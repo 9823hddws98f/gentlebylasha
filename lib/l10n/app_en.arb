@@ -1,0 +1,91 @@
+{
+  "countryCode": "DE",
+  "myProfile":"My Profile",
+  "changeLanguage": "Change language",
+  "editProfile": "Edit Profile",
+  "favoriteList": "Favorite List",
+  "downloads": "Downloads",
+  "changePassword": "Change Password",
+  "reminders": "Reminders",
+  "manageSubscription": "Manage Subscription",
+  "helpSupport": "Help & Support",
+  "about": "About",
+  "logout": "Logout",
+  "favorites": "Favorites",
+  "deleteAccount": "Delete Account",
+  "deleteAccountMessage": "Are you sure, you want to delete you account?",
+  "deleteAccountDescription": "Your profile and whole data will be removed and you will not be able to login again.",
+
+  "home": "Home",
+  "forMe": "For me",
+  "explore": "Explore",
+  "profile": "Profile",
+
+  "goodMorning": "Good morning",
+  "goodAfternoon": "Good afternoon",
+  "goodEvening": "Good evening",
+  "goodNight": "Good night",
+
+  "workWithUs": "Work with us",
+  "termsOfService": "Terms of service",
+  "privacyPolicy": "Privacy policy",
+
+
+
+  "mindfulnessAndMeditation": "Mindfulness and Meditation",
+  "bedtime": "Bedtime",
+  "moodCheckIn": "Mood check-in",
+  "gratitudeCheckIn": "Gratitude check-in",
+  "dailyReflection": "Daily reflection",
+  "sleepCheckIn": "Sleep check-in",
+
+
+  "welcomeToSleepytales": "Welcome to gentle",
+  "launchScreenMessage": "just close your eyes and listen",
+  "createYourAccount": "Create your account",
+  "signupWithEmail": "Sign Up with Email",
+  "continueWithApple": "Continue with Apple",
+  "continueWithFacebook": "Continue with Facebook",
+  "continueWithGoogle": "Continue with Google",
+
+
+  "authThrough": "Authenticating through",
+  "unableToAuth": "Unable to authenticate through",
+  "signingIn": "Signing in",
+  "unableToSignIn": "Unable to sign in",
+  "signInSuccess": "Sign in Successful",
+
+
+
+  "haveAnAccount": "Have an account",
+  "login": "Login",
+
+  "joinSleepytales": "Join Gentle",
+  "yourName": "Your name",
+  "email": "Email",
+  "name": "Name",
+  "password": "Password",
+  "alreadyHaveAnAccount": "Already have an account",
+  "enterName": "Please enter your name",
+  "enterEmail": "Please enter your email",
+  "enterValidEmail": "Please enter a valid email",
+  "enterPassword": "Please enter password",
+  "passwordCaracterLimit": "Password must contain minimum of 6 characters",
+  "authenticationEmail": "Authenticating with email",
+  "pleaseFillForm": "Please fill the form",
+  "signUp": "Sign Up",
+
+
+  "loginToSleepytales": "Login to Gentle",
+  "notMember": "Not a member",
+  "forgotYourPassword": "Forgot your password",
+  "reset": "Reset",
+
+  "whatBringsYouToSleepytales": "What brings you to Gentle",
+  "personalizeRecMessage": "We’ll personalize recommendations based on your goals.",
+  "continueText": "Continue",
+
+  "favoritePlaylist": "Favorite Playlist"
+
+
+}

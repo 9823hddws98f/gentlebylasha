@@ -1,0 +1,13 @@
+const String SplashPath = '/splash';
+const String LoginPath = '/LoginScreen';
+const String QrPath = '/QrPath';
+const String RegistrationPath = '/registration';
+const String CheckoutPath = '/checkout';
+const String SuccessScreenPath = '/successScreen';
+const String ShoppingCartPath = '/shoppingCart';
+const String ProductScreenPath = '/ProductScreen';
+const String HomeScreenPath = '/DashboardScren';
+const String login_signUp_screen = '/LoginSignupScreen';
+const String dashboard = '/DashBoard';
+const String searchProderPath = '/searchProduct';
+const String orderScreenPath = '/OrderScreen';

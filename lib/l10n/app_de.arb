@@ -1,0 +1,95 @@
+{
+  "countryCode": "DE",
+  "myProfile":"Mijn profiel",
+  "changeLanguage": "Taal wijzigen",
+  "editProfile": "Bewerk profiel",
+  "favoriteList": "Favoriete lijst",
+  "downloads": "Downloaden",
+  "changePassword": "Verander wachtwoord",
+  "reminders": "Herinneringen",
+  "manageSubscription": "Abonnement beheren",
+  "helpSupport": "Help & Ondersteuning",
+  "about": "Over",
+  "logout": "Uitloggen",
+  "favorites": "Favorieten",
+  "deleteAccount": "Account verwijderen",
+  "deleteAccountMessage": "Weet je zeker dat je je account wilt verwijderen?",
+  "deleteAccountDescription": "Je profiel en alle gegevens worden verwijderd en je kunt niet meer inloggen.",
+
+  "home": "Thuis",
+  "forMe": "Voor mij",
+  "explore": "Ontdekken",
+  "profile": "Profiel",
+
+  "goodMorning": "Goedemorgen",
+  "goodAfternoon": "Goedemiddag",
+  "goodEvening": "Goedeavond",
+  "goodNight": "Goedeavond",
+
+
+  "workWithUs": "Werk met ons",
+  "termsOfService": "Servicevoorwaarden",
+  "privacyPolicy": "Privacybeleid",
+
+
+  "mindfulnessAndMeditation": "Mindfullness en meditatie",
+  "bedtime": "Bedtijd",
+  "moodCheckIn": "Stemming check-in",
+  "gratitudeCheckIn": "Dankbaarheid inchecken",
+  "dailyReflection": "Dagelijkse reflectie",
+  "sleepCheckIn": "Slaap check-in",
+
+
+
+
+
+
+
+  "welcomeToSleepytales": "Welkom bij gentle",
+  "launchScreenMessage": "sluit gewoon je ogen en luister",
+  "createYourAccount": "Maak een account aan",
+  "signupWithEmail": "Aanmelden met e-mail",
+  "continueWithApple": "Ga verder met Apple",
+  "continueWithFacebook": "Ga verder met Facebook",
+  "continueWithGoogle": "Ga verder met Google",
+
+
+  "authThrough": "Authenticatie door",
+  "unableToAuth": "Kan niet verifiëren via",
+  "signingIn": "Inloggen",
+  "unableToSignIn": "Onmogelijk om in te loggen",
+  "signInSuccess": "Aanmelden gelukt",
+
+
+  "haveAnAccount": "Een account hebben",
+  "login": "Inloggen",
+
+
+  "joinSleepytales": "Sluit je aan bij Gentle",
+  "yourName": "Uw naam",
+  "email": "E-mail",
+  "name": "Naam",
+  "password": "Wachtwoord",
+  "alreadyHaveAnAccount": "Heb al een account",
+  "enterName": "Voer uw naam in",
+  "enterEmail": "Vul alstublieft uw e-mailadres in",
+  "enterValidEmail": "Voer een geldig e-mailadres in",
+  "enterPassword": "Voer een wachtwoord in",
+  "passwordCaracterLimit": "Wachtwoord moet minimaal 6 tekens bevatten",
+  "authenticationEmail": "Authenticeren met e-mail",
+  "pleaseFillForm": "Vul het formulier in",
+  "signUp": "Aanmelden",
+
+
+  "loginToSleepytales": "Log in op Gentle",
+  "notMember": "Geen lid",
+  "forgotYourPassword": "Je wachtwoord vergeten",
+  "reset": "Resetten",
+
+  "whatBringsYouToSleepytales": "Wat brengt je naar Gentle",
+  "personalizeRecMessage": "We personaliseren aanbevelingen op basis van uw doelen.",
+  "continueText": "Doorgaan",
+
+  "favoritePlaylist": "Favoriete afspeellijst"
+
+}
