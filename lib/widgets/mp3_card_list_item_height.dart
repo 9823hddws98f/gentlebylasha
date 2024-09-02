@@ -30,7 +30,7 @@ class Mp3Item extends StatelessWidget {
               children: [
 
                 Container(
-                  height: 187.h,
+                  height: 175.h,
                   width: 187.w,
                   child:   CachedNetworkImage(
                     imageUrl: imageUrl,

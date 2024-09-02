@@ -989,13 +989,13 @@ SPEC CHECKSUMS:
   FirebaseFirestore: b3bb12a497c9d13e80ec3158dbb75ded03592e8d
   FirebaseInstallations: f672b1eda64e6381c21d424a2f680a943fd83f3b
   FirebaseMessaging: 8a3b9a8b98ce72a42d22e69865cf662e38d2d6f5
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_facebook_auth: 42016bec1574eabf69bc2fe4311e8cd55813d352
   flutter_inapp_purchase: 5c6a1ac3f11b11d0c8c0321c0c41c1f05805e4c8
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_native_timezone: 5f05b2de06c9776b4cc70e1839f03de178394d22
   flutter_secure_storage: 23fc622d89d073675f2eaa109381aefbcf5a49be
-  fluttertoast: fafc4fa4d01a6a9e4f772ecd190ffa525e9e2d9c
+  fluttertoast: 31b00dabfa7fb7bacd9e7dbee580d7a2ff4bf265
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   google_sign_in_ios: 1256ff9d941db546373826966720b0c24804bcdd
   GoogleDataTransport: 54dee9d48d14580407f8f5fbf2f496e92437a2f2
@@ -1021,4 +1021,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 622d7075a3a4d1acabc17024c304f7ed3acd547f
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.15.2

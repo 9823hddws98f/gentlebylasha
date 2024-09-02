@@ -217,33 +217,33 @@ class _TabsSubCategoryScreen extends State<TabsSubCategoryScreen> with TickerPro
               //
               //                }, musicList: widget.category.name == "Music"?true:false,panelFunction: widget.panelFunction,)
               //            ),
-              if(subCategories.isNotEmpty)...[
-                         Padding(padding: EdgeInsets.only(left: 11.w),
-                           child:Container(
-                           width: MediaQuery.of(context).size.width,
-                            child: TabBar(
-                               labelPadding: EdgeInsets.all(4.w),
-                               controller: TabController(length: 5, vsync: Scaffold.of(context)),
-                               isScrollable: true,
-                               indicatorColor: Colors.transparent,
-                               tabs: [
-                                 ...subCategories.map((category) {
-                                   int index = subCategories.indexOf(category);
-                                   return Tab(
-                                     child: CustomTabButton(
-                                       title: category.name,
-                                       onPress: () {
-                                         _tabControllerNew.animateTo(index);
-                                         setState(() {});
-                                       },
-                                       color: _tabControllerNew.index == index ? tabSelectedColor : tabUnselectedColor,
-                                       textColor: Colors.white,
-                                     ),
-                                   );
-                                 }).toList(),
-                               ])),
-                         ),
-               ]
+              // if(subCategories.isNotEmpty)...[
+              //            Padding(padding: EdgeInsets.only(left: 11.w),
+              //              child:Container(
+              //              width: MediaQuery.of(context).size.width,
+              //               child: TabBar(
+              //                  labelPadding: EdgeInsets.all(4.w),
+              //                  controller: TabController(length: 5, vsync: Scaffold.of(context)),
+              //                  isScrollable: true,
+              //                  indicatorColor: Colors.transparent,
+              //                  tabs: [
+              //                    ...subCategories.map((category) {
+              //                      int index = subCategories.indexOf(category);
+              //                      return Tab(
+              //                        child: CustomTabButton(
+              //                          title: category.name,
+              //                          onPress: () {
+              //                            _tabControllerNew.animateTo(index);
+              //                            setState(() {});
+              //                          },
+              //                          color: _tabControllerNew.index == index ? tabSelectedColor : tabUnselectedColor,
+              //                          textColor: Colors.white,
+              //                        ),
+              //                      );
+              //                    }).toList(),
+              //                  ])),
+              //            ),
+              //  ]
 
 
               ],
