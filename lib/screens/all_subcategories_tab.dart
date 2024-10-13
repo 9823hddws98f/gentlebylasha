@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sleeptales/models/sub_categories.dart';
-import 'package:sleeptales/screens/track_list.dart';
-import 'package:sleeptales/utils/colors.dart';
-import 'package:sleeptales/utils/firestore_helper.dart';
-import 'package:sleeptales/utils/global_functions.dart';
-import 'package:sleeptales/widgets/tracklist_horizontal_widget.dart';
+import '/models/sub_categories.dart';
+import '/screens/track_list.dart';
+import '/utils/colors.dart';
+import '/utils/firestore_helper.dart';
+import '/utils/global_functions.dart';
+import '/widgets/tracklist_horizontal_widget.dart';
 import '../models/audiofile_model.dart';
 import '../models/category_block.dart';
 import '../models/collection_model.dart';
@@ -16,7 +16,11 @@ class AllSubCategoriesTab extends StatefulWidget {
   final CategoryBlock category;
   final Function panelFunction;
 
-  const AllSubCategoriesTab({super.key, required this.subCategories, required this.category,required this.panelFunction});
+  const AllSubCategoriesTab(
+      {super.key,
+      required this.subCategories,
+      required this.category,
+      required this.panelFunction});
   @override
   _AllSubCategoriesTab createState() => _AllSubCategoriesTab();
 }
@@ -42,13 +46,13 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
     return Scaffold(
         backgroundColor: Colors.transparent,
         body: Container(
-          child:SingleChildScrollView(
+          child: SingleChildScrollView(
             physics: NeverScrollableScrollPhysics(),
             child: Column(
               children: [
-                if(recentIsLoading || recentlyPlayed.isNotEmpty)...[
+                if (recentIsLoading || recentlyPlayed.isNotEmpty) ...[
                   Padding(
-                      padding: EdgeInsets.fromLTRB(16.w, 32.h,16.w,16.h),
+                      padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h),
                       child: Row(
                         children: [
                           Text(
@@ -58,32 +62,40 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-
                           Spacer(),
-                          if(recentlyPlayed.isNotEmpty)
-                            TextButton(onPressed: (){
-                              pushName(context, TrackListScreen(heading: "Recently Played",list: recentlyPlayed,panelFunction: widget.panelFunction,));
-
-                            }, child:Text("See all",style: TextStyle(color: blueAccentColor,fontSize: 16.sp),))
+                          if (recentlyPlayed.isNotEmpty)
+                            TextButton(
+                                onPressed: () {
+                                  pushName(
+                                      context,
+                                      TrackListScreen(
+                                        heading: "Recently Played",
+                                        list: recentlyPlayed,
+                                        panelFunction: widget.panelFunction,
+                                      ));
+                                },
+                                child: Text(
+                                  "See all",
+                                  style:
+                                      TextStyle(color: blueAccentColor, fontSize: 16.sp),
+                                ))
                         ],
-
-                      )
-                  ),
+                      )),
                   recentlyPlayed.isEmpty
                       ? _buildShimmerListViewHeight()
                       : SizedBox(
-                      height: 231.h,
-                      child: TrackListHorizontal(tap: (){
-                      },audiList: recentlyPlayed,musicList: widget.category.name == "Music"?true:false,panelFunction: widget.panelFunction,)
-
-                  ),
+                          height: 231.h,
+                          child: TrackListHorizontal(
+                            tap: () {},
+                            audiList: recentlyPlayed,
+                            musicList: widget.category.name == "Music" ? true : false,
+                            panelFunction: widget.panelFunction,
+                          )),
                 ],
 
-
-
-                if(!collectionsIsLoading && topCollection.isNotEmpty)...[
+                if (!collectionsIsLoading && topCollection.isNotEmpty) ...[
                   SizedBox(
-                    child:ListView.separated(
+                    child: ListView.separated(
                       scrollDirection: Axis.vertical,
                       padding: EdgeInsets.zero,
                       itemCount: topCollection.length,
@@ -97,7 +109,7 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Padding(
-                                padding: EdgeInsets.fromLTRB(16.w, 32.h,16.w,16.h),
+                                padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h),
                                 child: Row(
                                   children: [
                                     Text(
@@ -107,73 +119,74 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-
                                     Spacer(),
-                                    TextButton(onPressed: (){
-                                      pushName(context, TrackListScreen(heading: topCollection[index].collectionTitle,list:topCollection[index].collectionTracks,panelFunction: widget.panelFunction,));
-
-                                    }, child:Text("See all",style: TextStyle(color: blueAccentColor,fontSize: 16.sp),))
+                                    TextButton(
+                                        onPressed: () {
+                                          pushName(
+                                              context,
+                                              TrackListScreen(
+                                                heading:
+                                                    topCollection[index].collectionTitle,
+                                                list:
+                                                    topCollection[index].collectionTracks,
+                                                panelFunction: widget.panelFunction,
+                                              ));
+                                        },
+                                        child: Text(
+                                          "See all",
+                                          style: TextStyle(
+                                              color: blueAccentColor, fontSize: 16.sp),
+                                        ))
                                   ],
-
-                                )
-                            ),
+                                )),
                             topCollection[index].collectionTracks.isEmpty
                                 ? _buildShimmerListViewHeight()
                                 : SizedBox(
-                                height: 231.h,
-                                child: TrackListHorizontal(tap: (){
-
-                                },audiList: topCollection[index].collectionTracks,musicList:widget.category.name == "Music"?true:false,panelFunction: widget.panelFunction,)
-                            ),
+                                    height: 231.h,
+                                    child: TrackListHorizontal(
+                                      tap: () {},
+                                      audiList: topCollection[index].collectionTracks,
+                                      musicList:
+                                          widget.category.name == "Music" ? true : false,
+                                      panelFunction: widget.panelFunction,
+                                    )),
                           ],
                         );
                       },
                     ),
                   )
-
-                ]else...[
+                ] else ...[
                   _buildShimmerListViewFullWidget(),
                 ],
                 // Heading and horizontal list view of cards
 
-                SizedBox(height: 165.h,),
-
+                SizedBox(
+                  height: 165.h,
+                ),
               ],
             ),
           ),
-        )
-    );
+        ));
   }
-
-
-
 
   Future<void> getFirtList(String cat) async {
-
     audioList1 = await getNewAndWorthyByCategory(cat);
     newworthyIsLoading = false;
-    setState(() {
-
-    });
-
+    setState(() {});
   }
-
 
   void fetchPopularTracks(String cat) async {
     popularCat = await getPopularTracksByCategory(cat);
     popularIsLoading = false;
-    setState(() {
-    });
+    setState(() {});
   }
-
 
   Widget _buildShimmerListViewFullWidget() {
     return Column(
       children: [
         Padding(
-            padding: EdgeInsets.fromLTRB(16.w, 32.h,16.w,16.h),
-            child:
-            Row(
+            padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h),
+            child: Row(
               children: [
                 Container(
                     width: 120.w,
@@ -181,29 +194,21 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
                     decoration: BoxDecoration(
                       color: shimmerBaseColor,
                       borderRadius: BorderRadius.circular(20),
-                    )
-                ),
-
+                    )),
                 Spacer(),
                 Container(
                     width: 80.w,
                     height: 20.h,
-
                     decoration: BoxDecoration(
                       color: shimmerBaseColor,
                       borderRadius: BorderRadius.circular(20),
-                    )
-                )
+                    ))
               ],
-            )
-
-
-
-        ),
+            )),
         SizedBox(
           height: 231.h,
-          child:ListView.separated(
-            padding: EdgeInsets.only(left:16.w),
+          child: ListView.separated(
+            padding: EdgeInsets.only(left: 16.w),
             scrollDirection: Axis.horizontal,
             itemCount: 3,
             separatorBuilder: (BuildContext context, int index) {
@@ -216,15 +221,13 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
         )
       ],
     );
-
-
   }
 
   Widget _buildShimmerListViewHeight() {
     return SizedBox(
       height: 231.h,
-      child:ListView.separated(
-        padding: EdgeInsets.only(left:16.w),
+      child: ListView.separated(
+        padding: EdgeInsets.only(left: 16.w),
         scrollDirection: Axis.horizontal,
         itemCount: 3,
         separatorBuilder: (BuildContext context, int index) {
@@ -240,16 +243,12 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
   void fetchRecentlyPlayedTracks(String cat) async {
     recentlyPlayed = await getRecentlyPlayedTracksByCategory(cat);
     recentIsLoading = false;
-    setState(() {
-    });
+    setState(() {});
   }
 
   void fetchTopCollections(String cat) async {
     topCollection = await getTopCollections(cat);
     collectionsIsLoading = false;
-    setState(() {
-    });
+    setState(() {});
   }
-
-
 }

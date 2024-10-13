@@ -6,8 +6,8 @@ import '../../utils/colors.dart';
 
 class ShimmerCustomTabButton extends StatelessWidget {
   const ShimmerCustomTabButton({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

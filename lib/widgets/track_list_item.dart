@@ -10,13 +10,13 @@ class TrackListItemSmall extends StatelessWidget {
   final Function() tap;
 
   const TrackListItemSmall({
-    Key? key,
+    super.key,
     required this.imageUrl,
     required this.mp3Name,
     required this.mp3Category,
     required this.mp3Duration,
     required this.tap
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class TrackListItemSmall extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
+              SizedBox(
                 height: 164.h,
                 width: double.maxFinite,
                 child:CachedNetworkImage(

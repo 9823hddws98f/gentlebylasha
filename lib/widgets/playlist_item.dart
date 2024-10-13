@@ -9,11 +9,11 @@ class PlaylistItem extends StatelessWidget {
   final Function() favoriteTap;
 
   const PlaylistItem({
-    Key? key,
+    super.key,
     required this.block,
     required this.tap,
     required this.favoriteTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class PlaylistItem extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
 
               children: [
-                Container(
+                SizedBox(
                   height: 72.h,
                   width: 72.h,
                   child:CachedNetworkImage(

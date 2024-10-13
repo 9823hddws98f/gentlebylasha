@@ -7,32 +7,30 @@ class Mp3Item extends StatelessWidget {
   final String mp3Name;
   final String mp3Category;
   final String mp3Duration;
-  Function() tap;
+  final Function() tap;
 
-  Mp3Item({
-    Key? key,
+  const Mp3Item({
+    super.key,
     required this.imageUrl,
     required this.mp3Name,
     required this.mp3Category,
     required this.mp3Duration,
-    required this.tap
-  }) : super(key: key);
+    required this.tap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: GestureDetector(
+    return GestureDetector(
         onTap: tap,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Stack(
               children: [
-
-                Container(
+                SizedBox(
                   height: 175.h,
                   width: 187.w,
-                  child:   CachedNetworkImage(
+                  child: CachedNetworkImage(
                     imageUrl: imageUrl,
                     imageBuilder: (context, imageProvider) => ClipRRect(
                       borderRadius: BorderRadius.circular(20),
@@ -41,13 +39,15 @@ class Mp3Item extends StatelessWidget {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    errorWidget: (context, url, error) =>  ClipRRect(
-                        borderRadius: BorderRadius.circular(20), // Adjust the radius as needed
-                        child:Image.asset("images/placeholder_image.jpg",fit: BoxFit.cover,)
-                    ),
+                    errorWidget: (context, url, error) => ClipRRect(
+                        borderRadius:
+                            BorderRadius.circular(20), // Adjust the radius as needed
+                        child: Image.asset(
+                          "images/placeholder_image.jpg",
+                          fit: BoxFit.cover,
+                        )),
                   ),
                 ),
-
                 Positioned(
                   bottom: 12,
                   left: 12,
@@ -55,8 +55,7 @@ class Mp3Item extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
                     decoration: BoxDecoration(
                       color: Colors.grey.withOpacity(0.5),
-                      borderRadius: const BorderRadius.all(Radius.circular(10)
-                      ),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -79,8 +78,7 @@ class Mp3Item extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox( height:8.h),
-
+            SizedBox(height: 8.h),
             Text(
               mp3Category,
               overflow: TextOverflow.ellipsis,
@@ -89,9 +87,9 @@ class Mp3Item extends StatelessWidget {
                 fontSize: 10.sp,
               ),
             ),
-            SizedBox( height:2.h),
+            SizedBox(height: 2.h),
             Text(
-              mp3Name.length > 25?mp3Name.substring(0, 25) + "...":mp3Name,
+              mp3Name.length > 25 ? "${mp3Name.substring(0, 25)}..." : mp3Name,
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
               style: TextStyle(
@@ -99,11 +97,7 @@ class Mp3Item extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-
           ],
-
-        )
-      )
-    );
+        ));
   }
 }

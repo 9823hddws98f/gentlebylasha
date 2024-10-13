@@ -7,8 +7,7 @@ class CustomSocialButton extends StatelessWidget {
   final Color color;
   final Color textColor;
   final Icon icon;
-  const CustomSocialButton({Key? key, required this.title, required this.onPress,required this.color, required this.textColor,required this.icon})
-      : super(key: key);
+  const CustomSocialButton({super.key, required this.title, required this.onPress,required this.color, required this.textColor,required this.icon});
 
   @override
   Widget build(BuildContext context) {

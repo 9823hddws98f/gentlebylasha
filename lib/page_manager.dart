@@ -1,17 +1,19 @@
 import 'dart:async';
+
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
-import 'package:sleeptales/utils/firestore_helper.dart';
+
+import '/utils/firestore_helper.dart';
 import 'models/audiofile_model.dart';
 import 'notifiers/play_button_notifier.dart';
 import 'notifiers/progress_notifier.dart';
-import 'package:audio_service/audio_service.dart';
 import 'notifiers/repeat_notifier.dart';
 import 'services/playlist_repository.dart';
 import 'services/service_locator.dart';
 
 class PageManager {
   final currentSongTitleNotifier = ValueNotifier<String>('---');
-  final currentMediaItemNotifier = ValueNotifier<MediaItem>(MediaItem(id: "",title: ""));
+  final currentMediaItemNotifier = ValueNotifier<MediaItem>(MediaItem(id: "", title: ""));
   final playlistNotifier = ValueNotifier<List<String>>([]);
   final playlistIdNotifier = ValueNotifier<List<String>>([]);
   final progressNotifier = ProgressNotifier();
@@ -24,7 +26,6 @@ class PageManager {
   bool isBufferingDone = true;
   bool check = true;
 
-
   void init() async {
     _listenToChangesInPlaylist();
     _listenToPlaybackState();
@@ -35,42 +36,40 @@ class PageManager {
     _listenToPlaying();
   }
 
-  Future<void> playSinglePlaylist(MediaItem mediaItem,String trackId) async {
+  Future<void> playSinglePlaylist(MediaItem mediaItem, String trackId) async {
     isBufferingDone = false;
-    if(currentMediaItemNotifier.value.id != trackId){
-     playlistNotifier.value = [];
-     playlistIdNotifier.value = [];
+    if (currentMediaItemNotifier.value.id != trackId) {
+      playlistNotifier.value = [];
+      playlistIdNotifier.value = [];
       _audioHandler.addQueueItem(mediaItem);
     }
   }
 
-  Future<void> loadPlaylist(List<AudioTrack> list,int index) async {
+  Future<void> loadPlaylist(List<AudioTrack> list, int index) async {
     isBufferingDone = false;
-    if(currentMediaItemNotifier.value.id != list[index].trackId){
+    if (currentMediaItemNotifier.value.id != list[index].trackId) {
       playlistNotifier.value = [];
       playlistIdNotifier.value = [];
       final mediaItems = list
-          .map((song) =>
-          MediaItem(
-            id: song.trackId ?? '',
-            album: song.speaker ?? '',
-            title: song.title ?? '',
-            displayDescription: song.description,
-            artUri: Uri.parse(song.imageBackground ?? ''),
-            extras: {
-              'url': song.trackUrl,
-              'id': song.trackId,
-              'categories': song.categories[0].categoryName
-            },
-          ))
+          .map((song) => MediaItem(
+                id: song.trackId,
+                album: song.speaker,
+                title: song.title,
+                displayDescription: song.description,
+                artUri: Uri.parse(song.imageBackground),
+                extras: {
+                  'url': song.trackUrl,
+                  'id': song.trackId,
+                  'categories': song.categories[0].categoryName
+                },
+              ))
           .toList();
       _audioHandler.addQueueItems(mediaItems);
-      Future.delayed(Duration(milliseconds: 200), () { // <-- Delay here
+      Future.delayed(Duration(milliseconds: 200), () {
+        // <-- Delay here
         _audioHandler.skipToQueueItem(index);
       });
-
     }
-
   }
 
   void _listenToChangesInPlaylist() {
@@ -89,20 +88,17 @@ class PageManager {
     });
   }
 
-  bool _listenToPlaying(){
+  bool _listenToPlaying() {
     bool isPlaying = false;
     _audioHandler.playbackState.listen((playbackState) {
       isPlaying = playbackState.playing;
-
     });
-        return isPlaying;
+    return isPlaying;
   }
 
-
-  void stopTrackAfter(Duration duration){
+  void stopTrackAfter(Duration duration) {
     Timer(duration, () {
-     pause();
-
+      pause();
     });
   }
 
@@ -116,15 +112,14 @@ class PageManager {
       } else if (!isPlaying) {
         playButtonNotifier.value = ButtonState.paused;
         if (!isBufferingDone) {
-          if(processingState == AudioProcessingState.ready) {
+          if (processingState == AudioProcessingState.ready) {
             play();
             isBufferingDone = true;
           }
         }
       } else if (processingState != AudioProcessingState.completed) {
         playButtonNotifier.value = ButtonState.playing;
-
-      }  else{
+      } else {
         _audioHandler.seek(Duration.zero);
         _audioHandler.pause();
         isBufferingDone = false;
@@ -166,11 +161,10 @@ class PageManager {
   }
 
   void _listenToChangesInSong() {
-    if(check) {
+    if (check) {
       _audioHandler.mediaItem.listen((mediaItem) {
         currentSongTitleNotifier.value = mediaItem?.title ?? '';
-        currentMediaItemNotifier.value =
-            mediaItem ?? MediaItem(id: "", title: "");
+        currentMediaItemNotifier.value = mediaItem ?? MediaItem(id: "", title: "");
         if (mediaItem != null) {
           if (mediaItem.id != "") {
             addToRecentlyPlayed(mediaItem.id);
@@ -202,21 +196,22 @@ class PageManager {
   void previous() => _audioHandler.skipToPrevious();
   void next() => _audioHandler.skipToNext();
 
-  void skipForward(){
+  void skipForward() {
     Duration position;
-    if(progressNotifier.value.current.inSeconds < (progressNotifier.value.total.inSeconds - 10)) {
+    if (progressNotifier.value.current.inSeconds <
+        (progressNotifier.value.total.inSeconds - 10)) {
       position = progressNotifier.value.current + Duration(seconds: 10);
-    }else{
-      position  =progressNotifier.value.total;
+    } else {
+      position = progressNotifier.value.total;
     }
     seek(position);
   }
 
-  void skipBackward(){
+  void skipBackward() {
     Duration position;
-    if(progressNotifier.value.current.inSeconds > 10) {
+    if (progressNotifier.value.current.inSeconds > 10) {
       position = progressNotifier.value.current - Duration(seconds: 10);
-    }else{
+    } else {
       position = Duration.zero;
     }
 
@@ -267,22 +262,20 @@ class PageManager {
     _audioHandler.removeQueueItemAt(lastIndex);
   }
 
-  void removeAllFromPlaylist() async{
-    for(int i =0;i<_audioHandler.queue.value.length;i++){
+  void removeAllFromPlaylist() async {
+    for (int i = 0; i < _audioHandler.queue.value.length; i++) {
       remove();
     }
-
   }
-
 
   void resetNotifiers() {
     currentSongTitleNotifier.value = '---';
-    progressNotifier.value = ProgressBarState(current: Duration.zero, buffered: Duration.zero, total: Duration.zero);
+    progressNotifier.value = ProgressBarState(
+        current: Duration.zero, buffered: Duration.zero, total: Duration.zero);
     playlistNotifier.value = [];
     currentMediaItemNotifier.value = MediaItem(id: "", title: "");
     check = false;
   }
-
 
   void dispose() {
     _audioHandler.pause();

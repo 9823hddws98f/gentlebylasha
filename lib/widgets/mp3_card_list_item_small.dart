@@ -8,30 +8,26 @@ class Mp3ItemSmall extends StatelessWidget {
   final String mp3Category;
   final Function() tap;
 
-  const Mp3ItemSmall({
-    Key? key,
-    required this.imageUrl,
-    required this.mp3Name,
-    required this.mp3Category,
-    required this.tap
-  }) : super(key: key);
+  const Mp3ItemSmall(
+      {super.key,
+      required this.imageUrl,
+      required this.mp3Name,
+      required this.mp3Category,
+      required this.tap});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child:GestureDetector(
-        onTap: tap,
-        child:
-      Column(
+    return GestureDetector(
+      onTap: tap,
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Stack(
             children: [
-
-              Container(
+              SizedBox(
                 height: 90.h,
                 width: 140.w,
-                child:   CachedNetworkImage(
+                child: CachedNetworkImage(
                   imageUrl: imageUrl,
                   imageBuilder: (context, imageProvider) => ClipRRect(
                     borderRadius: BorderRadius.circular(20),
@@ -40,16 +36,18 @@ class Mp3ItemSmall extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  errorWidget: (context, url, error) =>  ClipRRect(
-                      borderRadius: BorderRadius.circular(20), // Adjust the radius as needed
-                      child:Image.asset("images/placeholder_image.jpg",fit: BoxFit.cover,)
-                  ),
+                  errorWidget: (context, url, error) => ClipRRect(
+                      borderRadius:
+                          BorderRadius.circular(20), // Adjust the radius as needed
+                      child: Image.asset(
+                        "images/placeholder_image.jpg",
+                        fit: BoxFit.cover,
+                      )),
                 ),
               ),
-
             ],
           ),
-          SizedBox( height:8.h),
+          SizedBox(height: 8.h),
           Text(
             mp3Name,
             overflow: TextOverflow.ellipsis,
@@ -59,7 +57,7 @@ class Mp3ItemSmall extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox( height:2.h),
+          SizedBox(height: 2.h),
           Text(
             mp3Category,
             overflow: TextOverflow.ellipsis,
@@ -68,14 +66,8 @@ class Mp3ItemSmall extends StatelessWidget {
               fontSize: 10.sp,
             ),
           ),
-
-
-
         ],
-
-      )
-        ,
-      )
+      ),
     );
   }
 }

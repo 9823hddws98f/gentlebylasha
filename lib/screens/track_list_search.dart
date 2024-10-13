@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sleeptales/widgets/track_list_item.dart';
-import '../main.dart';
+
+import '/widgets/track_list_item.dart';
 import '../models/audiofile_model.dart';
 import '../models/category_model.dart';
 import '../page_manager.dart';
@@ -14,9 +14,10 @@ import '../widgets/topbar_widget.dart';
 class TrackListSearchScreen extends StatefulWidget {
   final Categories category;
   final Function panelFunction;
-  TrackListSearchScreen({super.key, required this.category,required this.panelFunction});
+  const TrackListSearchScreen(
+      {super.key, required this.category, required this.panelFunction});
   @override
-  _TrackListSearchScreenState createState() => _TrackListSearchScreenState();
+  State<TrackListSearchScreen> createState() => _TrackListSearchScreenState();
 }
 
 class _TrackListSearchScreenState extends State<TrackListSearchScreen> {
@@ -25,106 +26,94 @@ class _TrackListSearchScreenState extends State<TrackListSearchScreen> {
   @override
   void initState() {
     super.initState();
-      getTrackList(widget.category.id);
+    getTrackList(widget.category.id);
   }
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       body: SafeArea(
         child: SizedBox(
             child: Padding(
                 padding: EdgeInsets.all(10.w),
-                child:Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    TopBar(heading: widget.category.categoryName, onPress: (){
-                      Navigator.pop(context);
-                    }),
-                    SizedBox(height: 20.h,),
-                    (list.isNotEmpty)?
-                    Expanded(
-                        child: SingleChildScrollView(
-                          padding: EdgeInsets.only(bottom: 165.h),
-                          child:
-                          GridView.builder(
-                              itemCount: list.length,
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 16.w,
-                                  mainAxisSpacing: 16.h,
-                                  childAspectRatio: 0.81
-                              ),
-                              itemBuilder: (BuildContext context, int index) {
-                                return TrackListItemSmall(
-                                  imageUrl: list[index].thumbnail,
-                                  mp3Name: list[index].title,
-                                  mp3Category: list[index].categories[0].categoryName,
-                                  mp3Duration: list[index].length,
-                                  tap: (){
-                                    if(widget.category.categoryName == "Music") {
-                                      getIt<PageManager>().loadPlaylist(list,index);
-                                      widget.panelFunction(false);
-                                    }else{
-                                      playTrack(list[index]);
-                                      widget.panelFunction(false);
-                                    }
-                                  },
-                                ); }
-                          ),
-                        )
-                    ):_buildShimmerListView(),
+                    TopBar(
+                        heading: widget.category.categoryName,
+                        onPress: () {
+                          Navigator.pop(context);
+                        }),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    (list.isNotEmpty)
+                        ? Expanded(
+                            child: SingleChildScrollView(
+                            padding: EdgeInsets.only(bottom: 165.h),
+                            child: GridView.builder(
+                                itemCount: list.length,
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 16.w,
+                                    mainAxisSpacing: 16.h,
+                                    childAspectRatio: 0.81),
+                                itemBuilder: (BuildContext context, int index) {
+                                  return TrackListItemSmall(
+                                    imageUrl: list[index].thumbnail,
+                                    mp3Name: list[index].title,
+                                    mp3Category: list[index].categories[0].categoryName,
+                                    mp3Duration: list[index].length,
+                                    tap: () {
+                                      if (widget.category.categoryName == "Music") {
+                                        getIt<PageManager>().loadPlaylist(list, index);
+                                        widget.panelFunction(false);
+                                      } else {
+                                        playTrack(list[index]);
+                                        widget.panelFunction(false);
+                                      }
+                                    },
+                                  );
+                                }),
+                          ))
+                        : _buildShimmerListView(),
                   ],
-                )
-            )
-
-
-        ),
+                ))),
       ),
     );
-
-
-
   }
-
 
   Widget _buildShimmerListView() {
     return Expanded(
         child: SingleChildScrollView(
-          child:
-          GridView.builder(
-              itemCount: 10,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16.w,
-                  mainAxisSpacing: 16.h,
-                  childAspectRatio: 0.81
-              ),
-              itemBuilder: (BuildContext context, int index) {
-                return ShimmerTrackListItemSmall();}
-          ),
-        )
-    );
+      child: GridView.builder(
+          itemCount: 10,
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 16.w,
+              mainAxisSpacing: 16.h,
+              childAspectRatio: 0.81),
+          itemBuilder: (BuildContext context, int index) {
+            return ShimmerTrackListItemSmall();
+          }),
+    ));
   }
 
-  Future<void> getTrackList(String search)async {
-
-
+  Future<void> getTrackList(String search) async {
     final snapshot = await FirebaseFirestore.instance
         .collection('Tracks')
         .where('categories', arrayContains: search)
         .get();
 
-    if(snapshot.size > 0) {
+    if (snapshot.size > 0) {
       list = snapshot.docs.map((doc) {
         return AudioTrack.fromFirestore(doc);
       }).toList();
       setState(() {});
     }
-
   }
 }

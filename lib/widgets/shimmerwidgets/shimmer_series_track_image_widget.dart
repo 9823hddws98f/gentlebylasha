@@ -5,6 +5,8 @@ import 'package:shimmer/shimmer.dart';
 import '../../utils/colors.dart';
 
 class ShimmerSeriesTrackListImageWidget extends StatelessWidget {
+  const ShimmerSeriesTrackListImageWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(

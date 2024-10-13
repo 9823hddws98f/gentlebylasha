@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sleeptales/widgets/topbar_widget.dart';
-
+import '/widgets/topbar_widget.dart';
 
 class DownloadsScreen extends StatefulWidget {
   final String? email;
-  const DownloadsScreen({Key? key,this.email}) : super(key: key);
+  const DownloadsScreen({super.key, this.email});
 
   @override
   State<DownloadsScreen> createState() {
@@ -20,58 +19,60 @@ class _DownloadsScreen extends State<DownloadsScreen> {
   final mp3Files = <String>[];
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       body: SafeArea(
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          child:SingleChildScrollView(
+          child: SingleChildScrollView(
               child: Padding(
                   padding: EdgeInsets.all(10.w),
-                  child:Column(
+                  child: Column(
                     children: [
-                      TopBar(heading: "Downloads", onPress: (){
-                        Navigator.pop(context);
-                      }),
-
-                      SizedBox(height: 20.h,),
+                      TopBar(
+                          heading: "Downloads",
+                          onPress: () {
+                            Navigator.pop(context);
+                          }),
+                      SizedBox(
+                        height: 20.h,
+                      ),
                       ListTile(
-                        leading: Icon(Icons.dark_mode,color: Colors.white),
+                        leading: Icon(Icons.dark_mode, color: Colors.white),
                         title: Text('Delete sleep stories'),
-                        trailing: Text("Zero KB",style: TextStyle(color: Colors.grey),),
-                        onTap: () {
-
-                        },
+                        trailing: Text(
+                          "Zero KB",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        onTap: () {},
                       ),
                       ListTile(
                         leading: SvgPicture.asset("assets/spa_black.svg"),
                         title: Text('Delete guided meditations'),
-                        trailing: Text("Zero KB",style: TextStyle(color: Colors.grey),),
+                        trailing: Text(
+                          "Zero KB",
+                          style: TextStyle(color: Colors.grey),
+                        ),
                         onTap: () {},
                       ),
                       ListTile(
-                        leading: Icon(Icons.music_note,color: Colors.white),
+                        leading: Icon(Icons.music_note, color: Colors.white),
                         title: Text('Delete music'),
-                        trailing: Text("Zero KB",style: TextStyle(color: Colors.grey),),
+                        trailing: Text(
+                          "Zero KB",
+                          style: TextStyle(color: Colors.grey),
+                        ),
                         onTap: () {},
                       ),
-
                     ],
-                  )
-              )
-
-
-          ),
+                  ))),
         ),
       ),
     );
-
-
   }
 
   Future<List<String>> getDownloadedMP3Files() async {
     final directory = await getApplicationDocumentsDirectory();
-
 
     try {
       final directoryList = directory.listSync(recursive: true);
@@ -81,12 +82,10 @@ class _DownloadsScreen extends State<DownloadsScreen> {
         }
       }
     } catch (e) {
-      print('Error retrieving MP3 files: $e');
+      debugPrint('Error retrieving MP3 files: $e');
     }
 
-    setState(() {
-
-    });
+    setState(() {});
     return mp3Files;
   }
 
@@ -103,5 +102,3 @@ class DownloadedTrack {
 
   DownloadedTrack({required this.trackName, required this.trackFilePath});
 }
-
-

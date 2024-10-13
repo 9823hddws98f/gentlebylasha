@@ -4,12 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sleeptales/models/audiofile_model.dart';
-import 'package:sleeptales/models/category_block.dart';
-import 'package:sleeptales/screens/music_player_screen.dart';
-import 'package:sleeptales/screens/tabs_subcategory_screen.dart';
-import 'package:sleeptales/utils/firestore_helper.dart';
-import 'package:sleeptales/widgets/search_list_item.dart';
+
+import '/models/audiofile_model.dart';
+import '/models/category_block.dart';
+import '/screens/tabs_subcategory_screen.dart';
+import '/utils/firestore_helper.dart';
+import '/widgets/search_list_item.dart';
 import '../utils/colors.dart';
 import '../utils/global_functions.dart';
 import '../widgets/custom_tab_button.dart';
@@ -22,21 +22,13 @@ class ExploreScreen extends StatefulWidget {
   _ExploreScreenState createState() => _ExploreScreenState();
 }
 
-class _ExploreScreenState extends State<ExploreScreen>
-    with TickerProviderStateMixin {
+class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateMixin {
   bool _showSearchList = false;
   late TabController tabController;
   final TextEditingController _controller = TextEditingController();
   String searchText = "";
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final list = [
-    'Happiness',
-    'Anxiety',
-    'Rain',
-    'Soundscapes',
-    'Sleep',
-    'Meditations'
-  ];
+  final list = ['Happiness', 'Anxiety', 'Rain', 'Soundscapes', 'Sleep', 'Meditations'];
   List<CategoryBlock> categories = [];
 
   @override
@@ -122,8 +114,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                     itemCount: 5,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        title: Text('${list[index]}',
-                            style: TextStyle(color: Colors.white)),
+                        title: Text(list[index], style: TextStyle(color: Colors.white)),
                         onTap: () {
                           setState(() {
                             _controller.text = list[index];
@@ -149,8 +140,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                         padding: EdgeInsets.all(16.h),
                         child: CircularProgressIndicator(color: Colors.white),
                       );
-                    } else if (snapshot.connectionState ==
-                            ConnectionState.done &&
+                    } else if (snapshot.connectionState == ConnectionState.done &&
                         snapshot.data == null) {
                       return Padding(
                         padding: EdgeInsets.only(top: 30.h),
@@ -167,15 +157,14 @@ class _ExploreScreenState extends State<ExploreScreen>
                           shrinkWrap: true,
                           padding: EdgeInsets.fromLTRB(16.w, 16.w, 16.w, 165.h),
                           children: snapshot.data!.map((document) {
-                            AudioTrack track =
-                                AudioTrack.fromFirestore(document);
+                            AudioTrack track = AudioTrack.fromFirestore(document);
                             return SearchListItem(
-                              imageUrl: track.thumbnail ?? '',
-                              mp3Name: track.title ?? '',
+                              imageUrl: track.thumbnail,
+                              mp3Name: track.title,
                               mp3Category: track.categories.isNotEmpty
-                                  ? track.categories[0].categoryName ?? ''
+                                  ? track.categories[0].categoryName
                                   : '',
-                              mp3Duration: track.length ?? '',
+                              mp3Duration: track.length,
                               speaker: track.speaker,
                               onPress: () {
                                 playTrack(track);
@@ -299,14 +288,13 @@ class _ExploreScreenState extends State<ExploreScreen>
 
     void processQuerySnapshot(Stream<QuerySnapshot> queryStream) {
       queryStream.listen((snapshot) async {
-        print('Query returned ${snapshot.docs.length} documents');
+        debugPrint('Query returned ${snapshot.docs.length} documents');
 
         // Filter documents locally for case-insensitive matching
         final filteredDocs = snapshot.docs.where((doc) {
-          final title = (doc.data() as Map<String, dynamic>)['title']
-                  ?.toString()
-                  .toLowerCase() ??
-              '';
+          final title =
+              (doc.data() as Map<String, dynamic>)['title']?.toString().toLowerCase() ??
+                  '';
           return title.contains(normalizedQuery);
         }).toList();
 
@@ -319,12 +307,10 @@ class _ExploreScreenState extends State<ExploreScreen>
               .where('speaker',
                   isGreaterThanOrEqualTo: query.substring(0, 1).toUpperCase())
               .where('speaker',
-                  isLessThanOrEqualTo:
-                      query.substring(0, 1).toUpperCase() + '\uf8ff')
+                  isLessThanOrEqualTo: '${query.substring(0, 1).toUpperCase()}\uf8ff')
               .get();
 
-          print(
-              'Speaker query returned ${speakerSnapshot.docs.length} documents');
+          debugPrint('Speaker query returned ${speakerSnapshot.docs.length} documents');
 
           // Emit speaker query results
           controller.add(speakerSnapshot.docs);
@@ -348,10 +334,9 @@ class _ExploreScreenState extends State<ExploreScreen>
 
     // Perform the query on the title field and handle results
     final titleStream = tracksCollection
+        .where('title', isGreaterThanOrEqualTo: query.substring(0, 1).toUpperCase())
         .where('title',
-            isGreaterThanOrEqualTo: query.substring(0, 1).toUpperCase())
-        .where('title',
-            isLessThanOrEqualTo: query.substring(0, 1).toUpperCase() + '\uf8ff')
+            isLessThanOrEqualTo: '${query.substring(0, 1).toUpperCase()}\uf8ff')
         .snapshots();
 
     processQuerySnapshot(titleStream);

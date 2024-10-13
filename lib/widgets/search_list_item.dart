@@ -12,21 +12,21 @@ class SearchListItem extends StatelessWidget {
   final void Function() onPress;
 
   const SearchListItem({
-    Key? key,
+    super.key,
     required this.imageUrl,
     required this.mp3Name,
     required this.mp3Category,
     required this.mp3Duration,
     required this.speaker,
     required this.onPress
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(padding: EdgeInsets.symmetric(vertical: 10.h),
     child: GestureDetector(
       onTap: onPress,
-      child: Container(
+      child: SizedBox(
         width: MediaQuery.of(context).size.width,
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,7 +35,7 @@ class SearchListItem extends StatelessWidget {
                 children: [
                   Stack(
                     children: [
-                      Container(
+                      SizedBox(
                         height: 134.h,
                         width: 134.w,
                         child:   CachedNetworkImage(

@@ -37,7 +37,7 @@ InputDecoration decorationInputStyle(String hint) {
 }
 
 InputDecoration decorationPasswordHintStyle(
-    String hint, String icon_path, Widget icon) {
+    String hint, String iconPath, Widget icon) {
   return InputDecoration(
     hintStyle: textFieldStyle,
     suffixIcon: icon,

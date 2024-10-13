@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:sleeptales/models/user_model.dart';
-import 'package:sleeptales/utils/global_functions.dart';
+
+import '/models/user_model.dart';
+import '/utils/global_functions.dart';
 
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -15,7 +16,8 @@ class Auth {
   Future<UserCredential?> signInWithEmail(String email, String password) async {
     try {
       // Sign in the user with the provided email and password
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -42,12 +44,9 @@ class Auth {
     return null;
   }
 
-
-
-
-
 // Sign up with email and password
-  Future<UserCredential?> signUpWithEmail(String name, String email, String password) async {
+  Future<UserCredential?> signUpWithEmail(
+      String name, String email, String password) async {
     try {
       return await _auth.createUserWithEmailAndPassword(email: email, password: password);
     } catch (e) {
@@ -72,7 +71,7 @@ class Auth {
 
       // Authenticate with Firebase using the credentials
       final OAuthCredential credential =
-      FacebookAuthProvider.credential(result.accessToken!.token);
+          FacebookAuthProvider.credential(result.accessToken!.tokenString);
       return _auth.signInWithCredential(credential);
     } catch (e) {
       // Handle errors
@@ -85,7 +84,8 @@ class Auth {
     try {
       // Log in with Google
       final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
-      final GoogleSignInAuthentication googleAuth = await googleSignInAccount!.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleSignInAccount!.authentication;
 
       // Authenticate with Firebase using the credentials
       final OAuthCredential credential = GoogleAuthProvider.credential(
@@ -94,9 +94,6 @@ class Auth {
       );
       // Sign in with Firebase
       final UserCredential userCredential = await _auth.signInWithCredential(credential);
-
-
-
 
       return userCredential;
     } catch (e) {
@@ -121,14 +118,13 @@ class Auth {
       );
       // Sign in with Firebase
       final UserCredential userCredential = await _auth.signInWithCredential(credential);
-      print("name ${userCredential.user!.displayName}");
+      debugPrint("name ${userCredential.user!.displayName}");
       return userCredential;
     } catch (e) {
-      print("error in apple sign in $e");
+      debugPrint("error in apple sign in $e");
       return null;
     }
   }
-
 
   // Link a user's account with their email and password
   Future<UserCredential?> linkWithEmail(String email, String password) async {
@@ -147,12 +143,11 @@ class Auth {
     }
   }
 
-
-  Future<UserModel?> addUserToServer(UserCredential userCredential,String nameC,List<int> _selectedGoalsOptions,int _selectedOption,bool anually) async {
-
+  Future<UserModel?> addUserToServer(UserCredential userCredential, String nameC,
+      List<int> selectedGoalsOptions, int selectedOption, bool anually) async {
     UserModel? userModel;
 
-    final List<String> _options = [
+    final List<String> options = [
       'Reduce Anxiety',
       'Improve Performance',
       'Build Self Esteem',
@@ -162,11 +157,10 @@ class Auth {
       'Develop Gratitude',
     ];
 
-    final List<String> _selectedOptions = _selectedGoalsOptions.map((index) => _options[index]).toList();
+    final List<String> selectedOptions =
+        selectedGoalsOptions.map((index) => options[index]).toList();
 
-
-
-    final List<String> _optionsString = [
+    final List<String> optionsString = [
       'Billboard',
       'App Store or Google',
       'TV Ad',
@@ -179,39 +173,49 @@ class Auth {
       'Other'
     ];
 
+    // Get the user's name and email
+    final User? user = userCredential.user;
+    String? name;
+    if (user!.displayName != null) {
+      name = user.displayName;
+    } else {
+      name = nameC;
+    }
 
-      // Get the user's name and email
-      final User? user = userCredential.user;
-      String? name;
-      if(user!.displayName != null){
-        name = user.displayName;
-      }else{
-        name = nameC;
-      }
+    final String? email = user.email;
+    final String? photoURL = user.photoURL;
+    String subscriptionType;
+    if (anually) {
+      subscriptionType = "Anually";
+    } else {
+      subscriptionType = "Monthly";
+    }
 
-      final String? email = user.email;
-      final String? photoURL = user.photoURL;
-      String subscription_type;
-      if(anually)
-      subscription_type = "Anually";
-      else
-        subscription_type = "Monthly";
+    userModel = UserModel(
+        id: user.uid,
+        email: email,
+        language: "en",
+        photoURL: photoURL,
+        name: name,
+        goals: selectedOptions,
+        heardFrom: optionsString[selectedOption]);
 
-
-
-      userModel = UserModel(id: user.uid, email: email, language: "en", photoURL:photoURL,name: name, goals: _selectedOptions, heardFrom: _optionsString[_selectedOption]);
-
-      // Add the user's name and email to the Firestore database
-      await FirebaseFirestore.instance
-          .collection('User')
-          .doc(user.uid)
-          .set({'name': name, 'email': email,'photo_url':user.photoURL,"language":"en","heard_from":_optionsString[_selectedOption],"goals":_selectedOptions,"subscription_type":subscription_type,"is_active":true,"is_premium":false,"is_admin":false});
-
-
+    // Add the user's name and email to the Firestore database
+    await FirebaseFirestore.instance.collection('User').doc(user.uid).set({
+      'name': name,
+      'email': email,
+      'photo_url': user.photoURL,
+      "language": "en",
+      "heard_from": optionsString[selectedOption],
+      "goals": selectedOptions,
+      "subscription_type": subscriptionType,
+      "is_active": true,
+      "is_premium": false,
+      "is_admin": false
+    });
 
     return userModel;
   }
-
 
   // Future<UserModel?> addgetUserFromServer(UserCredential userCredential) async {
   //   UserModel? userModel;
@@ -258,17 +262,13 @@ class Auth {
   //   return userModel;
   // }
 
-
   Future<UserModel?> getUserFromServer(UserCredential userCredential) async {
     UserModel? userModel;
 
-
     // Get the user information from the Firestore database
     final User? user = userCredential.user;
-    final DocumentSnapshot snapshot = await FirebaseFirestore.instance
-        .collection('User')
-        .doc(user?.uid)
-        .get();
+    final DocumentSnapshot snapshot =
+        await FirebaseFirestore.instance.collection('User').doc(user?.uid).get();
 
     final String? name = snapshot.get('name');
     final String? email = snapshot.get('email');
@@ -276,13 +276,17 @@ class Auth {
     final List<dynamic>? goals = snapshot.get('goals');
     final String? heardFrom = snapshot.get('heard_from');
     final String? photoURL = snapshot.get('photo_url');
-    userModel = UserModel(id: user!.uid,name:name,email: email,photoURL:photoURL,language: language,heardFrom: heardFrom,goals: goals);
-
+    userModel = UserModel(
+        id: user!.uid,
+        name: name,
+        email: email,
+        photoURL: photoURL,
+        language: language,
+        heardFrom: heardFrom,
+        goals: goals);
 
     return userModel;
   }
-
-
 
   void sendEmailVerification() async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -303,6 +307,4 @@ class Auth {
       // You can display an error message to the user indicating that the password reset email could not be sent
     }
   }
-
-
 }

@@ -1,29 +1,28 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sleeptales/language_constants.dart';
-import 'package:sleeptales/models/user_model.dart';
-import 'package:sleeptales/screens/forgot_password_screen.dart';
-import 'package:sleeptales/screens/home_screen.dart';
-import 'package:sleeptales/utils/global_functions.dart';
-import 'package:sleeptales/widgets/custom_btn.dart';
-import 'package:sleeptales/widgets/login_footer.dart';
+
+import '/language_constants.dart';
+import '/models/user_model.dart';
+import '/screens/forgot_password_screen.dart';
+import '/screens/home_screen.dart';
+import '/utils/global_functions.dart';
+import '/widgets/custom_btn.dart';
+import '/widgets/login_footer.dart';
 import '../utils/colors.dart';
 import '../widgets/widget_email_textField.dart';
 import 'authentication.dart';
 
-
 class LoginScreen extends StatefulWidget {
-   Function callback;
-  LoginScreen({Key? key,required this.callback}) : super(key: key);
+  final Function callback;
+
+  const LoginScreen({super.key, required this.callback});
 
   @override
-  State<LoginScreen> createState() {
-    return LoginScreenState();
-  }
+  State<LoginScreen> createState() => LoginScreenState();
 }
 
-class LoginScreenState extends State<LoginScreen>{
+class LoginScreenState extends State<LoginScreen> {
   static final _formKey = GlobalKey<FormState>();
   String? _email;
   String? _password;
@@ -34,55 +33,68 @@ class LoginScreenState extends State<LoginScreen>{
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Padding(
-        padding: EdgeInsets.symmetric(vertical: 16.h,horizontal: 16.w),
+        padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-
-              Padding(padding: EdgeInsets.only(top: 10.h),
-                child:   Stack(
+              Padding(
+                padding: EdgeInsets.only(top: 10.h),
+                child: Stack(
                   alignment: Alignment.center,
                   children: [
                     Align(
                       alignment: Alignment.topRight,
-                      child: Padding(padding: EdgeInsets.fromLTRB(10.w,0.h,0.w,0.h),
-                        child: IconButton(iconSize: 22, icon: Icon(Icons.close,color: Colors.white,), onPressed: (){
-                          Navigator.pop(context);
-                        },),
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(10.w, 0.h, 0.w, 0.h),
+                        child: IconButton(
+                          iconSize: 22,
+                          icon: Icon(
+                            Icons.close,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
                       ),
                     ),
                     Align(
                       alignment: Alignment.center,
-                      child:    Column(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Padding(padding:  EdgeInsets.fromLTRB(20.w,5.h,20.w,5.h),
-                            child: Text(translation(context).loginToSleepytales,textAlign: TextAlign.center,style: TextStyle(fontSize: 24.sp,fontWeight: FontWeight.bold),),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(20.w, 5.h, 20.w, 5.h),
+                            child: Text(
+                              translation(context).loginToSleepytales,
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold),
+                            ),
                           ),
-
                         ],
                       ),
                     )
-
                   ],
                 ),
               ),
-
-              Padding(padding: EdgeInsets.fromLTRB(0.w,30.h,0.w,10.h),
-                child:Align(
+              Padding(
+                padding: EdgeInsets.fromLTRB(0.w, 30.h, 0.w, 10.h),
+                child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("${translation(context).email}:",style: TextStyle(fontSize: 16.sp)),
+                  child: Text("${translation(context).email}:",
+                      style: TextStyle(fontSize: 16.sp)),
                 ),
               ),
-
               CustomeEditText(
                 hint: "",
                 validator: (value) {
                   if (value.isEmpty) {
                     return "Please enter your email";
-                  } else if (!(RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                  } else if (!(RegExp(
+                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                       .hasMatch(value))) {
                     return "Please enter a valid email";
                   }
@@ -94,18 +106,17 @@ class LoginScreenState extends State<LoginScreen>{
                   setState(() {
                     _email = value;
                   });
-
                 },
               ),
-
-
               SizedBox(
                 height: 5.h,
               ),
-              Padding(padding: EdgeInsets.fromLTRB(0.w,10.h,0.w,10.h),
-                child:Align(
+              Padding(
+                padding: EdgeInsets.fromLTRB(0.w, 10.h, 0.w, 10.h),
+                child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(translation(context).password,style: TextStyle(fontSize: 16.sp)),
+                  child: Text(translation(context).password,
+                      style: TextStyle(fontSize: 16.sp)),
                 ),
               ),
               PasswordEditText(
@@ -125,100 +136,98 @@ class LoginScreenState extends State<LoginScreen>{
                   return null;
                 },
                 onchange: (String value) {
-
                   setState(() {
                     _password = value;
                   });
-
                 },
               ),
-
-
               SizedBox(
                 height: 40.h,
               ),
-
               Align(
                 alignment: Alignment.centerLeft,
-                child: LoginFotter(alignment:MainAxisAlignment.start,sentenceText: "${translation(context).notMember}?", loginSingUpText: translation(context).signUp, onPress: (){
-                  Navigator.pop(context);
-                  widget.callback();
-                }),
+                child: LoginFotter(
+                    alignment: MainAxisAlignment.start,
+                    sentenceText: "${translation(context).notMember}?",
+                    loginSingUpText: translation(context).signUp,
+                    onPress: () {
+                      Navigator.pop(context);
+                      widget.callback();
+                    }),
               ),
-
               Align(
                 alignment: Alignment.centerLeft,
-                child: LoginFotter(alignment:MainAxisAlignment.start,sentenceText: "${translation(context).forgotYourPassword}??", loginSingUpText: translation(context).reset, onPress: (){
-                  showModalBottomSheet<void>(
-                    enableDrag: false,
-                    isScrollControlled:true,
-                    backgroundColor: colorBackground,
-                    shape: RoundedRectangleBorder(
-                        borderRadius:BorderRadius.only(
-                            topLeft:  Radius.circular(24.h),
-                            topRight:  Radius.circular(24.h))
-                    ),
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Form(child: Builder(
-                          builder: (cxt) {
+                child: LoginFotter(
+                    alignment: MainAxisAlignment.start,
+                    sentenceText: "${translation(context).forgotYourPassword}??",
+                    loginSingUpText: translation(context).reset,
+                    onPress: () {
+                      showModalBottomSheet<void>(
+                        enableDrag: false,
+                        isScrollControlled: true,
+                        backgroundColor: colorBackground,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(24.h),
+                                topRight: Radius.circular(24.h))),
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Form(child: Builder(builder: (cxt) {
                             return Container(
                                 height: MediaQuery.of(context).size.height * 0.88,
                                 clipBehavior: Clip.hardEdge,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.only(
-                                        topLeft:  Radius.circular(24.h),
-                                        topRight:  Radius.circular(24.h))
-                                ),
-                                child: ForgotPasswordScreen()
-                            );
+                                        topLeft: Radius.circular(24.h),
+                                        topRight: Radius.circular(24.h))),
+                                child: ForgotPasswordScreen());
                           }));
-                    },
-                  );
-                }),
+                        },
+                      );
+                    }),
               ),
-
               SizedBox(
                 height: 20.h,
               ),
-
               CustomButton(
                 title: translation(context).login,
                 onPress: () async {
                   if (_formKey.currentState!.validate()) {
                     showLoaderDialog(context, "Logging in...");
-                   // _formKey.currentState!.save();
+                    // _formKey.currentState!.save();
                     // TODO: call backend API to register user with provided information
 
-                    if(_email != null){
-                    try {
-                      Auth auth = Auth();
-                      UserCredential? user = await auth.signInWithEmail(_email!, _password!);
-                      if(user !=  null){
-                        UserModel? userModel = await auth.getUserFromServer(user);
-                        if(userModel == null){
-                          showToast(translation(context).unableToSignIn);
+                    if (_email != null) {
+                      try {
+                        Auth auth = Auth();
+                        UserCredential? user =
+                            await auth.signInWithEmail(_email!, _password!);
+                        if (user != null) {
+                          UserModel? userModel = await auth.getUserFromServer(user);
+                          if (userModel == null) {
+                            showToast(translation(context).unableToSignIn);
+                            Navigator.pop(context);
+                          } else {
+                            await saveUser(userModel);
+                            Navigator.pop(context);
+                            pushRemoveAll(context, HomeScreen());
+                          }
+                        } else {
                           Navigator.pop(context);
-                        }else{
-                          await saveUser(userModel);
-                          Navigator.pop(context);
-                          pushRemoveAll(context, HomeScreen());
                         }
-                      }else{
+                      } catch (e) {
+                        showToast(e.toString());
                         Navigator.pop(context);
                       }
-                    }catch(e){
-                      showToast(e.toString());
-                      Navigator.pop(context);
-                    }
-                    }else{
+                    } else {
                       showToast("email is null");
                     }
-                  }else{
+                  } else {
                     showToast("wrong input");
                   }
-
-                }, color: Colors.white, textColor: Colors.black,
+                },
+                color: Colors.white,
+                textColor: Colors.black,
               ),
             ],
           ),

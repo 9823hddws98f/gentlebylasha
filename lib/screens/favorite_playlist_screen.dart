@@ -3,21 +3,20 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sleeptales/language_constants.dart';
-import 'package:sleeptales/models/user_model.dart';
-import 'package:sleeptales/screens/playlist_tracks_screen.dart';
-import 'package:sleeptales/utils/colors.dart';
-import 'package:sleeptales/utils/global_functions.dart';
-import 'package:sleeptales/widgets/custom_tab_button.dart';
-import 'package:sleeptales/widgets/playlist_item.dart';
-import 'package:sleeptales/widgets/shimmerwidgets/shimmer_playlist_item.dart';
+import '/language_constants.dart';
+import '/models/user_model.dart';
+import '/screens/playlist_tracks_screen.dart';
+import '/utils/colors.dart';
+import '/utils/global_functions.dart';
+import '/widgets/custom_tab_button.dart';
+import '/widgets/playlist_item.dart';
+import '/widgets/shimmerwidgets/shimmer_playlist_item.dart';
 import '../models/block.dart';
 import '../widgets/topbar_widget.dart';
 
 class FavoritePlaylistScreen extends StatefulWidget {
-
   final Function panelFunction;
-  const FavoritePlaylistScreen({super.key,required this.panelFunction});
+  const FavoritePlaylistScreen({super.key, required this.panelFunction});
 
   @override
   _FavoritePlaylistScreenState createState() => _FavoritePlaylistScreenState();
@@ -36,19 +35,18 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen> {
     super.initState();
     getFavPlayListArray();
     fetchFavoriteTracks();
-
   }
 
   Future<void> getFavPlayListArray() async {
-    favoritesPlayList =  await getFavoritePlayListFromSharedPref();
-    setState(() {
-    });
+    favoritesPlayList = await getFavoritePlayListFromSharedPref();
+    setState(() {});
   }
 
   // Call this function to start listening for changes to the favorites array
   Future<void> startListeningToFavoritePlaylist() async {
     UserModel user = await getUser();
-    final favoritesCollection = FirebaseFirestore.instance.collection('favorites_playlist');
+    final favoritesCollection =
+        FirebaseFirestore.instance.collection('favorites_playlist');
     final userFavoritesDocRef = favoritesCollection.doc(user.id);
 
     favoritesSubscription = userFavoritesDocRef.snapshots().listen((snapshot) {
@@ -59,6 +57,7 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen> {
       }
     });
   }
+
   // Call this function to stop listening for changes to the favorites array
   void stopListeningToFavorites() {
     favoritesSubscription?.cancel();
@@ -72,7 +71,7 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen> {
     try {
       UserModel user = await getUser();
       final favoritesRef =
-      FirebaseFirestore.instance.collection('favorites_playlist').doc(user.id);
+          FirebaseFirestore.instance.collection('favorites_playlist').doc(user.id);
       await favoritesRef.update({
         'playlist': FieldValue.arrayRemove([blockId])
       });
@@ -104,16 +103,19 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen> {
       for (var i = 0; i < batchCount; i++) {
         final start = i * batchSize;
         final end = (i + 1) * batchSize;
-        final batchFavorites = favorites.sublist(start, end < totalFavorites ? end : totalFavorites);
+        final batchFavorites =
+            favorites.sublist(start, end < totalFavorites ? end : totalFavorites);
 
-        final tracksQuerySnapshot = await tracksCollection.where(
-          FieldPath.documentId,
-          whereIn: batchFavorites,
-        ).get();
+        final tracksQuerySnapshot = await tracksCollection
+            .where(
+              FieldPath.documentId,
+              whereIn: batchFavorites,
+            )
+            .get();
 
         for (var doc in tracksQuerySnapshot.docs) {
-          Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-          Block block = Block.fromMap(doc.id,data);
+          Map<String, dynamic> data = doc.data();
+          Block block = Block.fromMap(doc.id, data);
           favoritePlaylist.add(block);
         }
       }
@@ -134,7 +136,7 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen> {
 
     try {
       await startListeningToFavoritePlaylist();
-    } on FirebaseException catch (e) {
+    } on FirebaseException {
       isLoading = false;
       exception = true;
       // Handle Firebase exception
@@ -153,80 +155,97 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen> {
     stopListeningToFavorites();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       body: SafeArea(
         child: SizedBox(
             child: Padding(
                 padding: EdgeInsets.all(10.w),
-                child:Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    TopBar(heading: translation(context).favoritePlaylist, onPress: (){
-                      Navigator.pop(context);
-                    }),
-
-                    SizedBox(height: 20.h,),
-                    if(favoritePlaylist.isNotEmpty && !isLoading)...[
+                    TopBar(
+                        heading: translation(context).favoritePlaylist,
+                        onPress: () {
+                          Navigator.pop(context);
+                        }),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    if (favoritePlaylist.isNotEmpty && !isLoading) ...[
                       Expanded(
                           child: SingleChildScrollView(
-                            padding: EdgeInsets.only(bottom: 165.h),
-                            child:
-                            Column(
-                              children: [
-                                for (int index = 0; index < favoritePlaylist.length; index++)
-                                  PlaylistItem(
-                                    block: favoritePlaylist[index],
-                                    tap: () {
-                                      // Handle item tap
-                                      pushName(context, PlayListTracksScreen(panelFunction: widget.panelFunction, block: favoritePlaylist[index]));
-                                    },
-                                    favoriteTap: () {
-                                      // Handle favorite tap
-                                      removePlayListFavorites(favoritePlaylist[index].id);
-                                    },
-                                  ),
-                              ],
-                            ),
-                          )
-                      )]else if(favoritePlaylist.isEmpty && exception)...[
-                      Expanded(child:Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children:[
-                            Text("Something went wrong",style: TextStyle(fontSize: 16.sp),),
-                            SizedBox(height: 20.h,),
-                            CustomTabButton(title: "Retry", onPress: (){
-                              fetchFavoriteTracks();
-                            }, color: Colors.white, textColor: textColor)
-                          ]
+                        padding: EdgeInsets.only(bottom: 165.h),
+                        child: Column(
+                          children: [
+                            for (int index = 0; index < favoritePlaylist.length; index++)
+                              PlaylistItem(
+                                block: favoritePlaylist[index],
+                                tap: () {
+                                  // Handle item tap
+                                  pushName(
+                                      context,
+                                      PlayListTracksScreen(
+                                          panelFunction: widget.panelFunction,
+                                          block: favoritePlaylist[index]));
+                                },
+                                favoriteTap: () {
+                                  // Handle favorite tap
+                                  removePlayListFavorites(favoritePlaylist[index].id);
+                                },
+                              ),
+                          ],
+                        ),
                       ))
-                    ]else if(favoritePlaylist.isEmpty && !exception && !isLoading)...[
-                      Expanded(child:Column(
+                    ] else if (favoritePlaylist.isEmpty && exception) ...[
+                      Expanded(
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                            Text(
+                              "Something went wrong",
+                              style: TextStyle(fontSize: 16.sp),
+                            ),
+                            SizedBox(
+                              height: 20.h,
+                            ),
+                            CustomTabButton(
+                                title: "Retry",
+                                onPress: () {
+                                  fetchFavoriteTracks();
+                                },
+                                color: Colors.white,
+                                textColor: textColor)
+                          ]))
+                    ] else if (favoritePlaylist.isEmpty && !exception && !isLoading) ...[
+                      Expanded(
+                          child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Center(
-                              child:Icon(Icons.favorite_border,size: 40.h,)
+                              child: Icon(
+                            Icons.favorite_border,
+                            size: 40.h,
+                          )),
+                          SizedBox(
+                            height: 5.h,
                           ),
-                          SizedBox(height: 5.h,),
-                          Text("You have not added any playlists to favorites",style: TextStyle(fontSize: 16.sp),)
+                          Text(
+                            "You have not added any playlists to favorites",
+                            style: TextStyle(fontSize: 16.sp),
+                          )
                         ],
-                      ))]
-                    else...[_buildShimmerListView()],
-
+                      ))
+                    ] else ...[
+                      _buildShimmerListView()
+                    ],
                   ],
-                )
-            )
-
-
-        ),
+                ))),
       ),
     );
-
-
-
   }
-
 
   Widget _buildShimmerListView() {
     return Expanded(
@@ -234,7 +253,7 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen> {
         child: Column(
           children: List.generate(
             6,
-                (index) => Padding(
+            (index) => Padding(
               padding: EdgeInsets.only(bottom: 16.h),
               child: ShimmerPlaylistItem(),
             ),
@@ -243,5 +262,4 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen> {
       ),
     );
   }
-
 }

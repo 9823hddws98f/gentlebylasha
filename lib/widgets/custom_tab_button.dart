@@ -6,8 +6,7 @@ class CustomTabButton extends StatelessWidget {
   final void Function() onPress;
   final Color color;
   final Color textColor;
-  const CustomTabButton({Key? key, required this.title, required this.onPress,required this.color, required this.textColor})
-      : super(key: key);
+  const CustomTabButton({super.key, required this.title, required this.onPress,required this.color, required this.textColor});
 
   @override
   Widget build(BuildContext context) {

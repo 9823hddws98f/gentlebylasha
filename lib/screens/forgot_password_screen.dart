@@ -1,77 +1,88 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sleeptales/utils/global_functions.dart';
-import 'package:sleeptales/widgets/custom_btn.dart';
+import '/utils/global_functions.dart';
+import '/widgets/custom_btn.dart';
 import '../widgets/widget_email_textField.dart';
 import 'authentication.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
-  const ForgotPasswordScreen({Key? key}) : super(key: key);
+  const ForgotPasswordScreen({super.key});
   @override
   State<ForgotPasswordScreen> createState() {
     return ForgotPasswordState();
   }
 }
 
-class ForgotPasswordState extends State<ForgotPasswordScreen>{
+class ForgotPasswordState extends State<ForgotPasswordScreen> {
   static final _formKey = GlobalKey<FormState>();
   String? _email;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset:false,
+      resizeToAvoidBottomInset: false,
       body: Padding(
-        padding: EdgeInsets.symmetric(vertical: 16.h,horizontal: 16.w),
+        padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-
-              Padding(padding: EdgeInsets.only(top: 10.h),
-                child:   Stack(
+              Padding(
+                padding: EdgeInsets.only(top: 10.h),
+                child: Stack(
                   alignment: Alignment.center,
                   children: [
                     Align(
                       alignment: Alignment.topRight,
-                      child: Padding(padding: EdgeInsets.fromLTRB(10.w,0.h,0.w,0.h),
-                        child: IconButton(iconSize: 22, icon: Icon(Icons.close,color: Colors.white,), onPressed: (){
-                          Navigator.pop(context);
-                        },),
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(10.w, 0.h, 0.w, 0.h),
+                        child: IconButton(
+                          iconSize: 22,
+                          icon: Icon(
+                            Icons.close,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
                       ),
                     ),
                     Align(
                       alignment: Alignment.center,
-                      child:    Column(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Padding(padding:  EdgeInsets.fromLTRB(20.w,5.h,20.w,5.h),
-                            child: Text("Login to Sleeptales",textAlign: TextAlign.center,style: TextStyle(fontSize: 24.sp,fontWeight: FontWeight.bold),),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(20.w, 5.h, 20.w, 5.h),
+                            child: Text(
+                              "Login to Sleeptales",
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold),
+                            ),
                           ),
-
                         ],
                       ),
                     )
-
                   ],
                 ),
               ),
-
-
-
-
-              Padding(padding: EdgeInsets.fromLTRB(0.w,20.h,0.w,20.h),
-                child:Align(
+              Padding(
+                padding: EdgeInsets.fromLTRB(0.w, 20.h, 0.w, 20.h),
+                child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("Enter your email we will send a link to reset your password",style: TextStyle(fontSize: 16.sp)),
+                  child: Text(
+                      "Enter your email we will send a link to reset your password",
+                      style: TextStyle(fontSize: 16.sp)),
                 ),
               ),
-
-              Padding(padding: EdgeInsets.fromLTRB(0.w,10.h,0.w,10.h),
-                child:Align(
+              Padding(
+                padding: EdgeInsets.fromLTRB(0.w, 10.h, 0.w, 10.h),
+                child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("Email:",style: TextStyle(fontSize: 16.sp)),
+                  child: Text("Email:", style: TextStyle(fontSize: 16.sp)),
                 ),
               ),
               CustomeEditText(
@@ -79,7 +90,8 @@ class ForgotPasswordState extends State<ForgotPasswordScreen>{
                 validator: (value) {
                   if (value.isEmpty) {
                     return "Please enter your email";
-                  } else if (!(RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                  } else if (!(RegExp(
+                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                       .hasMatch(value))) {
                     return "Please enter a valid email";
                   }
@@ -91,23 +103,14 @@ class ForgotPasswordState extends State<ForgotPasswordScreen>{
                   setState(() {
                     _email = value;
                   });
-
                 },
               ),
-
-
               SizedBox(
                 height: 40.h,
               ),
-
-
-
-
-
               SizedBox(
                 height: 20.h,
               ),
-
               CustomButton(
                 title: "Send Password Reset Email",
                 onPress: () async {
@@ -116,24 +119,26 @@ class ForgotPasswordState extends State<ForgotPasswordScreen>{
                     // _formKey.currentState!.save();
                     // TODO: call backend API to register user with provided information
 
-                    if(_email != null){
+                    if (_email != null) {
                       showLoaderDialog(context, "Sending password reset email...");
                       try {
                         Auth auth = Auth();
                         await auth.sendPasswordResetEmail(_email!);
                         Navigator.pop(context);
                         Navigator.pop(context);
-                      }catch(e){
+                      } catch (e) {
                         showToast(e.toString());
                         Navigator.pop(context);
                       }
-                    }else{
+                    } else {
                       showToast("Please enter your email");
                     }
-                  }else{
+                  } else {
                     showToast("wrong input");
                   }
-                }, color: Colors.white, textColor: Colors.black,
+                },
+                color: Colors.white,
+                textColor: Colors.black,
               ),
             ],
           ),

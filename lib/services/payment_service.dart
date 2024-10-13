@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
-import 'package:flutter_inapp_purchase/modules.dart';
 
 class PaymentService {
   /// We want singelton object of ``PaymentService`` so create private constructor
@@ -38,12 +37,12 @@ class PaymentService {
 
   /// view of the app will subscribe to this to get notified
   /// when premium status of the user changes
-  ObserverList<Function> _proStatusChangedListeners =
-  new ObserverList<Function>();
+  final ObserverList<Function> _proStatusChangedListeners =
+  ObserverList<Function>();
 
   /// view of the app will subscribe to this to get errors of the purchase
-  ObserverList<Function(String)> _errorListeners =
-  new ObserverList<Function(String)>();
+  final ObserverList<Function(String)> _errorListeners =
+  ObserverList<Function(String)>();
 
   /// logged in user's premium status
   bool _isProUser = false;
@@ -91,16 +90,16 @@ class PaymentService {
 
   /// Call this method to notify all the subsctibers of _proStatusChangedListeners
   void _callProStatusChangedListeners() {
-    _proStatusChangedListeners.forEach((Function callback) {
+    for (var callback in _proStatusChangedListeners) {
       callback();
-    });
+    }
   }
 
   /// Call this method to notify all the subsctibers of _errorListeners
   void _callErrorListeners(String error) {
-    _errorListeners.forEach((Function callback) {
+    for (var callback in _errorListeners) {
       callback(error);
-    });
+    }
   }
 
   Future<void> _handlePurchaseUpdateIOS(PurchasedItem? purchasedItem) async {
@@ -111,7 +110,7 @@ class PaymentService {
         break;
       case TransactionState.failed:
         _callErrorListeners("Transaction Failed");
-        FlutterInappPurchase.instance.finishTransaction(purchasedItem!);
+        FlutterInappPurchase.instance.finishTransaction(purchasedItem);
         break;
       case TransactionState.purchased:
         await _verifyAndFinishTransaction(purchasedItem);
@@ -119,7 +118,7 @@ class PaymentService {
       case TransactionState.purchasing:
         break;
       case TransactionState.restored:
-        FlutterInappPurchase.instance.finishTransaction(purchasedItem!);
+        FlutterInappPurchase.instance.finishTransaction(purchasedItem);
         break;
       default:
     }
@@ -150,7 +149,7 @@ class PaymentService {
     bool isValid = false;
     try {
       // Call API
-      isValid = await _verifyPurchase(purchasedItem);
+      isValid = _verifyPurchase(purchasedItem);
     }
     // on NoInternetException {
     //   _callErrorListeners("No Internet");
@@ -175,9 +174,6 @@ class PaymentService {
 
 
   Future<List<IAPItem>> get products async {
-    if (_products == null) {
-      await _getItems();
-    }
     return _products;
   }
 
@@ -186,7 +182,7 @@ class PaymentService {
     await FlutterInappPurchase.instance.getSubscriptions(_productIds);
     _products = [];
     for (var item in items) {
-      this._products.add(item);
+      _products.add(item);
     }
   }
 }

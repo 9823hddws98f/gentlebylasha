@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sleeptales/utils/colors.dart';
+import '/utils/colors.dart';
 import '../../utils/styles.dart';
 
 class CustomeEditText extends StatelessWidget {
@@ -12,15 +12,14 @@ class CustomeEditText extends StatelessWidget {
   final void Function(String value) onchange;
   String hint;
 
-  CustomeEditText({
-    Key? key,
-    this.length,
-    required this.validator,
-    //required this.controller,
-    required this.inputType,
-    required this.onchange,
-    required this.hint
-  }) : super(key: key);
+  CustomeEditText(
+      {super.key,
+      this.length,
+      required this.validator,
+      //required this.controller,
+      required this.inputType,
+      required this.onchange,
+      required this.hint});
 
   @override
   Widget build(BuildContext context) {
@@ -28,34 +27,33 @@ class CustomeEditText extends StatelessWidget {
         validator: (value) {
           return validator(value.toString());
         },
-      onChanged: onchange,
+        onChanged: onchange,
         cursorColor: Colors.white,
-      textAlign: TextAlign.left,
-      //controller: controller,
-      style: textFieldStyle,
-      keyboardType: inputType,
+        textAlign: TextAlign.left,
+        //controller: controller,
+        style: textFieldStyle,
+        keyboardType: inputType,
         autovalidateMode: AutovalidateMode.onUserInteraction,
-      decoration: decorationInputStyle(hint));
+        decoration: decorationInputStyle(hint));
   }
 }
 
 class CustomeEditTextFullName extends StatelessWidget {
   String? Function(String value) validator;
- // final TextEditingController controller;
+  // final TextEditingController controller;
   final TextInputType inputType;
   int? length = 50;
   final void Function(String value) onchange;
   String hint;
 
-  CustomeEditTextFullName({
-    Key? key,
-    this.length,
-    required this.validator,
-    //required this.controller,
-    required this.inputType,
-    required this.onchange,
-    required this.hint
-  }) : super(key: key);
+  CustomeEditTextFullName(
+      {super.key,
+      this.length,
+      required this.validator,
+      //required this.controller,
+      required this.inputType,
+      required this.onchange,
+      required this.hint});
 
   @override
   Widget build(BuildContext context) {
@@ -69,29 +67,29 @@ class CustomeEditTextFullName extends StatelessWidget {
           FilteringTextInputFormatter.allow(RegExp("[a-zA-Z ]")),
         ],
         textAlign: TextAlign.left,
-       // controller: controller,
+        // controller: controller,
         style: textFieldStyle,
         keyboardType: inputType,
         autovalidateMode: AutovalidateMode.onUserInteraction,
-        decoration: decorationInputStyle(hint)
-    );
+        decoration: decorationInputStyle(hint));
   }
 }
+
 class CustomeEditTextName extends StatelessWidget {
   String? Function(String value) validator;
- // final TextEditingController controller;
+  // final TextEditingController controller;
   final TextInputType inputType;
   int? length = 50;
   final void Function(String value) onchange;
 
   CustomeEditTextName({
-    Key? key,
+    super.key,
     this.length,
     required this.validator,
-   // required this.controller,
+    // required this.controller,
     required this.inputType,
     required this.onchange,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +137,7 @@ class PasswordEditText extends StatelessWidget {
   final bool isHide;
 
   PasswordEditText(
-      {required this.validator,
+      {super.key, required this.validator,
       //required this.controller,
       required this.onchange,
       required this.onTap,
@@ -157,7 +155,7 @@ class PasswordEditText extends StatelessWidget {
       enableSuggestions: false,
       autocorrect: false,
       textAlign: TextAlign.left,
-     // controller: controller,
+      // controller: controller,
       style: textFieldStyle,
       keyboardType: TextInputType.text,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -174,7 +172,6 @@ class PasswordEditText extends StatelessWidget {
             ),
           ),
         ),
-
       ),
     );
   }

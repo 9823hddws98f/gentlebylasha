@@ -9,16 +9,16 @@ import 'mp3_card_list_item_width.dart';
 class WidthTrackListHorizontalNew extends StatelessWidget {
   final List<AudioTrack> audiList;
   final Function() tap;
-  bool musicList;
-  Function panelFunction;
+  final bool musicList;
+  final Function panelFunction;
 
-  WidthTrackListHorizontalNew({
-    Key? key,
+  const WidthTrackListHorizontalNew({
+    super.key,
     required this.audiList,
     required this.tap,
     required this.musicList,
     required this.panelFunction,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class WidthTrackListHorizontalNew extends StatelessWidget {
         },
         children: List.generate(
           audiList.length,
-              (index) => Mp3ListItem(
+          (index) => Mp3ListItem(
             key: Key('$index'),
             imageUrl: audiList[index].thumbnail,
             mp3Name: audiList[index].title,

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sleeptales/models/audiofile_model.dart';
-import 'package:sleeptales/models/category_model.dart';
+import '/models/audiofile_model.dart';
+import '/models/category_model.dart';
 
 import '../utils/global_functions.dart';
 
@@ -11,15 +11,12 @@ class Collection {
   final List<Categories> collectionCategory;
   List<AudioTrack> collectionTracks;
 
-
-
-  Collection({
-    required this.collectionId,
-    required this.collectionTitle,
-    required this.collectionThumbnail,
-    required this.collectionTracks,
-    required this.collectionCategory
-  });
+  Collection(
+      {required this.collectionId,
+      required this.collectionTitle,
+      required this.collectionThumbnail,
+      required this.collectionTracks,
+      required this.collectionCategory});
 
   factory Collection.fromMap(Map<String, dynamic> map) {
     return Collection(
@@ -45,7 +42,6 @@ class Collection {
       collectionTracks: [],
     );
   }
-
 
   Future<List<Categories>> getListCategories() async {
     List<Categories> list = await getCategories();

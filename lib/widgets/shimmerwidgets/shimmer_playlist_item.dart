@@ -7,8 +7,8 @@ import '../../utils/colors.dart';
 class ShimmerPlaylistItem extends StatelessWidget {
 
   const ShimmerPlaylistItem({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

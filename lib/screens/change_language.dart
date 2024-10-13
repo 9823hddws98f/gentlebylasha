@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sleeptales/widgets/topbar_widget.dart';
+import '/widgets/topbar_widget.dart';
 import '../language_constants.dart';
 import '../languages.dart';
 import '../main.dart';
 
-
 class ChangeLanguageScreen extends StatefulWidget {
   final String? email;
-  const ChangeLanguageScreen({Key? key,this.email}) : super(key: key);
+  const ChangeLanguageScreen({super.key, this.email});
 
   @override
   State<ChangeLanguageScreen> createState() {
@@ -16,11 +15,13 @@ class ChangeLanguageScreen extends StatefulWidget {
   }
 }
 
-class _ChangeLanguageScreen extends State<ChangeLanguageScreen> {// default selection
+class _ChangeLanguageScreen extends State<ChangeLanguageScreen> {
+  // default selection
   int languageIndex = 0;
   Future<void> _handleLanguageChange(int index) async {
-    Locale _locale = await setLocale(Language.languageList().elementAt(index).languageCode);
-    MyApp.setLocale(context, _locale);
+    Locale locale =
+        await setLocale(Language.languageList().elementAt(index).languageCode);
+    MyApp.setLocale(context, locale);
 
     setState(() {
       languageIndex = index;
@@ -29,56 +30,61 @@ class _ChangeLanguageScreen extends State<ChangeLanguageScreen> {// default sele
 
   Future<void> getCurrentLanguageIndex() async {
     String languageCode = await getLanguageCode();
-    if(languageCode == "de"){
+    if (languageCode == "de") {
       languageIndex = 1;
-    }else{
+    } else {
       languageIndex = 0;
     }
-    setState(() {
-
-    });
+    setState(() {});
   }
+
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       body: SafeArea(
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          child:SingleChildScrollView(
+          child: SingleChildScrollView(
               child: Padding(
                   padding: EdgeInsets.all(10.w),
-                  child:Column(
+                  child: Column(
                     children: [
-                      TopBar(heading: translation(context).changeLanguage, onPress: (){
-                        Navigator.pop(context);
-                      }),
-
-                      SizedBox(height: 20.h,),
-
+                      TopBar(
+                          heading: translation(context).changeLanguage,
+                          onPress: () {
+                            Navigator.pop(context);
+                          }),
+                      SizedBox(
+                        height: 20.h,
+                      ),
                       ListTile(
                         title: const Text('English'),
-                        trailing: languageIndex == 0 ? const Icon(Icons.check,color: Colors.white,) : null,
+                        trailing: languageIndex == 0
+                            ? const Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              )
+                            : null,
                         onTap: () => _handleLanguageChange(0),
                       ),
                       ListTile(
                         title: const Text('Dutch'),
-                        trailing: languageIndex == 1 ? const Icon(Icons.check,color: Colors.white,) : null,
+                        trailing: languageIndex == 1
+                            ? const Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              )
+                            : null,
                         onTap: () => _handleLanguageChange(1),
                       ),
-
                     ],
-                  )
-              )
-
-
-          ),
+                  ))),
         ),
       ),
     );
-
-
   }
+
   @override
   void initState() {
     super.initState();

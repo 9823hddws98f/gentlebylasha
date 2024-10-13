@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../main.dart';
 import '../models/audiofile_model.dart';
 import '../page_manager.dart';
 import '../services/service_locator.dart';
@@ -15,12 +14,12 @@ class WidthTrackListHorizontal extends StatelessWidget {
   Function panelFunction;
 
   WidthTrackListHorizontal({
-    Key? key,
+    super.key,
     required this.audiList,
     required this.tap,
     required this.musicList,
     required this.panelFunction
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

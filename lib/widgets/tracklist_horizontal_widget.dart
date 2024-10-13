@@ -14,12 +14,12 @@ class TrackListHorizontal extends StatelessWidget {
   bool musicList;
 
   TrackListHorizontal({
-    Key? key,
+    super.key,
     required this.audiList,
     required this.tap,
     required this.musicList,
     required this.panelFunction
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

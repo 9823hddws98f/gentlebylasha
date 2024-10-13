@@ -1,4 +1,5 @@
 import 'package:audio_service/audio_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 
 Future<AudioHandler> initAudioService() async {
@@ -29,24 +30,23 @@ class MyAudioHandler extends BaseAudioHandler {
     try {
       await _player.setAudioSource(_playlist);
     } catch (e) {
-      print("Error: $e");
+      debugPrint("Error: $e");
     }
   }
 
-  Future<void> emptlyPlaylist()async{
+  Future<void> emptlyPlaylist() async {
     _playlist.clear();
   }
-
 
   void _notifyAudioHandlerAboutPlaybackEvents() {
     _player.playbackEventStream.listen((PlaybackEvent event) {
       final playing = _player.playing;
       playbackState.add(playbackState.value.copyWith(
         controls: [
-          if(_playlist.length > 1)MediaControl.skipToPrevious,
+          if (_playlist.length > 1) MediaControl.skipToPrevious,
           if (playing) MediaControl.pause else MediaControl.play,
           MediaControl.stop,
-          if(_playlist.length > 1)MediaControl.skipToNext,
+          if (_playlist.length > 1) MediaControl.skipToNext,
         ],
         systemActions: const {
           MediaAction.seek,
@@ -116,14 +116,13 @@ class MyAudioHandler extends BaseAudioHandler {
   Future<void> addQueueItems(List<MediaItem> mediaItems) async {
     // manage Just Audio
 
-      _playlist.clear();
-      final audioSource = mediaItems.map(_createAudioSource);
-      _playlist.addAll(audioSource.toList());
+    _playlist.clear();
+    final audioSource = mediaItems.map(_createAudioSource);
+    _playlist.addAll(audioSource.toList());
 
-      // notify system
-      final newQueue = queue.value..addAll(mediaItems);
-      queue.add(newQueue);
-
+    // notify system
+    final newQueue = queue.value..addAll(mediaItems);
+    queue.add(newQueue);
   }
 
   @override
@@ -154,9 +153,6 @@ class MyAudioHandler extends BaseAudioHandler {
     final newQueue = queue.value..removeAt(index);
     queue.add(newQueue);
   }
-
-
-
 
   @override
   Future<void> play() => _player.play();
@@ -215,7 +211,7 @@ class MyAudioHandler extends BaseAudioHandler {
       _playlist.clear();
 
       _loadEmptyPlaylist();
-     // await _player.dispose();
+      // await _player.dispose();
       super.stop();
     }
   }

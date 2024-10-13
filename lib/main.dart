@@ -1,33 +1,31 @@
-import 'package:sleeptales/services/service_locator.dart';
 import 'package:audio_session/audio_session.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:sleeptales/screens/home_screen.dart';
-import 'package:sleeptales/screens/launch_screen.dart';
-import 'package:sleeptales/screens/splash_screen.dart';
-import 'package:sleeptales/utils/colors.dart';
-import 'package:sleeptales/utils/route_constant.dart';
-import 'firebase_options.dart';
-import 'language_constants.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
+import '/screens/home_screen.dart';
+import '/screens/launch_screen.dart';
+import '/screens/splash_screen.dart';
+import '/services/service_locator.dart';
+import '/utils/colors.dart';
+import '/utils/route_constant.dart';
+import 'firebase_options.dart';
+import 'language_constants.dart';
 
- FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
- FlutterLocalNotificationsPlugin();
-
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   tz.initializeTimeZones();
- // await initializeNotifications();
+  // await initializeNotifications();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -42,24 +40,24 @@ Future<void> main() async {
   runApp(MyApp());
 }
 
-
 void setupFirebaseMessaging() {
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print('Received message: ${message.notification?.title}');
+    debugPrint('Received message: ${message.notification?.title}');
     displayNotification(message);
   });
 }
+
 void displayNotification(RemoteMessage message) async {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
   const AndroidInitializationSettings initializationSettingsAndroid =
-  AndroidInitializationSettings('@mipmap/ic_launcher');
+      AndroidInitializationSettings('@mipmap/ic_launcher');
   final InitializationSettings initializationSettings =
-  InitializationSettings(android: initializationSettingsAndroid);
+      InitializationSettings(android: initializationSettingsAndroid);
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
   const AndroidNotificationDetails androidPlatformChannelSpecifics =
-  AndroidNotificationDetails(
+      AndroidNotificationDetails(
     'sleeptalespush112',
     'New Tracks',
     importance: Importance.high,
@@ -67,7 +65,7 @@ void displayNotification(RemoteMessage message) async {
   );
 
   const NotificationDetails platformChannelSpecifics =
-  NotificationDetails(android: androidPlatformChannelSpecifics);
+      NotificationDetails(android: androidPlatformChannelSpecifics);
 
   await flutterLocalNotificationsPlugin.show(
     0,
@@ -79,11 +77,11 @@ void displayNotification(RemoteMessage message) async {
 
 void subscribeToTopic(String topic) async {
   await FirebaseMessaging.instance.subscribeToTopic(topic);
-  print('Subscribed to topic: $topic');
+  debugPrint('Subscribed to topic: $topic');
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -112,92 +110,78 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-
     return ScreenUtilInit(
         designSize: const Size(375, 812),
         minTextAdapt: true,
         splitScreenMode: true,
-        builder:((BuildContext context,child) =>
-            MaterialApp(
+        builder: ((BuildContext context, child) => MaterialApp(
               title: "Gentle",
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
-                textTheme:
-                Theme.of(context).textTheme.apply(
-                  fontFamily: 'Nunito',
-                  bodyColor: Colors.white, //<-- SEE HERE
-                  displayColor: Colors.white, //<-- SEE HERE
-                ),
+                textTheme: Theme.of(context).textTheme.apply(
+                      fontFamily: 'Nunito',
+                      bodyColor: Colors.white, //<-- SEE HERE
+                      displayColor: Colors.white, //<-- SEE HERE
+                    ),
                 iconTheme: const IconThemeData(
                   color: Colors.white, // set the default color for icons
                 ),
                 unselectedWidgetColor: Colors.white,
                 scaffoldBackgroundColor: colorBackground,
                 colorScheme: ThemeData().colorScheme.copyWith(
-                  primary: colorBackground,
-                  secondary: Colors.white,
-                  background: colorBackground,
-                ),
+                      primary: colorBackground,
+                      secondary: Colors.white,
+                      surface: colorBackground,
+                    ),
               ),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
-              initialRoute: SplashPath,
+              initialRoute: splashPath,
               routes: {
-                SplashPath: (context) => const SplashScreen(),
-                LoginPath: (context) => const LaunchScreen(),
-                dashboard :(context)=>const HomeScreen(),
-
+                splashPath: (context) => const SplashScreen(),
+                loginPath: (context) => const LaunchScreen(),
+                dashboard: (context) => const HomeScreen(),
               },
               locale: _locale,
               // ))
             )));
-
-
   }
 }
-
 
 // Define a method to initialize the plugin and request permission to send notifications
 Future<void> initializeNotifications() async {
   await requestNotificationPermission();
   const AndroidInitializationSettings androidInitSettings =
-  AndroidInitializationSettings('@mipmap/ic_launcher');
+      AndroidInitializationSettings('@mipmap/ic_launcher');
   final DarwinInitializationSettings initializationSettingsDarwin =
-  DarwinInitializationSettings(
+      DarwinInitializationSettings(
     requestSoundPermission: true,
     requestBadgePermission: true,
     requestAlertPermission: true,
     onDidReceiveLocalNotification: onDidReceiveLocalNotification,
   );
-  final InitializationSettings initializationSettings =
-  InitializationSettings(android: androidInitSettings,iOS: initializationSettingsDarwin);
-
+  final InitializationSettings initializationSettings = InitializationSettings(
+      android: androidInitSettings, iOS: initializationSettingsDarwin);
 
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
 }
+
 void onDidReceiveLocalNotification(
-    int id, String? title, String? body, String? payload) async {
-
-}
+    int id, String? title, String? body, String? payload) async {}
 
 Future<void> requestNotificationPermission() async {
-
-  final bool? result = await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-      IOSFlutterLocalNotificationsPlugin>()
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
       ?.requestPermissions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
+        alert: true,
+        badge: true,
+        sound: true,
+      );
 
   await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-      AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel( AndroidNotificationChannel(
-      'daily_reminder',
-      'Daily Reminder',
-      importance: Importance.max,
-      vibrationPattern: Int64List.fromList([0, 500, 500, 1000])));
+      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(AndroidNotificationChannel(
+          'daily_reminder', 'Daily Reminder',
+          importance: Importance.max,
+          vibrationPattern: Int64List.fromList([0, 500, 500, 1000])));
 }

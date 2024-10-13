@@ -7,12 +7,11 @@ class LoginFotter extends StatelessWidget {
   final Function() onPress;
   MainAxisAlignment alignment;
   LoginFotter(
-      {Key? key,
+      {super.key,
       required this.sentenceText,
       required this.loginSingUpText,
       required this.alignment,
-      required this.onPress})
-      : super(key: key);
+      required this.onPress});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +23,7 @@ class LoginFotter extends StatelessWidget {
           style: TextStyle( fontSize: 16.sp,),
         ),
         TextButton(
+          onPressed: onPress,
           child: Text(
             loginSingUpText,
             style: TextStyle(
@@ -35,7 +35,6 @@ class LoginFotter extends StatelessWidget {
 
             ),
           ),
-          onPressed: onPress,
         )
       ],
     );

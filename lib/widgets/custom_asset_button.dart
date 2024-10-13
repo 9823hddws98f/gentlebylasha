@@ -9,8 +9,7 @@ class CustomAssetButton extends StatelessWidget {
   final Color textColor;
   final String assetPath;
   final double assetSize;
-  const CustomAssetButton({Key? key, required this.title, required this.onPress,required this.color, required this.textColor,required this.assetPath,required this.assetSize})
-      : super(key: key);
+  const CustomAssetButton({super.key, required this.title, required this.onPress,required this.color, required this.textColor,required this.assetPath,required this.assetSize});
 
   @override
   Widget build(BuildContext context) {
