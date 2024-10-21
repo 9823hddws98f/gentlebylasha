@@ -160,253 +160,231 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                         }
                       }
                       return mediaItem.id != ""
-                          ? Container(
-                              child: Stack(
-                                children: [
-                                  Positioned.fill(
-                                    child: ClipRRect(
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(16),
-                                          topRight: Radius.circular(16),
-                                        ),
-                                        child: (mediaItem.artUri != null &&
-                                                mediaItem.artUri.toString() != "")
-                                            ? CachedNetworkImage(
-                                                imageUrl: mediaItem.artUri.toString(),
-                                                fit: BoxFit.cover,
-                                                height: double.infinity,
-                                                width: double.infinity,
-                                                fadeInDuration:
-                                                    Duration(milliseconds: 100),
-                                                errorWidget: (context, url, error) =>
-                                                    Image.asset(
-                                                      "images/placeholder_image.jpg",
-                                                      fit: BoxFit.cover,
-                                                    ))
-                                            : Icon(
-                                                Icons.music_note,
-                                                color: blueAccentColor,
-                                              )),
-                                  ),
-                                  if (!hide)
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 16.w, top: 50.h),
-                                          child: CircleIconButton(
-                                            icon: Icons.arrow_back_ios_new,
-                                            onPressed: () {
-                                              //widget.onPopUpClosed();
-                                              //Navigator.of(context).pop();
+                          ? Stack(
+                              children: [
+                                Positioned.fill(
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(16),
+                                        topRight: Radius.circular(16),
+                                      ),
+                                      child: (mediaItem.artUri != null &&
+                                              mediaItem.artUri.toString() != "")
+                                          ? CachedNetworkImage(
+                                              imageUrl: mediaItem.artUri.toString(),
+                                              fit: BoxFit.cover,
+                                              height: double.infinity,
+                                              width: double.infinity,
+                                              fadeInDuration: Duration(milliseconds: 100),
+                                              errorWidget: (context, url, error) =>
+                                                  Image.asset(
+                                                    "images/placeholder_image.jpg",
+                                                    fit: BoxFit.cover,
+                                                  ))
+                                          : Icon(
+                                              Icons.music_note,
+                                              color: blueAccentColor,
+                                            )),
+                                ),
+                                if (!hide)
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 16.w, top: 50.h),
+                                        child: CircleIconButton(
+                                          icon: Icons.arrow_back_ios_new,
+                                          onPressed: () {
+                                            //widget.onPopUpClosed();
+                                            //Navigator.of(context).pop();
 
-                                              if (panelController.isAttached) {
-                                                panelController.close();
-                                              }
-                                            },
-                                            backgroundColor: transparentWhite,
-                                            size: 40.h,
-                                            iconSize: 24.h,
-                                          ),
+                                            if (panelController.isAttached) {
+                                              panelController.close();
+                                            }
+                                          },
+                                          backgroundColor: transparentWhite,
+                                          size: 40.h,
+                                          iconSize: 24.h,
                                         ),
-                                        SizedBox(height: 68.h),
-                                        Center(
-                                            child: Padding(
+                                      ),
+                                      SizedBox(height: 68.h),
+                                      Center(
+                                        child: Padding(
                                           padding: EdgeInsets.all(5.w),
                                           child: CurrentSongTitle(),
-                                        )),
-                                        SizedBox(height: 16.h),
-                                        Center(
-                                          child: Padding(
-                                            padding: EdgeInsets.all(5.w),
-                                            child: Text(
-                                              mediaItem.displayDescription ?? "",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16.sp,
-                                              ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 16.h),
+                                      Center(
+                                        child: Padding(
+                                          padding: EdgeInsets.all(5.w),
+                                          child: Text(
+                                            mediaItem.displayDescription ?? "",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16.sp,
                                             ),
                                           ),
                                         ),
-                                        SizedBox(height: 10.h),
-                                      ],
-                                    ),
-                                  Align(
-                                      alignment: Alignment.bottomCenter,
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 24.w, vertical: 8.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            if (!hide)
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  (!favoriteLoading)
-                                                      ? CircleIconButton(
-                                                          icon: Icons.favorite_border,
-                                                          onPressed: () {
-                                                            if (favorite) {
-                                                              removeFavorite(
-                                                                  user!.id!,
-                                                                  mediaItem
-                                                                      .extras!['id']);
-                                                            } else {
-                                                              addTrackToFavorites(
-                                                                  user!.id!,
-                                                                  mediaItem
-                                                                      .extras!['id']);
-                                                            }
-                                                          },
-                                                          backgroundColor: favorite
-                                                              ? Colors.blue
-                                                              : Colors.black,
-                                                          size: 48.h,
-                                                          iconSize: 24.h,
-                                                        )
-                                                      : Container(
-                                                          margin: EdgeInsets.all(8.w),
-                                                          height: 30.h,
-                                                          width: 30.w,
-                                                          child:
-                                                              const CircularProgressIndicator(
-                                                            color: Colors.white,
-                                                          ),
+                                      ),
+                                      SizedBox(height: 10.h),
+                                    ],
+                                  ),
+                                Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 24.w, vertical: 8.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          if (!hide)
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                (!favoriteLoading)
+                                                    ? CircleIconButton(
+                                                        icon: Icons.favorite_border,
+                                                        onPressed: () {
+                                                          if (favorite) {
+                                                            removeFavorite(user!.id!,
+                                                                mediaItem.extras!['id']);
+                                                          } else {
+                                                            addTrackToFavorites(user!.id!,
+                                                                mediaItem.extras!['id']);
+                                                          }
+                                                        },
+                                                        backgroundColor: favorite
+                                                            ? Colors.blue
+                                                            : Colors.black,
+                                                        size: 48.h,
+                                                        iconSize: 24.h,
+                                                      )
+                                                    : Container(
+                                                        margin: EdgeInsets.all(8.w),
+                                                        height: 30.h,
+                                                        width: 30.w,
+                                                        child:
+                                                            const CircularProgressIndicator(
+                                                          color: Colors.white,
                                                         ),
+                                                      ),
+                                                SizedBox(
+                                                  width: 24.w,
+                                                ),
+                                                CircleIconButton(
+                                                  icon: Icons.share,
+                                                  onPressed: () {
+                                                    createDeepLink(mediaItem.id);
+                                                  },
+                                                  backgroundColor: Colors.black,
+                                                  size: 48.h,
+                                                  iconSize: 24.h,
+                                                ),
+                                                if (mediaItem.extras?["categories"] !=
+                                                        "Sleep Story" &&
+                                                    mediaItem.extras?["categories"] !=
+                                                        "Meditation") ...[
                                                   SizedBox(
                                                     width: 24.w,
                                                   ),
                                                   CircleIconButton(
-                                                    icon: Icons.share,
+                                                    icon: Icons.timer_outlined,
                                                     onPressed: () {
-                                                      createDeepLink(mediaItem.id);
+                                                      setState(() {
+                                                        toggleTimer();
+                                                        pushName(
+                                                            context, SleepTimerScreen());
+                                                      });
                                                     },
                                                     backgroundColor: Colors.black,
                                                     size: 48.h,
                                                     iconSize: 24.h,
                                                   ),
-                                                  if (mediaItem.extras?["categories"] !=
-                                                          "Sleep Story" &&
-                                                      mediaItem.extras?["categories"] !=
-                                                          "Meditation") ...[
-                                                    SizedBox(
-                                                      width: 24.w,
-                                                    ),
-                                                    CircleIconButton(
-                                                      icon: Icons.timer_outlined,
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          toggleTimer();
-                                                          pushName(context,
-                                                              SleepTimerScreen());
-                                                        });
-                                                      },
-                                                      backgroundColor: Colors.black,
-                                                      size: 48.h,
-                                                      iconSize: 24.h,
-                                                    ),
-                                                  ]
-                                                ],
-                                              ),
-                                            SizedBox(height: 40.h),
-                                            if (!hide)
-                                              StreamBuilder<bool>(
-                                                stream: _audioHandler.playbackState
-                                                    .map((state) => state.playing)
-                                                    .distinct(),
-                                                builder: (context, snapshot) {
-                                                  final playing = snapshot.data ?? false;
-                                                  return Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.spaceBetween,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment.center,
-                                                    children: <Widget>[
-                                                      if (mediaItem.extras?[
-                                                                  "categories"] ==
-                                                              "Sleep Story" ||
-                                                          mediaItem.extras?[
-                                                                  "categories"] ==
-                                                              "Soundscape") ...[
-                                                        SizedBox(
-                                                          width: 32.w,
-                                                          height: 32.h,
-                                                        )
-                                                      ] else if (mediaItem.extras?[
-                                                                  "categories"] ==
-                                                              "Music" &&
-                                                          widget.playList) ...[
-                                                        IconButton(
-                                                          icon: Icon(
-                                                            Icons.shuffle,
-                                                            color: getIt<PageManager>()
-                                                                    .isShuffleModeEnabledNotifier
-                                                                    .value
-                                                                ? Colors.green
-                                                                : Colors.white,
-                                                            size: 32.h,
-                                                          ),
-                                                          onPressed: () {
-                                                            final pageManager =
-                                                                getIt<PageManager>();
-                                                            pageManager.shuffle();
-                                                            setState(() {});
-                                                          },
+                                                ]
+                                              ],
+                                            ),
+                                          SizedBox(height: 40.h),
+                                          if (!hide)
+                                            StreamBuilder<bool>(
+                                              stream: _audioHandler.playbackState
+                                                  .map((state) => state.playing)
+                                                  .distinct(),
+                                              builder: (context, snapshot) {
+                                                final playing = snapshot.data ?? false;
+                                                return Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    if (mediaItem.extras?["categories"] ==
+                                                            "Sleep Story" ||
+                                                        mediaItem.extras?["categories"] ==
+                                                            "Soundscape") ...[
+                                                      SizedBox(
+                                                        width: 32.w,
+                                                        height: 32.h,
+                                                      )
+                                                    ] else if (mediaItem
+                                                                .extras?["categories"] ==
+                                                            "Music" &&
+                                                        widget.playList) ...[
+                                                      IconButton(
+                                                        icon: Icon(
+                                                          Icons.shuffle,
+                                                          color: getIt<PageManager>()
+                                                                  .isShuffleModeEnabledNotifier
+                                                                  .value
+                                                              ? Colors.green
+                                                              : Colors.white,
+                                                          size: 32.h,
                                                         ),
-                                                      ] else if (mediaItem.extras?[
-                                                                  "categories"] ==
-                                                              "Music" &&
-                                                          widget.playList == false) ...[
-                                                        SizedBox(
-                                                          height: 32.h,
-                                                          width: 32.w,
+                                                        onPressed: () {
+                                                          final pageManager =
+                                                              getIt<PageManager>();
+                                                          pageManager.shuffle();
+                                                          setState(() {});
+                                                        },
+                                                      ),
+                                                    ] else if (mediaItem
+                                                                .extras?["categories"] ==
+                                                            "Music" &&
+                                                        widget.playList == false) ...[
+                                                      SizedBox(
+                                                        height: 32.h,
+                                                        width: 32.w,
+                                                      ),
+                                                    ] else ...[
+                                                      IconButton(
+                                                        icon: Icon(
+                                                          Icons.tune,
+                                                          color: Colors.white,
+                                                          size: 32.h,
                                                         ),
-                                                      ] else ...[
-                                                        IconButton(
-                                                          icon: Icon(
-                                                            Icons.tune,
-                                                            color: Colors.white,
-                                                            size: 32.h,
-                                                          ),
-                                                          onPressed: () {},
-                                                        ),
-                                                      ],
-                                                      if (widget.playList) ...[
+                                                        onPressed: () {},
+                                                      ),
+                                                    ],
+                                                    if (widget.playList) ...[
+                                                      if (pageManagerNew
+                                                          .isFirstSongNotifier.value) ...{
                                                         if (pageManagerNew
-                                                            .isFirstSongNotifier
-                                                            .value) ...{
-                                                          if (pageManagerNew
-                                                                  .repeatButtonNotifier
-                                                                  .value ==
-                                                              RepeatState.off) ...{
-                                                            IconButton(
-                                                              icon: Icon(
-                                                                Icons.skip_previous,
-                                                                color: Colors.grey,
-                                                                size: 32.h,
-                                                              ),
-                                                              onPressed: () {
-                                                                // final pageManager = getIt<PageManager>();
-                                                                // pageManager.previous();
-                                                              },
+                                                                .repeatButtonNotifier
+                                                                .value ==
+                                                            RepeatState.off) ...{
+                                                          IconButton(
+                                                            icon: Icon(
+                                                              Icons.skip_previous,
+                                                              color: Colors.grey,
+                                                              size: 32.h,
                                                             ),
-                                                          } else ...{
-                                                            IconButton(
-                                                              icon: Icon(
-                                                                Icons.skip_previous,
-                                                                color: Colors.white,
-                                                                size: 32.h,
-                                                              ),
-                                                              onPressed: () {
-                                                                // final pageManager = getIt<PageManager>();
-                                                                pageManagerNew.previous();
-                                                              },
-                                                            ),
-                                                          }
+                                                            onPressed: () {
+                                                              // final pageManager = getIt<PageManager>();
+                                                              // pageManager.previous();
+                                                            },
+                                                          ),
                                                         } else ...{
                                                           IconButton(
                                                             icon: Icon(
@@ -420,52 +398,52 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                             },
                                                           ),
                                                         }
-                                                      ] else ...[
+                                                      } else ...{
                                                         IconButton(
                                                           icon: Icon(
-                                                            Icons.replay_10,
+                                                            Icons.skip_previous,
                                                             color: Colors.white,
                                                             size: 32.h,
                                                           ),
                                                           onPressed: () {
-                                                            final pageManager =
-                                                                getIt<PageManager>();
-                                                            pageManager.skipBackward();
+                                                            // final pageManager = getIt<PageManager>();
+                                                            pageManagerNew.previous();
                                                           },
                                                         ),
-                                                      ],
-                                                      PlayButton(),
-                                                      if (widget.playList) ...[
-                                                        if (pageManagerNew
-                                                            .isLastSongNotifier
-                                                            .value) ...{
-                                                          if (!(pageManagerNew
-                                                                  .isShuffleModeEnabledNotifier
-                                                                  .value) &&
-                                                              pageManagerNew
-                                                                      .repeatButtonNotifier
-                                                                      .value ==
-                                                                  RepeatState.off) ...{
-                                                            IconButton(
-                                                              icon: Icon(
-                                                                Icons.skip_next,
-                                                                color: Colors.grey,
-                                                                size: 32.h,
-                                                              ),
-                                                              onPressed: () {},
+                                                      }
+                                                    ] else ...[
+                                                      IconButton(
+                                                        icon: Icon(
+                                                          Icons.replay_10,
+                                                          color: Colors.white,
+                                                          size: 32.h,
+                                                        ),
+                                                        onPressed: () {
+                                                          final pageManager =
+                                                              getIt<PageManager>();
+                                                          pageManager.skipBackward();
+                                                        },
+                                                      ),
+                                                    ],
+                                                    PlayButton(),
+                                                    if (widget.playList) ...[
+                                                      if (pageManagerNew
+                                                          .isLastSongNotifier.value) ...{
+                                                        if (!(pageManagerNew
+                                                                .isShuffleModeEnabledNotifier
+                                                                .value) &&
+                                                            pageManagerNew
+                                                                    .repeatButtonNotifier
+                                                                    .value ==
+                                                                RepeatState.off) ...{
+                                                          IconButton(
+                                                            icon: Icon(
+                                                              Icons.skip_next,
+                                                              color: Colors.grey,
+                                                              size: 32.h,
                                                             ),
-                                                          } else ...{
-                                                            IconButton(
-                                                              icon: Icon(
-                                                                Icons.skip_next,
-                                                                color: Colors.white,
-                                                                size: 32.h,
-                                                              ),
-                                                              onPressed: () {
-                                                                pageManagerNew.next();
-                                                              },
-                                                            ),
-                                                          }
+                                                            onPressed: () {},
+                                                          ),
                                                         } else ...{
                                                           IconButton(
                                                             icon: Icon(
@@ -478,79 +456,90 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                             },
                                                           ),
                                                         }
-                                                      ] else ...[
+                                                      } else ...{
                                                         IconButton(
                                                           icon: Icon(
-                                                            Icons.forward_10_outlined,
+                                                            Icons.skip_next,
                                                             color: Colors.white,
                                                             size: 32.h,
                                                           ),
                                                           onPressed: () {
-                                                            final pageManager =
-                                                                getIt<PageManager>();
-                                                            pageManager.skipForward();
+                                                            pageManagerNew.next();
                                                           },
                                                         ),
-                                                      ],
-                                                      if (widget.playList) ...[
-                                                        IconButton(
-                                                          icon: Icon(
-                                                            getIt<PageManager>()
-                                                                        .repeatButtonNotifier
-                                                                        .value ==
-                                                                    RepeatState.repeatSong
-                                                                ? Icons.repeat_one
-                                                                : Icons.repeat,
-                                                            color: getIt<PageManager>()
-                                                                        .repeatButtonNotifier
-                                                                        .value ==
-                                                                    RepeatState.off
-                                                                ? Colors.white
-                                                                : Colors.green,
-                                                            size: 32.h,
-                                                          ),
-                                                          onPressed: () {
-                                                            final pageManager =
-                                                                getIt<PageManager>();
-                                                            pageManager.repeat();
-                                                            setState(() {});
-                                                          },
+                                                      }
+                                                    ] else ...[
+                                                      IconButton(
+                                                        icon: Icon(
+                                                          Icons.forward_10_outlined,
+                                                          color: Colors.white,
+                                                          size: 32.h,
                                                         ),
-                                                      ] else if (mediaItem
-                                                              .extras?["categories"] ==
-                                                          "Soundscape") ...[
-                                                        SizedBox(
-                                                          width: 32.w,
-                                                          height: 32.h,
-                                                        )
-                                                      ] else ...[
-                                                        IconButton(
-                                                          icon: Icon(
-                                                            Icons.square,
-                                                            color: Colors.white,
-                                                            size: 32.h,
-                                                          ),
-                                                          onPressed: () {
-                                                            final pageManager =
-                                                                getIt<PageManager>();
-                                                            pageManager.stop();
-                                                          },
-                                                        ),
-                                                      ]
+                                                        onPressed: () {
+                                                          final pageManager =
+                                                              getIt<PageManager>();
+                                                          pageManager.skipForward();
+                                                        },
+                                                      ),
                                                     ],
-                                                  );
-                                                },
-                                              ),
-                                            SizedBox(height: 32.h),
-                                            if (mediaItem.extras?["categories"] !=
-                                                "Soundscape")
-                                              AudioProgressBar(),
-                                            SizedBox(height: 30.h),
-                                          ],
-                                        ),
-                                      ))
-                                ],
-                              ),
+                                                    if (widget.playList) ...[
+                                                      IconButton(
+                                                        icon: Icon(
+                                                          getIt<PageManager>()
+                                                                      .repeatButtonNotifier
+                                                                      .value ==
+                                                                  RepeatState.repeatSong
+                                                              ? Icons.repeat_one
+                                                              : Icons.repeat,
+                                                          color: getIt<PageManager>()
+                                                                      .repeatButtonNotifier
+                                                                      .value ==
+                                                                  RepeatState.off
+                                                              ? Colors.white
+                                                              : Colors.green,
+                                                          size: 32.h,
+                                                        ),
+                                                        onPressed: () {
+                                                          final pageManager =
+                                                              getIt<PageManager>();
+                                                          pageManager.repeat();
+                                                          setState(() {});
+                                                        },
+                                                      ),
+                                                    ] else if (mediaItem
+                                                            .extras?["categories"] ==
+                                                        "Soundscape") ...[
+                                                      SizedBox(
+                                                        width: 32.w,
+                                                        height: 32.h,
+                                                      )
+                                                    ] else ...[
+                                                      IconButton(
+                                                        icon: Icon(
+                                                          Icons.square,
+                                                          color: Colors.white,
+                                                          size: 32.h,
+                                                        ),
+                                                        onPressed: () {
+                                                          final pageManager =
+                                                              getIt<PageManager>();
+                                                          pageManager.stop();
+                                                        },
+                                                      ),
+                                                    ]
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                          SizedBox(height: 32.h),
+                                          if (mediaItem.extras?["categories"] !=
+                                              "Soundscape")
+                                            AudioProgressBar(),
+                                          SizedBox(height: 30.h),
+                                        ],
+                                      ),
+                                    ))
+                              ],
                             )
                           : Center(
                               child: CircularProgressIndicator(

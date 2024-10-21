@@ -30,9 +30,7 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  HomeScreenState createState() {
-    return HomeScreenState();
-  }
+  HomeScreenState createState() => HomeScreenState();
 }
 
 class HomeScreenState extends State<HomeScreen> {
@@ -45,6 +43,8 @@ class HomeScreenState extends State<HomeScreen> {
   bool gestureCheck = false;
   bool panelVisibility = false;
   late List<GlobalKey<NavigatorState>> _navigatorKeys;
+
+  final _panelKey = GlobalKey();
 
   void onItemTapped(int index) {
     final NavigatorState currentNavigator = _navigatorKeys[_selectedIndex].currentState!;
@@ -227,6 +227,7 @@ class HomeScreenState extends State<HomeScreen> {
                           }
                         },
                         child: SlidingUpPanel(
+                          key: _panelKey,
                           maxHeight: MediaQuery.of(context).size.height,
                           minHeight: defaultTargetPlatform == TargetPlatform.android
                               ? (kBottomNavigationBarHeight + 78.h)

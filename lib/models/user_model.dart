@@ -1,15 +1,13 @@
+class UserModel {
+  final String? id;
+  final String? name;
+  final String? email;
+  final String? language;
+  final String? heardFrom;
+  final List<dynamic>? goals;
+  final String? photoURL;
 
-class UserModel{
-  String? id;
-  String? name;
-  String? email;
-  String? language;
-  String? heardFrom;
-  List<dynamic>? goals;
-  String? photoURL;
-
-
-  UserModel({
+  const UserModel({
     this.id,
     this.email,
     this.language,
