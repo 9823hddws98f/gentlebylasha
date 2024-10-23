@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TrackListItemSmall extends StatelessWidget {
   final String imageUrl;
@@ -27,7 +26,7 @@ class TrackListItemSmall extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(
-                  height: 164.h,
+                  height: 164,
                   width: double.maxFinite,
                   child: CachedNetworkImage(
                     imageUrl: imageUrl,
@@ -41,7 +40,7 @@ class TrackListItemSmall extends StatelessWidget {
                     errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
                 ),
-                SizedBox(height: 8.h),
+                SizedBox(height: 8),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -49,12 +48,12 @@ class TrackListItemSmall extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                SizedBox(height: 2.h),
+                SizedBox(height: 2),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -62,7 +61,7 @@ class TrackListItemSmall extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                     style: TextStyle(
-                      fontSize: 10.sp,
+                      fontSize: 10,
                     ),
                   ),
                 )

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:shimmer/shimmer.dart';
 
 import '/utils/colors.dart';
@@ -18,8 +18,8 @@ class Mp3ListItemShimmer extends StatelessWidget {
           Stack(
             children: [
               Container(
-                height: 185.h,
-                width: 282.w,
+                height: 185,
+                width: 282,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
@@ -29,7 +29,7 @@ class Mp3ListItemShimmer extends StatelessWidget {
                 bottom: 12,
                 left: 12,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                   decoration: BoxDecoration(
                     color: Colors.grey.withValues(alpha: 0.5),
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -39,13 +39,13 @@ class Mp3ListItemShimmer extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.play_arrow,
-                        size: 12.h,
+                        size: 12,
                       ),
-                      SizedBox(width: 2.w),
+                      SizedBox(width: 2),
                       Text(
                         '0:00',
                         style: TextStyle(
-                          fontSize: 7.sp,
+                          fontSize: 7,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -56,22 +56,22 @@ class Mp3ListItemShimmer extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: 8.h,
+            height: 8,
           ),
           Container(
-            height: 14.h,
-            width: 100.w,
+            height: 14,
+            width: 100,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
             ),
           ),
           SizedBox(
-            height: 2.h,
+            height: 2,
           ),
           Container(
-            height: 10.h,
-            width: 50.w,
+            height: 10,
+            width: 50,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),

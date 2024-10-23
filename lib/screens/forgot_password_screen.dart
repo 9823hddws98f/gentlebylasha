@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../widgets/widget_email_textField.dart';
 import '/utils/global_functions.dart';
 import '/widgets/custom_btn.dart';
@@ -24,21 +22,21 @@ class ForgotPasswordState extends State<ForgotPasswordScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Padding(
-        padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
+        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Padding(
-                padding: EdgeInsets.only(top: 10.h),
+                padding: EdgeInsets.only(top: 10),
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
                     Align(
                       alignment: Alignment.topRight,
                       child: Padding(
-                        padding: EdgeInsets.fromLTRB(10.w, 0.h, 0.w, 0.h),
+                        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                         child: IconButton(
                           iconSize: 22,
                           icon: Icon(
@@ -57,12 +55,11 @@ class ForgotPasswordState extends State<ForgotPasswordScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Padding(
-                            padding: EdgeInsets.fromLTRB(20.w, 5.h, 20.w, 5.h),
+                            padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                             child: Text(
                               "Login to Sleeptales",
                               textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ],
@@ -72,19 +69,19 @@ class ForgotPasswordState extends State<ForgotPasswordScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(0.w, 20.h, 0.w, 20.h),
+                padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                       "Enter your email we will send a link to reset your password",
-                      style: TextStyle(fontSize: 16.sp)),
+                      style: TextStyle(fontSize: 16)),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(0.w, 10.h, 0.w, 10.h),
+                padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("Email:", style: TextStyle(fontSize: 16.sp)),
+                  child: Text("Email:", style: TextStyle(fontSize: 16)),
                 ),
               ),
               CustomeEditText(
@@ -108,10 +105,10 @@ class ForgotPasswordState extends State<ForgotPasswordScreen> {
                 },
               ),
               SizedBox(
-                height: 40.h,
+                height: 40,
               ),
               SizedBox(
-                height: 20.h,
+                height: 20,
               ),
               CustomButton(
                 title: "Send Password Reset Email",

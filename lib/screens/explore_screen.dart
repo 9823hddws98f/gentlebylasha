@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/models/audiofile_model.dart';
 import '/models/category_block.dart';
@@ -52,21 +51,21 @@ class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateM
           mainAxisSize: MainAxisSize.max,
           children: [
             SizedBox(
-              height: 50.h,
+              height: 50,
             ),
             Text(
               "Explore",
-              style: TextStyle(fontSize: 20.sp),
+              style: TextStyle(fontSize: 20),
             ),
             Container(
-              padding: EdgeInsets.fromLTRB(16.w, 30.h, 16.w, 5.h),
+              padding: EdgeInsets.fromLTRB(16, 30, 16, 5),
               child: Row(
                 children: [
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.grey.withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(8.h),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                       child: TextField(
                         decoration: InputDecoration(
@@ -101,11 +100,11 @@ class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateM
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(16.w, 10.h, 0, 0),
+                    padding: EdgeInsets.fromLTRB(16, 10, 0, 0),
                     child: Text(
                       "Popular",
                       textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 22.sp),
+                      style: TextStyle(fontSize: 22),
                     ),
                   ),
                 ),
@@ -137,13 +136,13 @@ class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateM
 
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Padding(
-                        padding: EdgeInsets.all(16.h),
+                        padding: EdgeInsets.all(16),
                         child: CircularProgressIndicator(color: Colors.white),
                       );
                     } else if (snapshot.connectionState == ConnectionState.done &&
                         snapshot.data == null) {
                       return Padding(
-                        padding: EdgeInsets.only(top: 30.h),
+                        padding: EdgeInsets.only(top: 30),
                         child: Text(
                           "Couldn't find $searchText",
                           style: TextStyle(color: Colors.white),
@@ -155,7 +154,7 @@ class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateM
                       return Expanded(
                         child: ListView(
                           shrinkWrap: true,
-                          padding: EdgeInsets.fromLTRB(16.w, 16.w, 16.w, 165.h),
+                          padding: EdgeInsets.fromLTRB(16, 16, 16, 165),
                           children: snapshot.data!.map((document) {
                             AudioTrack track = AudioTrack.fromFirestore(document);
                             return SearchListItem(
@@ -176,7 +175,7 @@ class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateM
                       );
                     } else {
                       return Padding(
-                        padding: EdgeInsets.only(top: 30.h),
+                        padding: EdgeInsets.only(top: 30),
                         child: Text(
                           "Couldn't find $searchText",
                           style: TextStyle(color: Colors.white),
@@ -189,11 +188,11 @@ class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateM
             if (!_showSearchList)
               if (categories.isNotEmpty) ...[
                 SizedBox(
-                  height: 50.h, // adjust the height as needed
+                  height: 50, // adjust the height as needed
                   child: TabBar(
                     padding: EdgeInsets.zero,
                     indicatorPadding: EdgeInsets.zero,
-                    labelPadding: EdgeInsets.all(5.w),
+                    labelPadding: EdgeInsets.all(5),
                     indicatorColor: Colors.transparent,
                     controller: tabController,
                     isScrollable: true,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/widgets/custom_btn.dart';
 import '/widgets/topbar_widget.dart';
@@ -22,7 +21,7 @@ class _ManageSubscriptionScreen extends State<ManageSubscriptionScreen> {
           height: MediaQuery.of(context).size.height,
           child: SingleChildScrollView(
               child: Padding(
-                  padding: EdgeInsets.all(10.w),
+                  padding: EdgeInsets.all(10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -32,32 +31,32 @@ class _ManageSubscriptionScreen extends State<ManageSubscriptionScreen> {
                             Navigator.pop(context);
                           }),
                       SizedBox(
-                        height: 20.h,
+                        height: 20,
                       ),
                       Center(
                         child: Text(
                           "You subscribed on IOS",
-                          style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                         ),
                       ),
                       SizedBox(
-                        height: 20.h,
+                        height: 20,
                       ),
                       Text(
                         "Your free trial began on August 9, 2021.\nYour yearly subscription will begin on August 16, 2021.\n\nHowever, if you’ve already stopped recurring payments through iTunes, then your access will lapse at that time, and you won’t be charged.\n\nIf you would like to stop recurring payments, you can do so here.Unfortunately, we’re unable to do so on your behalf.",
-                        style: TextStyle(fontSize: 16.sp, height: 1.5),
+                        style: TextStyle(fontSize: 16, height: 1.5),
                       ),
                       SizedBox(
-                        height: 20.h,
+                        height: 20,
                       ),
                       Center(
                         child: Text(
                           "Questions?",
-                          style: TextStyle(fontSize: 16.sp),
+                          style: TextStyle(fontSize: 16),
                         ),
                       ),
                       SizedBox(
-                        height: 5.h,
+                        height: 5,
                       ),
                       CustomButton(
                           title: "Visit help center",

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/language_constants.dart';
 import '/models/user_model.dart';
@@ -78,7 +77,7 @@ class _ForMeState extends State<ForMeScreen> {
           children: [
             // Gif at the top with text overlay
             SizedBox(
-              height: 300.h,
+              height: 300,
               child: Stack(
                 fit: StackFit.expand,
                 children: [
@@ -104,13 +103,13 @@ class _ForMeState extends State<ForMeScreen> {
                             children: [
                               Text("$greeting,",
                                   style: TextStyle(
-                                    fontSize: 32.sp,
+                                    fontSize: 32,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                   )),
                               Text("${getNick(value)}!",
                                   style: TextStyle(
-                                    fontSize: 32.sp,
+                                    fontSize: 32,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                   ))
@@ -125,26 +124,26 @@ class _ForMeState extends State<ForMeScreen> {
             ),
 
             SizedBox(
-              height: 10.h,
+              height: 10,
             ),
 
             Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 child: Divider(
-                  height: 1.h,
+                  height: 1,
                   color: dividerColor,
                 )),
             // Heading and horizontal list view of cards
             if (categoryBlocks.isNotEmpty) ...[
               SizedBox(
-                height: 40.h,
+                height: 40,
                 child: ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
                   scrollDirection: Axis.horizontal,
                   itemCount: categoryBlocks.length,
                   itemBuilder: (context, index) {
                     return Padding(
-                      padding: EdgeInsets.all(5.w),
+                      padding: EdgeInsets.all(5),
                       child: CustomTabButton(
                         title: categoryBlocks[index].name,
                         onPress: () {
@@ -164,22 +163,22 @@ class _ForMeState extends State<ForMeScreen> {
             ],
 
             Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 child: Divider(
-                  height: 1.h,
+                  height: 1,
                   color: dividerColor,
                 )),
 
             // Heading and horizontal list view of cards
             if (isLoading || recentlyPlayed.isNotEmpty) ...[
               Padding(
-                  padding: EdgeInsets.fromLTRB(14.w, 4.h, 14.w, 14.h),
+                  padding: EdgeInsets.fromLTRB(14, 4, 14, 14),
                   child: Row(
                     children: [
                       Text(
                         "Recently played",
                         style: TextStyle(
-                          fontSize: 20.sp,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -196,14 +195,14 @@ class _ForMeState extends State<ForMeScreen> {
                           },
                           child: Text(
                             "See all",
-                            style: TextStyle(color: seeAllColor, fontSize: 16.sp),
+                            style: TextStyle(color: seeAllColor, fontSize: 16),
                           ))
                     ],
                   )),
               recentlyPlayed.isEmpty
                   ? _buildShimmerListViewWidth()
                   : SizedBox(
-                      height: 231.h,
+                      height: 231,
                       child: WidthTrackListHorizontal(
                         tap: () {},
                         audiList: recentlyPlayed,
@@ -218,7 +217,7 @@ class _ForMeState extends State<ForMeScreen> {
                 : ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    padding: EdgeInsets.only(top: 0.h),
+                    padding: EdgeInsets.only(top: 0),
                     itemCount: blockList.length,
                     itemBuilder: (context, index) {
                       final block = blockList[index];
@@ -231,12 +230,12 @@ class _ForMeState extends State<ForMeScreen> {
                         return Column(
                           children: [
                             Padding(
-                                padding: EdgeInsets.fromLTRB(14.w, 14.h, 14.w, 14.h),
+                                padding: EdgeInsets.fromLTRB(14, 14, 14, 14),
                                 child: Row(children: [
                                   Text(
                                     block.title,
                                     style: TextStyle(
-                                      fontSize: 22.sp,
+                                      fontSize: 22,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -249,13 +248,13 @@ class _ForMeState extends State<ForMeScreen> {
                         return Column(
                           children: [
                             Padding(
-                              padding: EdgeInsets.fromLTRB(14.w, 14.h, 14.w, 14.h),
+                              padding: EdgeInsets.fromLTRB(14, 14, 14, 14),
                               child: Row(
                                 children: [
                                   Text(
                                     block.title,
                                     style: TextStyle(
-                                      fontSize: 22.sp,
+                                      fontSize: 22,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -270,13 +269,13 @@ class _ForMeState extends State<ForMeScreen> {
                         return Column(
                           children: [
                             Padding(
-                              padding: EdgeInsets.fromLTRB(14.w, 14.h, 14.w, 14.h),
+                              padding: EdgeInsets.fromLTRB(14, 14, 14, 14),
                               child: Row(
                                 children: [
                                   Text(
                                     block.title,
                                     style: TextStyle(
-                                      fontSize: 22.sp,
+                                      fontSize: 22,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -304,8 +303,8 @@ class _ForMeState extends State<ForMeScreen> {
                                         },
                                         child: Text(
                                           "See all",
-                                          style: TextStyle(
-                                              color: seeAllColor, fontSize: 16.sp),
+                                          style:
+                                              TextStyle(color: seeAllColor, fontSize: 16),
                                         ))
                                 ],
                               ),
@@ -313,7 +312,7 @@ class _ForMeState extends State<ForMeScreen> {
                             tracks.isEmpty
                                 ? _buildShimmerListViewHeight()
                                 : SizedBox(
-                                    height: 231.h,
+                                    height: 231,
                                     child: TrackListHorizontal(
                                       tap: () {},
                                       audiList: tracks,
@@ -342,14 +341,14 @@ class _ForMeState extends State<ForMeScreen> {
             //           return Column(
             //             children: [
             //               Padding(
-            //                 padding: EdgeInsets.fromLTRB(14.w, 14.h,14.w,14.h),
+            //                 padding: EdgeInsets.fromLTRB(14, 14,14,14),
             //                 child:
             //                 Row(
             //                 children:[
             //                   Text(
             //                     block.title,
             //                     style: TextStyle(
-            //                       fontSize: 22.sp,
+            //                       fontSize: 22,
             //                       fontWeight: FontWeight.bold,
             //                     ),
             //                   ),
@@ -365,13 +364,13 @@ class _ForMeState extends State<ForMeScreen> {
             //           return Column(
             //             children: [
             //               Padding(
-            //                 padding: EdgeInsets.fromLTRB(14.w, 14.h,14.w,14.h),
+            //                 padding: EdgeInsets.fromLTRB(14, 14,14,14),
             //                 child: Row(
             //                   children: [
             //                     Text(
             //                       block.title,
             //                       style: TextStyle(
-            //                         fontSize: 22.sp,
+            //                         fontSize: 22,
             //                         fontWeight: FontWeight.bold,
             //                       ),
             //                     ),],
@@ -387,13 +386,13 @@ class _ForMeState extends State<ForMeScreen> {
             //           return Column(
             //             children: [
             //               Padding(
-            //                 padding: EdgeInsets.fromLTRB(14.w, 14.h,14.w,14.h),
+            //                 padding: EdgeInsets.fromLTRB(14, 14,14,14),
             //                 child: Row(
             //                   children: [
             //                     Text(
             //                       block.title,
             //                       style: TextStyle(
-            //                         fontSize: 22.sp,
+            //                         fontSize: 22,
             //                         fontWeight: FontWeight.bold,
             //                       ),
             //                     ),
@@ -403,7 +402,7 @@ class _ForMeState extends State<ForMeScreen> {
             //                       TextButton(onPressed: (){
             //                         pushName(context, TrackListScreen(heading:block.title,list: tracks,panelFunction: widget.panelFunction,));
             //
-            //                       }, child:Text("See all",style: TextStyle(color: blueAccentColor,fontSize: 16.sp),))
+            //                       }, child:Text("See all",style: TextStyle(color: blueAccentColor,fontSize: 16),))
             //                   ],
             //
             //                 ),),
@@ -411,7 +410,7 @@ class _ForMeState extends State<ForMeScreen> {
             //         tracks.isEmpty
             //         ? _buildShimmerListViewHeight()
             //             : SizedBox(
-            //         height: 231.h,
+            //         height: 231,
             //         child: TrackListHorizontal(tap: (){
             //
             //         },audiList: tracks,musicList: false,panelFunction: widget.panelFunction,)
@@ -431,7 +430,7 @@ class _ForMeState extends State<ForMeScreen> {
             //    audioList1.isEmpty
             //        ? _buildShimmerListViewWidth()
             //        : SizedBox(
-            //      height: 231.h,
+            //      height: 231,
             //      child:WidthTrackListHorizontal(audiList: audioList1, tap: (){
             //
             //      }, musicList: false,panelFunction: widget.panelFunction,)
@@ -444,7 +443,7 @@ class _ForMeState extends State<ForMeScreen> {
             //
             //         Expanded(child:
             //             Padding(
-            //        padding: EdgeInsets.fromLTRB(16.w,16.h,7.w,8.h),
+            //        padding: EdgeInsets.fromLTRB(16,16,7,8),
             //         child:   CustomButton(title:categroiesArray[0].categoryName,onPress: (){
             //           pushName(context, TrackListSearchScreen(category: categroiesArray[0],panelFunction: widget.panelFunction,));
             //
@@ -458,7 +457,7 @@ class _ForMeState extends State<ForMeScreen> {
             //
             //        Expanded(child:
             //        Padding(
-            //          padding: EdgeInsets.fromLTRB(7.w,16.h,16.w,8.h),
+            //          padding: EdgeInsets.fromLTRB(7,16,16,8),
             //          child:   CustomButton(title:categroiesArray[1].categoryName,onPress: (){
             //            pushName(context, TrackListSearchScreen(category: categroiesArray[1],panelFunction: widget.panelFunction,));
             //          },color: lightBlueColor,textColor: Colors.white,)
@@ -474,7 +473,7 @@ class _ForMeState extends State<ForMeScreen> {
             //
             //        Expanded(child:
             //        Padding(
-            //          padding: EdgeInsets.fromLTRB(16.w,8.h,7.w,0.h),
+            //          padding: EdgeInsets.fromLTRB(16,8,7,0),
             //          child:   CustomButton(title:categroiesArray[2].categoryName,onPress: (){
             //            pushName(context, TrackListSearchScreen(category: categroiesArray[2],panelFunction: widget.panelFunction,));
             //          },color: lightBlueColor,textColor: Colors.white,)
@@ -485,7 +484,7 @@ class _ForMeState extends State<ForMeScreen> {
             //
             //        Expanded(child:
             //        Padding(
-            //        padding: EdgeInsets.fromLTRB(7.w,8.h,16.w,0.h),
+            //        padding: EdgeInsets.fromLTRB(7,8,16,0),
             //          child:   CustomButton(title:categroiesArray[3].categoryName,onPress: (){
             //            pushName(context, TrackListSearchScreen(category: categroiesArray[4],panelFunction: widget.panelFunction,));
             //          },color: lightBlueColor,textColor: Colors.white,)
@@ -502,13 +501,13 @@ class _ForMeState extends State<ForMeScreen> {
             //    if(recommenedTrackIsLoading || recommendedTrackList.isNotEmpty)...[
             //      // Heading and horizontal list view of cards
             //      Padding(
-            //          padding: EdgeInsets.fromLTRB(16.w, 32.h,16.w,16.h),
+            //          padding: EdgeInsets.fromLTRB(16, 32,16,16),
             //          child: Row(
             //            children: [
             //              Text(
             //                "Recommended for you",
             //                style: TextStyle(
-            //                  fontSize: 22.sp,
+            //                  fontSize: 22,
             //                  fontWeight: FontWeight.bold,
             //                ),
             //              ),
@@ -518,7 +517,7 @@ class _ForMeState extends State<ForMeScreen> {
             //                TextButton(onPressed: (){
             //                  pushName(context, TrackListScreen(heading: "Recommended for you",list: recommendedTrackList,panelFunction: widget.panelFunction,));
             //
-            //                }, child:Text("See all",style: TextStyle(color: blueAccentColor,fontSize: 16.sp),))
+            //                }, child:Text("See all",style: TextStyle(color: blueAccentColor,fontSize: 16),))
             //            ],
             //
             //          )
@@ -526,7 +525,7 @@ class _ForMeState extends State<ForMeScreen> {
             //      recommendedTrackList.isEmpty
             //          ? _buildShimmerListViewHeight()
             //          : SizedBox(
-            //          height: 231.h,
+            //          height: 231,
             //          child: TrackListHorizontal(tap: (){
             //
             //          },audiList: recommendedTrackList,musicList: false,panelFunction: widget.panelFunction,)
@@ -540,13 +539,13 @@ class _ForMeState extends State<ForMeScreen> {
             //
             //      if(collectionsIsLoading || recommendedCollectionList.isNotEmpty)...[
             //    Padding(
-            //        padding: EdgeInsets.fromLTRB(16.w, 32.h,16.w,16.h),
+            //        padding: EdgeInsets.fromLTRB(16, 32,16,16),
             //        child: Row(
             //          children: [
             //            Text(
             //              "Recommended Collections",
             //              style: TextStyle(
-            //                fontSize: 22.sp,
+            //                fontSize: 22,
             //                fontWeight: FontWeight.bold,
             //              ),
             //            ),
@@ -555,7 +554,7 @@ class _ForMeState extends State<ForMeScreen> {
             //            if(recommendedCollectionList.isNotEmpty)
             //            TextButton(onPressed: (){
             //              pushName(context, CollectionListScreen(heading: "Recommended Collections",list:recommendedCollectionList,panelFunction: widget.panelFunction,));
-            //            }, child:Text("See all",style: TextStyle(color: lightBlueColor,fontSize: 16.sp),))
+            //            }, child:Text("See all",style: TextStyle(color: lightBlueColor,fontSize: 16),))
             //          ],
             //
             //        )
@@ -563,13 +562,13 @@ class _ForMeState extends State<ForMeScreen> {
             //    recommendedCollectionList.isEmpty
             //        ? _buildShimmerListViewSmall()
             //        : SizedBox(
-            //      height: 136.h,
+            //      height: 136,
             //      child: ListView.separated(
-            //        padding: EdgeInsets.only(left:16.w),
+            //        padding: EdgeInsets.only(left:16),
             //        scrollDirection: Axis.horizontal,
             //        itemCount: recommendedCollectionList.length,
             //        separatorBuilder: (BuildContext context, int index) {
-            //          return SizedBox(width: 16.w);
+            //          return SizedBox(width: 16);
             //        },
             //        itemBuilder: (BuildContext context, int index) {
             //          return Mp3ItemSmall(
@@ -589,13 +588,13 @@ class _ForMeState extends State<ForMeScreen> {
             //    if(sleepStoriesIsLoading || sleepStoriesList.isNotEmpty)...[
             //      // Heading and horizontal list view of cards
             //      Padding(
-            //          padding: EdgeInsets.fromLTRB(16.w, 32.h,16.w,16.h),
+            //          padding: EdgeInsets.fromLTRB(16, 32,16,16),
             //          child: Row(
             //            children: [
             //              Text(
             //                categroiesArray[0].categoryName,
             //                style: TextStyle(
-            //                  fontSize: 22.sp,
+            //                  fontSize: 22,
             //                  fontWeight: FontWeight.bold,
             //                ),
             //              ),
@@ -605,7 +604,7 @@ class _ForMeState extends State<ForMeScreen> {
             //                TextButton(onPressed: (){
             //                  pushName(context, TrackListScreen(heading:categroiesArray[0].categoryName,list: sleepStoriesList,panelFunction: widget.panelFunction,));
             //
-            //                }, child:Text("See all",style: TextStyle(color: blueAccentColor,fontSize: 16.sp),))
+            //                }, child:Text("See all",style: TextStyle(color: blueAccentColor,fontSize: 16),))
             //            ],
             //
             //          )
@@ -613,7 +612,7 @@ class _ForMeState extends State<ForMeScreen> {
             //      sleepStoriesList.isEmpty
             //          ? _buildShimmerListViewHeight()
             //          : SizedBox(
-            //          height: 231.h,
+            //          height: 231,
             //          child: TrackListHorizontal(tap: (){
             //
             //          },audiList: sleepStoriesList,musicList: false,panelFunction: widget.panelFunction,)
@@ -627,13 +626,13 @@ class _ForMeState extends State<ForMeScreen> {
             //    if(meditationsIsLoading || meditationsList.isNotEmpty)...[
             //      // Heading and horizontal list view of cards
             //      Padding(
-            //          padding: EdgeInsets.fromLTRB(16.w, 32.h,16.w,16.h),
+            //          padding: EdgeInsets.fromLTRB(16, 32,16,16),
             //          child: Row(
             //            children: [
             //              Text(
             //                categroiesArray[1].categoryName,
             //                style: TextStyle(
-            //                  fontSize: 22.sp,
+            //                  fontSize: 22,
             //                  fontWeight: FontWeight.bold,
             //                ),
             //              ),
@@ -643,7 +642,7 @@ class _ForMeState extends State<ForMeScreen> {
             //                TextButton(onPressed: (){
             //                  pushName(context, TrackListScreen(heading:categroiesArray[1].categoryName,list: meditationsList,panelFunction: widget.panelFunction,));
             //
-            //                }, child:Text("See all",style: TextStyle(color: blueAccentColor,fontSize: 16.sp),))
+            //                }, child:Text("See all",style: TextStyle(color: blueAccentColor,fontSize: 16),))
             //            ],
             //
             //          )
@@ -651,7 +650,7 @@ class _ForMeState extends State<ForMeScreen> {
             //      meditationsList.isEmpty
             //          ? _buildShimmerListViewHeight()
             //          : SizedBox(
-            //          height: 231.h,
+            //          height: 231,
             //          child: WidthTrackListHorizontalNew(tap: (){
             //
             //          },audiList: meditationsList,musicList: false,panelFunction: widget.panelFunction,)
@@ -664,13 +663,13 @@ class _ForMeState extends State<ForMeScreen> {
             //    if(musicIsLoading || musicList.isNotEmpty)...[
             //      // Heading and horizontal list view of cards
             //      Padding(
-            //          padding: EdgeInsets.fromLTRB(16.w, 32.h,16.w,16.h),
+            //          padding: EdgeInsets.fromLTRB(16, 32,16,16),
             //          child: Row(
             //            children: [
             //              Text(
             //                categroiesArray[2].categoryName,
             //                style: TextStyle(
-            //                  fontSize: 22.sp,
+            //                  fontSize: 22,
             //                  fontWeight: FontWeight.bold,
             //                ),
             //              ),
@@ -680,7 +679,7 @@ class _ForMeState extends State<ForMeScreen> {
             //                TextButton(onPressed: (){
             //                  pushName(context, TrackListScreen(heading:categroiesArray[2].categoryName,list: musicList,panelFunction: widget.panelFunction,));
             //
-            //                }, child:Text("See all",style: TextStyle(color: blueAccentColor,fontSize: 16.sp),))
+            //                }, child:Text("See all",style: TextStyle(color: blueAccentColor,fontSize: 16),))
             //            ],
             //
             //          )
@@ -688,7 +687,7 @@ class _ForMeState extends State<ForMeScreen> {
             //      musicList.isEmpty
             //          ? _buildShimmerListViewHeight()
             //          : SizedBox(
-            //          height: 231.h,
+            //          height: 231,
             //          child: TrackListHorizontal(tap: (){
             //
             //          },audiList: musicList,musicList: true,panelFunction: widget.panelFunction,)
@@ -699,7 +698,7 @@ class _ForMeState extends State<ForMeScreen> {
             //    ],
 
             SizedBox(
-              height: 165.h,
+              height: 165,
             ),
           ],
         ),
@@ -773,13 +772,13 @@ class _ForMeState extends State<ForMeScreen> {
 
   Widget _buildShimmerListButton() {
     return SizedBox(
-      height: 40.h,
+      height: 40,
       child: ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: 10.w),
+        padding: EdgeInsets.symmetric(horizontal: 10),
         scrollDirection: Axis.horizontal,
         itemCount: 5,
         itemBuilder: (context, index) {
-          return Padding(padding: EdgeInsets.all(5.w), child: ShimmerCustomTabButton());
+          return Padding(padding: EdgeInsets.all(5), child: ShimmerCustomTabButton());
         },
       ),
     );
@@ -787,13 +786,13 @@ class _ForMeState extends State<ForMeScreen> {
 
   Widget _buildShimmerListViewWidth() {
     return SizedBox(
-      height: 231.h,
+      height: 231,
       child: ListView.separated(
-        padding: EdgeInsets.only(left: 16.w),
+        padding: EdgeInsets.only(left: 16),
         scrollDirection: Axis.horizontal,
         itemCount: 3,
         separatorBuilder: (BuildContext context, int index) {
-          return SizedBox(width: 16.w);
+          return SizedBox(width: 16);
         },
         itemBuilder: (BuildContext context, int index) {
           return Mp3ListItemShimmer();
@@ -807,13 +806,13 @@ class _ForMeState extends State<ForMeScreen> {
       children: [
         // Heading and horizontal list view of cards
         Padding(
-            padding: EdgeInsets.fromLTRB(14.w, 14.h, 14.w, 14.h),
+            padding: EdgeInsets.fromLTRB(14, 14, 14, 14),
             child: Row(
               children: [
                 Text(
                   "       ",
                   style: TextStyle(
-                    fontSize: 22.sp,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -822,18 +821,18 @@ class _ForMeState extends State<ForMeScreen> {
                     onPressed: () {},
                     child: Text(
                       "    ",
-                      style: TextStyle(color: blueAccentColor, fontSize: 16.sp),
+                      style: TextStyle(color: blueAccentColor, fontSize: 16),
                     ))
               ],
             )),
         SizedBox(
-          height: 231.h,
+          height: 231,
           child: ListView.separated(
-            padding: EdgeInsets.only(left: 16.w),
+            padding: EdgeInsets.only(left: 16),
             scrollDirection: Axis.horizontal,
             itemCount: 3,
             separatorBuilder: (BuildContext context, int index) {
-              return SizedBox(width: 16.w);
+              return SizedBox(width: 16);
             },
             itemBuilder: (BuildContext context, int index) {
               return Mp3ListItemShimmerHeight();
@@ -846,13 +845,13 @@ class _ForMeState extends State<ForMeScreen> {
 
   Widget _buildShimmerListViewTab() {
     return SizedBox(
-      height: 40.h,
+      height: 40,
       child: ListView.separated(
-        padding: EdgeInsets.only(left: 16.w),
+        padding: EdgeInsets.only(left: 16),
         scrollDirection: Axis.horizontal,
         itemCount: 3,
         separatorBuilder: (BuildContext context, int index) {
-          return SizedBox(width: 16.w);
+          return SizedBox(width: 16);
         },
         itemBuilder: (BuildContext context, int index) {
           return Mp3ListItemShimmerHeight();
@@ -863,13 +862,13 @@ class _ForMeState extends State<ForMeScreen> {
 
   Widget _buildShimmerListViewHeight() {
     return SizedBox(
-      height: 231.h,
+      height: 231,
       child: ListView.separated(
-        padding: EdgeInsets.only(left: 16.w),
+        padding: EdgeInsets.only(left: 16),
         scrollDirection: Axis.horizontal,
         itemCount: 3,
         separatorBuilder: (BuildContext context, int index) {
-          return SizedBox(width: 16.w);
+          return SizedBox(width: 16);
         },
         itemBuilder: (BuildContext context, int index) {
           return Mp3ListItemShimmerHeight();
@@ -880,13 +879,13 @@ class _ForMeState extends State<ForMeScreen> {
 
   Widget _buildShimmerListViewSmall() {
     return SizedBox(
-      height: 133.h,
+      height: 133,
       child: ListView.separated(
-        padding: EdgeInsets.only(left: 16.w),
+        padding: EdgeInsets.only(left: 16),
         scrollDirection: Axis.horizontal,
         itemCount: 3,
         separatorBuilder: (BuildContext context, int index) {
-          return SizedBox(width: 16.w);
+          return SizedBox(width: 16);
         },
         itemBuilder: (BuildContext context, int index) {
           return Mp3ListItemShimmerSmall();

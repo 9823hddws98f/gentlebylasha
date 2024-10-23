@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/language_constants.dart';
 import '/models/user_model.dart';
@@ -42,7 +41,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
         title: Text(
           translation(context).myProfile,
           style: TextStyle(
-            fontSize: 18.sp,
+            fontSize: 18,
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -58,14 +57,14 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    width: 64.w,
-                    height: 64.h,
+                    width: 64,
+                    height: 64,
                     child: user?.photoURL != null
                         ? CachedNetworkImage(
                             imageUrl: user!.photoURL!,
                             imageBuilder: (context, imageProvider) => CircleAvatar(
                               backgroundImage: imageProvider,
-                              radius: 64.h,
+                              radius: 64,
                             ),
                             placeholder: (context, url) => Image.asset(
                               "images/profile.png",
@@ -81,17 +80,17 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                             fit: BoxFit.cover,
                           ),
                   ),
-                  SizedBox(width: 16.0.w),
+                  SizedBox(width: 16.0),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(left: 5.w),
+                        padding: EdgeInsets.only(left: 5),
                         child:
                             // Text(
                             //   user?.name??"",
                             //   style: TextStyle(
-                            //     fontSize: 20.0.sp,
+                            //     fontSize: 20.0,
                             //     fontWeight: FontWeight.bold,
                             //   ),
                             // ),
@@ -106,7 +105,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                           },
                         ),
                       ),
-                      SizedBox(height: 5.0.h),
+                      SizedBox(height: 5.0),
                       TextButton(
                         onPressed: () async {
                           pushName(context, EditProfileScreen());
@@ -122,19 +121,19 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 8.w),
+              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
               child: Divider(
                 height: 3.0,
                 color: lightBlueColor,
               ),
             ),
             ListTile(
-              leading: Icon(Icons.favorite, color: Colors.white, size: 20.h),
+              leading: Icon(Icons.favorite, color: Colors.white, size: 20),
               title: Text(translation(context).favoriteList),
               trailing: Icon(
                 Icons.arrow_forward_ios,
                 color: Colors.white,
-                size: 24.h,
+                size: 24,
               ),
               onTap: () {
                 pushName(
@@ -145,12 +144,12 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.playlist_add_check, color: Colors.white, size: 20.h),
+              leading: Icon(Icons.playlist_add_check, color: Colors.white, size: 20),
               title: Text(translation(context).favoritePlaylist),
               trailing: Icon(
                 Icons.arrow_forward_ios,
                 color: Colors.white,
-                size: 24.h,
+                size: 24,
               ),
               onTap: () {
                 pushName(
@@ -161,7 +160,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.download, color: Colors.white, size: 20.h),
+              leading: Icon(Icons.download, color: Colors.white, size: 20),
               title: Text(translation(context).downloads),
               trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
               onTap: () {
@@ -169,14 +168,14 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               },
             ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 8.w),
+              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
               child: Divider(
                 height: 3.0,
                 color: lightBlueColor,
               ),
             ),
             ListTile(
-              leading: Icon(Icons.lock, color: Colors.white, size: 20.h),
+              leading: Icon(Icons.lock, color: Colors.white, size: 20),
               title: Text(translation(context).changePassword),
               trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
               onTap: () {
@@ -184,7 +183,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.punch_clock_rounded, color: Colors.white, size: 20.h),
+              leading: Icon(Icons.punch_clock_rounded, color: Colors.white, size: 20),
               title: Text(translation(context).reminders),
               trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
               onTap: () {
@@ -192,7 +191,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.subscriptions, color: Colors.white, size: 20.h),
+              leading: Icon(Icons.subscriptions, color: Colors.white, size: 20),
               title: Text(translation(context).manageSubscription),
               trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
               onTap: () {
@@ -200,14 +199,14 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               },
             ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 8.w),
+              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
               child: Divider(
                 height: 3.0,
                 color: lightBlueColor,
               ),
             ),
             ListTile(
-              leading: Icon(Icons.language, color: Colors.white, size: 20.h),
+              leading: Icon(Icons.language, color: Colors.white, size: 20),
               title: Text(translation(context).changeLanguage),
               trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
               onTap: () {
@@ -215,7 +214,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.help_center, color: Colors.white, size: 20.h),
+              leading: Icon(Icons.help_center, color: Colors.white, size: 20),
               title: Text(translation(context).helpSupport),
               trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
               onTap: () {},
@@ -224,7 +223,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               leading: Icon(
                 Icons.info,
                 color: Colors.white,
-                size: 20.h,
+                size: 20,
               ),
               title: Text(translation(context).about),
               trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
@@ -236,7 +235,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               leading: Icon(
                 Icons.account_circle,
                 color: Colors.white,
-                size: 20.h,
+                size: 20,
               ),
               title: Text(translation(context).deleteAccount),
               trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
@@ -245,10 +244,10 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               },
             ),
             SizedBox(
-              height: 40.h,
+              height: 40,
             ),
             Padding(
-              padding: EdgeInsets.only(left: 16.w),
+              padding: EdgeInsets.only(left: 16),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: TextButton(
@@ -261,12 +260,12 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                       style: TextStyle(
                           decoration: TextDecoration.underline,
                           color: Colors.white,
-                          fontSize: 18.sp),
+                          fontSize: 18),
                     )),
               ),
             ),
             SizedBox(
-              height: 150.h,
+              height: 150,
             )
           ],
         ),

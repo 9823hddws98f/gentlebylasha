@@ -1,4 +1,5 @@
 import 'package:audio_session/audio_session.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -6,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
@@ -25,19 +25,25 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   tz.initializeTimeZones();
-  // await initializeNotifications();
+  //TODO: await initializeNotifications();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   await FlutterTimezone.getAvailableTimezones();
   final session = await AudioSession.instance;
   await session.configure(AudioSessionConfiguration.music());
   await setupServiceLocator();
-  runApp(MyApp());
+
+  runApp(
+    DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) => MyApp(),
+    ),
+  );
 }
 
 void setupFirebaseMessaging() {
@@ -110,40 +116,35 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(375, 812),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, child) => MaterialApp(
-        title: "Gentle",
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          textTheme: Theme.of(context).textTheme.apply(
-                fontFamily: 'Nunito',
-                bodyColor: Colors.white, //<-- SEE HERE
-                displayColor: Colors.white, //<-- SEE HERE
-              ),
-          iconTheme: const IconThemeData(
-            color: Colors.white, // set the default color for icons
-          ),
-          unselectedWidgetColor: Colors.white,
-          scaffoldBackgroundColor: colorBackground,
-          colorScheme: ThemeData().colorScheme.copyWith(
-                primary: colorBackground,
-                secondary: Colors.white,
-                surface: colorBackground,
-              ),
+    return MaterialApp(
+      title: "Gentle",
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        textTheme: Theme.of(context).textTheme.apply(
+              fontFamily: 'Nunito',
+              bodyColor: Colors.white, //<-- SEE HERE
+              displayColor: Colors.white, //<-- SEE HERE
+            ),
+        iconTheme: const IconThemeData(
+          color: Colors.white, // set the default color for icons
         ),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        initialRoute: splashPath,
-        routes: {
-          splashPath: (context) => const SplashScreen(),
-          loginPath: (context) => const LaunchScreen(),
-          dashboard: (context) => const HomeScreen(),
-        },
-        locale: _locale,
+        unselectedWidgetColor: Colors.white,
+        scaffoldBackgroundColor: colorBackground,
+        colorScheme: ThemeData().colorScheme.copyWith(
+              primary: colorBackground,
+              secondary: Colors.white,
+              surface: colorBackground,
+            ),
       ),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      initialRoute: splashPath,
+      routes: {
+        splashPath: (context) => const SplashScreen(),
+        loginPath: (context) => const LaunchScreen(),
+        dashboard: (context) => const HomeScreen(),
+      },
+      locale: _locale,
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/screens/onboarding01.dart';
 import '/screens/onboarding02.dart';
@@ -79,8 +78,8 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24.h),
-          topRight: Radius.circular(24.h),
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
         ),
       ),
       child: Column(

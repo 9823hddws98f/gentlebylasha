@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/language_constants.dart';
 import '/models/user_model.dart';
@@ -163,7 +162,7 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen> {
       body: SafeArea(
         child: SizedBox(
             child: Padding(
-                padding: EdgeInsets.all(10.w),
+                padding: EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -173,12 +172,12 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen> {
                           Navigator.pop(context);
                         }),
                     SizedBox(
-                      height: 20.h,
+                      height: 20,
                     ),
                     if (favoritePlaylist.isNotEmpty && !isLoading) ...[
                       Expanded(
                           child: SingleChildScrollView(
-                        padding: EdgeInsets.only(bottom: 165.h),
+                        padding: EdgeInsets.only(bottom: 165),
                         child: Column(
                           children: [
                             for (int index = 0; index < favoritePlaylist.length; index++)
@@ -207,10 +206,10 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen> {
                               children: [
                             Text(
                               "Something went wrong",
-                              style: TextStyle(fontSize: 16.sp),
+                              style: TextStyle(fontSize: 16),
                             ),
                             SizedBox(
-                              height: 20.h,
+                              height: 20,
                             ),
                             CustomTabButton(
                                 title: "Retry",
@@ -228,14 +227,14 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen> {
                           Center(
                               child: Icon(
                             Icons.favorite_border,
-                            size: 40.h,
+                            size: 40,
                           )),
                           SizedBox(
-                            height: 5.h,
+                            height: 5,
                           ),
                           Text(
                             "You have not added any playlists to favorites",
-                            style: TextStyle(fontSize: 16.sp),
+                            style: TextStyle(fontSize: 16),
                           )
                         ],
                       ))
@@ -255,7 +254,7 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen> {
           children: List.generate(
             6,
             (index) => Padding(
-              padding: EdgeInsets.only(bottom: 16.h),
+              padding: EdgeInsets.only(bottom: 16),
               child: ShimmerPlaylistItem(),
             ),
           ),

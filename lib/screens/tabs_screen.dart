@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/models/user_model.dart';
 import '/screens/track_list.dart';
@@ -64,13 +63,13 @@ class _TabsScreen extends State<TabsScreen> {
           children: [
             if (!newworthyIsLoading && audioList1.isNotEmpty) ...[
               Padding(
-                  padding: EdgeInsets.fromLTRB(16.w, 15.h, 16.w, 16.h),
+                  padding: EdgeInsets.fromLTRB(16, 15, 16, 16),
                   child: Row(
                     children: [
                       Text(
                         "New & Worthy",
                         style: TextStyle(
-                          fontSize: 22.sp,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -88,14 +87,14 @@ class _TabsScreen extends State<TabsScreen> {
                             },
                             child: Text(
                               "See all",
-                              style: TextStyle(color: blueAccentColor, fontSize: 16.sp),
+                              style: TextStyle(color: blueAccentColor, fontSize: 16),
                             ))
                     ],
                   )),
               audioList1.isEmpty
                   ? _buildShimmerListViewWidth()
                   : SizedBox(
-                      height: 231.h,
+                      height: 231,
                       child: WidthTrackListHorizontal(
                         audiList: audioList1,
                         tap: () {},
@@ -107,13 +106,13 @@ class _TabsScreen extends State<TabsScreen> {
             // Heading and horizontal list view of cards
             if (recentIsLoading || recentlyPlayed.isNotEmpty) ...[
               Padding(
-                  padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h),
+                  padding: EdgeInsets.fromLTRB(16, 32, 16, 16),
                   child: Row(
                     children: [
                       Text(
                         "Recently played",
                         style: TextStyle(
-                          fontSize: 22.sp,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -131,14 +130,14 @@ class _TabsScreen extends State<TabsScreen> {
                             },
                             child: Text(
                               "See all",
-                              style: TextStyle(color: blueAccentColor, fontSize: 16.sp),
+                              style: TextStyle(color: blueAccentColor, fontSize: 16),
                             ))
                     ],
                   )),
               recentlyPlayed.isEmpty
                   ? _buildShimmerListViewHeight()
                   : SizedBox(
-                      height: 231.h,
+                      height: 231,
                       child: TrackListHorizontal(
                         tap: () {},
                         audiList: recentlyPlayed,
@@ -147,11 +146,11 @@ class _TabsScreen extends State<TabsScreen> {
                       )
 
                       // ListView.separated(
-                      //   padding: EdgeInsets.only(left:16.w),
+                      //   padding: EdgeInsets.only(left:16),
                       //   scrollDirection: Axis.horizontal,
                       //   itemCount: recentlyPlayed.length < 10?recentlyPlayed.length:10,
                       //   separatorBuilder: (BuildContext context, int index) {
-                      //     return SizedBox(width: 16.w);
+                      //     return SizedBox(width: 16);
                       //   },
                       //   itemBuilder: (BuildContext context, int index) {
                       //     return Mp3Item(
@@ -174,13 +173,13 @@ class _TabsScreen extends State<TabsScreen> {
             if (popularIsLoading || popularCat.isNotEmpty) ...[
               // Heading and horizontal list view of cards
               Padding(
-                  padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h),
+                  padding: EdgeInsets.fromLTRB(16, 32, 16, 16),
                   child: Row(
                     children: [
                       Text(
                         "Popular ${widget.category.categoryName}",
                         style: TextStyle(
-                          fontSize: 22.sp,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -198,14 +197,14 @@ class _TabsScreen extends State<TabsScreen> {
                             },
                             child: Text(
                               "See all",
-                              style: TextStyle(color: blueAccentColor, fontSize: 16.sp),
+                              style: TextStyle(color: blueAccentColor, fontSize: 16),
                             ))
                     ],
                   )),
               popularCat.isEmpty
                   ? _buildShimmerListViewHeight()
                   : SizedBox(
-                      height: 231.h,
+                      height: 231,
                       child: TrackListHorizontal(
                         tap: () {},
                         audiList: popularCat,
@@ -223,20 +222,20 @@ class _TabsScreen extends State<TabsScreen> {
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   separatorBuilder: (BuildContext context, int index) {
-                    return SizedBox(width: 0.w);
+                    return SizedBox(width: 0);
                   },
                   itemBuilder: (BuildContext context, int index) {
                     return Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Padding(
-                            padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h),
+                            padding: EdgeInsets.fromLTRB(16, 32, 16, 16),
                             child: Row(
                               children: [
                                 Text(
                                   topCollection[index].collectionTitle,
                                   style: TextStyle(
-                                    fontSize: 22.sp,
+                                    fontSize: 22,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -253,15 +252,15 @@ class _TabsScreen extends State<TabsScreen> {
                                     },
                                     child: Text(
                                       "See all",
-                                      style: TextStyle(
-                                          color: blueAccentColor, fontSize: 16.sp),
+                                      style:
+                                          TextStyle(color: blueAccentColor, fontSize: 16),
                                     ))
                               ],
                             )),
                         topCollection[index].collectionTracks.isEmpty
                             ? _buildShimmerListViewHeight()
                             : SizedBox(
-                                height: 231.h,
+                                height: 231,
                                 child: TrackListHorizontal(
                                     tap: () {},
                                     audiList: topCollection[index].collectionTracks,
@@ -281,7 +280,7 @@ class _TabsScreen extends State<TabsScreen> {
             // Heading and horizontal list view of cards
 
             SizedBox(
-              height: 100.h,
+              height: 100,
             ),
           ],
         ),
@@ -303,13 +302,13 @@ class _TabsScreen extends State<TabsScreen> {
 
   Widget _buildShimmerListViewWidth() {
     return SizedBox(
-      height: 231.h,
+      height: 231,
       child: ListView.separated(
-        padding: EdgeInsets.only(left: 16.w),
+        padding: EdgeInsets.only(left: 16),
         scrollDirection: Axis.horizontal,
         itemCount: 3,
         separatorBuilder: (BuildContext context, int index) {
-          return SizedBox(width: 16.w);
+          return SizedBox(width: 16);
         },
         itemBuilder: (BuildContext context, int index) {
           return Mp3ListItemShimmer();
@@ -320,13 +319,13 @@ class _TabsScreen extends State<TabsScreen> {
 
   Widget _buildShimmerListViewHeight() {
     return SizedBox(
-      height: 231.h,
+      height: 231,
       child: ListView.separated(
-        padding: EdgeInsets.only(left: 16.w),
+        padding: EdgeInsets.only(left: 16),
         scrollDirection: Axis.horizontal,
         itemCount: 3,
         separatorBuilder: (BuildContext context, int index) {
-          return SizedBox(width: 16.w);
+          return SizedBox(width: 16);
         },
         itemBuilder: (BuildContext context, int index) {
           return Mp3ListItemShimmerHeight();
@@ -337,13 +336,13 @@ class _TabsScreen extends State<TabsScreen> {
 
   Widget _buildShimmerListViewSmall() {
     return SizedBox(
-      height: 133.h,
+      height: 133,
       child: ListView.separated(
-        padding: EdgeInsets.only(left: 16.w),
+        padding: EdgeInsets.only(left: 16),
         scrollDirection: Axis.horizontal,
         itemCount: 3,
         separatorBuilder: (BuildContext context, int index) {
-          return SizedBox(width: 16.w);
+          return SizedBox(width: 16);
         },
         itemBuilder: (BuildContext context, int index) {
           return Mp3ListItemShimmerSmall();

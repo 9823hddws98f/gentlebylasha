@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/language_constants.dart';
 import '/screens/authentication.dart';
@@ -38,7 +37,7 @@ class _SignupScreenState extends State<SignupScreen> {
             child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.95,
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
+                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                 child: Form(
                   key: SignupScreen._formKey,
                   child: Column(
@@ -46,14 +45,14 @@ class _SignupScreenState extends State<SignupScreen> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(top: 14.h),
+                        padding: EdgeInsets.only(top: 14),
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
                             Align(
                               alignment: Alignment.topRight,
                               child: Padding(
-                                padding: EdgeInsets.fromLTRB(10.w, 0.h, 0.w, 0.h),
+                                padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                                 child: IconButton(
                                   iconSize: 22,
                                   icon: Icon(
@@ -72,12 +71,12 @@ class _SignupScreenState extends State<SignupScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.fromLTRB(20.w, 5.h, 20.w, 5.h),
+                                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                                     child: Text(
                                       translation(context).joinSleepytales,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                          fontSize: 24.sp, fontWeight: FontWeight.bold),
+                                          fontSize: 24, fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ],
@@ -87,11 +86,11 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(0.w, 30.h, 0.w, 10.h),
+                        padding: EdgeInsets.fromLTRB(0, 30, 0, 10),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text("${translation(context).yourName}:",
-                              style: TextStyle(fontSize: 16.sp)),
+                              style: TextStyle(fontSize: 16)),
                         ),
                       ),
                       CustomeEditTextFullName(
@@ -108,14 +107,14 @@ class _SignupScreenState extends State<SignupScreen> {
                         },
                       ),
                       SizedBox(
-                        height: 5.h,
+                        height: 5,
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(0.w, 10.h, 0.w, 10.h),
+                        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text("${translation(context).email}:",
-                              style: TextStyle(fontSize: 16.sp)),
+                              style: TextStyle(fontSize: 16)),
                         ),
                       ),
                       CustomeEditText(
@@ -137,14 +136,14 @@ class _SignupScreenState extends State<SignupScreen> {
                         },
                       ),
                       SizedBox(
-                        height: 5.h,
+                        height: 5,
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(0.w, 10.h, 0.w, 10.h),
+                        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text("${translation(context).password}:",
-                              style: TextStyle(fontSize: 16.sp)),
+                              style: TextStyle(fontSize: 16)),
                         ),
                       ),
                       PasswordEditText(
@@ -168,7 +167,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         },
                       ),
                       SizedBox(
-                        height: 40.h,
+                        height: 40,
                       ),
                       LoginFotter(
                           alignment: MainAxisAlignment.start,
@@ -179,7 +178,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             widget.callbackSignUp!();
                           }),
                       SizedBox(
-                        height: 20.h,
+                        height: 20,
                       ),
                       CustomButton(
                         title: translation(context).signUp,

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'colors.dart';
 
-var textFieldStyle = TextStyle(color: Colors.white, fontSize: 16.sp);
-var headingTextStyle = TextStyle(fontSize: 18.sp);
+var textFieldStyle = TextStyle(color: Colors.white, fontSize: 16);
+var headingTextStyle = TextStyle(fontSize: 18);
 
 InputDecoration decorationInputStyle(String hint) {
   return InputDecoration(
@@ -14,23 +13,23 @@ InputDecoration decorationInputStyle(String hint) {
     hintText: hint,
     focusedBorder: OutlineInputBorder(
       borderSide: BorderSide(color: lightBlueColor, width: 2),
-      borderRadius: BorderRadius.circular(8.h),
+      borderRadius: BorderRadius.circular(8),
     ),
     border: OutlineInputBorder(
       borderSide: BorderSide(color: lightBlueColor, width: 2),
-      borderRadius: BorderRadius.circular(8.h),
+      borderRadius: BorderRadius.circular(8),
     ),
     enabledBorder: OutlineInputBorder(
       borderSide: BorderSide(color: lightBlueColor, width: 2),
-      borderRadius: BorderRadius.circular(8.h),
+      borderRadius: BorderRadius.circular(8),
     ),
     errorBorder: OutlineInputBorder(
       borderSide: BorderSide(color: Colors.purple, width: 2),
-      borderRadius: BorderRadius.circular(8.h),
+      borderRadius: BorderRadius.circular(8),
     ),
     focusedErrorBorder: OutlineInputBorder(
       borderSide: BorderSide(color: lightBlueColor, width: 2),
-      borderRadius: BorderRadius.circular(8.h),
+      borderRadius: BorderRadius.circular(8),
     ),
   );
 }
@@ -43,22 +42,22 @@ InputDecoration decorationPasswordHintStyle(String hint, String iconPath, Widget
     filled: true,
     enabledBorder: OutlineInputBorder(
       borderSide: BorderSide(color: lightBlueColor, width: 2),
-      borderRadius: BorderRadius.circular(8.h),
+      borderRadius: BorderRadius.circular(8),
     ),
     focusedBorder: OutlineInputBorder(
       borderSide: BorderSide(color: lightBlueColor, width: 2),
-      borderRadius: BorderRadius.circular(8.h),
+      borderRadius: BorderRadius.circular(8),
     ),
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8.h),
+      borderRadius: BorderRadius.circular(8),
     ),
     errorBorder: OutlineInputBorder(
       borderSide: BorderSide(color: Colors.purple, width: 2),
-      borderRadius: BorderRadius.circular(8.h),
+      borderRadius: BorderRadius.circular(8),
     ),
     focusedErrorBorder: OutlineInputBorder(
       borderSide: BorderSide(color: lightBlueColor, width: 2),
-      borderRadius: BorderRadius.circular(8.h),
+      borderRadius: BorderRadius.circular(8),
     ),
   );
 }

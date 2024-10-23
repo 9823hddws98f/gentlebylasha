@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/models/audiofile_model.dart';
 
@@ -34,10 +33,10 @@ class SeriesTrackListWidget extends StatelessWidget {
                   onPressed: onTapPlayPause,
                   icon: Icon(
                     currentPlaying ? Icons.pause : Icons.play_arrow_outlined,
-                    size: 30.h,
+                    size: 30,
                   ),
                   constraints: BoxConstraints(),
-                  padding: EdgeInsets.only(right: 10.w, top: 0.h, bottom: 8.h, left: 0.w),
+                  padding: EdgeInsets.only(right: 10, top: 0, bottom: 8, left: 0),
                 ),
 
                 Expanded(
@@ -46,14 +45,14 @@ class SeriesTrackListWidget extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
 
                 //Spacer(),
-                SizedBox(width: 15.h),
+                SizedBox(width: 15),
                 Align(
                   alignment: Alignment.bottomLeft,
                   child: Text(
@@ -61,21 +60,21 @@ class SeriesTrackListWidget extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: 14,
                     ),
                   ),
                 ),
 
                 SizedBox(
-                  width: 12.w,
+                  width: 12,
                 ),
 
                 Padding(
-                  padding: EdgeInsets.only(top: 4.h),
+                  padding: EdgeInsets.only(top: 4),
                   child: IconButton(
                     onPressed: favoriteTap,
                     icon: favorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
-                    padding: EdgeInsets.only(top: 8.h, bottom: 8.h),
+                    padding: EdgeInsets.only(top: 8, bottom: 8),
                     constraints: BoxConstraints(),
                   ),
                 )

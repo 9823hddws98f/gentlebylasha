@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/utils/global_functions.dart';
 import '/widgets/custom_btn.dart';
@@ -36,19 +35,19 @@ class _OnBoarding02ScreenState extends State<OnBoarding02Screen> {
     return Scaffold(
         body: SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
+        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
         child: Column(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(top: 10.h),
+              padding: EdgeInsets.only(top: 10),
               child: Text(
                 'How did you hear about Sleepytales?',
-                style: TextStyle(fontSize: 18.sp),
+                style: TextStyle(fontSize: 18),
               ),
             ),
 
             Padding(
-              padding: EdgeInsets.fromLTRB(0, 30.h, 0, 20.h),
+              padding: EdgeInsets.fromLTRB(0, 30, 0, 20),
               child: Column(
                 children: _options
                     .asMap()
@@ -60,7 +59,7 @@ class _OnBoarding02ScreenState extends State<OnBoarding02Screen> {
                         activeColor: Colors.white,
                         title: Text(
                           entry.value,
-                          style: TextStyle(fontSize: 18.sp),
+                          style: TextStyle(fontSize: 18),
                         ),
                         value: entry.key,
                         groupValue: _selectedOption,
@@ -75,13 +74,13 @@ class _OnBoarding02ScreenState extends State<OnBoarding02Screen> {
               ),
             ),
             SizedBox(
-              height: 20.h,
+              height: 20,
             ),
 
             // Positioned(
             //   left: 0,
             //   right: 0,
-            //   bottom: 50.h,
+            //   bottom: 50,
             //     child:
 
             CustomButton(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/models/sub_categories.dart';
 import '/screens/track_list.dart';
@@ -55,13 +54,13 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
               children: [
                 if (recentIsLoading || recentlyPlayed.isNotEmpty) ...[
                   Padding(
-                      padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h),
+                      padding: EdgeInsets.fromLTRB(16, 32, 16, 16),
                       child: Row(
                         children: [
                           Text(
                             "Recently played",
                             style: TextStyle(
-                              fontSize: 22.sp,
+                              fontSize: 22,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -79,15 +78,14 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
                                 },
                                 child: Text(
                                   "See all",
-                                  style:
-                                      TextStyle(color: blueAccentColor, fontSize: 16.sp),
+                                  style: TextStyle(color: blueAccentColor, fontSize: 16),
                                 ))
                         ],
                       )),
                   recentlyPlayed.isEmpty
                       ? _buildShimmerListViewHeight()
                       : SizedBox(
-                          height: 231.h,
+                          height: 231,
                           child: TrackListHorizontal(
                             tap: () {},
                             audiList: recentlyPlayed,
@@ -105,20 +103,20 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       separatorBuilder: (BuildContext context, int index) {
-                        return SizedBox(width: 0.w);
+                        return SizedBox(width: 0);
                       },
                       itemBuilder: (BuildContext context, int index) {
                         return Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Padding(
-                                padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h),
+                                padding: EdgeInsets.fromLTRB(16, 32, 16, 16),
                                 child: Row(
                                   children: [
                                     Text(
                                       topCollection[index].collectionTitle,
                                       style: TextStyle(
-                                        fontSize: 22.sp,
+                                        fontSize: 22,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -138,14 +136,14 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
                                         child: Text(
                                           "See all",
                                           style: TextStyle(
-                                              color: blueAccentColor, fontSize: 16.sp),
+                                              color: blueAccentColor, fontSize: 16),
                                         ))
                                   ],
                                 )),
                             topCollection[index].collectionTracks.isEmpty
                                 ? _buildShimmerListViewHeight()
                                 : SizedBox(
-                                    height: 231.h,
+                                    height: 231,
                                     child: TrackListHorizontal(
                                       tap: () {},
                                       audiList: topCollection[index].collectionTracks,
@@ -164,7 +162,7 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
                 // Heading and horizontal list view of cards
 
                 SizedBox(
-                  height: 165.h,
+                  height: 165,
                 ),
               ],
             ),
@@ -188,20 +186,20 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
     return Column(
       children: [
         Padding(
-            padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 16.h),
+            padding: EdgeInsets.fromLTRB(16, 32, 16, 16),
             child: Row(
               children: [
                 Container(
-                    width: 120.w,
-                    height: 20.h,
+                    width: 120,
+                    height: 20,
                     decoration: BoxDecoration(
                       color: shimmerBaseColor,
                       borderRadius: BorderRadius.circular(20),
                     )),
                 Spacer(),
                 Container(
-                    width: 80.w,
-                    height: 20.h,
+                    width: 80,
+                    height: 20,
                     decoration: BoxDecoration(
                       color: shimmerBaseColor,
                       borderRadius: BorderRadius.circular(20),
@@ -209,13 +207,13 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
               ],
             )),
         SizedBox(
-          height: 231.h,
+          height: 231,
           child: ListView.separated(
-            padding: EdgeInsets.only(left: 16.w),
+            padding: EdgeInsets.only(left: 16),
             scrollDirection: Axis.horizontal,
             itemCount: 3,
             separatorBuilder: (BuildContext context, int index) {
-              return SizedBox(width: 16.w);
+              return SizedBox(width: 16);
             },
             itemBuilder: (BuildContext context, int index) {
               return Mp3ListItemShimmerHeight();
@@ -228,13 +226,13 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
 
   Widget _buildShimmerListViewHeight() {
     return SizedBox(
-      height: 231.h,
+      height: 231,
       child: ListView.separated(
-        padding: EdgeInsets.only(left: 16.w),
+        padding: EdgeInsets.only(left: 16),
         scrollDirection: Axis.horizontal,
         itemCount: 3,
         separatorBuilder: (BuildContext context, int index) {
-          return SizedBox(width: 16.w);
+          return SizedBox(width: 16);
         },
         itemBuilder: (BuildContext context, int index) {
           return Mp3ListItemShimmerHeight();

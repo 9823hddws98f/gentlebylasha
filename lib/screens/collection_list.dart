@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/screens/track_list.dart';
 import '/widgets/collection_item_grid.dart';
@@ -31,7 +30,7 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
       body: SafeArea(
         child: SizedBox(
             child: Padding(
-                padding: EdgeInsets.all(10.w),
+                padding: EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -41,20 +40,20 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
                           Navigator.pop(context);
                         }),
                     SizedBox(
-                      height: 20.h,
+                      height: 20,
                     ),
                     (widget.list.isNotEmpty)
                         ? Expanded(
                             child: SingleChildScrollView(
-                            padding: EdgeInsets.only(bottom: 165.h),
+                            padding: EdgeInsets.only(bottom: 165),
                             child: GridView.builder(
                                 itemCount: widget.list.length,
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
                                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 2,
-                                    crossAxisSpacing: 16.w,
-                                    mainAxisSpacing: 16.h,
+                                    crossAxisSpacing: 16,
+                                    mainAxisSpacing: 16,
                                     childAspectRatio: 1.22),
                                 itemBuilder: (BuildContext context, int index) {
                                   return CollectionItemGrid(
@@ -90,8 +89,8 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
           physics: NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              crossAxisSpacing: 16.w,
-              mainAxisSpacing: 16.h,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
               childAspectRatio: 0.81),
           itemBuilder: (BuildContext context, int index) {
             return Mp3ListItemShimmerSmall();

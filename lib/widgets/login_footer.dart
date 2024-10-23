@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LoginFotter extends StatelessWidget {
   final String sentenceText;
@@ -21,7 +20,7 @@ class LoginFotter extends StatelessWidget {
         Text(
           sentenceText,
           style: TextStyle(
-            fontSize: 16.sp,
+            fontSize: 16,
           ),
         ),
         TextButton(
@@ -29,7 +28,7 @@ class LoginFotter extends StatelessWidget {
           child: Text(
             loginSingUpText,
             style: TextStyle(
-              fontSize: 16.sp,
+              fontSize: 16,
               color: Colors.white,
               fontWeight: FontWeight.bold,
               letterSpacing: 1,

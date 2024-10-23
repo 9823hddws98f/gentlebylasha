@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
@@ -230,10 +229,10 @@ class HomeScreenState extends State<HomeScreen> {
                           key: _panelKey,
                           maxHeight: MediaQuery.of(context).size.height,
                           minHeight: defaultTargetPlatform == TargetPlatform.android
-                              ? (kBottomNavigationBarHeight + 78.h)
+                              ? (kBottomNavigationBarHeight + 78)
                               : MediaQuery.of(context).padding.bottom +
                                   kBottomNavigationBarHeight +
-                                  78.h,
+                                  78,
                           controller: panelController,
                           body: Stack(
                             children: [
@@ -250,7 +249,7 @@ class HomeScreenState extends State<HomeScreen> {
                                         opacity: value ? 1.0 : 0.0,
                                         duration: Duration(milliseconds: 100),
                                         child: Container(
-                                            height: 78.h,
+                                            height: 78,
                                             decoration: BoxDecoration(
                                               gradient: LinearGradient(
                                                 begin: Alignment.topCenter,
@@ -295,8 +294,8 @@ class HomeScreenState extends State<HomeScreen> {
                                                                   imageUrl: mediaItem
                                                                       .artUri
                                                                       .toString(),
-                                                                  width: 72.w,
-                                                                  height: 72.h,
+                                                                  width: 72,
+                                                                  height: 72,
                                                                   fit: BoxFit.cover,
                                                                   errorWidget: (context,
                                                                           url, error) =>
@@ -317,7 +316,7 @@ class HomeScreenState extends State<HomeScreen> {
                                                           },
                                                         ),
                                                         SizedBox(
-                                                          width: 5.w,
+                                                          width: 5,
                                                         ),
                                                         Expanded(
                                                             child:
@@ -330,7 +329,7 @@ class HomeScreenState extends State<HomeScreen> {
                                                               CrossAxisAlignment.center,
                                                           children: [
                                                             SizedBox(
-                                                              width: 10.w,
+                                                              width: 10,
                                                             ),
                                                             ValueListenableBuilder(
                                                               valueListenable:
@@ -346,7 +345,7 @@ class HomeScreenState extends State<HomeScreen> {
                                                                   "${progress.current.inMinutes.remainder(60).toString().padLeft(2, '0')}:${progress.current.inSeconds.remainder(60).toString().padLeft(2, '0')}",
                                                                   style: TextStyle(
                                                                       color: Colors.white,
-                                                                      fontSize: 14.sp),
+                                                                      fontSize: 14),
                                                                 ));
                                                               },
                                                             ),
@@ -386,15 +385,15 @@ class HomeScreenState extends State<HomeScreen> {
                                 duration: Duration(milliseconds: 300),
                                 child: Container(
                                   height: defaultTargetPlatform == TargetPlatform.android
-                                      ? kBottomNavigationBarHeight + 2.h
+                                      ? kBottomNavigationBarHeight + 2
                                       : (MediaQuery.of(context).padding.bottom +
                                           kBottomNavigationBarHeight +
-                                          2.h),
+                                          2),
                                   color: lightBlueColor,
-                                  //padding: EdgeInsets.only(top: 2.h,bottom: defaultTargetPlatform == TargetPlatform.android ? 2.h : 0.0,),
+                                  //padding: EdgeInsets.only(top: 2,bottom: defaultTargetPlatform == TargetPlatform.android ? 2.h : 0.0,),
                                   child: BottomNavigationBar(
                                     elevation: 0.0,
-                                    //iconSize: 26.h,
+                                    //iconSize: 26,
                                     items: <BottomNavigationBarItem>[
                                       BottomNavigationBarItem(
                                         icon: _selectedIndex == 0
@@ -472,9 +471,9 @@ class PlayButtonNew extends StatelessWidget {
         switch (value) {
           case ButtonState.loading:
             return Container(
-              margin: EdgeInsets.all(8.w),
-              height: 24.h,
-              width: 24.w,
+              margin: EdgeInsets.all(8),
+              height: 24,
+              width: 24,
               child: const CircularProgressIndicator(
                 color: Colors.white,
               ),
@@ -482,13 +481,13 @@ class PlayButtonNew extends StatelessWidget {
           case ButtonState.paused:
             return IconButton(
               icon: const Icon(Icons.play_arrow),
-              iconSize: 24.h,
+              iconSize: 24,
               onPressed: pageManager.play,
             );
           case ButtonState.playing:
             return IconButton(
               icon: const Icon(Icons.pause),
-              iconSize: 24.h,
+              iconSize: 24,
               onPressed: pageManager.pause,
             );
         }
@@ -546,7 +545,7 @@ class CurrentSongTitleSmall extends StatelessWidget {
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 16.sp,
+              fontSize: 16,
             ),
           ),
         );

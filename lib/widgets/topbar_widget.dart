@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../utils/styles.dart';
 import '/utils/colors.dart';
 import '/widgets/circle_icon_button.dart';
@@ -19,15 +17,15 @@ class TopBar extends StatelessWidget {
         Align(
           alignment: Alignment.centerLeft,
           child: Padding(
-              padding: EdgeInsets.fromLTRB(16.w, 0.h, 0.w, 5.h),
+              padding: EdgeInsets.fromLTRB(16, 0, 0, 5),
               child: CircleIconButton(
                 icon: Icons.arrow_back_ios_new,
                 onPressed: () {
                   Navigator.pop(context);
                 },
                 backgroundColor: transparentWhite,
-                size: 32.h,
-                iconSize: 20.h,
+                size: 32,
+                iconSize: 20,
               )),
         ),
 
@@ -37,7 +35,7 @@ class TopBar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(20.w, 5.h, 20.w, 5.h),
+                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                 child: Text(
                   heading,
                   textAlign: TextAlign.center,

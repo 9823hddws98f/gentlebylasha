@@ -2,7 +2,6 @@ import 'package:audio_service/audio_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/utils/colors.dart';
 import '/widgets/custom_btn.dart';
@@ -275,7 +274,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
           SliverList(
             delegate: SliverChildListDelegate([
               Padding(
-                padding: EdgeInsets.fromLTRB(16.w, 10.h, 8.w, 16.h),
+                padding: EdgeInsets.fromLTRB(16, 10, 8, 16),
                 child: _isAppBarExpanded
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -284,17 +283,16 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                           Expanded(
                               child: Text(
                             widget.block.title,
-                            style:
-                                TextStyle(fontWeight: FontWeight.bold, fontSize: 24.sp),
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                           )),
                           Stack(
                             children: [
                               favoritePlayListLoading
                                   ? Padding(
-                                      padding: EdgeInsets.all(8.w),
+                                      padding: EdgeInsets.all(8),
                                       child: SizedBox(
-                                        height: 20.h,
-                                        width: 20.w,
+                                        height: 20,
+                                        width: 20,
                                         child: Center(
                                             child: CircularProgressIndicator(
                                           color: Colors.white,
@@ -312,11 +310,11 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                                       icon: isPlaylistFavorited(widget.block.id)
                                           ? Icon(
                                               Icons.favorite,
-                                              size: 24.w,
+                                              size: 24,
                                             )
                                           : Icon(
                                               Icons.favorite_border,
-                                              size: 24.w,
+                                              size: 24,
                                             ),
                                       constraints: BoxConstraints(),
                                     )
@@ -327,19 +325,19 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                     : null,
               ),
               Container(
-                padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h),
+                padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      width: 40.w,
-                      height: 40.h,
+                      width: 40,
+                      height: 40,
                       child: widget.block.authorImage != null
                           ? CachedNetworkImage(
                               imageUrl: widget.block.authorImage,
                               imageBuilder: (context, imageProvider) => CircleAvatar(
                                 backgroundImage: imageProvider,
-                                radius: 40.h,
+                                radius: 40,
                               ),
                               placeholder: (context, url) => Image.asset(
                                 "images/profile.png",
@@ -355,27 +353,27 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                               fit: BoxFit.cover,
                             ),
                     ),
-                    SizedBox(width: 8.w),
+                    SizedBox(width: 8),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(left: 0.w),
+                          padding: EdgeInsets.only(left: 0),
                           child: Text(
                             widget.block.author,
                             style: TextStyle(
-                              fontSize: 16.0.sp,
+                              fontSize: 16.0,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 0.w),
+                          padding: EdgeInsets.only(left: 0),
                           child: Text(
                             widget.block.profession,
                             style: TextStyle(
-                              fontSize: 14.0.sp,
+                              fontSize: 14.0,
                             ),
                           ),
                         ),
@@ -385,7 +383,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                padding: EdgeInsets.symmetric(horizontal: 16),
                 child: CustomButton(
                     title: (currentPlaylistIsPlaying && playing) ? "Pause" : "Play",
                     onPress: () {
@@ -406,18 +404,18 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                     textColor: tracksList.isEmpty ? Colors.black12 : textColor),
               ),
               SizedBox(
-                height: 16.h,
+                height: 16,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
                   widget.block.description,
-                  style: TextStyle(fontSize: 16.sp),
+                  style: TextStyle(fontSize: 16),
                 ),
               ),
               if (trackListLoading || tracksList.isNotEmpty)
                 Padding(
-                  padding: EdgeInsets.only(top: 32.h, left: 16.w, right: 16.w),
+                  padding: EdgeInsets.only(top: 32, left: 16, right: 16),
                   child: Divider(
                     height: 1.0,
                     color: Colors.grey,
@@ -427,11 +425,11 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                   ? ListView.separated(
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      padding: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 200.h),
+                      padding: EdgeInsets.only(left: 16, right: 16, bottom: 200),
                       itemCount: tracksList.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Padding(
-                          padding: EdgeInsets.fromLTRB(0, 8.h, 0, 8.h),
+                          padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
                           child: widget.block.showSeriesImg != "1"
                               ? SeriesTrackListWidget(
                                   audioTrack: tracksList[index],
@@ -496,7 +494,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                   : _buildShimmerListViewImage("0"),
               if (trackListLoading || tracksList.isNotEmpty)
                 Padding(
-                  padding: EdgeInsets.only(top: 16.h, left: 16.w, right: 16.w),
+                  padding: EdgeInsets.only(top: 16, left: 16, right: 16),
                   child: Divider(
                     height: 1.0,
                     color: Colors.grey,
@@ -528,11 +526,11 @@ Widget _buildShimmerListViewImage(String type) {
   return ListView.separated(
     physics: NeverScrollableScrollPhysics(),
     shrinkWrap: true,
-    padding: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 300.h),
+    padding: EdgeInsets.only(left: 16, right: 16, bottom: 300),
     itemCount: 3,
     itemBuilder: (BuildContext context, int index) {
       return Padding(
-          padding: EdgeInsets.fromLTRB(0, 8.h, 0, 8.h),
+          padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
           child: type == "1"
               ? ShimmerSeriesTrackListImageWidget()
               : ShimmerSeriesTrackListWidget());

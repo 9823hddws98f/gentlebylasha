@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/utils/colors.dart';
 import '../../utils/styles.dart';
@@ -113,18 +112,18 @@ class CustomeEditTextName extends StatelessWidget {
           filled: true,
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: lightBlueColor, width: 2),
-            borderRadius: BorderRadius.circular(8.h),
+            borderRadius: BorderRadius.circular(8),
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.h),
+            borderRadius: BorderRadius.circular(8),
           ),
           errorBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.purple, width: 2),
-            borderRadius: BorderRadius.circular(8.h),
+            borderRadius: BorderRadius.circular(8),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderSide: BorderSide(color: lightBlueColor, width: 2),
-            borderRadius: BorderRadius.circular(8.h),
+            borderRadius: BorderRadius.circular(8),
           ),
         ));
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:shimmer/shimmer.dart';
 
 import '../../utils/colors.dart';
@@ -20,48 +20,48 @@ class ShimmerPlaylistItem extends StatelessWidget {
             baseColor: shimmerBaseColor,
             highlightColor: gradientColorOne,
             child: Container(
-              height: 72.h,
-              width: 72.h,
+              height: 72,
+              width: 72,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 color: shimmerBaseColor,
               ),
             ),
           ),
-          SizedBox(width: 8.w),
+          SizedBox(width: 8),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: [
-                SizedBox(height: 4.h),
+                SizedBox(height: 4),
                 Shimmer.fromColors(
                   baseColor: shimmerBaseColor,
                   highlightColor: gradientColorOne,
                   child: Container(
-                    height: 16.h,
-                    width: 200.w,
+                    height: 16,
+                    width: 200,
                     color: shimmerBaseColor,
                   ),
                 ),
-                SizedBox(height: 2.h),
+                SizedBox(height: 2),
                 Shimmer.fromColors(
                   baseColor: shimmerBaseColor,
                   highlightColor: gradientColorOne,
                   child: Container(
-                    height: 24.h,
-                    width: 200.w,
+                    height: 24,
+                    width: 200,
                     color: shimmerBaseColor,
                   ),
                 ),
-                SizedBox(height: 15.h),
+                SizedBox(height: 15),
                 Shimmer.fromColors(
                   baseColor: shimmerBaseColor,
                   highlightColor: gradientColorOne,
                   child: Container(
-                    height: 16.h,
-                    width: 100.w,
+                    height: 16,
+                    width: 100,
                     color: shimmerBaseColor,
                   ),
                 ),

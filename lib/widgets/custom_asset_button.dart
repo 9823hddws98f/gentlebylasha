@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:flutter_svg/svg.dart';
 
 class CustomAssetButton extends StatelessWidget {
@@ -22,14 +22,14 @@ class CustomAssetButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      height: 48.h,
+      height: 48,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           elevation: 0,
           backgroundColor: color,
           foregroundColor: textColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8.h)),
+            borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
         ),
         onPressed: onPress,
@@ -42,10 +42,10 @@ class CustomAssetButton extends StatelessWidget {
               height: assetSize,
             ),
             Padding(
-              padding: EdgeInsets.only(left: 10.w),
+              padding: EdgeInsets.only(left: 10),
               child: Text(
                 title,
-                style: TextStyle(color: textColor, fontSize: 18.sp),
+                style: TextStyle(color: textColor, fontSize: 18),
               ),
             )
           ],

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/widgets/track_list_item.dart';
 import '../models/audiofile_model.dart';
@@ -35,7 +34,7 @@ class _TrackListSearchScreenState extends State<TrackListSearchScreen> {
       body: SafeArea(
         child: SizedBox(
             child: Padding(
-                padding: EdgeInsets.all(10.w),
+                padding: EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -45,20 +44,20 @@ class _TrackListSearchScreenState extends State<TrackListSearchScreen> {
                           Navigator.pop(context);
                         }),
                     SizedBox(
-                      height: 20.h,
+                      height: 20,
                     ),
                     (list.isNotEmpty)
                         ? Expanded(
                             child: SingleChildScrollView(
-                            padding: EdgeInsets.only(bottom: 165.h),
+                            padding: EdgeInsets.only(bottom: 165),
                             child: GridView.builder(
                                 itemCount: list.length,
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
                                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 2,
-                                    crossAxisSpacing: 16.w,
-                                    mainAxisSpacing: 16.h,
+                                    crossAxisSpacing: 16,
+                                    mainAxisSpacing: 16,
                                     childAspectRatio: 0.81),
                                 itemBuilder: (BuildContext context, int index) {
                                   return TrackListItemSmall(
@@ -94,8 +93,8 @@ class _TrackListSearchScreenState extends State<TrackListSearchScreen> {
           physics: NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              crossAxisSpacing: 16.w,
-              mainAxisSpacing: 16.h,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
               childAspectRatio: 0.81),
           itemBuilder: (BuildContext context, int index) {
             return ShimmerTrackListItemSmall();

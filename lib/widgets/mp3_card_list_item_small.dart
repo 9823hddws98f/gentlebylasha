@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Mp3ItemSmall extends StatelessWidget {
   final String imageUrl;
@@ -25,8 +24,8 @@ class Mp3ItemSmall extends StatelessWidget {
           Stack(
             children: [
               SizedBox(
-                height: 90.h,
-                width: 140.w,
+                height: 90,
+                width: 140,
                 child: CachedNetworkImage(
                   imageUrl: imageUrl,
                   imageBuilder: (context, imageProvider) => ClipRRect(
@@ -47,23 +46,23 @@ class Mp3ItemSmall extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: 8),
           Text(
             mp3Name,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
             style: TextStyle(
-              fontSize: 14.sp,
+              fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 2.h),
+          SizedBox(height: 2),
           Text(
             mp3Category,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
             style: TextStyle(
-              fontSize: 10.sp,
+              fontSize: 10,
             ),
           ),
         ],

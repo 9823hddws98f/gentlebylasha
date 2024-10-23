@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '/language_constants.dart';
@@ -25,7 +24,7 @@ class _AboutScreen extends State<AboutScreen> {
           height: MediaQuery.of(context).size.height,
           child: SingleChildScrollView(
               child: Padding(
-                  padding: EdgeInsets.all(10.w),
+                  padding: EdgeInsets.all(10),
                   child: Column(
                     children: [
                       TopBar(
@@ -34,13 +33,13 @@ class _AboutScreen extends State<AboutScreen> {
                             Navigator.pop(context);
                           }),
                       SizedBox(
-                        height: 20.h,
+                        height: 20,
                       ),
                       ListTile(
                         leading: SvgPicture.asset(
                           'assets/thumb_icon.svg',
-                          width: 20.h,
-                          height: 20.w,
+                          width: 20,
+                          height: 20,
                         ),
                         title: Text(translation(context).workWithUs),
                         onTap: () {},
@@ -48,8 +47,8 @@ class _AboutScreen extends State<AboutScreen> {
                       ListTile(
                         leading: SvgPicture.asset(
                           'assets/article_icon.svg',
-                          width: 20.h,
-                          height: 20.w,
+                          width: 20,
+                          height: 20,
                         ),
                         title: Text(translation(context).termsOfService),
                         onTap: () {},
@@ -57,8 +56,8 @@ class _AboutScreen extends State<AboutScreen> {
                       ListTile(
                         leading: SvgPicture.asset(
                           'assets/verified_user_icon.svg',
-                          width: 20.h,
-                          height: 20.w,
+                          width: 20,
+                          height: 20,
                         ),
                         title: Text(translation(context).privacyPolicy),
                         onTap: () {},

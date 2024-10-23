@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -26,7 +26,7 @@ class _DownloadsScreen extends State<DownloadsScreen> {
           height: MediaQuery.of(context).size.height,
           child: SingleChildScrollView(
               child: Padding(
-                  padding: EdgeInsets.all(10.w),
+                  padding: EdgeInsets.all(10),
                   child: Column(
                     children: [
                       TopBar(
@@ -35,7 +35,7 @@ class _DownloadsScreen extends State<DownloadsScreen> {
                             Navigator.pop(context);
                           }),
                       SizedBox(
-                        height: 20.h,
+                        height: 20,
                       ),
                       ListTile(
                         leading: Icon(Icons.dark_mode, color: Colors.white),

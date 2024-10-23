@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/models/user_model.dart';
 import '/screens/authentication.dart';
@@ -34,17 +33,17 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
+              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
               child: Text(
                 'Unlock Sleeptales',
-                style: TextStyle(fontSize: 32.0.sp),
+                style: TextStyle(fontSize: 32.0),
               ),
             ),
             _buildBenefitItem('Every week new content'),
             _buildBenefitItem('More then 100 + sleep stories & guided meditations'),
             _buildBenefitItem('Cancel anytime without questions'),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -53,7 +52,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                       '47,00,- \$ per month',
                       _isAnnuallySelected,
                       () => setState(() => _isAnnuallySelected = true)),
-                  SizedBox(height: 16.0.h),
+                  SizedBox(height: 16.0),
                   _buildSubscriptionButton(
                       'Monthly',
                       '11,99,-\$ per month',
@@ -63,7 +62,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
               ),
             ),
             Padding(
-                padding: EdgeInsets.all(16.0.h),
+                padding: EdgeInsets.all(16.0),
                 child: CustomButton(
                     title: "Try for free and subscribe",
                     onPress: () async {
@@ -109,15 +108,15 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
               color: Colors.blue,
             ),
             child: Padding(
-              padding: EdgeInsets.all(2.w),
-              child: Icon(Icons.check, size: 15.h, color: Colors.white),
+              padding: EdgeInsets.all(2),
+              child: Icon(Icons.check, size: 15, color: Colors.white),
             ),
           ),
         ),
         Expanded(
           child: Text(
             text,
-            style: TextStyle(fontSize: 18.sp),
+            style: TextStyle(fontSize: 18),
           ),
         )
       ],
@@ -133,19 +132,19 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
             backgroundColor: isSelected ? blueAccentColor : lightBlueWithOpacity,
             foregroundColor: isSelected ? Colors.white : lightBlueColor,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.h),
+              borderRadius: BorderRadius.circular(8),
             ),
           ),
           onPressed: onPressed,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.h),
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
                   buttonText,
                   style: TextStyle(
-                    fontSize: 18.0.sp,
+                    fontSize: 18.0,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
@@ -153,7 +152,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                 Text(
                   priceText,
                   style: TextStyle(
-                    fontSize: 16.0.sp,
+                    fontSize: 16.0,
                     color: Colors.white,
                     fontWeight: FontWeight.normal,
                   ),

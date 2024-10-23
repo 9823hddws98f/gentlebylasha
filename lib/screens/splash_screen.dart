@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/screens/home_screen.dart';
 import '/screens/launch_screen.dart';
@@ -34,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
         children: [
           Text(
             "Gentle",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 45.sp),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 45),
           ),
         ],
       ),

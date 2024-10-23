@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../models/audiofile_model.dart';
 import '../page_manager.dart';
@@ -129,7 +128,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       body: SafeArea(
         child: SizedBox(
             child: Padding(
-                padding: EdgeInsets.all(10.w),
+                padding: EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -139,20 +138,20 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                           Navigator.pop(context);
                         }),
                     SizedBox(
-                      height: 20.h,
+                      height: 20,
                     ),
                     if (favoriteList.isNotEmpty && !isLoading) ...[
                       Expanded(
                           child: SingleChildScrollView(
-                        padding: EdgeInsets.only(bottom: 165.h),
+                        padding: EdgeInsets.only(bottom: 165),
                         child: GridView.builder(
                             itemCount: favoriteList.length,
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
-                                crossAxisSpacing: 16.w,
-                                mainAxisSpacing: 16.h,
+                                crossAxisSpacing: 16,
+                                mainAxisSpacing: 16,
                                 childAspectRatio: 0.81),
                             itemBuilder: (BuildContext context, int index) {
                               return TrackListItemSmall(
@@ -190,10 +189,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                               children: [
                             Text(
                               "Something went wrong",
-                              style: TextStyle(fontSize: 16.sp),
+                              style: TextStyle(fontSize: 16),
                             ),
                             SizedBox(
-                              height: 20.h,
+                              height: 20,
                             ),
                             CustomTabButton(
                                 title: "Retry",
@@ -211,14 +210,14 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                           Center(
                               child: Icon(
                             Icons.favorite_border,
-                            size: 40.h,
+                            size: 40,
                           )),
                           SizedBox(
-                            height: 5.h,
+                            height: 5,
                           ),
                           Text(
                             "You have not added any favorites yet",
-                            style: TextStyle(fontSize: 16.sp),
+                            style: TextStyle(fontSize: 16),
                           )
                         ],
                       ))
@@ -240,8 +239,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           physics: NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              crossAxisSpacing: 16.w,
-              mainAxisSpacing: 16.h,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
               childAspectRatio: 0.81),
           itemBuilder: (BuildContext context, int index) {
             return ShimmerTrackListItemSmall();

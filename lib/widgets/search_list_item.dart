@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SearchListItem extends StatelessWidget {
   final String imageUrl;
@@ -22,7 +21,7 @@ class SearchListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.h),
+      padding: EdgeInsets.symmetric(vertical: 10),
       child: GestureDetector(
         onTap: onPress,
         child: SizedBox(
@@ -35,8 +34,8 @@ class SearchListItem extends StatelessWidget {
                     Stack(
                       children: [
                         SizedBox(
-                          height: 134.h,
-                          width: 134.w,
+                          height: 134,
+                          width: 134,
                           child: CachedNetworkImage(
                             imageUrl: imageUrl,
                             imageBuilder: (context, imageProvider) => ClipRRect(
@@ -53,14 +52,14 @@ class SearchListItem extends StatelessWidget {
                           bottom: 12,
                           left: 12,
                           child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+                            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                             decoration: BoxDecoration(
                               color: Colors.grey.withValues(alpha: 0.5),
                               borderRadius: const BorderRadius.all(Radius.circular(30)),
                             ),
                             child: Icon(
                               Icons.play_arrow,
-                              size: 16.h,
+                              size: 16,
                             ),
                           ),
                         ),
@@ -68,7 +67,7 @@ class SearchListItem extends StatelessWidget {
                     ),
                     Expanded(
                         child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -76,39 +75,39 @@ class SearchListItem extends StatelessWidget {
                             mp3Category,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: TextStyle(fontSize: 12.sp, color: Colors.blue),
+                            style: TextStyle(fontSize: 12, color: Colors.blue),
                           ),
                           SizedBox(
-                            height: 4.h,
+                            height: 4,
                           ),
                           Text(
                             mp3Name,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                             style: TextStyle(
-                              fontSize: 14.sp,
+                              fontSize: 14,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           SizedBox(
-                            height: 4.h,
+                            height: 4,
                           ),
                           Text(
                             speaker,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             style: TextStyle(
-                              fontSize: 12.sp,
+                              fontSize: 12,
                             ),
                           ),
                           SizedBox(
-                            height: 16.h,
+                            height: 16,
                           ),
                           Text(
                             "$mp3Duration min",
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: TextStyle(fontSize: 12.sp, color: Colors.grey),
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
                           ),
                         ],
                       ),

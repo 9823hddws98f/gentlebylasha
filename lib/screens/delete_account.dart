@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/language_constants.dart';
 import '/utils/colors.dart';
@@ -26,7 +25,7 @@ class _DeleteAccountScreen extends State<DeleteAccountScreen> {
           height: MediaQuery.of(context).size.height,
           child: SingleChildScrollView(
               child: Padding(
-                  padding: EdgeInsets.all(10.w),
+                  padding: EdgeInsets.all(10),
                   child: Column(
                     children: [
                       TopBar(
@@ -35,29 +34,29 @@ class _DeleteAccountScreen extends State<DeleteAccountScreen> {
                             Navigator.pop(context);
                           }),
                       SizedBox(
-                        height: 50.h,
+                        height: 50,
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        padding: EdgeInsets.symmetric(horizontal: 16),
                         child: Text(
                           translation(context).deleteAccountMessage,
                           textAlign: TextAlign.start,
-                          style: TextStyle(fontSize: 18.sp),
+                          style: TextStyle(fontSize: 18),
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        padding: EdgeInsets.symmetric(horizontal: 16),
                         child: Text(
                           translation(context).deleteAccountDescription,
                           textAlign: TextAlign.start,
-                          style: TextStyle(fontSize: 18.sp),
+                          style: TextStyle(fontSize: 18),
                         ),
                       ),
                       SizedBox(
-                        height: 10.h,
+                        height: 10,
                       ),
                       Padding(
-                        padding: EdgeInsets.all(16.w),
+                        padding: EdgeInsets.all(16),
                         child: CustomButton(
                             title: translation(context).deleteAccount,
                             onPress: () async {

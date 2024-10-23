@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -57,7 +57,7 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> {
                   topRight: Radius.circular(12),
                 ),
               ),
-              height: 357.h,
+              height: 357,
               child: Column(
                 children: [
                   Center(
@@ -74,7 +74,7 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> {
                   ),
 
                   SizedBox(
-                    height: 216.h,
+                    height: 216,
                     child: CupertinoTheme(
                       data: CupertinoThemeData(
                         textTheme: CupertinoTextThemeData(
@@ -96,7 +96,7 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> {
 
                   // Close the modal
                   Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                       child: CustomButton(
                         title: 'Set time',
                         onPress: () {
@@ -139,7 +139,7 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> {
           height: MediaQuery.of(context).size.height,
           child: SingleChildScrollView(
               child: Padding(
-                  padding: EdgeInsets.all(10.w),
+                  padding: EdgeInsets.all(10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -149,38 +149,38 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> {
                             Navigator.pop(context);
                           }),
                       SizedBox(
-                        height: 60.h,
+                        height: 60,
                       ),
                       Center(
                         child: Text(
                           widget.description,
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16.sp, height: 1.5),
+                          style: TextStyle(fontSize: 16, height: 1.5),
                         ),
                       ),
                       SizedBox(
-                        height: 48.h,
+                        height: 48,
                       ),
                       Center(
                         child: Text(
                           widget.description2,
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16.sp),
+                          style: TextStyle(fontSize: 16),
                         ),
                       ),
                       SizedBox(
-                        height: 40.h,
+                        height: 40,
                       ),
                       Center(
                           child: SizedBox(
-                        height: 40.h,
+                        height: 40,
                         child: ElevatedButton.icon(
                           style: ButtonStyle(
                             padding: WidgetStateProperty.all<EdgeInsets>(
-                                EdgeInsets.symmetric(vertical: 10.h, horizontal: 16.w)),
+                                EdgeInsets.symmetric(vertical: 10, horizontal: 16)),
                             shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.w),
+                              borderRadius: BorderRadius.circular(10),
                             )),
                             backgroundColor: WidgetStateProperty.resolveWith<Color?>(
                               (Set<WidgetState> states) {
@@ -208,7 +208,7 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> {
                         ),
                       )),
                       SizedBox(
-                        height: 48.h,
+                        height: 48,
                       ),
                       if (widget.type == 1) ...[
                         Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
@@ -312,7 +312,7 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> {
                           ),
                         ]),
                         SizedBox(
-                          height: 80.h,
+                          height: 80,
                         ),
                       ],
                       Row(
@@ -320,7 +320,7 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> {
                           Expanded(
                             child: Text(
                               "Get reminders",
-                              style: TextStyle(fontSize: 18.sp),
+                              style: TextStyle(fontSize: 18),
                             ),
                           ),
                           (Platform.isIOS)
@@ -406,7 +406,7 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> {
                         ],
                       ),
                       SizedBox(
-                        height: 24.h,
+                        height: 24,
                       ),
                       CustomButton(
                           title: "Save settings",
@@ -631,8 +631,8 @@ class DaySelector extends StatelessWidget {
         onSelected(!isSelected);
       },
       child: Container(
-        width: 40.w,
-        height: 40.h,
+        width: 40,
+        height: 40,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: isSelected ? lightBlueColor : whiteWithOpacity,
@@ -643,7 +643,7 @@ class DaySelector extends StatelessWidget {
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 18.sp,
+              fontSize: 18,
             ),
           ),
         ),

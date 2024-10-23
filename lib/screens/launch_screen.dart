@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/language_constants.dart';
 import '/screens/home_screen.dart';
@@ -39,7 +38,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
         backgroundColor: colorBackground,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20.h), topRight: Radius.circular(20.h))),
+                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
         context: context,
         builder: (BuildContext context) {
           return MyBottomSheet(
@@ -57,7 +56,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
       backgroundColor: colorBackground,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(24.h), topRight: Radius.circular(24.h))),
+              topLeft: Radius.circular(24), topRight: Radius.circular(24))),
       context: context,
       builder: (BuildContext context) {
         return Form(child: Builder(builder: (cxt) {
@@ -66,7 +65,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(24.h), topRight: Radius.circular(24.h))),
+                      topLeft: Radius.circular(24), topRight: Radius.circular(24))),
               child: LoginScreen(
                 callback: callbackSignup,
               ));
@@ -88,45 +87,45 @@ class _LaunchScreenState extends State<LaunchScreen> {
           ),
         ),
         Padding(
-            padding: EdgeInsets.only(top: 102.h),
+            padding: EdgeInsets.only(top: 102),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Center(
                   child: Text(
                     "Gentle",
-                    style: TextStyle(fontSize: 32.sp, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                   ),
                 ),
                 SizedBox(
-                  height: 118.h,
+                  height: 118,
                 ),
                 Center(
                   child: Text(
                     translation(context).welcomeToSleepytales,
-                    style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                 ),
                 SizedBox(
-                  height: 10.h,
+                  height: 10,
                 ),
                 Center(
                   child: Text(
                     translation(context).launchScreenMessage,
-                    style: TextStyle(fontSize: 16.sp),
+                    style: TextStyle(fontSize: 16),
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 100.h),
+                  padding: EdgeInsets.only(top: 100),
                   child: Center(
                     child: Text(
                       translation(context).createYourAccount,
-                      style: TextStyle(fontSize: 18.sp),
+                      style: TextStyle(fontSize: 18),
                     ),
                   ),
                 ),
                 Padding(
-                    padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 10.h),
+                    padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                     child: CustomSocialButton(
                       title: translation(context).signupWithEmail,
                       onPress: () {
@@ -137,8 +136,8 @@ class _LaunchScreenState extends State<LaunchScreen> {
                             backgroundColor: colorBackground,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20.h),
-                                    topRight: Radius.circular(20.h))),
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20))),
                             context: context,
                             builder: (BuildContext context) {
                               return MyBottomSheet(
@@ -151,11 +150,11 @@ class _LaunchScreenState extends State<LaunchScreen> {
                       textColor: Colors.black,
                       icon: Icon(
                         Icons.email_outlined,
-                        size: 24.w,
+                        size: 24,
                       ),
                     )),
                 Padding(
-                    padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 10.h),
+                    padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                     child: CustomSocialButton(
                       title: translation(context).continueWithApple,
                       onPress: () async {
@@ -175,8 +174,8 @@ class _LaunchScreenState extends State<LaunchScreen> {
                                 backgroundColor: colorBackground,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(20.h),
-                                        topRight: Radius.circular(20.h))),
+                                        topLeft: Radius.circular(20),
+                                        topRight: Radius.circular(20))),
                                 context: context,
                                 builder: (BuildContext context) {
                                   return MyBottomSheet(
@@ -205,11 +204,11 @@ class _LaunchScreenState extends State<LaunchScreen> {
                       textColor: Colors.black,
                       icon: Icon(
                         Icons.apple,
-                        size: 24.w,
+                        size: 24,
                       ),
                     )),
                 Padding(
-                    padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 10.h),
+                    padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                     child: CustomAssetButton(
                       title: translation(context).continueWithFacebook,
                       onPress: () async {
@@ -225,10 +224,10 @@ class _LaunchScreenState extends State<LaunchScreen> {
                       color: Colors.white,
                       textColor: textColor,
                       assetPath: 'assets/facebook_icon.svg',
-                      assetSize: 24.h,
+                      assetSize: 24,
                     )),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 10.h),
+                  padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                   child: CustomAssetButton(
                     title: translation(context).continueWithGoogle,
                     onPress: () async {
@@ -249,8 +248,8 @@ class _LaunchScreenState extends State<LaunchScreen> {
                               backgroundColor: colorBackground,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(20.h),
-                                      topRight: Radius.circular(20.h))),
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20))),
                               context: context,
                               builder: (BuildContext context) {
                                 return MyBottomSheet(
@@ -278,11 +277,11 @@ class _LaunchScreenState extends State<LaunchScreen> {
                     color: Colors.white,
                     textColor: Colors.black,
                     assetPath: "assets/google_icon.svg",
-                    assetSize: 24.h,
+                    assetSize: 24,
                   ),
                 ),
                 SizedBox(
-                  height: 10.h,
+                  height: 10,
                 ),
                 LoginFotter(
                     alignment: MainAxisAlignment.center,
@@ -295,8 +294,8 @@ class _LaunchScreenState extends State<LaunchScreen> {
                         backgroundColor: colorBackground,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(24.h),
-                                topRight: Radius.circular(24.h))),
+                                topLeft: Radius.circular(24),
+                                topRight: Radius.circular(24))),
                         context: context,
                         builder: (BuildContext context) {
                           return Form(child: Builder(builder: (cxt) {
@@ -305,8 +304,8 @@ class _LaunchScreenState extends State<LaunchScreen> {
                                 clipBehavior: Clip.hardEdge,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(24.h),
-                                        topRight: Radius.circular(24.h))),
+                                        topLeft: Radius.circular(24),
+                                        topRight: Radius.circular(24))),
                                 child: LoginScreen(
                                   callback: callbackSignup,
                                 ));

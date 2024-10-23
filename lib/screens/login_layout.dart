@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/language_constants.dart';
 import '/models/user_model.dart';
@@ -33,21 +32,21 @@ class LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Padding(
-        padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
+        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Padding(
-                padding: EdgeInsets.only(top: 10.h),
+                padding: EdgeInsets.only(top: 10),
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
                     Align(
                       alignment: Alignment.topRight,
                       child: Padding(
-                        padding: EdgeInsets.fromLTRB(10.w, 0.h, 0.w, 0.h),
+                        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                         child: IconButton(
                           iconSize: 22,
                           icon: Icon(
@@ -66,12 +65,11 @@ class LoginScreenState extends State<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Padding(
-                            padding: EdgeInsets.fromLTRB(20.w, 5.h, 20.w, 5.h),
+                            padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                             child: Text(
                               translation(context).loginToSleepytales,
                               textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ],
@@ -81,11 +79,11 @@ class LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(0.w, 30.h, 0.w, 10.h),
+                padding: EdgeInsets.fromLTRB(0, 30, 0, 10),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text("${translation(context).email}:",
-                      style: TextStyle(fontSize: 16.sp)),
+                      style: TextStyle(fontSize: 16)),
                 ),
               ),
               CustomeEditText(
@@ -109,14 +107,14 @@ class LoginScreenState extends State<LoginScreen> {
                 },
               ),
               SizedBox(
-                height: 5.h,
+                height: 5,
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(0.w, 10.h, 0.w, 10.h),
+                padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(translation(context).password,
-                      style: TextStyle(fontSize: 16.sp)),
+                  child:
+                      Text(translation(context).password, style: TextStyle(fontSize: 16)),
                 ),
               ),
               PasswordEditText(
@@ -142,7 +140,7 @@ class LoginScreenState extends State<LoginScreen> {
                 },
               ),
               SizedBox(
-                height: 40.h,
+                height: 40,
               ),
               Align(
                 alignment: Alignment.centerLeft,
@@ -168,8 +166,8 @@ class LoginScreenState extends State<LoginScreen> {
                         backgroundColor: colorBackground,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(24.h),
-                                topRight: Radius.circular(24.h))),
+                                topLeft: Radius.circular(24),
+                                topRight: Radius.circular(24))),
                         context: context,
                         builder: (BuildContext context) {
                           return Form(child: Builder(builder: (cxt) {
@@ -178,8 +176,8 @@ class LoginScreenState extends State<LoginScreen> {
                                 clipBehavior: Clip.hardEdge,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(24.h),
-                                        topRight: Radius.circular(24.h))),
+                                        topLeft: Radius.circular(24),
+                                        topRight: Radius.circular(24))),
                                 child: ForgotPasswordScreen());
                           }));
                         },
@@ -187,7 +185,7 @@ class LoginScreenState extends State<LoginScreen> {
                     }),
               ),
               SizedBox(
-                height: 20.h,
+                height: 20,
               ),
               CustomButton(
                 title: translation(context).login,

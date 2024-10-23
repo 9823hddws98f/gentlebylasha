@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/page_manager.dart';
 import '/utils/colors.dart';
@@ -56,10 +55,10 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
         children: [
           Text(
             'Sleep Timer',
-            style: TextStyle(fontSize: 24.sp),
+            style: TextStyle(fontSize: 24),
           ),
           SizedBox(
-            height: 20.h,
+            height: 20,
           ),
           if (timerSet)
             if (_duration != Duration(hours: 0)) ...[
@@ -70,20 +69,20 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
               ),
 
               SizedBox(
-                height: 20.h,
+                height: 20,
               ),
               Text(
                 formatDuration(_duration.inMinutes),
                 style: TextStyle(fontSize: 18),
               ),
             ],
-          SizedBox(height: 92.h),
+          SizedBox(height: 92),
           Text(
             'How long do you want this playlist to play for?',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 20),
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: 10),
           CupertinoTheme(
             data: CupertinoThemeData(
               brightness: Brightness.dark,
@@ -98,9 +97,9 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
               initialTimerDuration: _duration,
             ),
           ),
-          SizedBox(height: 30.h),
+          SizedBox(height: 30),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.h),
+            padding: EdgeInsets.symmetric(horizontal: 16),
             child: CustomButton(
                 title: "Set Time",
                 onPress: () {
@@ -110,7 +109,7 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
                 textColor: textColor),
           ),
           SizedBox(
-            height: 20.h,
+            height: 20,
           ),
           TextButton(
             onPressed: _cancelSleepTimer,

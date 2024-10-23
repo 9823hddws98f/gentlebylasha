@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/widgets/topbar_widget.dart';
 import '../language_constants.dart';
@@ -46,7 +45,7 @@ class _ChangeLanguageScreen extends State<ChangeLanguageScreen> {
           height: MediaQuery.of(context).size.height,
           child: SingleChildScrollView(
               child: Padding(
-                  padding: EdgeInsets.all(10.w),
+                  padding: EdgeInsets.all(10),
                   child: Column(
                     children: [
                       TopBar(
@@ -55,7 +54,7 @@ class _ChangeLanguageScreen extends State<ChangeLanguageScreen> {
                             Navigator.pop(context);
                           }),
                       SizedBox(
-                        height: 20.h,
+                        height: 20,
                       ),
                       ListTile(
                         title: const Text('English'),

@@ -5,7 +5,7 @@ import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:share_plus/share_plus.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
@@ -191,7 +191,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Padding(
-                                        padding: EdgeInsets.only(left: 16.w, top: 50.h),
+                                        padding: EdgeInsets.only(left: 16, top: 50),
                                         child: CircleIconButton(
                                           icon: Icons.arrow_back_ios_new,
                                           onPressed: () {
@@ -203,39 +203,39 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                             }
                                           },
                                           backgroundColor: transparentWhite,
-                                          size: 40.h,
-                                          iconSize: 24.h,
+                                          size: 40,
+                                          iconSize: 24,
                                         ),
                                       ),
-                                      SizedBox(height: 68.h),
+                                      SizedBox(height: 68),
                                       Center(
                                         child: Padding(
-                                          padding: EdgeInsets.all(5.w),
+                                          padding: EdgeInsets.all(5),
                                           child: CurrentSongTitle(),
                                         ),
                                       ),
-                                      SizedBox(height: 16.h),
+                                      SizedBox(height: 16),
                                       Center(
                                         child: Padding(
-                                          padding: EdgeInsets.all(5.w),
+                                          padding: EdgeInsets.all(5),
                                           child: Text(
                                             mediaItem.displayDescription ?? "",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 16.sp,
+                                              fontSize: 16,
                                             ),
                                           ),
                                         ),
                                       ),
-                                      SizedBox(height: 10.h),
+                                      SizedBox(height: 10),
                                     ],
                                   ),
                                 Align(
                                     alignment: Alignment.bottomCenter,
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: 24.w, vertical: 8.0),
+                                          horizontal: 24, vertical: 8.0),
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.stretch,
                                         mainAxisSize: MainAxisSize.min,
@@ -259,20 +259,20 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                         backgroundColor: favorite
                                                             ? Colors.blue
                                                             : Colors.black,
-                                                        size: 48.h,
-                                                        iconSize: 24.h,
+                                                        size: 48,
+                                                        iconSize: 24,
                                                       )
                                                     : Container(
-                                                        margin: EdgeInsets.all(8.w),
-                                                        height: 30.h,
-                                                        width: 30.w,
+                                                        margin: EdgeInsets.all(8),
+                                                        height: 30,
+                                                        width: 30,
                                                         child:
                                                             const CircularProgressIndicator(
                                                           color: Colors.white,
                                                         ),
                                                       ),
                                                 SizedBox(
-                                                  width: 24.w,
+                                                  width: 24,
                                                 ),
                                                 CircleIconButton(
                                                   icon: Icons.share,
@@ -280,15 +280,15 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                     createDeepLink(mediaItem.id);
                                                   },
                                                   backgroundColor: Colors.black,
-                                                  size: 48.h,
-                                                  iconSize: 24.h,
+                                                  size: 48,
+                                                  iconSize: 24,
                                                 ),
                                                 if (mediaItem.extras?["categories"] !=
                                                         "Sleep Story" &&
                                                     mediaItem.extras?["categories"] !=
                                                         "Meditation") ...[
                                                   SizedBox(
-                                                    width: 24.w,
+                                                    width: 24,
                                                   ),
                                                   CircleIconButton(
                                                     icon: Icons.timer_outlined,
@@ -300,13 +300,13 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                       });
                                                     },
                                                     backgroundColor: Colors.black,
-                                                    size: 48.h,
-                                                    iconSize: 24.h,
+                                                    size: 48,
+                                                    iconSize: 24,
                                                   ),
                                                 ]
                                               ],
                                             ),
-                                          SizedBox(height: 40.h),
+                                          SizedBox(height: 40),
                                           if (!hide)
                                             StreamBuilder<bool>(
                                               stream: _audioHandler.playbackState
@@ -325,8 +325,8 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                         mediaItem.extras?["categories"] ==
                                                             "Soundscape") ...[
                                                       SizedBox(
-                                                        width: 32.w,
-                                                        height: 32.h,
+                                                        width: 32,
+                                                        height: 32,
                                                       )
                                                     ] else if (mediaItem
                                                                 .extras?["categories"] ==
@@ -340,7 +340,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                                   .value
                                                               ? Colors.green
                                                               : Colors.white,
-                                                          size: 32.h,
+                                                          size: 32,
                                                         ),
                                                         onPressed: () {
                                                           final pageManager =
@@ -354,15 +354,15 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                             "Music" &&
                                                         widget.playList == false) ...[
                                                       SizedBox(
-                                                        height: 32.h,
-                                                        width: 32.w,
+                                                        height: 32,
+                                                        width: 32,
                                                       ),
                                                     ] else ...[
                                                       IconButton(
                                                         icon: Icon(
                                                           Icons.tune,
                                                           color: Colors.white,
-                                                          size: 32.h,
+                                                          size: 32,
                                                         ),
                                                         onPressed: () {},
                                                       ),
@@ -378,7 +378,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                             icon: Icon(
                                                               Icons.skip_previous,
                                                               color: Colors.grey,
-                                                              size: 32.h,
+                                                              size: 32,
                                                             ),
                                                             onPressed: () {
                                                               // final pageManager = getIt<PageManager>();
@@ -390,7 +390,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                             icon: Icon(
                                                               Icons.skip_previous,
                                                               color: Colors.white,
-                                                              size: 32.h,
+                                                              size: 32,
                                                             ),
                                                             onPressed: () {
                                                               // final pageManager = getIt<PageManager>();
@@ -403,7 +403,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                           icon: Icon(
                                                             Icons.skip_previous,
                                                             color: Colors.white,
-                                                            size: 32.h,
+                                                            size: 32,
                                                           ),
                                                           onPressed: () {
                                                             // final pageManager = getIt<PageManager>();
@@ -416,7 +416,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                         icon: Icon(
                                                           Icons.replay_10,
                                                           color: Colors.white,
-                                                          size: 32.h,
+                                                          size: 32,
                                                         ),
                                                         onPressed: () {
                                                           final pageManager =
@@ -440,7 +440,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                             icon: Icon(
                                                               Icons.skip_next,
                                                               color: Colors.grey,
-                                                              size: 32.h,
+                                                              size: 32,
                                                             ),
                                                             onPressed: () {},
                                                           ),
@@ -449,7 +449,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                             icon: Icon(
                                                               Icons.skip_next,
                                                               color: Colors.white,
-                                                              size: 32.h,
+                                                              size: 32,
                                                             ),
                                                             onPressed: () {
                                                               pageManagerNew.next();
@@ -461,7 +461,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                           icon: Icon(
                                                             Icons.skip_next,
                                                             color: Colors.white,
-                                                            size: 32.h,
+                                                            size: 32,
                                                           ),
                                                           onPressed: () {
                                                             pageManagerNew.next();
@@ -473,7 +473,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                         icon: Icon(
                                                           Icons.forward_10_outlined,
                                                           color: Colors.white,
-                                                          size: 32.h,
+                                                          size: 32,
                                                         ),
                                                         onPressed: () {
                                                           final pageManager =
@@ -497,7 +497,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                                   RepeatState.off
                                                               ? Colors.white
                                                               : Colors.green,
-                                                          size: 32.h,
+                                                          size: 32,
                                                         ),
                                                         onPressed: () {
                                                           final pageManager =
@@ -510,15 +510,15 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                             .extras?["categories"] ==
                                                         "Soundscape") ...[
                                                       SizedBox(
-                                                        width: 32.w,
-                                                        height: 32.h,
+                                                        width: 32,
+                                                        height: 32,
                                                       )
                                                     ] else ...[
                                                       IconButton(
                                                         icon: Icon(
                                                           Icons.square,
                                                           color: Colors.white,
-                                                          size: 32.h,
+                                                          size: 32,
                                                         ),
                                                         onPressed: () {
                                                           final pageManager =
@@ -531,11 +531,11 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                 );
                                               },
                                             ),
-                                          SizedBox(height: 32.h),
+                                          SizedBox(height: 32),
                                           if (mediaItem.extras?["categories"] !=
                                               "Soundscape")
                                             AudioProgressBar(),
-                                          SizedBox(height: 30.h),
+                                          SizedBox(height: 30),
                                         ],
                                       ),
                                     ))
@@ -647,9 +647,9 @@ class PlayButton extends StatelessWidget {
         switch (value) {
           case ButtonState.loading:
             return Container(
-              margin: EdgeInsets.all(8.w),
-              height: 45.h,
-              width: 45.w,
+              margin: EdgeInsets.all(8),
+              height: 45,
+              width: 45,
               child: const CircularProgressIndicator(
                 color: Colors.white,
               ),
@@ -665,8 +665,8 @@ class PlayButton extends StatelessWidget {
                     icon: Icons.play_arrow,
                     onPressed: pageManager.play,
                     backgroundColor: transparentWhite,
-                    size: 64.h,
-                    iconSize: 40.h);
+                    size: 64,
+                    iconSize: 40);
           case ButtonState.playing:
             return
                 //   CircleIconButton(
@@ -678,8 +678,8 @@ class PlayButton extends StatelessWidget {
                     icon: Icons.pause,
                     onPressed: pageManager.pause,
                     backgroundColor: transparentWhite,
-                    size: 64.h,
-                    iconSize: 40.h);
+                    size: 64,
+                    iconSize: 40);
         }
       },
     );
@@ -703,7 +703,7 @@ class CurrentSongTitle extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 24.sp,
+                  fontSize: 24,
                 ),
               ),
             ));

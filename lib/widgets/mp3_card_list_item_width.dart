@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Mp3ListItem extends StatelessWidget {
   final String imageUrl;
@@ -27,8 +26,8 @@ class Mp3ListItem extends StatelessWidget {
           Stack(
             children: [
               SizedBox(
-                  height: 185.h,
-                  width: 282.w,
+                  height: 185,
+                  width: 282,
                   child: imageUrl != ""
                       ? CachedNetworkImage(
                           imageUrl: imageUrl,
@@ -58,7 +57,7 @@ class Mp3ListItem extends StatelessWidget {
                 bottom: 12,
                 left: 12,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                   decoration: BoxDecoration(
                     color: Colors.grey.withValues(alpha: 0.5),
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -68,13 +67,13 @@ class Mp3ListItem extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.play_arrow,
-                        size: 12.h,
+                        size: 12,
                       ),
-                      SizedBox(width: 2.w),
+                      SizedBox(width: 2),
                       Text(
                         "$mp3Duration min",
                         style: TextStyle(
-                          fontSize: 7.sp,
+                          fontSize: 7,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -85,26 +84,26 @@ class Mp3ListItem extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: 8.h,
+            height: 8,
           ),
           Text(
             mp3Name.length > 35 ? "${mp3Name.substring(0, 35)}..." : mp3Name,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
             style: TextStyle(
-              fontSize: 14.sp,
+              fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
           ),
           SizedBox(
-            height: 2.h,
+            height: 2,
           ),
           Text(
             mp3Category,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
             style: TextStyle(
-              fontSize: 10.sp,
+              fontSize: 10,
             ),
           ),
         ],

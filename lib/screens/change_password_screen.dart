@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/widgets/topbar_widget.dart';
 import '../utils/global_functions.dart';
@@ -31,7 +30,7 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
           height: MediaQuery.of(context).size.height,
           child: SingleChildScrollView(
               child: Padding(
-                  padding: EdgeInsets.all(10.w),
+                  padding: EdgeInsets.all(10),
                   child: Column(
                     children: [
                       TopBar(
@@ -44,11 +43,11 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
                           child: Column(
                             children: [
                               Padding(
-                                padding: EdgeInsets.fromLTRB(0.w, 30.h, 0.w, 10.h),
+                                padding: EdgeInsets.fromLTRB(0, 30, 0, 10),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text("Current password",
-                                      style: TextStyle(fontSize: 16.sp)),
+                                      style: TextStyle(fontSize: 16)),
                                 ),
                               ),
                               PasswordEditText(
@@ -73,11 +72,11 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
                                 },
                               ),
                               Padding(
-                                padding: EdgeInsets.fromLTRB(0.w, 30.h, 0.w, 10.h),
+                                padding: EdgeInsets.fromLTRB(0, 30, 0, 10),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text("New password",
-                                      style: TextStyle(fontSize: 16.sp)),
+                                      style: TextStyle(fontSize: 16)),
                                 ),
                               ),
                               PasswordEditText(
@@ -108,7 +107,7 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
                             ],
                           )),
                       Padding(
-                          padding: EdgeInsets.only(top: 50.h),
+                          padding: EdgeInsets.only(top: 50),
                           child: CustomButton(
                             onPress: () {
                               if (formKey.currentState!.validate()) {
@@ -123,7 +122,7 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
                             textColor: Colors.black,
                           )),
                       SizedBox(
-                        height: 180.h,
+                        height: 180,
                       )
                     ],
                   ))),

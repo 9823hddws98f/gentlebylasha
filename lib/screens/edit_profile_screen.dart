@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/utils/colors.dart';
 import '/widgets/topbar_widget.dart';
@@ -133,7 +132,7 @@ class _EditProfileScreen extends State<EditProfileScreen> {
           height: MediaQuery.of(context).size.height,
           child: SingleChildScrollView(
               child: Padding(
-                  padding: EdgeInsets.all(20.w),
+                  padding: EdgeInsets.all(20),
                   child: Column(
                     children: [
                       TopBar(
@@ -146,11 +145,11 @@ class _EditProfileScreen extends State<EditProfileScreen> {
                           child: Column(
                             children: [
                               Padding(
-                                padding: EdgeInsets.fromLTRB(0.w, 30.h, 0.w, 10.h),
+                                padding: EdgeInsets.fromLTRB(0, 30, 0, 10),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
-                                  child: Text("Your Name:",
-                                      style: TextStyle(fontSize: 16.sp)),
+                                  child:
+                                      Text("Your Name:", style: TextStyle(fontSize: 16)),
                                 ),
                               ),
                               CustomeEditTextFullName(
@@ -169,14 +168,13 @@ class _EditProfileScreen extends State<EditProfileScreen> {
                                 },
                               ),
                               SizedBox(
-                                height: 5.h,
+                                height: 5,
                               ),
                               Padding(
-                                padding: EdgeInsets.fromLTRB(0.w, 10.h, 0.w, 10.h),
+                                padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
-                                  child:
-                                      Text("Email:", style: TextStyle(fontSize: 16.sp)),
+                                  child: Text("Email:", style: TextStyle(fontSize: 16)),
                                 ),
                               ),
                               CustomeEditText(
@@ -200,12 +198,12 @@ class _EditProfileScreen extends State<EditProfileScreen> {
                                 },
                               ),
                               SizedBox(
-                                height: 5.h,
+                                height: 5,
                               ),
                             ],
                           )),
                       Padding(
-                          padding: EdgeInsets.only(top: 50.h),
+                          padding: EdgeInsets.only(top: 50),
                           child: CustomButton(
                             onPress: () async {
                               if (formKey.currentState!.validate()) {

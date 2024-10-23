@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/language_constants.dart';
 import '/widgets/custom_btn.dart';
@@ -47,31 +46,31 @@ class _OnBoarding01ScreenState extends State<OnBoarding01Screen> {
     return Scaffold(
         body: SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
+        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
         child: Column(
           children: [
             Column(
               children: [
                 Text(
                   '${translation(context).whatBringsYouToSleepytales}?',
-                  style: TextStyle(fontSize: 22.sp),
+                  style: TextStyle(fontSize: 22),
                 ),
                 SizedBox(
-                  height: 10.h,
+                  height: 10,
                 ),
                 Text(
                   translation(context).personalizeRecMessage,
-                  style: TextStyle(fontSize: 18.sp),
+                  style: TextStyle(fontSize: 18),
                 ),
               ],
             ),
             Padding(
-              padding: EdgeInsets.fromLTRB(0, 24.h, 0, 24.h),
+              padding: EdgeInsets.fromLTRB(0, 24, 0, 24),
               child: ListView.builder(
                 controller: _controller,
                 itemBuilder: (BuildContext, index) {
                   return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 4.h),
+                    padding: EdgeInsets.symmetric(horizontal: 0, vertical: 4),
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
@@ -87,25 +86,25 @@ class _OnBoarding01ScreenState extends State<OnBoarding01Screen> {
                             color: _selectedGoalsOptions.contains(index)
                                 ? blueAccentColor
                                 : lightBlueWithOpacity,
-                            borderRadius: BorderRadius.all(Radius.circular(8.h))),
-                        height: 56.h,
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
+                        height: 56,
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                           child: Row(
                             children: [
                               SizedBox(
-                                height: 24.h,
-                                width: 24.w,
+                                height: 24,
+                                width: 24,
                                 child: Image.asset(
                                   _icons[index],
                                   color: Colors.white,
                                 ),
                               ),
-                              SizedBox(width: 16.w),
+                              SizedBox(width: 16),
                               Text(
                                 _options[index],
                                 style: TextStyle(
-                                  fontSize: 18.sp,
+                                  fontSize: 18,
                                   color: Colors.white,
                                 ),
                               ),
@@ -118,15 +117,15 @@ class _OnBoarding01ScreenState extends State<OnBoarding01Screen> {
                 },
                 itemCount: _options.length,
                 shrinkWrap: true,
-                padding: EdgeInsets.fromLTRB(5.w, 0.h, 5.w, 10.h),
+                padding: EdgeInsets.fromLTRB(5, 0, 5, 10),
                 scrollDirection: Axis.vertical,
               ),
             ),
-            //SizedBox(height: 20.h),
+            //SizedBox(height: 20),
             // Positioned(
             //   left: 0,
             //   right: 0,
-            //   bottom: 50.h,
+            //   bottom: 50,
             //   child:
 
             CustomButton(

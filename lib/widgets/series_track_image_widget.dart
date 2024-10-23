@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/models/audiofile_model.dart';
 
@@ -27,8 +26,8 @@ class SeriesTrackListImageWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(
-                  height: 72.h,
-                  width: 72.h,
+                  height: 72,
+                  width: 72,
                   child: CachedNetworkImage(
                     imageUrl: audioTrack.thumbnail,
                     imageBuilder: (context, imageProvider) => ClipRRect(
@@ -42,7 +41,7 @@ class SeriesTrackListImageWidget extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: 8.w,
+                  width: 8,
                 ),
                 Expanded(
                   child: Column(
@@ -51,7 +50,7 @@ class SeriesTrackListImageWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       SizedBox(
-                        height: 4.h,
+                        height: 4,
                       ),
                       Align(
                         alignment: Alignment.topLeft,
@@ -60,11 +59,11 @@ class SeriesTrackListImageWidget extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           style: TextStyle(
-                            fontSize: 12.sp,
+                            fontSize: 12,
                           ),
                         ),
                       ),
-                      SizedBox(height: 2.h),
+                      SizedBox(height: 2),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -72,13 +71,13 @@ class SeriesTrackListImageWidget extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           style: TextStyle(
-                            fontSize: 14.sp,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                       //Spacer(),
-                      SizedBox(height: 15.h),
+                      SizedBox(height: 15),
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
@@ -86,7 +85,7 @@ class SeriesTrackListImageWidget extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           style: TextStyle(
-                            fontSize: 12.sp,
+                            fontSize: 12,
                           ),
                         ),
                       ),
@@ -94,7 +93,7 @@ class SeriesTrackListImageWidget extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 4.h),
+                  padding: EdgeInsets.only(top: 4),
                   child: IconButton(
                     onPressed: favoriteTap,
                     icon: favorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
