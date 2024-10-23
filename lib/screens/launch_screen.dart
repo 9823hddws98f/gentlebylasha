@@ -1,17 +1,19 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../models/user_model.dart';
+import '../widgets/custom_asset_button.dart';
 import '/language_constants.dart';
 import '/screens/home_screen.dart';
 import '/screens/login_layout.dart';
 import '/screens/my_bottomsheet.dart';
+import '/utils/colors.dart';
 import '/utils/global_functions.dart';
 import '/widgets/custom_socialmedia_btn.dart';
 import '/widgets/login_footer.dart';
-import '/utils/colors.dart';
-import '../models/user_model.dart';
-import '../widgets/custom_asset_button.dart';
 import 'authentication.dart';
 
 class LaunchScreen extends StatefulWidget {

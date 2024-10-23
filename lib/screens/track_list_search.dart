@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '/widgets/track_list_item.dart';
 import '../models/audiofile_model.dart';
 import '../models/category_model.dart';
 import '../page_manager.dart';
@@ -10,6 +10,7 @@ import '../services/service_locator.dart';
 import '../utils/global_functions.dart';
 import '../widgets/shimmerwidgets/shimmer_mp3_card_tracklist_item.dart';
 import '../widgets/topbar_widget.dart';
+import '/widgets/track_list_item.dart';
 
 class TrackListSearchScreen extends StatefulWidget {
   final Categories category;

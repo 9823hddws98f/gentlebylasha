@@ -1,13 +1,15 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '/utils/colors.dart';
-import '/widgets/topbar_widget.dart';
+
 import '../models/user_model.dart';
 import '../utils/firestore_helper.dart';
 import '../utils/global_functions.dart';
 import '../widgets/custom_btn.dart';
 import '../widgets/widget_email_textField.dart';
+import '/utils/colors.dart';
+import '/widgets/topbar_widget.dart';
 import 'authentication.dart';
 
 class EditProfileScreen extends StatefulWidget {

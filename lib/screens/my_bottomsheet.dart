@@ -1,6 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '/screens/onboarding01.dart';
 import '/screens/onboarding02.dart';
 import '/screens/signup_layout.dart';

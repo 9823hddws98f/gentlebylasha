@@ -1,3 +1,4 @@
+import 'package:app_links/app_links.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,15 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:uni_links/uni_links.dart';
+import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
+import '/helper/scrollcontroller_helper.dart';
 import '/language_constants.dart';
 import '/screens/explore_screen.dart';
 import '/screens/forme_screen.dart';
 import '/screens/profile_settings_screen.dart';
 import '/utils/colors.dart';
-import '../helper/scrollcontroller_helper.dart';
 import '../models/user_model.dart';
 import '../notifiers/play_button_notifier.dart';
 import '../notifiers/progress_notifier.dart';
@@ -235,7 +235,7 @@ class HomeScreenState extends State<HomeScreen> {
                                   kBottomNavigationBarHeight +
                                   78.h,
                           controller: panelController,
-                          panel: Stack(
+                          body: Stack(
                             children: [
                               MusicPlayerScreen(
                                 playList: playlist.length > 1 ? true : false,
@@ -444,7 +444,8 @@ class HomeScreenState extends State<HomeScreen> {
     // Platform messages are asynchronous, so we initialize in an async method.
     try {
       // Request permission to handle incoming links
-      getUriLinksStream().listen((Uri? uri) {
+      final appLinks = AppLinks();
+      appLinks.uriLinkStream.listen((Uri? uri) {
         if (uri != null) {
           handleDeepLink(uri);
         }

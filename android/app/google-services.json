@@ -7,56 +7,28 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:65622286155:android:052cb8b85ab1c2921e12ce",
-        "android_client_info": {
-          "package_name": "com.sleeptales.sleeptales"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "65622286155-rf6ag8p4q7t98d31pugqcm6oqaauf2mb.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.sleeptales.sleeptales",
-            "certificate_hash": "85aa0d4382d68df9d4b891776e1f46b7d46e5ee5"
-          }
-        },
-        {
-          "client_id": "65622286155-5aergsldc7ntm4flft2ql4qu8urlggir.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyALrpeKIpQfSmRDOQfY51Z2tdXb2EDG-FE"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "65622286155-5aergsldc7ntm4flft2ql4qu8urlggir.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "65622286155-hnh133hrvtj757bn4i0u41mvld25mn2k.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.sleeptales.sleeptales"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:65622286155:android:c30c99ed78a615341e12ce",
         "android_client_info": {
           "package_name": "io.sleeptales.sleeptales"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "65622286155-6gugiak1h8139igjdi0u8nv55uhvk8ak.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.sleeptales.sleeptales",
+            "certificate_hash": "8e46c7f344a6da93420a605d9e4c51df06472ec1"
+          }
+        },
+        {
+          "client_id": "65622286155-7jj98m56og0hhdhirlp65140uj500b1e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.sleeptales.sleeptales",
+            "certificate_hash": "85aa0d4382d68df9d4b891776e1f46b7d46e5ee5"
+          }
+        },
         {
           "client_id": "65622286155-5aergsldc7ntm4flft2ql4qu8urlggir.apps.googleusercontent.com",
           "client_type": 3

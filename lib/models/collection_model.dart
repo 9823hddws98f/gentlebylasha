@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '/models/audiofile_model.dart';
-import '/models/category_model.dart';
 
 import '../utils/global_functions.dart';
+import '/models/audiofile_model.dart';
+import '/models/category_model.dart';
 
 class Collection {
   final String collectionId;

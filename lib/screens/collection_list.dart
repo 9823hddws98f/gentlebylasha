@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '/screens/track_list.dart';
-import '/widgets/collection_item_grid.dart';
+
 import '../models/collection_model.dart';
 import '../utils/global_functions.dart';
 import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_small.dart';
 import '../widgets/topbar_widget.dart';
+import '/screens/track_list.dart';
+import '/widgets/collection_item_grid.dart';
 
 class CollectionListScreen extends StatefulWidget {
   final String heading;

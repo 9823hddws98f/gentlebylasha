@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../utils/global_functions.dart';
 import '/screens/home_screen.dart';
 import '/screens/launch_screen.dart';
 import '/utils/firestore_helper.dart';
-import '../utils/global_functions.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '/models/sub_categories.dart';
-import '/models/user_model.dart';
-import '/screens/playlist_screen.dart';
-import '/screens/subcategories_tab.dart';
-import '/screens/track_list.dart';
-import '/utils/colors.dart';
-import '/utils/firestore_helper.dart';
-import '/utils/global_functions.dart';
 import '../models/audiofile_model.dart';
 import '../models/block.dart';
 import '../models/category_block.dart';
@@ -17,6 +10,14 @@ import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_height.dart';
 import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_small.dart';
 import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_width.dart';
 import '../widgets/tracklist_horizontal_widget.dart';
+import '/models/sub_categories.dart';
+import '/models/user_model.dart';
+import '/screens/playlist_screen.dart';
+import '/screens/subcategories_tab.dart';
+import '/screens/track_list.dart';
+import '/utils/colors.dart';
+import '/utils/firestore_helper.dart';
+import '/utils/global_functions.dart';
 
 class TabsSubCategoryScreen extends StatefulWidget {
   final CategoryBlock category;

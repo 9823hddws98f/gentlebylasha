@@ -1,10 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '/widgets/topbar_widget.dart';
+
 import '../utils/global_functions.dart';
 import '../widgets/custom_btn.dart';
 import '../widgets/widget_email_textField.dart';
+import '/widgets/topbar_widget.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   final String? email;

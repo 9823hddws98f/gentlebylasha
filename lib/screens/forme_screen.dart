@@ -1,15 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '/language_constants.dart';
-import '/models/user_model.dart';
-import '/screens/playlist_screen.dart';
-import '/screens/track_list.dart';
-import '/utils/colors.dart';
-import '/utils/firestore_helper.dart';
-import '/utils/global_functions.dart';
-import '/widgets/shimmerwidgets/shimmer_tab_layout.dart';
-import '/widgets/width_tracklist_horizontal_widget.dart';
 import '../helper/scrollcontroller_helper.dart';
 import '../models/audiofile_model.dart';
 import '../models/block.dart';
@@ -19,6 +11,15 @@ import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_height.dart';
 import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_small.dart';
 import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_width.dart';
 import '../widgets/tracklist_horizontal_widget.dart';
+import '/language_constants.dart';
+import '/models/user_model.dart';
+import '/screens/playlist_screen.dart';
+import '/screens/track_list.dart';
+import '/utils/colors.dart';
+import '/utils/firestore_helper.dart';
+import '/utils/global_functions.dart';
+import '/widgets/shimmerwidgets/shimmer_tab_layout.dart';
+import '/widgets/width_tracklist_horizontal_widget.dart';
 
 class ForMeScreen extends StatefulWidget {
   final Function panelFunction;

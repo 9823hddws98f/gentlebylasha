@@ -1,10 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '/language_constants.dart';
-import '/widgets/custom_btn.dart';
+
 import '../utils/colors.dart';
 import '../utils/global_functions.dart';
+import '/language_constants.dart';
+import '/widgets/custom_btn.dart';
 
 class OnBoarding01Screen extends StatefulWidget {
   final Function() callback;

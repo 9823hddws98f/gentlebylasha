@@ -1,8 +1,12 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../models/block.dart';
+import '../widgets/topbar_widget.dart';
 import '/language_constants.dart';
 import '/models/user_model.dart';
 import '/screens/playlist_tracks_screen.dart';
@@ -11,8 +15,6 @@ import '/utils/global_functions.dart';
 import '/widgets/custom_tab_button.dart';
 import '/widgets/playlist_item.dart';
 import '/widgets/shimmerwidgets/shimmer_playlist_item.dart';
-import '../models/block.dart';
-import '../widgets/topbar_widget.dart';
 
 class FavoritePlaylistScreen extends StatefulWidget {
   final Function panelFunction;

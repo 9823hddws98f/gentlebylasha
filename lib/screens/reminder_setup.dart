@@ -1,16 +1,19 @@
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:timezone/timezone.dart' as tz;
+
+import '../main.dart';
 import '/utils/colors.dart';
 import '/utils/global_functions.dart';
 import '/widgets/custom_btn.dart';
 import '/widgets/topbar_widget.dart';
-import 'package:timezone/timezone.dart' as tz;
-import '../main.dart';
 
 class ReminderSetupScreen extends StatefulWidget {
   final String heading;
@@ -469,7 +472,7 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> {
   Future<void> setReminderNotification(
       String title, String reminderDescription, TimeOfDay time) async {
     // Initialize the timezone database
-    String timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
+    String timeZoneName = await FlutterTimezone.getLocalTimezone();
     tz.setLocalLocation(tz.getLocation(timeZoneName));
 
     AndroidNotificationDetails androidPlatformChannelSpecifics =
@@ -509,7 +512,7 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> {
     TimeOfDay time,
   ) async {
     // Initialize the timezone database
-    String timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
+    String timeZoneName = await FlutterTimezone.getLocalTimezone();
     tz.setLocalLocation(tz.getLocation(timeZoneName));
 
     AndroidNotificationDetails androidPlatformChannelSpecifics =
@@ -615,7 +618,8 @@ class DaySelector extends StatelessWidget {
   final bool isSelected;
   final ValueChanged<bool> onSelected;
 
-  const DaySelector({super.key, 
+  const DaySelector({
+    super.key,
     required this.dayInitial,
     required this.isSelected,
     required this.onSelected,

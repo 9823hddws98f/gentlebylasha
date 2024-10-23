@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../models/audiofile_model.dart';
+import '../models/category_model.dart';
+import '../models/collection_model.dart';
+import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_height.dart';
+import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_small.dart';
+import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_width.dart';
 import '/models/user_model.dart';
 import '/screens/track_list.dart';
 import '/utils/colors.dart';
@@ -8,12 +15,6 @@ import '/utils/firestore_helper.dart';
 import '/utils/global_functions.dart';
 import '/widgets/tracklist_horizontal_widget.dart';
 import '/widgets/width_tracklist_horizontal_widget.dart';
-import '../models/audiofile_model.dart';
-import '../models/category_model.dart';
-import '../models/collection_model.dart';
-import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_height.dart';
-import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_small.dart';
-import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_width.dart';
 
 class TabsScreen extends StatefulWidget {
   final Categories category;

@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
+
+import 'package:audio_service/audio_service.dart';
 
 import '/utils/firestore_helper.dart';
 import 'models/audiofile_model.dart';
