@@ -1,26 +1,25 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../utils/colors.dart';
-import '../utils/global_functions.dart';
-import '../widgets/custom_tab_button.dart';
 import '/models/audiofile_model.dart';
 import '/models/category_block.dart';
 import '/screens/tabs_subcategory_screen.dart';
 import '/utils/firestore_helper.dart';
 import '/widgets/search_list_item.dart';
+import '../utils/colors.dart';
+import '../utils/global_functions.dart';
+import '../widgets/custom_tab_button.dart';
 
 class ExploreScreen extends StatefulWidget {
   final Function panelFunction;
 
   const ExploreScreen(this.panelFunction, {super.key});
   @override
-  _ExploreScreenState createState() => _ExploreScreenState();
+  State<ExploreScreen> createState() => _ExploreScreenState();
 }
 
 class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateMixin {

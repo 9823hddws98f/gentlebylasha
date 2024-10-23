@@ -1,12 +1,11 @@
-import 'package:flutter/material.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../utils/colors.dart';
-import '../utils/global_functions.dart';
 import '/language_constants.dart';
 import '/widgets/custom_btn.dart';
+import '../utils/colors.dart';
+import '../utils/global_functions.dart';
 
 class OnBoarding01Screen extends StatefulWidget {
   final Function() callback;
@@ -16,7 +15,7 @@ class OnBoarding01Screen extends StatefulWidget {
       {super.key});
 
   @override
-  _OnBoarding01ScreenState createState() => _OnBoarding01ScreenState();
+  State<OnBoarding01Screen> createState() => _OnBoarding01ScreenState();
 }
 
 class _OnBoarding01ScreenState extends State<OnBoarding01Screen> {

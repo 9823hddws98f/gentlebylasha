@@ -1,18 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../services/service_locator.dart';
 import '/page_manager.dart';
 import '/utils/colors.dart';
 import '/widgets/custom_btn.dart';
+import '../services/service_locator.dart';
 
 class SleepTimerScreen extends StatefulWidget {
   const SleepTimerScreen({super.key});
 
   @override
-  _SleepTimerScreenState createState() => _SleepTimerScreenState();
+  State<SleepTimerScreen> createState() => _SleepTimerScreenState();
 }
 
 class _SleepTimerScreenState extends State<SleepTimerScreen> {

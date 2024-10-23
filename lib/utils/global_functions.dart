@@ -1,19 +1,18 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-
 import 'package:audio_service/audio_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/category_model.dart';
-import '../page_manager.dart';
-import '../services/service_locator.dart';
 import '/models/audiofile_model.dart';
 import '/models/user_model.dart';
 import '/screens/launch_screen.dart';
 import '/utils/colors.dart';
+import '../models/category_model.dart';
+import '../page_manager.dart';
+import '../services/service_locator.dart';
 
 void showToast(String value) =>
     Fluttertoast.showToast(msg: value, gravity: ToastGravity.BOTTOM, fontSize: 15);

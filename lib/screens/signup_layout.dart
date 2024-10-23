@@ -1,14 +1,13 @@
-import 'package:flutter/material.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../widgets/widget_email_textField.dart';
 import '/language_constants.dart';
 import '/screens/authentication.dart';
 import '/utils/global_functions.dart';
 import '/widgets/custom_btn.dart';
 import '/widgets/login_footer.dart';
+import '../widgets/widget_email_textField.dart';
 
 class SignupScreen extends StatefulWidget {
   static final _formKey = GlobalKey<FormState>();

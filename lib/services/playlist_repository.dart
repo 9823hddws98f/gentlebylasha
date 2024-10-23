@@ -5,8 +5,7 @@ abstract class PlaylistRepository {
 
 class DemoPlaylist extends PlaylistRepository {
   @override
-  Future<List<Map<String, String>>> fetchInitialPlaylist(
-      {int length = 3}) async {
+  Future<List<Map<String, String>>> fetchInitialPlaylist({int length = 3}) async {
     return List.generate(length, (index) => _nextSong());
   }
 
@@ -24,10 +23,7 @@ class DemoPlaylist extends PlaylistRepository {
       'id': _songIndex.toString().padLeft(3, '0'),
       'title': 'Song $_songIndex',
       'album': 'SoundHelix',
-      'url':
-      'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-$_songIndex.mp3',
+      'url': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-$_songIndex.mp3',
     };
   }
-
-
 }

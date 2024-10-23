@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/screens/onboarding01.dart';
@@ -13,15 +12,17 @@ class MyBottomSheet extends StatefulWidget {
   UserCredential? userCredential;
   Function()? callBackLogin;
   Function()? isDissmisableBottomSheet;
-  MyBottomSheet(
-      {super.key,
-      required this.currentPage,
-      this.userCredential,
-      this.callBackLogin,
-      this.isDissmisableBottomSheet});
+
+  MyBottomSheet({
+    super.key,
+    required this.currentPage,
+    this.userCredential,
+    this.callBackLogin,
+    this.isDissmisableBottomSheet,
+  });
 
   @override
-  _MyBottomSheetState createState() => _MyBottomSheetState();
+  State<MyBottomSheet> createState() => _MyBottomSheetState();
 }
 
 class _MyBottomSheetState extends State<MyBottomSheet> {

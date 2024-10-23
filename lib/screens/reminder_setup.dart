@@ -3,17 +3,16 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-import '../main.dart';
 import '/utils/colors.dart';
 import '/utils/global_functions.dart';
 import '/widgets/custom_btn.dart';
 import '/widgets/topbar_widget.dart';
+import '../main.dart';
 
 class ReminderSetupScreen extends StatefulWidget {
   final String heading;
@@ -22,19 +21,19 @@ class ReminderSetupScreen extends StatefulWidget {
   final String notificationDescription;
   final String description;
   final String description2;
-  const ReminderSetupScreen(
-      {super.key,
-      required this.heading,
-      required this.type,
-      required this.reminderID,
-      required this.description,
-      required this.description2,
-      required this.notificationDescription});
+
+  const ReminderSetupScreen({
+    super.key,
+    required this.heading,
+    required this.type,
+    required this.reminderID,
+    required this.description,
+    required this.description2,
+    required this.notificationDescription,
+  });
 
   @override
-  State<ReminderSetupScreen> createState() {
-    return _ReminderSetupScreen();
-  }
+  State<ReminderSetupScreen> createState() => _ReminderSetupScreen();
 }
 
 class _ReminderSetupScreen extends State<ReminderSetupScreen> {

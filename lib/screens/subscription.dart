@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/models/user_model.dart';
@@ -17,10 +16,11 @@ class SubscriptionScreen extends StatefulWidget {
   final int? _selectedOption;
   String name;
   SubscriptionScreen(this.callback, this.name, this.userCredentials,
-      this._selectedGoalsOptions, this._selectedOption, {super.key});
+      this._selectedGoalsOptions, this._selectedOption,
+      {super.key});
 
   @override
-  _SubscriptionScreenState createState() => _SubscriptionScreenState();
+  State<SubscriptionScreen> createState() => _SubscriptionScreenState();
 }
 
 class _SubscriptionScreenState extends State<SubscriptionScreen> {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -13,9 +12,7 @@ class RemindersScreen extends StatefulWidget {
   const RemindersScreen({super.key, this.email});
 
   @override
-  State<RemindersScreen> createState() {
-    return _RemindersScreen();
-  }
+  State<RemindersScreen> createState() => _RemindersScreen();
 }
 
 class _RemindersScreen extends State<RemindersScreen> {

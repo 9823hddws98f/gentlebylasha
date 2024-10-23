@@ -2,7 +2,6 @@
 // ignore_for_file: lines_longer_than_80_chars, avoid_classes_with_only_static_members
 
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
-
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
@@ -59,8 +58,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '65622286155',
     projectId: 'sleeptales-4bac2',
     storageBucket: 'sleeptales-4bac2.appspot.com',
-    androidClientId: '65622286155-6gugiak1h8139igjdi0u8nv55uhvk8ak.apps.googleusercontent.com',
-    iosClientId: '65622286155-ksiqb07766dr4t4nnm07fcna2g8ot7v5.apps.googleusercontent.com',
+    androidClientId:
+        '65622286155-6gugiak1h8139igjdi0u8nv55uhvk8ak.apps.googleusercontent.com',
+    iosClientId:
+        '65622286155-ksiqb07766dr4t4nnm07fcna2g8ot7v5.apps.googleusercontent.com',
     iosBundleId: 'io.sleeptales.sleeptales',
   );
 
@@ -70,8 +71,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '65622286155',
     projectId: 'sleeptales-4bac2',
     storageBucket: 'sleeptales-4bac2.appspot.com',
-    androidClientId: '65622286155-6gugiak1h8139igjdi0u8nv55uhvk8ak.apps.googleusercontent.com',
-    iosClientId: '65622286155-ksiqb07766dr4t4nnm07fcna2g8ot7v5.apps.googleusercontent.com',
+    androidClientId:
+        '65622286155-6gugiak1h8139igjdi0u8nv55uhvk8ak.apps.googleusercontent.com',
+    iosClientId:
+        '65622286155-ksiqb07766dr4t4nnm07fcna2g8ot7v5.apps.googleusercontent.com',
     iosBundleId: 'io.sleeptales.sleeptales',
   );
 
@@ -84,5 +87,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'sleeptales-4bac2.appspot.com',
     measurementId: 'G-D03JX3LZEJ',
   );
-
 }

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 
 class PaymentService {
@@ -21,14 +20,13 @@ class PaymentService {
   /// If status is not error then app will be notied by this stream
   late StreamSubscription<PurchasedItem?> _purchaseUpdatedSubscription;
 
-
   /// To listen the errors of the purchase
   late StreamSubscription<PurchaseResult?> _purchaseErrorSubscription;
 
   /// List of product ids you want to fetch
   final List<String> _productIds = [
     'sleepytales_monthly_11.99'
-    'sleepytales_annually_47.00'
+        'sleepytales_annually_47.00'
   ];
 
   /// All available products will be store in this list
@@ -39,19 +37,15 @@ class PaymentService {
 
   /// view of the app will subscribe to this to get notified
   /// when premium status of the user changes
-  final ObserverList<Function> _proStatusChangedListeners =
-  ObserverList<Function>();
+  final ObserverList<Function> _proStatusChangedListeners = ObserverList<Function>();
 
   /// view of the app will subscribe to this to get errors of the purchase
-  final ObserverList<Function(String)> _errorListeners =
-  ObserverList<Function(String)>();
+  final ObserverList<Function(String)> _errorListeners = ObserverList<Function(String)>();
 
   /// logged in user's premium status
   bool _isProUser = false;
 
   bool get isProUser => _isProUser;
-
-
 
   /// Call this method at the startup of you app to initialize connection
   /// with billing server and get all the necessary data
@@ -67,14 +61,15 @@ class PaymentService {
         FlutterInappPurchase.purchaseError.listen(_handlePurchaseError);
 
     _getItems();
-   // _getPastPurchases();
+    // _getPastPurchases();
   }
+
   /// call when user close the app
   void dispose() {
     _connectionSubscription.cancel();
     _purchaseErrorSubscription.cancel();
     _purchaseUpdatedSubscription.cancel();
-   // FlutterInappPurchase.instance.endConnection;
+    // FlutterInappPurchase.instance.endConnection;
   }
 
   void _handlePurchaseError(PurchaseResult? purchaseError) {
@@ -107,8 +102,8 @@ class PaymentService {
   Future<void> _handlePurchaseUpdateIOS(PurchasedItem? purchasedItem) async {
     switch (purchasedItem!.transactionStateIOS) {
       case TransactionState.deferred:
-      // Edit: This was a bug that was pointed out here : https://github.com/dooboolab/flutter_inapp_purchase/issues/234
-      // FlutterInappPurchase.instance.finishTransaction(purchasedItem);
+        // Edit: This was a bug that was pointed out here : https://github.com/dooboolab/flutter_inapp_purchase/issues/234
+        // FlutterInappPurchase.instance.finishTransaction(purchasedItem);
         break;
       case TransactionState.failed:
         _callErrorListeners("Transaction Failed");
@@ -125,6 +120,7 @@ class PaymentService {
       default:
     }
   }
+
   /// three purchase state https://developer.android.com/reference/com/android/billingclient/api/Purchase.PurchaseState
   /// 0 : UNSPECIFIED_STATE
   /// 1 : PURCHASED
@@ -141,9 +137,10 @@ class PaymentService {
     }
   }
 
-  bool _verifyPurchase(PurchasedItem purchasedItem){
+  bool _verifyPurchase(PurchasedItem purchasedItem) {
     return true;
   }
+
   /// Call this method when status of purchase is success
   /// Call API of your back end to verify the reciept
   /// back end has to call billing server's API to verify the purchase token
@@ -162,8 +159,6 @@ class PaymentService {
       return;
     }
 
-
-
     if (isValid) {
       FlutterInappPurchase.instance.finishTransaction(purchasedItem);
       _isProUser = true;
@@ -174,14 +169,13 @@ class PaymentService {
     }
   }
 
-
   Future<List<IAPItem>> get products async {
     return _products;
   }
 
   Future<void> _getItems() async {
     List<IAPItem> items =
-    await FlutterInappPurchase.instance.getSubscriptions(_productIds);
+        await FlutterInappPurchase.instance.getSubscriptions(_productIds);
     _products = [];
     for (var item in items) {
       _products.add(item);

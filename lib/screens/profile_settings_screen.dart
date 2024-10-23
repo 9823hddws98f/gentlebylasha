@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/language_constants.dart';
@@ -23,10 +22,10 @@ class ProfileSettingsScreen extends StatefulWidget {
   const ProfileSettingsScreen(this.panelFunction, {super.key});
 
   @override
-  ProfileSettingsScreenState createState() => ProfileSettingsScreenState();
+  State<ProfileSettingsScreen> createState() => _ProfileSettingsScreenState();
 }
 
-class ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
+class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   @override
   void initState() {
     super.initState();

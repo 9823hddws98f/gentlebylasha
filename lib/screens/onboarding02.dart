@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/utils/global_functions.dart';
@@ -10,10 +9,11 @@ class OnBoarding02Screen extends StatefulWidget {
   Function() callback;
   Function(int selected) setSelectedOption;
   UserCredential userCredentials;
-  OnBoarding02Screen(this.callback, this.userCredentials, this.setSelectedOption, {super.key});
+  OnBoarding02Screen(this.callback, this.userCredentials, this.setSelectedOption,
+      {super.key});
 
   @override
-  _OnBoarding02ScreenState createState() => _OnBoarding02ScreenState();
+  State<OnBoarding02Screen> createState() => _OnBoarding02ScreenState();
 }
 
 class _OnBoarding02ScreenState extends State<OnBoarding02Screen> {

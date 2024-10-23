@@ -1,10 +1,13 @@
-import 'package:flutter/material.dart';
-
 import 'package:audio_service/audio_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '/notifiers/play_button_notifier.dart';
+import '/utils/colors.dart';
+import '/widgets/custom_btn.dart';
+import '/widgets/series_track_image_widget.dart';
 import '../models/audiofile_model.dart';
 import '../models/block.dart';
 import '../models/user_model.dart';
@@ -12,24 +15,24 @@ import '../page_manager.dart';
 import '../services/service_locator.dart';
 import '../utils/global_functions.dart';
 import '../widgets/series_track_widget.dart';
-import '/notifiers/play_button_notifier.dart';
-import '/utils/colors.dart';
-import '/widgets/custom_btn.dart';
-import '/widgets/series_track_image_widget.dart';
 
 class PlayListScreen extends StatefulWidget {
   final Block block;
   final List<AudioTrack> list;
   final Function panelFunction;
 
-  const PlayListScreen(
-      {super.key, required this.list, required this.panelFunction, required this.block});
+  const PlayListScreen({
+    super.key,
+    required this.list,
+    required this.panelFunction,
+    required this.block,
+  });
 
   @override
-  _TrackListScreenState createState() => _TrackListScreenState();
+  State<PlayListScreen> createState() => _PlayListScreenState();
 }
 
-class _TrackListScreenState extends State<PlayListScreen> {
+class _PlayListScreenState extends State<PlayListScreen> {
   UserModel? user;
   bool favoritePlayListLoading = false;
   List<String> favoritesList = [];

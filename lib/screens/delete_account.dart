@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/language_constants.dart';
@@ -14,9 +13,7 @@ class DeleteAccountScreen extends StatefulWidget {
   const DeleteAccountScreen({super.key, this.email});
 
   @override
-  State<DeleteAccountScreen> createState() {
-    return _DeleteAccountScreen();
-  }
+  State<DeleteAccountScreen> createState() => _DeleteAccountScreen();
 }
 
 class _DeleteAccountScreen extends State<DeleteAccountScreen> {
@@ -79,10 +76,5 @@ class _DeleteAccountScreen extends State<DeleteAccountScreen> {
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 }

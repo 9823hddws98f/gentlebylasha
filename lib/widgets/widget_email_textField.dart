@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../utils/styles.dart';
 import '/utils/colors.dart';
+import '../../utils/styles.dart';
 
 class CustomeEditText extends StatelessWidget {
   String? Function(String value) validator;
@@ -139,7 +138,8 @@ class PasswordEditText extends StatelessWidget {
   final bool isHide;
 
   PasswordEditText(
-      {super.key, required this.validator,
+      {super.key,
+      required this.validator,
       //required this.controller,
       required this.onchange,
       required this.onTap,

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path_provider/path_provider.dart';
@@ -13,9 +12,7 @@ class DownloadsScreen extends StatefulWidget {
   const DownloadsScreen({super.key, this.email});
 
   @override
-  State<DownloadsScreen> createState() {
-    return _DownloadsScreen();
-  }
+  State<DownloadsScreen> createState() => _DownloadsScreen();
 }
 
 class _DownloadsScreen extends State<DownloadsScreen> {

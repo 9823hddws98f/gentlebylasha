@@ -7,22 +7,31 @@ class CustomTabButton extends StatelessWidget {
   final void Function() onPress;
   final Color color;
   final Color textColor;
-  const CustomTabButton({super.key, required this.title, required this.onPress,required this.color, required this.textColor});
+  const CustomTabButton(
+      {super.key,
+      required this.title,
+      required this.onPress,
+      required this.color,
+      required this.textColor});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 30.h,
-      child:ElevatedButton(
+      child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             elevation: 0,
             backgroundColor: color,
             foregroundColor: textColor,
-            shape:RoundedRectangleBorder(
+            shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(8.h)),
             ),
           ),
-          onPressed: onPress, child: Text(title,style: TextStyle(color: textColor, fontSize:14.sp),)) ,
+          onPressed: onPress,
+          child: Text(
+            title,
+            style: TextStyle(color: textColor, fontSize: 14.sp),
+          )),
     );
   }
 }

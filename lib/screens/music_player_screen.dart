@@ -1,25 +1,24 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
+import '/models/user_model.dart';
+import '/screens/timer_picker_screen.dart';
+import '/utils/global_functions.dart';
+import '/widgets/circle_icon_button.dart';
 import '../notifiers/play_button_notifier.dart';
 import '../notifiers/progress_notifier.dart';
 import '../notifiers/repeat_notifier.dart';
 import '../page_manager.dart';
 import '../services/service_locator.dart';
 import '../utils/colors.dart';
-import '/models/user_model.dart';
-import '/screens/timer_picker_screen.dart';
-import '/utils/global_functions.dart';
-import '/widgets/circle_icon_button.dart';
 import 'home_screen.dart';
 
 class MusicPlayerScreen extends StatefulWidget {

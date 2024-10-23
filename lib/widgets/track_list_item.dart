@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TrackListItemSmall extends StatelessWidget {
@@ -10,74 +9,64 @@ class TrackListItemSmall extends StatelessWidget {
   final String mp3Duration;
   final Function() tap;
 
-  const TrackListItemSmall({
-    super.key,
-    required this.imageUrl,
-    required this.mp3Name,
-    required this.mp3Category,
-    required this.mp3Duration,
-    required this.tap
-  });
+  const TrackListItemSmall(
+      {super.key,
+      required this.imageUrl,
+      required this.mp3Name,
+      required this.mp3Category,
+      required this.mp3Duration,
+      required this.tap});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        child:GestureDetector(
-          onTap: tap,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                height: 164.h,
-                width: double.maxFinite,
-                child:CachedNetworkImage(
-                  imageUrl: imageUrl,
-                  imageBuilder: (context, imageProvider) => ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image(
-                      image: imageProvider,
-                      fit: BoxFit.cover,
+        child: GestureDetector(
+            onTap: tap,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  height: 164.h,
+                  width: double.maxFinite,
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    imageBuilder: (context, imageProvider) => ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    mp3Name,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
-              ),
-
-
-              SizedBox( height:8.h),
-              Align(
-                alignment: Alignment.centerLeft,
-                child:  Text(
-                  mp3Name,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
+                SizedBox(height: 2.h),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    mp3Category,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                    ),
                   ),
-                ),
-              ),
-
-              SizedBox( height:2.h),
-              Align(
-                alignment: Alignment.centerLeft,
-                child:   Text(
-                  mp3Category,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: TextStyle(
-                    fontSize: 10.sp,
-                  ),
-                ),
-              )
-
-
-
-
-            ],
-
-          )
-        ));
+                )
+              ],
+            )));
   }
 }

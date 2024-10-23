@@ -1,35 +1,30 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '/screens/track_list.dart';
+import '/widgets/collection_item_grid.dart';
 import '../models/collection_model.dart';
 import '../utils/global_functions.dart';
 import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_small.dart';
 import '../widgets/topbar_widget.dart';
-import '/screens/track_list.dart';
-import '/widgets/collection_item_grid.dart';
 
 class CollectionListScreen extends StatefulWidget {
   final String heading;
   final List<Collection> list;
   final Function panelFunction;
 
-  const CollectionListScreen(
-      {super.key,
-      required this.heading,
-      required this.list,
-      required this.panelFunction});
+  const CollectionListScreen({
+    super.key,
+    required this.heading,
+    required this.list,
+    required this.panelFunction,
+  });
 
   @override
-  _CollectionListScreenState createState() => _CollectionListScreenState();
+  State<CollectionListScreen> createState() => _CollectionListScreenState();
 }
 
 class _CollectionListScreenState extends State<CollectionListScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

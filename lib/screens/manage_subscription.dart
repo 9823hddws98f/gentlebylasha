@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '/widgets/custom_btn.dart';
@@ -10,9 +9,7 @@ class ManageSubscriptionScreen extends StatefulWidget {
   const ManageSubscriptionScreen({super.key, this.email});
 
   @override
-  State<ManageSubscriptionScreen> createState() {
-    return _ManageSubscriptionScreen();
-  }
+  State<ManageSubscriptionScreen> createState() => _ManageSubscriptionScreen();
 }
 
 class _ManageSubscriptionScreen extends State<ManageSubscriptionScreen> {

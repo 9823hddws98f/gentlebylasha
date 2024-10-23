@@ -1,10 +1,7 @@
-import 'package:flutter/material.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../utils/colors.dart';
-import '../widgets/widget_email_textField.dart';
 import '/language_constants.dart';
 import '/models/user_model.dart';
 import '/screens/forgot_password_screen.dart';
@@ -12,6 +9,8 @@ import '/screens/home_screen.dart';
 import '/utils/global_functions.dart';
 import '/widgets/custom_btn.dart';
 import '/widgets/login_footer.dart';
+import '../utils/colors.dart';
+import '../widgets/widget_email_textField.dart';
 import 'authentication.dart';
 
 class LoginScreen extends StatefulWidget {
