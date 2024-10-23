@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sleeptales/screens/auth/login_screen.dart';
 
 import '/screens/home_screen.dart';
-import '/screens/launch_screen.dart';
 import '/utils/firestore_helper.dart';
 import '../utils/global_functions.dart';
 
@@ -13,32 +13,21 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  // create an instance
   @override
   void initState() {
     super.initState();
-
     goToMainScreen();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: SizedBox(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
+  Widget build(BuildContext context) => Scaffold(
+        body: Center(
+          child: Text(
             "Gentle",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 45),
           ),
-        ],
-      ),
-    ));
-  }
+        ),
+      );
 
   void goToMainScreen() async {
     var user = await getUser();
@@ -49,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
           MaterialPageRoute(builder: (context) => HomeScreen()), (route) => false);
     } else {
       Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (context) => LaunchScreen()), (route) => false);
+          MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false);
     }
   }
 }

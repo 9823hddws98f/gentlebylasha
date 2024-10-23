@@ -1,146 +1,92 @@
 import 'package:flutter/material.dart';
+import 'package:sleeptales/helper/validators.dart';
+import 'package:sleeptales/language_constants.dart';
+import 'package:sleeptales/widgets/app_scaffold/app_scaffold.dart';
 
-import '../widgets/widget_email_textField.dart';
 import '/utils/global_functions.dart';
 import '/widgets/custom_btn.dart';
 import 'authentication.dart';
 
-class ForgotPasswordScreen extends StatefulWidget {
-  const ForgotPasswordScreen({super.key});
+class ForgotPasswordModal extends StatefulWidget {
+  const ForgotPasswordModal({super.key});
   @override
-  State<ForgotPasswordScreen> createState() {
-    return ForgotPasswordState();
-  }
+  State<ForgotPasswordModal> createState() => ForgotPasswordState();
 }
 
-class ForgotPasswordState extends State<ForgotPasswordScreen> {
+class ForgotPasswordState extends State<ForgotPasswordModal> {
   static final _formKey = GlobalKey<FormState>();
   String? _email;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Padding(
-        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 10),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                        child: IconButton(
-                          iconSize: 22,
-                          icon: Icon(
-                            Icons.close,
-                            color: Colors.white,
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ),
+    return AppScaffold.modal(
+      height: 400,
+      body: Form(
+        key: _formKey,
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    translation(context).forgotYourPassword,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 24),
+                  Text(
+                    "Enter your email we will send a link to reset your password",
+                  ),
+                  SizedBox(height: 24),
+                  TextFormField(
+                    validator: AppValidators.emailValidator(context),
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      hintText: translation(context).email,
                     ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                            child: Text(
-                              "Login to Sleeptales",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+                    onSaved: (value) => setState(() => _email = value),
+                  ),
+                ],
               ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                      "Enter your email we will send a link to reset your password",
-                      style: TextStyle(fontSize: 16)),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text("Email:", style: TextStyle(fontSize: 16)),
-                ),
-              ),
-              CustomeEditText(
-                hint: "",
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return "Please enter your email";
-                  } else if (!(RegExp(
-                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                      .hasMatch(value))) {
-                    return "Please enter a valid email";
-                  }
-                  return null;
-                },
-                inputType: TextInputType.emailAddress,
-                // controller: provider.email,
-                onchange: (String value) {
-                  setState(() {
-                    _email = value;
-                  });
-                },
-              ),
-              SizedBox(
-                height: 40,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              CustomButton(
-                title: "Send Password Reset Email",
-                onPress: () async {
-                  if (_formKey.currentState!.validate()) {
-                    //showLoaderDialog(context, "Logging in...");
-                    // _formKey.currentState!.save();
-                    // TODO: call backend API to register user with provided information
+            ),
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Container(
+                padding: EdgeInsets.only(bottom: 16),
+                alignment: Alignment.bottomCenter,
+                child: CustomButton(
+                  title: "Send Password Reset Email",
+                  onPress: () async {
+                    if (_formKey.currentState!.validate()) {
+                      //showLoaderDialog(context, "Logging in...");
+                      // _formKey.currentState!.save();
+                      // TODO: call backend API to register user with provided information
 
-                    if (_email != null) {
-                      showLoaderDialog(context, "Sending password reset email...");
-                      try {
-                        Auth auth = Auth();
-                        await auth.sendPasswordResetEmail(_email!);
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                      } catch (e) {
-                        showToast(e.toString());
-                        Navigator.pop(context);
+                      if (_email != null) {
+                        showLoaderDialog(context, "Sending password reset email...");
+                        try {
+                          Auth auth = Auth();
+                          await auth.sendPasswordResetEmail(_email!);
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        } catch (e) {
+                          showToast(e.toString());
+                          Navigator.pop(context);
+                        }
+                      } else {
+                        showToast("Please enter your email");
                       }
                     } else {
-                      showToast("Please enter your email");
+                      showToast("wrong input");
                     }
-                  } else {
-                    showToast("wrong input");
-                  }
-                },
-                color: Colors.white,
-                textColor: Colors.black,
+                  },
+                  color: Colors.white,
+                  textColor: Colors.black,
+                ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

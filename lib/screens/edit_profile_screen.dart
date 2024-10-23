@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sleeptales/widgets/input/password_edit_text.dart';
 
 import '/utils/colors.dart';
 import '/widgets/topbar_widget.dart';
@@ -7,7 +8,7 @@ import '../models/user_model.dart';
 import '../utils/firestore_helper.dart';
 import '../utils/global_functions.dart';
 import '../widgets/custom_btn.dart';
-import '../widgets/widget_email_textField.dart';
+// import '../widgets/widget_email_textField.dart';
 import 'authentication.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -53,23 +54,7 @@ class _EditProfileScreen extends State<EditProfileScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     PasswordEditText(
-                      isHide: curPassShow,
-                      onTap: () {
-                        setState(() => curPassShow = !curPassShow);
-                      },
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return "Please enter password";
-                        } else if (value.length < 6) {
-                          return "Password must contain minimum of 6 characters";
-                        }
-                        return null;
-                      },
-                      onchange: (String value) {
-                        setState(() {
-                          currentPass = value;
-                        });
-                      },
+                      onSaved: (value) => setState(() => currentPass = value ?? ''),
                     ),
                     TextButton(
                       child: Text(
@@ -152,21 +137,21 @@ class _EditProfileScreen extends State<EditProfileScreen> {
                                       Text("Your Name:", style: TextStyle(fontSize: 16)),
                                 ),
                               ),
-                              CustomeEditTextFullName(
-                                hint: "",
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return "Please enter your name";
-                                  }
-                                  return null;
-                                },
-                                inputType: TextInputType.name,
-                                onchange: (String value) {
-                                  setState(() {
-                                    name = value;
-                                  });
-                                },
-                              ),
+                              // CustomeEditTextFullName(
+                              //   hint: "",
+                              //   validator: (value) {
+                              //     if (value.isEmpty) {
+                              //       return "Please enter your name";
+                              //     }
+                              //     return null;
+                              //   },
+                              //   inputType: TextInputType.name,
+                              //   onchange: (String value) {
+                              //     setState(() {
+                              //       name = value;
+                              //     });
+                              //   },
+                              // ),
                               SizedBox(
                                 height: 5,
                               ),
@@ -177,26 +162,26 @@ class _EditProfileScreen extends State<EditProfileScreen> {
                                   child: Text("Email:", style: TextStyle(fontSize: 16)),
                                 ),
                               ),
-                              CustomeEditText(
-                                hint: "",
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return "Please enter email";
-                                  } else if (!(RegExp(
-                                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                      .hasMatch(value))) {
-                                    return "Please enter a valid email";
-                                  }
-                                  return null;
-                                },
-                                inputType: TextInputType.emailAddress,
-                                // controller: provider.email,
-                                onchange: (String value) {
-                                  setState(() {
-                                    email = value;
-                                  });
-                                },
-                              ),
+                              // CustomeEditText(
+                              //   hint: "",
+                              //   validator: (value) {
+                              //     if (value.isEmpty) {
+                              //       return "Please enter email";
+                              //     } else if (!(RegExp(
+                              //             r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                              //         .hasMatch(value))) {
+                              //       return "Please enter a valid email";
+                              //     }
+                              //     return null;
+                              //   },
+                              //   inputType: TextInputType.emailAddress,
+                              //   // controller: provider.email,
+                              //   onchange: (String value) {
+                              //     setState(() {
+                              //       email = value;
+                              //     });
+                              //   },
+                              // ),
                               SizedBox(
                                 height: 5,
                               ),

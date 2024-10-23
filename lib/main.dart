@@ -8,16 +8,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:sleeptales/screens/auth/login_screen.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 import '/screens/home_screen.dart';
-import '/screens/launch_screen.dart';
 import '/screens/splash_screen.dart';
 import '/services/service_locator.dart';
-import '/utils/colors.dart';
 import '/utils/route_constant.dart';
 import 'firebase_options.dart';
 import 'language_constants.dart';
+import 'utils/app_theme.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -41,12 +41,16 @@ Future<void> main() async {
   runApp(
     DevicePreview(
       enabled: !kReleaseMode,
-      builder: (context) => MyApp(),
+      data: DevicePreviewData(
+        isDarkMode: true,
+      ),
+      builder: (context) => const MyApp(),
     ),
   );
 }
 
 void setupFirebaseMessaging() {
+  // TODO: setup firebase messaging
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     debugPrint('Received message: ${message.notification?.title}');
     displayNotification(message);
@@ -92,8 +96,7 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
 
-  static Future<void> setLocale(BuildContext context, Locale newLocale) async {
-    // newLocale = await getLocale();
+  static void setLocale(BuildContext context, Locale newLocale) {
     _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
     state?.setLocale(newLocale);
   }
@@ -102,73 +105,49 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   Locale? _locale;
 
-  setLocale(Locale locale) {
-    setState(() {
-      _locale = locale;
-    });
-  }
+  void setLocale(Locale locale) => setState(() => _locale = locale);
 
   @override
   void didChangeDependencies() {
-    getLocale().then((locale) => {setLocale(locale)});
+    getLocale().then(setLocale);
     super.didChangeDependencies();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Gentle",
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        textTheme: Theme.of(context).textTheme.apply(
-              fontFamily: 'Nunito',
-              bodyColor: Colors.white, //<-- SEE HERE
-              displayColor: Colors.white, //<-- SEE HERE
-            ),
-        iconTheme: const IconThemeData(
-          color: Colors.white, // set the default color for icons
-        ),
-        unselectedWidgetColor: Colors.white,
-        scaffoldBackgroundColor: colorBackground,
-        colorScheme: ThemeData().colorScheme.copyWith(
-              primary: colorBackground,
-              secondary: Colors.white,
-              surface: colorBackground,
-            ),
-      ),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      initialRoute: splashPath,
-      routes: {
-        splashPath: (context) => const SplashScreen(),
-        loginPath: (context) => const LaunchScreen(),
-        dashboard: (context) => const HomeScreen(),
-      },
-      locale: _locale,
-    );
-  }
+  Widget build(BuildContext context) => MaterialApp(
+        title: "Gentle",
+        debugShowCheckedModeBanner: false,
+        locale: _locale,
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        initialRoute: splashPath,
+        routes: {
+          splashPath: (context) => const SplashScreen(),
+          loginPath: (context) => const LoginScreen(),
+          dashboard: (context) => const HomeScreen(),
+        },
+      );
 }
 
 // Define a method to initialize the plugin and request permission to send notifications
 Future<void> initializeNotifications() async {
   await requestNotificationPermission();
-  const AndroidInitializationSettings androidInitSettings =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
-  final DarwinInitializationSettings initializationSettingsDarwin =
-      DarwinInitializationSettings(
+  const androidInitSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+  final initializationSettingsDarwin = DarwinInitializationSettings(
     requestSoundPermission: true,
     requestBadgePermission: true,
     requestAlertPermission: true,
-    onDidReceiveLocalNotification: onDidReceiveLocalNotification,
+    //TODO:  onDidReceiveLocalNotification:
   );
-  final InitializationSettings initializationSettings = InitializationSettings(
-      android: androidInitSettings, iOS: initializationSettingsDarwin);
+  final initializationSettings = InitializationSettings(
+    android: androidInitSettings,
+    iOS: initializationSettingsDarwin,
+  );
 
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 }
-
-void onDidReceiveLocalNotification(
-    int id, String? title, String? body, String? payload) async {}
 
 Future<void> requestNotificationPermission() async {
   await flutterLocalNotificationsPlugin
@@ -181,8 +160,12 @@ Future<void> requestNotificationPermission() async {
 
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(AndroidNotificationChannel(
-          'daily_reminder', 'Daily Reminder',
+      ?.createNotificationChannel(
+        AndroidNotificationChannel(
+          'daily_reminder',
+          'Daily Reminder',
           importance: Importance.max,
-          vibrationPattern: Int64List.fromList([0, 500, 500, 1000])));
+          vibrationPattern: Int64List.fromList([0, 500, 500, 1000]),
+        ),
+      );
 }

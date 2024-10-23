@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../utils/styles.dart';
 import '/utils/colors.dart';
 import '/widgets/circle_icon_button.dart';
 
@@ -39,7 +38,6 @@ class TopBar extends StatelessWidget {
                 child: Text(
                   heading,
                   textAlign: TextAlign.center,
-                  style: headingTextStyle,
                 ),
               ),
             ],

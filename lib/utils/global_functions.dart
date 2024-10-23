@@ -5,10 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sleeptales/screens/auth/login_screen.dart';
 
 import '/models/audiofile_model.dart';
 import '/models/user_model.dart';
-import '/screens/launch_screen.dart';
 import '/utils/colors.dart';
 import '../models/category_model.dart';
 import '../page_manager.dart';
@@ -122,7 +122,7 @@ void logout(BuildContext context) async {
   Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
     MaterialPageRoute(
       builder: (BuildContext context) {
-        return LaunchScreen();
+        return LoginScreen();
       },
     ),
     (_) => false,
@@ -216,11 +216,11 @@ playTrack(AudioTrack audioTrack) {
   //getIt<PageManager>().init();
   getIt<PageManager>().playSinglePlaylist(
       MediaItem(
-        id: audioTrack.trackId ?? '',
-        album: audioTrack.speaker ?? '',
-        title: audioTrack.title ?? '',
+        id: audioTrack.trackId,
+        album: audioTrack.speaker,
+        title: audioTrack.title,
         displayDescription: audioTrack.description,
-        artUri: Uri.parse(audioTrack.imageBackground ?? ''),
+        artUri: Uri.parse(audioTrack.imageBackground),
         extras: {
           'url': audioTrack.trackUrl,
           'id': audioTrack.trackId,

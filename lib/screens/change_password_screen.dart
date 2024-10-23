@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '/widgets/input/password_edit_text.dart';
 import '/widgets/topbar_widget.dart';
 import '../utils/global_functions.dart';
 import '../widgets/custom_btn.dart';
-import '../widgets/widget_email_textField.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   final String? email;
@@ -39,73 +39,34 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
                             Navigator.pop(context);
                           }),
                       Form(
-                          key: formKey,
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 30, 0, 10),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text("Current password",
-                                      style: TextStyle(fontSize: 16)),
-                                ),
+                        key: formKey,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(0, 30, 0, 10),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text("Current password",
+                                    style: TextStyle(fontSize: 16)),
                               ),
-                              PasswordEditText(
-                                isHide: curPassShow,
-                                onTap: () {
-                                  setState(() {
-                                    curPassShow = !curPassShow;
-                                  });
-                                },
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return "Please enter password";
-                                  } else if (value.length < 6) {
-                                    return "Password must contain minimum of 6 characters";
-                                  }
-                                  return null;
-                                },
-                                onchange: (String value) {
-                                  setState(() {
-                                    currentPass = value;
-                                  });
-                                },
+                            ),
+                            PasswordEditText(
+                              onSaved: (value) => setState(() => currentPass = value),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(0, 30, 0, 10),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child:
+                                    Text("New password", style: TextStyle(fontSize: 16)),
                               ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 30, 0, 10),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text("New password",
-                                      style: TextStyle(fontSize: 16)),
-                                ),
-                              ),
-                              PasswordEditText(
-                                isHide: newPassShow,
-                                //controller: provider.password,
-                                onTap: () {
-                                  setState(() {
-                                    newPassShow = !newPassShow;
-                                  });
-
-                                  // Provider.of<LoginProvider>(context, listen: false)
-                                  //     .showPassword1();
-                                },
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return "Please enter password";
-                                  } else if (value.length < 6) {
-                                    return "Password must contain minimum of 6 characters";
-                                  }
-                                  return null;
-                                },
-                                onchange: (String value) {
-                                  setState(() {
-                                    newPass = value;
-                                  });
-                                },
-                              ),
-                            ],
-                          )),
+                            ),
+                            PasswordEditText(
+                              onSaved: (value) => setState(() => newPass = value),
+                            ),
+                          ],
+                        ),
+                      ),
                       Padding(
                           padding: EdgeInsets.only(top: 50),
                           child: CustomButton(

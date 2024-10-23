@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class LoginFotter extends StatelessWidget {
+class LoginFooter extends StatelessWidget {
   final String sentenceText;
   final String loginSingUpText;
   final Function() onPress;
   MainAxisAlignment alignment;
-  LoginFotter(
+  LoginFooter(
       {super.key,
       required this.sentenceText,
       required this.loginSingUpText,

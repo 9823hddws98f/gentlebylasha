@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sleeptales/helper/validators.dart';
 
 import '/language_constants.dart';
 import '/screens/authentication.dart';
 import '/utils/global_functions.dart';
 import '/widgets/custom_btn.dart';
 import '/widgets/login_footer.dart';
-import '../widgets/widget_email_textField.dart';
 
 class SignupScreen extends StatefulWidget {
   static final _formKey = GlobalKey<FormState>();
@@ -93,18 +93,14 @@ class _SignupScreenState extends State<SignupScreen> {
                               style: TextStyle(fontSize: 16)),
                         ),
                       ),
-                      CustomeEditTextFullName(
-                        hint: translation(context).name,
+                      TextFormField(
                         validator: (value) {
-                          if (value.isEmpty) {
-                            return translation(context).name;
+                          if (value?.isEmpty ?? true) {
+                            return translation(context).enterName;
                           }
                           return null;
                         },
-                        inputType: TextInputType.name,
-                        onchange: (String value) {
-                          _name = value;
-                        },
+                        onSaved: (value) => setState(() => _name = value),
                       ),
                       SizedBox(
                         height: 5,
@@ -117,23 +113,9 @@ class _SignupScreenState extends State<SignupScreen> {
                               style: TextStyle(fontSize: 16)),
                         ),
                       ),
-                      CustomeEditText(
-                        hint: "example@gmail.com",
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return translation(context).enterEmail;
-                          } else if (!(RegExp(
-                                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                              .hasMatch(value))) {
-                            return translation(context).enterValidEmail;
-                          }
-                          return null;
-                        },
-                        inputType: TextInputType.emailAddress,
-                        // controller: provider.email,
-                        onchange: (String value) {
-                          _email = value;
-                        },
+                      TextFormField(
+                        validator: AppValidators.emailValidator(context),
+                        onSaved: (value) => setState(() => _email = value),
                       ),
                       SizedBox(
                         height: 5,
@@ -146,30 +128,23 @@ class _SignupScreenState extends State<SignupScreen> {
                               style: TextStyle(fontSize: 16)),
                         ),
                       ),
-                      PasswordEditText(
-                        isHide: hide,
-                        //controller: provider.password,
-                        onTap: () {
-                          setState(() {
-                            hide = !hide;
-                          });
-                        },
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return translation(context).enterPassword;
-                          } else if (value.length < 6) {
-                            return translation(context).passwordCaracterLimit;
-                          }
-                          return null;
-                        },
-                        onchange: (String value) {
-                          _password = value;
-                        },
-                      ),
+                      // PasswordEditText(
+                      //   validator: (value) {
+                      //     if (value?.isEmpty ?? true) {
+                      //       return translation(context).enterPassword;
+                      //     } else if (value!.length < 6) {
+                      //       return translation(context).passwordCaracterLimit;
+                      //     }
+                      //     return null;
+                      //   },
+                      //   onChanged: (String value) {
+                      //     _password = value;
+                      //   },
+                      // ),
                       SizedBox(
                         height: 40,
                       ),
-                      LoginFotter(
+                      LoginFooter(
                           alignment: MainAxisAlignment.start,
                           sentenceText: "${translation(context).alreadyHaveAnAccount}?",
                           loginSingUpText: translation(context).login,
