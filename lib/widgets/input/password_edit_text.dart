@@ -3,12 +3,16 @@ import 'package:sleeptales/helper/validators.dart';
 import 'package:sleeptales/language_constants.dart';
 
 class PasswordEditText extends StatefulWidget {
-  final void Function(String? value)? onSaved;
-
   const PasswordEditText({
     super.key,
     this.onSaved,
+    this.onFieldSubmitted,
+    this.textInputAction = TextInputAction.go,
   });
+
+  final void Function(String? value)? onSaved;
+  final void Function(String? value)? onFieldSubmitted;
+  final TextInputAction textInputAction;
 
   @override
   State<PasswordEditText> createState() => _PasswordEditTextState();
@@ -24,8 +28,9 @@ class _PasswordEditTextState extends State<PasswordEditText> {
         enableSuggestions: false,
         autocorrect: false,
         keyboardType: TextInputType.text,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
+        textInputAction: widget.textInputAction,
         onSaved: widget.onSaved,
+        onFieldSubmitted: widget.onFieldSubmitted,
         decoration: InputDecoration(
           hintText: translation(context).password,
           suffixIcon: InkWell(

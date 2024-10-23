@@ -234,7 +234,7 @@ class HomeScreenState extends State<HomeScreen> {
                                   kBottomNavigationBarHeight +
                                   78,
                           controller: panelController,
-                          body: Stack(
+                          panelBuilder: () => Stack(
                             children: [
                               MusicPlayerScreen(
                                 playList: playlist.length > 1 ? true : false,

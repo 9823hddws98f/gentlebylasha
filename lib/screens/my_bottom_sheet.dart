@@ -3,128 +3,72 @@ import 'package:flutter/material.dart';
 
 import '/screens/onboarding01.dart';
 import '/screens/onboarding02.dart';
-import '/screens/signup_layout.dart';
 import '/screens/subscription.dart';
+import '/utils/app_theme.dart';
 
-class MyBottomSheet extends StatefulWidget {
-  int currentPage;
-  UserCredential? userCredential;
-  Function()? callBackLogin;
-  Function()? isDissmisableBottomSheet;
+class OnboardingBottomSheet extends StatefulWidget {
+  final UserCredential userCredential;
 
-  MyBottomSheet({
-    super.key,
-    required this.currentPage,
-    this.userCredential,
-    this.callBackLogin,
-    this.isDissmisableBottomSheet,
-  });
+  const OnboardingBottomSheet(this.userCredential, {super.key});
 
   @override
-  State<MyBottomSheet> createState() => _MyBottomSheetState();
+  State<OnboardingBottomSheet> createState() => _OnboardingBottomSheetState();
 }
 
-class _MyBottomSheetState extends State<MyBottomSheet> {
-  String name = "";
-
+class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
   List<int> _selectedGoalsOptions = [];
   int? _selectedOption;
-  UserCredential? userCredential;
+  int _selectedPage = 1;
 
-  void nextPage() {
-    setState(() {
-      //currentPage++;
-      widget.currentPage++;
-    });
-  }
+  setSelectedGoalsOptions(List<int> selectedGoalsOptions) => setState(() {
+        _selectedGoalsOptions = selectedGoalsOptions;
+      });
 
-  callback() {
-    setState(() {
-      widget.currentPage++;
-      // currentPage++;
-    });
-  }
-
-  setSelectedGoalsOptions(List<int> selectedGoalsOptions) {
-    setState(() {
-      _selectedGoalsOptions = selectedGoalsOptions;
-    });
-  }
-
-  setSelectedOptions(int selectedOption) {
-    setState(() {
-      _selectedOption = selectedOption;
-    });
-  }
-
-  setUserCredentials(UserCredential userCredential, String name) {
-    setState(() {
-      this.userCredential = userCredential;
-      this.name = name;
-    });
-  }
-
-  void previousPage() {
-    setState(() {
-      widget.currentPage--;
-      // currentPage--;
-    });
-  }
+  setSelectedOptions(int selectedOption) => setState(() {
+        _selectedOption = selectedOption;
+      });
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.89,
-      clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (widget.currentPage == 0) ...[
-            Expanded(
-                child: SignupScreen(callback, setUserCredentials, widget.callBackLogin))
-          ] else if (widget.currentPage == 1) ...[
-            if (widget.userCredential != null) ...[
-              Expanded(
-                child: OnBoarding01Screen(
-                  callback,
-                  widget.userCredential!,
-                  setSelectedGoalsOptions,
-                ),
+  Widget build(BuildContext context) => PopScope(
+        canPop: false,
+        child: Container(
+          height: 750,
+          clipBehavior: Clip.hardEdge,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: AppTheme.largeBorderRadius.topLeft,
+              topRight: AppTheme.largeBorderRadius.topRight,
+            ),
+          ),
+          child: switch (_selectedPage) {
+            // 0 => SignupScreen(
+            //     () => _navigateTo(1),
+            //     setUserCredentials,
+            //     widget.callBackLogin,
+            //   ),
+            1 => OnBoarding01Screen(
+                () => _navigateTo(2),
+                widget.userCredential,
+                setSelectedGoalsOptions,
               ),
-            ] else ...[
-              Expanded(
-                  child: OnBoarding01Screen(
-                      callback, userCredential!, setSelectedGoalsOptions))
-            ],
-          ] else if (widget.currentPage == 2) ...[
-            if (widget.userCredential != null) ...[
-              Expanded(
-                  child: OnBoarding02Screen(
-                      callback, widget.userCredential!, setSelectedOptions))
-            ] else ...[
-              Expanded(
-                  child:
-                      OnBoarding02Screen(callback, userCredential!, setSelectedOptions))
-            ]
-          ] else ...[
-            if (widget.userCredential != null) ...[
-              Expanded(
-                  child: SubscriptionScreen(callback, name, widget.userCredential!,
-                      _selectedGoalsOptions, _selectedOption))
-            ] else ...[
-              Expanded(
-                  child: SubscriptionScreen(callback, name, userCredential!,
-                      _selectedGoalsOptions, _selectedOption))
-            ]
-          ]
-        ],
-      ),
-    );
+            2 => OnBoarding02Screen(
+                () => _navigateTo(3),
+                widget.userCredential,
+                setSelectedOptions,
+              ),
+            _ => SubscriptionScreen(
+                () => _navigateTo(3),
+                widget.userCredential,
+                _selectedGoalsOptions,
+                _selectedOption,
+              )
+          },
+        ),
+      );
+
+  void _navigateTo(int page) {
+    setState(() {
+      _selectedPage = page;
+    });
   }
 }

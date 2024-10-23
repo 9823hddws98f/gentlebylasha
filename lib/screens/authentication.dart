@@ -16,8 +16,7 @@ class Auth {
   Future<UserCredential?> signInWithEmail(String email, String password) async {
     try {
       // Sign in the user with the provided email and password
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+      final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -112,16 +111,16 @@ class Auth {
       );
 
       // Authenticate with Firebase using the credentials
-      final OAuthCredential credential = OAuthProvider("apple.com").credential(
+      final credential = OAuthProvider('apple.com').credential(
         idToken: String.fromCharCodes(appleCredential.identityToken!.codeUnits),
         accessToken: String.fromCharCodes(appleCredential.authorizationCode.codeUnits),
       );
       // Sign in with Firebase
-      final UserCredential userCredential = await _auth.signInWithCredential(credential);
-      debugPrint("name ${userCredential.user!.displayName}");
+      final userCredential = await _auth.signInWithCredential(credential);
+      debugPrint('name ${userCredential.user!.displayName}');
       return userCredential;
     } catch (e) {
-      debugPrint("error in apple sign in $e");
+      debugPrint('error in apple sign in $e');
       return null;
     }
   }

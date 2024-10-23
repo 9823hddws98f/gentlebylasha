@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:audio_session/audio_session.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -40,7 +42,7 @@ Future<void> main() async {
 
   runApp(
     DevicePreview(
-      enabled: !kReleaseMode,
+      enabled: !kReleaseMode && Platform.isMacOS,
       data: DevicePreviewData(
         isDarkMode: true,
       ),
@@ -115,11 +117,11 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        title: "Gentle",
+        title: 'Gentle',
         debugShowCheckedModeBanner: false,
         locale: _locale,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
+        theme: AppTheme.buildTheme(dark: false),
+        darkTheme: AppTheme.buildTheme(dark: true),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         initialRoute: splashPath,

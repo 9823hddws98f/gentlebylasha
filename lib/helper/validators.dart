@@ -4,7 +4,6 @@ import '/language_constants.dart';
 
 class AppValidators {
   static const _emailRegex = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
-  static const _passwordRegex = r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$';
 
   static String? Function(String?) emailValidator(BuildContext context) => (value) {
         if (value?.isEmpty ?? true) {
@@ -20,7 +19,7 @@ class AppValidators {
         if (value?.isEmpty ?? true) {
           return translation(context).enterPassword;
         }
-        if (!RegExp(_passwordRegex).hasMatch(value!)) {
+        if (value!.length < 6) {
           return translation(context).passwordCaracterLimit;
         }
         return null;

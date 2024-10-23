@@ -9,14 +9,18 @@ import '/utils/global_functions.dart';
 import '/widgets/custom_btn.dart';
 
 class SubscriptionScreen extends StatefulWidget {
-  Function() callback;
-  UserCredential userCredentials;
+  final Function() callback;
+  final UserCredential userCredentials;
   final List<int> _selectedGoalsOptions;
   final int? _selectedOption;
-  String name;
-  SubscriptionScreen(this.callback, this.name, this.userCredentials,
-      this._selectedGoalsOptions, this._selectedOption,
-      {super.key});
+
+  const SubscriptionScreen(
+    this.callback,
+    this.userCredentials,
+    this._selectedGoalsOptions,
+    this._selectedOption, {
+    super.key,
+  });
 
   @override
   State<SubscriptionScreen> createState() => _SubscriptionScreenState();
@@ -68,12 +72,15 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                     onPress: () async {
                       showLoaderDialog(context, "Signing up...");
                       Auth auth = Auth();
+                      // TODO: This should happen right after oauth sign in.
+                      // Here we only need to save selected goals and options.
                       UserModel? user = await auth.addUserToServer(
-                          widget.userCredentials,
-                          widget.name,
-                          widget._selectedGoalsOptions,
-                          widget._selectedOption!,
-                          _isAnnuallySelected);
+                        widget.userCredentials,
+                        widget.userCredentials.user!.displayName ?? '',
+                        widget._selectedGoalsOptions,
+                        widget._selectedOption!,
+                        _isAnnuallySelected,
+                      );
                       if (user == null) {
                         showToast("Unable to sign up");
                         Navigator.pop(context);
