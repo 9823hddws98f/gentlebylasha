@@ -1,21 +1,20 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-
 import 'package:audio_service/audio_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
-import '../models/audiofile_model.dart';
-import '../page_manager.dart';
-import '../services/service_locator.dart';
-import '../widgets/shimmerwidgets/shimmer_mp3_card_tracklist_item.dart';
-import '../widgets/topbar_widget.dart';
 import '/language_constants.dart';
-import '/models/user_model.dart';
 import '/utils/colors.dart';
 import '/utils/global_functions.dart';
 import '/widgets/custom_tab_button.dart';
 import '/widgets/track_list_item.dart';
+import '../domain/models/audiofile_model.dart';
+import '../domain/blocs/user/app_user.dart';
+import '../page_manager.dart';
+import '../domain/services/service_locator.dart';
+import '../widgets/shimmerwidgets/shimmer_mp3_card_tracklist_item.dart';
+import '../widgets/topbar_widget.dart';
 
 class FavoritesScreen extends StatefulWidget {
   final Function panelFunction;
@@ -39,7 +38,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
   // Call this function to start listening for changes to the favorites array
   Future<void> startListeningToFavorites() async {
-    UserModel user = await getUser();
+    AppUser user = await getUser();
     final favoritesCollection = FirebaseFirestore.instance.collection('favorites');
     final userFavoritesDocRef = favoritesCollection.doc(user.id);
 

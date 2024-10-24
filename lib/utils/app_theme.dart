@@ -37,7 +37,8 @@ class AppTheme {
     onErrorContainer: Colors.red,
     surface: Color(0xff1A2034),
     onSurface: Color(0xFFF5F5F5),
-    surfaceContainerHighest: Color(0xff1A2034),
+    surfaceContainerHighest: Color.fromARGB(255, 39, 55, 96),
+    surfaceContainerLowest: Color(0xff0E1529),
     onSurfaceVariant: Color(0xFF99A1B7),
     outline: Color(0xFF363843),
   );
@@ -45,8 +46,16 @@ class AppTheme {
   static ThemeData buildTheme({required bool dark}) {
     final colors = dark ? darkColors : lightColors;
     const borderShape = RoundedRectangleBorder(borderRadius: smallBorderRadius);
-    final buttonStyle = ButtonStyle(shape: WidgetStateProperty.all(borderShape));
     final appBarBackground = dark ? const Color(0xFF0D0E12) : const Color(0xFF0B0C10);
+    final buttonStyle = ButtonStyle(
+      shape: WidgetStateProperty.all(borderShape),
+      minimumSize: WidgetStateProperty.all(Size(double.infinity, 48)),
+      textStyle: WidgetStateProperty.all(TextStyle(
+        fontSize: 16,
+        fontFamily: fontFamily,
+        fontWeight: FontWeight.w500,
+      )),
+    );
     return ThemeData(
       brightness: dark ? Brightness.dark : Brightness.light,
       colorScheme: colors,
@@ -57,7 +66,7 @@ class AppTheme {
       textButtonTheme: TextButtonThemeData(style: buttonStyle),
       outlinedButtonTheme: OutlinedButtonThemeData(style: buttonStyle),
       elevatedButtonTheme: ElevatedButtonThemeData(style: buttonStyle),
-      inputDecorationTheme: const InputDecorationTheme(
+      inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
           borderRadius: smallBorderRadius,
           borderSide: BorderSide(color: Colors.transparent),
@@ -67,6 +76,7 @@ class AppTheme {
           borderSide: BorderSide(color: Colors.transparent),
         ),
         filled: true,
+        fillColor: colors.surface,
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: appBarBackground,

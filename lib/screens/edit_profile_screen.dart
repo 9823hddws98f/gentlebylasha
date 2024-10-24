@@ -1,15 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sleeptales/widgets/input/password_edit_text.dart';
 
 import '/utils/colors.dart';
 import '/widgets/topbar_widget.dart';
-import '../models/user_model.dart';
 import '../utils/firestore_helper.dart';
 import '../utils/global_functions.dart';
 import '../widgets/custom_btn.dart';
-// import '../widgets/widget_email_textField.dart';
-import 'authentication.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final String? email;
@@ -62,44 +58,45 @@ class _EditProfileScreen extends State<EditProfileScreen> {
                         style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () async {
-                        if (currentPass.isNotEmpty) {
-                          showLoaderDialog(context, "Updating email");
-                          bool authCheck =
-                              await updateUserEmailAndData(email, name, currentPass);
-                          if (authCheck) {
-                            try {
-                              Auth auth = Auth();
+                        // TODO: Implement
+                        // if (currentPass.isNotEmpty) {
+                        //   showLoaderDialog(context, "Updating email");
+                        //   bool authCheck =
+                        //       await updateUserEmailAndData(email, name, currentPass);
+                        //   if (authCheck) {
+                        //     try {
+                        //       Auth auth = Auth();
 
-                              UserCredential? user =
-                                  await auth.signInWithEmail(email, currentPass);
-                              if (user != null) {
-                                UserModel? userModel = await auth.getUserFromServer(user);
-                                if (userModel == null) {
-                                  showToast("Unable to sign in");
-                                  //  Navigator.pop(context);
-                                } else {
-                                  await saveUser(userModel);
-                                  showToast("Email and name updated succesfully");
-                                  email = '';
-                                  name = '';
-                                  setState(() {});
-                                  valueNotifierName.value = name;
-                                  // Navigator.pop(context);
-                                  //pushRemoveAll(context, HomeScreen());
-                                }
-                              } else {
-                                //Navigator.pop(context);
-                              }
-                            } catch (e) {
-                              showToast(e.toString());
-                              //Navigator.pop(context);
-                            }
-                          }
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        } else {
-                          showToast("Please enter your current password");
-                        }
+                        //       UserCredential? user =
+                        //           await auth.signInWithEmail(email, currentPass);
+                        //       if (user != null) {
+                        //         AppUser? userModel = await auth.getUserFromServer(user);
+                        //         if (userModel == null) {
+                        //           showToast("Unable to sign in");
+                        //           //  Navigator.pop(context);
+                        //         } else {
+                        //           await saveUser(userModel);
+                        //           showToast("Email and name updated succesfully");
+                        //           email = '';
+                        //           name = '';
+                        //           setState(() {});
+                        //           valueNotifierName.value = name;
+                        //           // Navigator.pop(context);
+                        //           //pushRemoveAll(context, HomeScreen());
+                        //         }
+                        //       } else {
+                        //         //Navigator.pop(context);
+                        //       }
+                        //     } catch (e) {
+                        //       showToast(e.toString());
+                        //       //Navigator.pop(context);
+                        //     }
+                        //   }
+                        //   Navigator.pop(context);
+                        //   Navigator.pop(context);
+                        // } else {
+                        //   showToast("Please enter your current password");
+                        // }
                       },
                     ),
                   ],

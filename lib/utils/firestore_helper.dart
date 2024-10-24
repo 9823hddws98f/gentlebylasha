@@ -5,13 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '/models/audiofile_model.dart';
-import '/models/category_block.dart';
-import '/models/user_model.dart';
-import '../models/block.dart';
-import '../models/category_model.dart';
-import '../models/collection_model.dart';
-import '../models/sub_categories.dart';
+import '../domain/models/audiofile_model.dart';
+import '../domain/models/block.dart';
+import '../domain/models/category_block.dart';
+import '../domain/models/category_model.dart';
+import '../domain/models/collection_model.dart';
+import '../domain/models/sub_categories.dart';
+import '../domain/blocs/user/app_user.dart';
 import 'global_functions.dart';
 
 final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -108,7 +108,7 @@ Future<List<AudioTrack>> fetchTracksForBlock(String blockId) async {
 
 Future<void> addToRecentlyPlayed(String trackId) async {
   if (trackId != "") {
-    UserModel user = await getUser();
+    AppUser user = await getUser();
     debugPrint("recently played $trackId");
 
     try {

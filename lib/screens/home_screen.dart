@@ -7,6 +7,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sleeptales/domain/blocs/authentication/auth_repository.dart';
+import 'package:sleeptales/utils/get.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
 import '/helper/scrollcontroller_helper.dart';
@@ -15,11 +17,11 @@ import '/screens/explore_screen.dart';
 import '/screens/forme_screen.dart';
 import '/screens/profile_settings_screen.dart';
 import '/utils/colors.dart';
-import '../models/user_model.dart';
+import '../domain/blocs/user/app_user.dart';
+import '../domain/services/service_locator.dart';
 import '../notifiers/play_button_notifier.dart';
 import '../notifiers/progress_notifier.dart';
 import '../page_manager.dart';
-import '../services/service_locator.dart';
 import '../utils/global_functions.dart';
 import 'music_player_screen.dart';
 
@@ -119,7 +121,7 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> fetchFavoritePlayList() async {
-    UserModel user = await getUser();
+    AppUser user = await getUser();
     final favoritesCollection =
         FirebaseFirestore.instance.collection('favorites_playlist');
     final userFavoritesDocRef = favoritesCollection.doc(user.id);
@@ -134,7 +136,7 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> fetchFavoriteTracksList() async {
-    UserModel user = await getUser();
+    AppUser user = await getUser();
     final favoritesCollection = FirebaseFirestore.instance.collection('favorites');
     final userFavoritesDocRef = favoritesCollection.doc(user.id);
 
@@ -433,7 +435,17 @@ class HomeScreenState extends State<HomeScreen> {
                                     onTap: onItemTapped,
                                   ),
                                 ));
-                          }))
+                          })),
+                  Positioned(
+                    bottom: 120,
+                    right: 20,
+                    child: FloatingActionButton(
+                      child: Icon(Icons.logo_dev),
+                      onPressed: () {
+                        Get.the<AuthRepository>().logOut();
+                      },
+                    ),
+                  ),
                 ],
               )),
         ));

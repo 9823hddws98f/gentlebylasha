@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '/models/sub_categories.dart';
 import '/screens/track_list.dart';
 import '/utils/colors.dart';
 import '/utils/firestore_helper.dart';
 import '/utils/global_functions.dart';
 import '/widgets/tracklist_horizontal_widget.dart';
-import '../models/audiofile_model.dart';
-import '../models/category_block.dart';
-import '../models/collection_model.dart';
+import '../domain/models/audiofile_model.dart';
+import '../domain/models/category_block.dart';
+import '../domain/models/collection_model.dart';
+import '../domain/models/sub_categories.dart';
 import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_height.dart';
 
 class AllSubCategoriesTab extends StatefulWidget {

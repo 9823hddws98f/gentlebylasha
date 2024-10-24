@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../models/audiofile_model.dart';
+import '../domain/models/audiofile_model.dart';
+import '../domain/services/service_locator.dart';
 import '../page_manager.dart';
-import '../services/service_locator.dart';
 import '../utils/global_functions.dart';
 import 'mp3_card_list_item_width.dart';
 

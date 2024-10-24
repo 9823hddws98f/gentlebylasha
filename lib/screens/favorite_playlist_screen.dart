@@ -4,14 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '/language_constants.dart';
-import '/models/user_model.dart';
 import '/screens/playlist_tracks_screen.dart';
 import '/utils/colors.dart';
 import '/utils/global_functions.dart';
 import '/widgets/custom_tab_button.dart';
 import '/widgets/playlist_item.dart';
 import '/widgets/shimmerwidgets/shimmer_playlist_item.dart';
-import '../models/block.dart';
+import '../domain/blocs/user/app_user.dart';
+import '../domain/models/block.dart';
 import '../widgets/topbar_widget.dart';
 
 class FavoritePlaylistScreen extends StatefulWidget {
@@ -44,7 +44,7 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen> {
 
   // Call this function to start listening for changes to the favorites array
   Future<void> startListeningToFavoritePlaylist() async {
-    UserModel user = await getUser();
+    AppUser user = await getUser();
     final favoritesCollection =
         FirebaseFirestore.instance.collection('favorites_playlist');
     final userFavoritesDocRef = favoritesCollection.doc(user.id);
@@ -69,7 +69,7 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen> {
     });
 
     try {
-      UserModel user = await getUser();
+      AppUser user = await getUser();
       final favoritesRef =
           FirebaseFirestore.instance.collection('favorites_playlist').doc(user.id);
       await favoritesRef.update({

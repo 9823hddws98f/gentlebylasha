@@ -16,16 +16,10 @@ class OnboardingBottomSheet extends StatefulWidget {
 }
 
 class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
-  List<int> _selectedGoalsOptions = [];
-  int? _selectedOption;
   int _selectedPage = 1;
 
-  setSelectedGoalsOptions(List<int> selectedGoalsOptions) => setState(() {
-        _selectedGoalsOptions = selectedGoalsOptions;
-      });
-
-  setSelectedOptions(int selectedOption) => setState(() {
-        _selectedOption = selectedOption;
+  void _navigateTo(int page) => setState(() {
+        _selectedPage = page;
       });
 
   @override
@@ -40,35 +34,17 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
               topRight: AppTheme.largeBorderRadius.topRight,
             ),
           ),
-          child: switch (_selectedPage) {
-            // 0 => SignupScreen(
-            //     () => _navigateTo(1),
-            //     setUserCredentials,
-            //     widget.callBackLogin,
-            //   ),
+          child:
+              // TODO: Add page transition switcher fadethrough
+              switch (_selectedPage) {
             1 => OnBoarding01Screen(
-                () => _navigateTo(2),
-                widget.userCredential,
-                setSelectedGoalsOptions,
+                onSubmit: () => _navigateTo(2),
               ),
             2 => OnBoarding02Screen(
-                () => _navigateTo(3),
-                widget.userCredential,
-                setSelectedOptions,
+                onSubmit: () => _navigateTo(3),
               ),
-            _ => SubscriptionScreen(
-                () => _navigateTo(3),
-                widget.userCredential,
-                _selectedGoalsOptions,
-                _selectedOption,
-              )
+            _ => SubscriptionScreen()
           },
         ),
       );
-
-  void _navigateTo(int page) {
-    setState(() {
-      _selectedPage = page;
-    });
-  }
 }

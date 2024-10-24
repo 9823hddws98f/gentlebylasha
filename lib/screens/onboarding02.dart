@@ -1,23 +1,22 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sleeptales/utils/get.dart';
 
+import '/domain/blocs/user/user_bloc.dart';
+import '/language_constants.dart';
 import '/utils/global_functions.dart';
-import '/widgets/custom_btn.dart';
+import '/utils/tx_button.dart';
 
 class OnBoarding02Screen extends StatefulWidget {
-  Function() callback;
-  Function(int selected) setSelectedOption;
-  UserCredential userCredentials;
-  OnBoarding02Screen(this.callback, this.userCredentials, this.setSelectedOption,
-      {super.key});
+  final VoidCallback onSubmit;
+
+  const OnBoarding02Screen({super.key, required this.onSubmit});
 
   @override
   State<OnBoarding02Screen> createState() => _OnBoarding02ScreenState();
 }
 
 class _OnBoarding02ScreenState extends State<OnBoarding02Screen> {
-  int? _selectedOption;
-  final List<String> _options = [
+  static const _options = [
     'Billboard',
     'App Store or Google',
     'TV Ad',
@@ -30,76 +29,64 @@ class _OnBoarding02ScreenState extends State<OnBoarding02Screen> {
     'Other'
   ];
 
+  String? _selectedOption;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 10),
-              child: Text(
-                'How did you hear about Sleepytales?',
-                style: TextStyle(fontSize: 18),
-              ),
+    final tr = translation(context);
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top: 10),
+            child: Text(
+              'How did you hear about Sleepytales?',
+              style: TextStyle(fontSize: 18),
             ),
-
-            Padding(
-              padding: EdgeInsets.fromLTRB(0, 30, 0, 20),
-              child: Column(
-                children: _options
-                    .asMap()
-                    .entries
-                    .map(
-                      (entry) => RadioListTile(
-                        dense: true,
-                        contentPadding: EdgeInsets.zero,
-                        activeColor: Colors.white,
-                        title: Text(
-                          entry.value,
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        value: entry.key,
-                        groupValue: _selectedOption,
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedOption = value;
-                          });
-                        },
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 30, 0, 20),
+            child: Column(
+              children: _options
+                  .map(
+                    (entry) => RadioListTile(
+                      dense: true,
+                      contentPadding: EdgeInsets.zero,
+                      activeColor: Colors.white,
+                      title: Text(
+                        entry,
+                        style: TextStyle(fontSize: 18),
                       ),
-                    )
-                    .toList(),
-              ),
+                      value: entry,
+                      groupValue: _selectedOption,
+                      onChanged: (value) => setState(() {
+                        _selectedOption = value;
+                      }),
+                    ),
+                  )
+                  .toList(),
             ),
-            SizedBox(
-              height: 20,
-            ),
-
-            // Positioned(
-            //   left: 0,
-            //   right: 0,
-            //   bottom: 50,
-            //     child:
-
-            CustomButton(
-                title: "Continue",
-                onPress: () {
-                  if (_selectedOption == null) {
-                    showToast("Please select a option first");
-                  } else {
-                    widget.setSelectedOption(_selectedOption!);
-                    widget.callback();
-                  }
-                },
-                color: Colors.white,
-                textColor: Colors.black)
-
-            // )
-          ],
-        ),
+          ),
+          SizedBox(height: 24),
+          TxButton.filled(
+            label: Text(tr.continueText),
+            onPressVoid: () {
+              if (_selectedOption == null) {
+                showToast("Please select a option first");
+              } else {
+                final bloc = Get.the<UserBloc>();
+                bloc.add(
+                  UserModified(
+                    bloc.state.user.copyWith(heardFrom: _selectedOption!),
+                  ),
+                );
+                widget.onSubmit();
+              }
+            },
+          )
+        ],
       ),
-    ));
+    );
   }
 }

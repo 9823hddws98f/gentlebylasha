@@ -2,20 +2,25 @@ import 'dart:convert';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sleeptales/screens/auth/login_screen.dart';
 
-import '/models/audiofile_model.dart';
-import '/models/user_model.dart';
+import '/screens/auth/login_screen.dart';
 import '/utils/colors.dart';
-import '../models/category_model.dart';
+import '../domain/blocs/user/app_user.dart';
+import '../domain/models/audiofile_model.dart';
+import '../domain/models/category_model.dart';
+import '../domain/services/service_locator.dart';
 import '../page_manager.dart';
-import '../services/service_locator.dart';
 
-void showToast(String value) =>
-    Fluttertoast.showToast(msg: value, gravity: ToastGravity.BOTTOM, fontSize: 15);
+void showToast(String value) {
+  if (kDebugMode) {
+    debugPrint('showToast $value');
+  }
+  Fluttertoast.showToast(msg: value, gravity: ToastGravity.BOTTOM, fontSize: 15);
+}
 
 ValueNotifier<String> valueNotifierName = ValueNotifier("");
 
@@ -26,7 +31,7 @@ fetchCategoriesArrayAndSave() async {
   categroiesArray = await getCategories();
 }
 
-Future<UserModel> getUser() async {
+Future<AppUser> getUser() async {
   final Future<SharedPreferences> prefs0 = SharedPreferences.getInstance();
   final SharedPreferences prefs = await prefs0;
   String? jsonString = prefs.getString('goals');
@@ -35,14 +40,16 @@ Future<UserModel> getUser() async {
     list = jsonDecode(jsonString);
     // Do something with the list
   }
-  return UserModel(
-    id: prefs.getString("user_id"),
-    email: prefs.getString("email"),
-    name: prefs.getString("name"),
-    goals: list,
-    language: prefs.getString("language"),
-    heardFrom: prefs.getString("heardfrom"),
-    photoURL: prefs.getString("photourl"),
+  // TODO: Implement correctly
+  return AppUser(
+    id: prefs.getString("user_id") ?? '',
+    email: prefs.getString("email") ?? '',
+    name: prefs.getString("name") ?? '',
+    goals: list as List<String>?,
+    language: prefs.getString("language") ?? '',
+    heardFrom: prefs.getString("heardfrom") ?? '',
+    photoURL: prefs.getString("photourl") ?? '',
+    createdAt: DateTime.now(),
   );
 }
 
@@ -88,7 +95,7 @@ Future<bool> getReminderValue(String id) async {
   return prefs.getBool(id) ?? false;
 }
 
-Future<String> saveUser(UserModel user) async {
+Future<String> saveUser(AppUser user) async {
   final Future<SharedPreferences> prefs0 = SharedPreferences.getInstance();
   final SharedPreferences prefs = await prefs0;
   prefs.setString("user_id", user.id ?? "null");

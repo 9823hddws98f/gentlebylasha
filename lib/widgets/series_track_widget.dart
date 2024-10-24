@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '/models/audiofile_model.dart';
+import '../domain/models/audiofile_model.dart';
 
 class SeriesTrackListWidget extends StatelessWidget {
   final AudioTrack audioTrack;

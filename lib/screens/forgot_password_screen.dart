@@ -3,9 +3,7 @@ import 'package:sleeptales/helper/validators.dart';
 import 'package:sleeptales/language_constants.dart';
 import 'package:sleeptales/widgets/app_scaffold/app_scaffold.dart';
 
-import '/utils/global_functions.dart';
 import '/widgets/custom_btn.dart';
-import 'authentication.dart';
 
 class ForgotPasswordModal extends StatefulWidget {
   const ForgotPasswordModal({super.key});
@@ -19,8 +17,7 @@ class ForgotPasswordState extends State<ForgotPasswordModal> {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold.modal(
-      height: 400,
+    return AppScaffold(
       body: Form(
         key: _formKey,
         child: CustomScrollView(
@@ -58,28 +55,29 @@ class ForgotPasswordState extends State<ForgotPasswordModal> {
                 child: CustomButton(
                   title: "Send Password Reset Email",
                   onPress: () async {
-                    if (_formKey.currentState!.validate()) {
-                      //showLoaderDialog(context, "Logging in...");
-                      // _formKey.currentState!.save();
-                      // TODO: call backend API to register user with provided information
+                    // TODO: Implement
+                    // if (_formKey.currentState!.validate()) {
+                    //   //showLoaderDialog(context, "Logging in...");
+                    //   // _formKey.currentState!.save();
+                    //   // TODO: call backend API to register user with provided information
 
-                      if (_email != null) {
-                        showLoaderDialog(context, "Sending password reset email...");
-                        try {
-                          Auth auth = Auth();
-                          await auth.sendPasswordResetEmail(_email!);
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        } catch (e) {
-                          showToast(e.toString());
-                          Navigator.pop(context);
-                        }
-                      } else {
-                        showToast("Please enter your email");
-                      }
-                    } else {
-                      showToast("wrong input");
-                    }
+                    //   if (_email != null) {
+                    //     showLoaderDialog(context, "Sending password reset email...");
+                    //     try {
+                    //       Auth auth = Auth();
+                    //       await auth.sendPasswordResetEmail(_email!);
+                    //       Navigator.pop(context);
+                    //       Navigator.pop(context);
+                    //     } catch (e) {
+                    //       showToast(e.toString());
+                    //       Navigator.pop(context);
+                    //     }
+                    //   } else {
+                    //     showToast("Please enter your email");
+                    //   }
+                    // } else {
+                    //   showToast("wrong input");
+                    // }
                   },
                   color: Colors.white,
                   textColor: Colors.black,

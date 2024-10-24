@@ -7,12 +7,12 @@ import '/utils/colors.dart';
 import '/widgets/custom_btn.dart';
 import '/widgets/series_track_image_widget.dart';
 import '/widgets/shimmerwidgets/shimmer_series_track_image_widget.dart';
-import '../models/audiofile_model.dart';
-import '../models/block.dart';
-import '../models/user_model.dart';
+import '../domain/blocs/user/app_user.dart';
+import '../domain/models/audiofile_model.dart';
+import '../domain/models/block.dart';
 import '../notifiers/play_button_notifier.dart';
 import '../page_manager.dart';
-import '../services/service_locator.dart';
+import '../domain/services/service_locator.dart';
 import '../utils/firestore_helper.dart';
 import '../utils/global_functions.dart';
 import '../widgets/series_track_widget.dart';
@@ -33,7 +33,7 @@ class PlayListTracksScreen extends StatefulWidget {
 }
 
 class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
-  UserModel? user;
+  AppUser? user;
   bool favoritePlayListLoading = false;
   List<String> favoritesList = [];
   List<String> favoritesPlayList = [];

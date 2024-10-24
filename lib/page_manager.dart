@@ -4,12 +4,12 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 
 import '/utils/firestore_helper.dart';
-import 'models/audiofile_model.dart';
+import 'domain/models/audiofile_model.dart';
+import 'domain/services/playlist_repository.dart';
+import 'domain/services/service_locator.dart';
 import 'notifiers/play_button_notifier.dart';
 import 'notifiers/progress_notifier.dart';
 import 'notifiers/repeat_notifier.dart';
-import 'services/playlist_repository.dart';
-import 'services/service_locator.dart';
 
 class PageManager {
   final currentSongTitleNotifier = ValueNotifier<String>('---');

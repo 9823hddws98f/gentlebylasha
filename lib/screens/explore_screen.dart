@@ -4,11 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
-import '/models/audiofile_model.dart';
-import '/models/category_block.dart';
 import '/screens/tabs_subcategory_screen.dart';
 import '/utils/firestore_helper.dart';
 import '/widgets/search_list_item.dart';
+import '../domain/models/audiofile_model.dart';
+import '../domain/models/category_block.dart';
 import '../utils/colors.dart';
 import '../utils/global_functions.dart';
 import '../widgets/custom_tab_button.dart';

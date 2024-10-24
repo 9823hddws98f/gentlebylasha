@@ -2,21 +2,25 @@ import 'dart:io';
 
 import 'package:audio_session/audio_session.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:sleeptales/screens/auth/login_screen.dart';
+import 'package:sleeptales/utils/get.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 import '/screens/home_screen.dart';
-import '/screens/splash_screen.dart';
-import '/services/service_locator.dart';
 import '/utils/route_constant.dart';
+import 'domain/blocs/authentication/app_bloc.dart';
+import 'domain/blocs/user/user_bloc.dart';
+import 'domain/services/service_locator.dart';
 import 'firebase_options.dart';
 import 'language_constants.dart';
 import 'utils/app_theme.dart';
@@ -40,13 +44,18 @@ Future<void> main() async {
   await session.configure(AudioSessionConfiguration.music());
   await setupServiceLocator();
 
+  String initialRoute = loginPath;
+  if (FirebaseAuth.instance.currentUser != null) {
+    initialRoute = dashboard;
+  }
+
   runApp(
     DevicePreview(
       enabled: !kReleaseMode && Platform.isMacOS,
       data: DevicePreviewData(
         isDarkMode: true,
       ),
-      builder: (context) => const MyApp(),
+      builder: (context) => MyApp(initialRoute: initialRoute),
     ),
   );
 }
@@ -60,13 +69,12 @@ void setupFirebaseMessaging() {
 }
 
 void displayNotification(RemoteMessage message) async {
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
   final InitializationSettings initializationSettings =
       InitializationSettings(android: initializationSettingsAndroid);
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  await localNotificationsPlugin.initialize(initializationSettings);
 
   const AndroidNotificationDetails androidPlatformChannelSpecifics =
       AndroidNotificationDetails(
@@ -79,7 +87,7 @@ void displayNotification(RemoteMessage message) async {
   const NotificationDetails platformChannelSpecifics =
       NotificationDetails(android: androidPlatformChannelSpecifics);
 
-  await flutterLocalNotificationsPlugin.show(
+  await localNotificationsPlugin.show(
     0,
     message.notification?.title ?? '',
     message.notification?.body ?? '',
@@ -93,7 +101,9 @@ void subscribeToTopic(String topic) async {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  final String initialRoute;
+
+  const MyApp({super.key, required this.initialRoute});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -116,20 +126,39 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
-        title: 'Gentle',
-        debugShowCheckedModeBanner: false,
-        locale: _locale,
-        theme: AppTheme.buildTheme(dark: false),
-        darkTheme: AppTheme.buildTheme(dark: true),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        initialRoute: splashPath,
-        routes: {
-          splashPath: (context) => const SplashScreen(),
-          loginPath: (context) => const LoginScreen(),
-          dashboard: (context) => const HomeScreen(),
-        },
+  Widget build(BuildContext context) => BlocProvider(
+        create: (context) => Get.the<AppBloc>(),
+        child: BlocListener<AppBloc, AppState>(
+          listener: (context, state) {
+            if (state.status == AppStatus.loading) {
+              Get.the<UserBloc>().add(
+                UserLoaded(
+                  state.user.toAppUser(),
+                  Get.the<AppBloc>(),
+                ),
+              );
+            } else if (state.status == AppStatus.authenticated) {
+              Get.the<UserBloc>().add(UserLoaded(
+                state.user.toAppUser(),
+                Get.the<AppBloc>(),
+              ));
+            }
+          },
+          child: MaterialApp(
+            title: 'Gentle',
+            debugShowCheckedModeBanner: false,
+            locale: _locale,
+            theme: AppTheme.buildTheme(dark: false),
+            darkTheme: AppTheme.buildTheme(dark: true),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            initialRoute: widget.initialRoute,
+            routes: {
+              loginPath: (context) => const LoginScreen(),
+              dashboard: (context) => const HomeScreen(),
+            },
+          ),
+        ),
       );
 }
 

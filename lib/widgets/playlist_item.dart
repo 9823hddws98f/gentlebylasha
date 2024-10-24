@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../models/block.dart';
+import '../domain/models/block.dart';
 
 class PlaylistItem extends StatelessWidget {
   final Block block;

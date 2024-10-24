@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '/models/category_model.dart';
 import '/utils/global_functions.dart';
+import 'category_model.dart';
 
 class AudioTrack {
   final String trackId;

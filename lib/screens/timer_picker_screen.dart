@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '/page_manager.dart';
 import '/utils/colors.dart';
 import '/widgets/custom_btn.dart';
-import '../services/service_locator.dart';
+import '../domain/services/service_locator.dart';
 
 class SleepTimerScreen extends StatefulWidget {
   const SleepTimerScreen({super.key});

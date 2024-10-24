@@ -88,4 +88,63 @@ class Modals {
       await onChange(range);
     }
   }
+
+  static Future<T?> show<T>(
+    BuildContext context, {
+    required Widget Function(BuildContext, ScrollController) builder,
+    bool enableDrag = true,
+    bool isDismissible = true,
+    bool showDragHandle = true,
+    bool useSafeArea = true,
+    bool expand = false,
+    bool scrollable = false,
+    double initialSize = 0.7,
+    double minSize = 0.5,
+    double maxSize = 0.9,
+  }) =>
+      showModalBottomSheet<T>(
+        context: context,
+        isScrollControlled: true,
+        enableDrag: enableDrag,
+        isDismissible: isDismissible,
+        showDragHandle: showDragHandle,
+        useSafeArea: useSafeArea,
+        builder: (context) {
+          final theme = Theme.of(context);
+          return Theme(
+            data: theme.copyWith(
+              inputDecorationTheme: InputDecorationTheme(
+                fillColor: theme.colorScheme.surfaceContainerHighest,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                ),
+              ),
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.viewInsetsOf(context).bottom,
+              ),
+              child: DraggableScrollableSheet(
+                expand: expand,
+                initialChildSize: initialSize,
+                minChildSize: minSize,
+                maxChildSize: maxSize,
+                builder: (context, controller) {
+                  if (scrollable) {
+                    return SingleChildScrollView(
+                      controller: controller,
+                      child: builder(context, controller),
+                    );
+                  }
+                  return builder(context, controller);
+                },
+              ),
+            ),
+          );
+        },
+      );
 }

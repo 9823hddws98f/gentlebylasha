@@ -1,4 +1,3 @@
-const String splashPath = '/splash';
 const String loginPath = '/LoginScreen';
 const String qrPath = '/QrPath';
 const String registrationPath = '/registration';

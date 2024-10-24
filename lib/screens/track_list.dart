@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '/widgets/track_list_item.dart';
-import '../models/audiofile_model.dart';
+import '../domain/models/audiofile_model.dart';
 import '../utils/global_functions.dart';
 import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_small.dart';
 import '../widgets/topbar_widget.dart';

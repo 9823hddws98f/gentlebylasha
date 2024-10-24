@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '/models/user_model.dart';
 import '/screens/track_list.dart';
 import '/utils/colors.dart';
 import '/utils/firestore_helper.dart';
 import '/utils/global_functions.dart';
 import '/widgets/tracklist_horizontal_widget.dart';
 import '/widgets/width_tracklist_horizontal_widget.dart';
-import '../models/audiofile_model.dart';
-import '../models/category_model.dart';
-import '../models/collection_model.dart';
+import '../domain/models/audiofile_model.dart';
+import '../domain/models/category_model.dart';
+import '../domain/models/collection_model.dart';
+import '../domain/blocs/user/app_user.dart';
 import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_height.dart';
 import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_small.dart';
 import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_width.dart';
@@ -352,7 +352,7 @@ class _TabsScreen extends State<TabsScreen> {
   }
 
   void setFirstName() async {
-    UserModel user = await getUser();
+    AppUser user = await getUser();
     String? fullName = user.name;
     List<String> words = fullName!.split(' ');
     setState(() {

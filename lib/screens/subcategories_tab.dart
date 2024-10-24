@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-import '/models/sub_categories.dart';
-import '/models/user_model.dart';
 import '/screens/playlist_screen.dart';
 import '/screens/track_list.dart';
 import '/utils/colors.dart';
 import '/utils/firestore_helper.dart';
 import '/utils/global_functions.dart';
 import '/widgets/tracklist_horizontal_widget.dart';
-import '../models/audiofile_model.dart';
-import '../models/block.dart';
-import '../models/collection_model.dart';
+import '../domain/models/audiofile_model.dart';
+import '../domain/models/block.dart';
+import '../domain/models/collection_model.dart';
+import '../domain/models/sub_categories.dart';
+import '../domain/blocs/user/app_user.dart';
 import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_height.dart';
 
 class SubCategoriesTab extends StatefulWidget {
@@ -350,7 +350,7 @@ class _SubCategoriesTab extends State<SubCategoriesTab> {
   }
 
   void setFirstName() async {
-    UserModel user = await getUser();
+    AppUser user = await getUser();
     String? fullName = user.name;
     List<String> words = fullName!.split(' ');
     setState(() {

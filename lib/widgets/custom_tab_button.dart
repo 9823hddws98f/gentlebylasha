@@ -16,6 +16,7 @@ class CustomTabButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 30,
+      width: 40,
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             elevation: 0,
