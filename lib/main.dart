@@ -146,25 +146,24 @@ class _MyAppState extends State<MyApp> {
               FlutterNativeSplash.remove();
             }
           },
-          builder: (context, state) =>
-              state.status == AppStatus.authenticated && widget.isWaitingForAuth
-                  ? MaterialApp(
-                      title: 'Gentle',
-                      debugShowCheckedModeBanner: false,
-                      locale: _locale,
-                      theme: AppTheme.buildTheme(dark: false),
-                      darkTheme: AppTheme.buildTheme(dark: true),
-                      localizationsDelegates: AppLocalizations.localizationsDelegates,
-                      supportedLocales: AppLocalizations.supportedLocales,
-                      initialRoute: widget.isWaitingForAuth
-                          ? HomeScreen.routeName
-                          : LoginScreen.routeName,
-                      routes: {
-                        LoginScreen.routeName: (_) => const LoginScreen(),
-                        HomeScreen.routeName: (_) => const HomeScreen(),
-                      },
-                    )
-                  : const SizedBox(child: CircularProgressIndicator()),
+          builder: (context, state) => !widget.isWaitingForAuth
+              ? MaterialApp(
+                  title: 'Gentle',
+                  debugShowCheckedModeBanner: false,
+                  locale: _locale,
+                  theme: AppTheme.buildTheme(dark: false),
+                  darkTheme: AppTheme.buildTheme(dark: true),
+                  localizationsDelegates: AppLocalizations.localizationsDelegates,
+                  supportedLocales: AppLocalizations.supportedLocales,
+                  initialRoute: widget.isWaitingForAuth
+                      ? HomeScreen.routeName
+                      : LoginScreen.routeName,
+                  routes: {
+                    LoginScreen.routeName: (_) => const LoginScreen(),
+                    HomeScreen.routeName: (_) => const HomeScreen(),
+                  },
+                )
+              : const SizedBox(child: CircularProgressIndicator()),
         ),
       );
 }

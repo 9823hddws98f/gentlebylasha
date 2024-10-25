@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sleeptales/utils/command_trigger.dart';
 
 import '/domain/blocs/authentication/auth_repository.dart';
 import '/helper/validators.dart';
@@ -29,6 +30,7 @@ class LoginScreenState extends State<LoginScreen> {
   final _auth = Get.the<AuthRepository>();
 
   final _formKey = GlobalKey<FormState>();
+  final _trigger = ActionTrigger();
   bool _dirty = false;
 
   String? _email;
@@ -64,7 +66,7 @@ class LoginScreenState extends State<LoginScreen> {
                       ),
                       SizedBox(height: 8),
                       PasswordEditText(
-                        onFieldSubmitted: (value) => _loginWithEmail(),
+                        onFieldSubmitted: (_) => _trigger.trigger(),
                         onSaved: (value) => _password = value,
                       ),
                       SizedBox(height: 16),
@@ -73,6 +75,7 @@ class LoginScreenState extends State<LoginScreen> {
                       TxButton.filled(
                         onPressVoid: _loginWithEmail,
                         showSuccess: false,
+                        trigger: _trigger,
                         label: Text(translation(context).login),
                       ),
                       SizedBox(height: 24),

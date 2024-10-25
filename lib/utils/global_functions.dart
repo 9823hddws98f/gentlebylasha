@@ -6,11 +6,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '/domain/blocs/user/user_bloc.dart';
-import '/utils/get.dart';
 
+import '/domain/blocs/user/user_bloc.dart';
 import '/screens/auth/login_screen.dart';
 import '/utils/colors.dart';
+import '/utils/get.dart';
 import '../domain/blocs/user/app_user.dart';
 import '../domain/models/audiofile_model.dart';
 import '../domain/models/category_model.dart';
@@ -122,7 +122,7 @@ void logout(BuildContext context) async {
 }
 
 void pushName(BuildContext context, Widget widget) {
-  FocusManager.instance.primaryFocus!.unfocus();
+  FocusManager.instance.primaryFocus?.unfocus();
   Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => widget),

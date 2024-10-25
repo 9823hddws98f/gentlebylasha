@@ -160,14 +160,14 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                           favorite = false;
                         }
                       }
-                      return mediaItem.id != ""
+                      return mediaItem.id.isNotEmpty
                           ? Stack(
                               children: [
                                 Positioned.fill(
                                   child: ClipRRect(
                                       borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(16),
-                                        topRight: Radius.circular(16),
+                                        topLeft: AppTheme.smallBorderRadius.topLeft,
+                                        topRight: AppTheme.smallBorderRadius.topRight,
                                       ),
                                       child: (mediaItem.artUri != null &&
                                               mediaItem.artUri.toString() != "")
