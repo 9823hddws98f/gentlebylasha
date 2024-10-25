@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '/domain/blocs/authentication/auth_repository.dart';
 import '/helper/validators.dart';
-import '/language_constants.dart';
+import '../../constants/language_constants.dart';
 import '/utils/get.dart';
 import '/utils/tx_button.dart';
 import '/widgets/input/password_edit_text.dart';

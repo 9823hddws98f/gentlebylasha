@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sleeptales/helper/validators.dart';
-import 'package:sleeptales/language_constants.dart';
+
+import '/helper/validators.dart';
+import '../../constants/language_constants.dart';
 
 class PasswordEditText extends StatefulWidget {
   const PasswordEditText({

@@ -4,7 +4,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '/language_constants.dart';
+import '../constants/language_constants.dart';
 import '/utils/colors.dart';
 import '/utils/global_functions.dart';
 import '/widgets/custom_tab_button.dart';

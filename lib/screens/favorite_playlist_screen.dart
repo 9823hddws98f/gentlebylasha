@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '/language_constants.dart';
+import '../constants/language_constants.dart';
 import '/screens/playlist_tracks_screen.dart';
 import '/utils/colors.dart';
 import '/utils/global_functions.dart';

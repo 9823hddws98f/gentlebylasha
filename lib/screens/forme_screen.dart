@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sleeptales/constants/assets.dart';
 
-import '/language_constants.dart';
 import '/screens/playlist_screen.dart';
 import '/screens/track_list.dart';
 import '/utils/colors.dart';
@@ -8,6 +8,7 @@ import '/utils/firestore_helper.dart';
 import '/utils/global_functions.dart';
 import '/widgets/shimmerwidgets/shimmer_tab_layout.dart';
 import '/widgets/width_tracklist_horizontal_widget.dart';
+import '../constants/language_constants.dart';
 import '../domain/blocs/user/app_user.dart';
 import '../domain/models/audiofile_model.dart';
 import '../domain/models/block.dart';
@@ -83,7 +84,7 @@ class _ForMeState extends State<ForMeScreen> {
                 children: [
                   // Gif image
                   Image.asset(
-                    'images/background_image.png', // Replace with your image asset path
+                    Assets.backgroundImage,
                     fit: BoxFit.fill, // Adjust the fit as needed
                   ),
 

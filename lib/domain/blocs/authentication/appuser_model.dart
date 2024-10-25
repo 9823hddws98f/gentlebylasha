@@ -1,4 +1,4 @@
-import 'package:sleeptales/domain/blocs/user/app_user.dart';
+import '/domain/blocs/user/app_user.dart';
 
 class AuthUser {
   final String id;

@@ -6,8 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sleeptales/domain/blocs/user/user_bloc.dart';
-import 'package:sleeptales/utils/get.dart';
+import '/domain/blocs/user/user_bloc.dart';
+import '/utils/get.dart';
 
 import '/screens/auth/login_screen.dart';
 import '/utils/colors.dart';

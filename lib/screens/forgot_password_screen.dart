@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sleeptales/helper/validators.dart';
-import 'package:sleeptales/language_constants.dart';
-import 'package:sleeptales/widgets/app_scaffold/app_scaffold.dart';
 
+import '/helper/validators.dart';
+import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/custom_btn.dart';
+import '../constants/language_constants.dart';
 
 class ForgotPasswordModal extends StatefulWidget {
   const ForgotPasswordModal({super.key});

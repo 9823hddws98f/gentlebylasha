@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sleeptales/constants/assets.dart';
 
-import '/language_constants.dart';
 import '/screens/about_screen.dart';
 import '/screens/change_language.dart';
 import '/screens/change_password_screen.dart';
@@ -14,6 +14,7 @@ import '/screens/manage_subscription.dart';
 import '/screens/reminders_screen.dart';
 import '/utils/colors.dart';
 import '/utils/global_functions.dart';
+import '../constants/language_constants.dart';
 import '../domain/blocs/user/app_user.dart';
 
 class ProfileSettingsScreen extends StatefulWidget {
@@ -67,16 +68,16 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                               radius: 64,
                             ),
                             placeholder: (context, url) => Image.asset(
-                              "images/profile.png",
+                              Assets.profile,
                               fit: BoxFit.cover,
                             ),
                             errorWidget: (context, url, error) => Image.asset(
-                              "images/profile.png",
+                              Assets.profile,
                               fit: BoxFit.cover,
                             ),
                           )
                         : Image.asset(
-                            "images/profile.png",
+                            Assets.profile,
                             fit: BoxFit.cover,
                           ),
                   ),

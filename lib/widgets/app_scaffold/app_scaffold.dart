@@ -5,11 +5,12 @@ class AppScaffold extends StatelessWidget {
     super.key,
     required this.body,
     this.resizeToAvoidBottomInset,
+    this.bottomNavigationBar,
   });
 
   final Widget body;
   final bool? resizeToAvoidBottomInset;
-
+  final Widget? bottomNavigationBar;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,6 +19,7 @@ class AppScaffold extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
         child: body,
       ),
+      bottomNavigationBar: bottomNavigationBar,
     );
   }
 }

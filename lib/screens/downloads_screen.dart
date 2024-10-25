@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sleeptales/constants/assets.dart';
 
 import '/widgets/topbar_widget.dart';
 
@@ -47,7 +47,7 @@ class _DownloadsScreen extends State<DownloadsScreen> {
                         onTap: () {},
                       ),
                       ListTile(
-                        leading: SvgPicture.asset("assets/spa_black.svg"),
+                        leading: SvgPicture.asset(Assets.spaBlack),
                         title: Text('Delete guided meditations'),
                         trailing: Text(
                           "Zero KB",

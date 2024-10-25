@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:sleeptales/utils/get.dart';
 
 import '/domain/blocs/user/user_bloc.dart';
-import '/language_constants.dart';
+import '/utils/get.dart';
 import '/utils/global_functions.dart';
 import '/utils/tx_button.dart';
+import '../constants/language_constants.dart';
 
 class OnBoarding02Screen extends StatefulWidget {
   final VoidCallback onSubmit;

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sleeptales/constants/assets.dart';
 
-import '/language_constants.dart';
 import '/widgets/topbar_widget.dart';
+import '../constants/language_constants.dart';
 
 class AboutScreen extends StatefulWidget {
   final String? email;
@@ -37,7 +38,7 @@ class _AboutScreen extends State<AboutScreen> {
                       ),
                       ListTile(
                         leading: SvgPicture.asset(
-                          'assets/thumb_icon.svg',
+                          Assets.thumbIcon,
                           width: 20,
                           height: 20,
                         ),
@@ -46,7 +47,7 @@ class _AboutScreen extends State<AboutScreen> {
                       ),
                       ListTile(
                         leading: SvgPicture.asset(
-                          'assets/article_icon.svg',
+                          Assets.articleIcon,
                           width: 20,
                           height: 20,
                         ),
@@ -55,7 +56,7 @@ class _AboutScreen extends State<AboutScreen> {
                       ),
                       ListTile(
                         leading: SvgPicture.asset(
-                          'assets/verified_user_icon.svg',
+                          Assets.verifiedUserIcon,
                           width: 20,
                           height: 20,
                         ),

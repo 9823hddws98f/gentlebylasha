@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '/language_constants.dart';
+import '../constants/language_constants.dart';
 
 class AppValidators {
   static const _emailRegex = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';

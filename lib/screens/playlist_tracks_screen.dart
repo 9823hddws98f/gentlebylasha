@@ -2,6 +2,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sleeptales/constants/assets.dart';
 
 import '/utils/colors.dart';
 import '/widgets/custom_btn.dart';
@@ -10,9 +11,9 @@ import '/widgets/shimmerwidgets/shimmer_series_track_image_widget.dart';
 import '../domain/blocs/user/app_user.dart';
 import '../domain/models/audiofile_model.dart';
 import '../domain/models/block.dart';
+import '../domain/services/service_locator.dart';
 import '../notifiers/play_button_notifier.dart';
 import '../page_manager.dart';
-import '../domain/services/service_locator.dart';
 import '../utils/firestore_helper.dart';
 import '../utils/global_functions.dart';
 import '../widgets/series_track_widget.dart';
@@ -266,7 +267,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                   imageUrl: widget.block.thumbnail,
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Image.asset(
-                    "images/placeholder_image.jpg",
+                    Assets.placeholderImage,
                     fit: BoxFit.cover,
                   ),
                 )),
@@ -340,16 +341,16 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                                 radius: 40,
                               ),
                               placeholder: (context, url) => Image.asset(
-                                "images/profile.png",
+                                Assets.profile,
                                 fit: BoxFit.cover,
                               ),
                               errorWidget: (context, url, error) => Image.asset(
-                                "images/profile.png",
+                                Assets.profile,
                                 fit: BoxFit.cover,
                               ),
                             )
                           : Image.asset(
-                              "images/profile.png",
+                              Assets.profile,
                               fit: BoxFit.cover,
                             ),
                     ),

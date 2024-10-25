@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sleeptales/constants/assets.dart';
 
-import '/language_constants.dart';
 import '/screens/reminder_setup.dart';
 import '/utils/global_functions.dart';
 import '/widgets/topbar_widget.dart';
+import '../constants/language_constants.dart';
 
 class RemindersScreen extends StatefulWidget {
   final String? email;
@@ -37,7 +37,7 @@ class _RemindersScreen extends State<RemindersScreen> {
                         height: 20,
                       ),
                       ListTile(
-                        leading: SvgPicture.asset("assets/spa_black.svg"),
+                        leading: SvgPicture.asset(Assets.spaBlack),
                         title: Text(translation(context).mindfulnessAndMeditation),
                         trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
                         onTap: () {
@@ -96,7 +96,7 @@ class _RemindersScreen extends State<RemindersScreen> {
                         },
                       ),
                       ListTile(
-                        leading: SvgPicture.asset("assets/local_florist_black.svg"),
+                        leading: SvgPicture.asset(Assets.localFloristBlack),
                         title: Text(translation(context).gratitudeCheckIn),
                         trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
                         onTap: () {
@@ -115,7 +115,7 @@ class _RemindersScreen extends State<RemindersScreen> {
                         },
                       ),
                       ListTile(
-                        leading: SvgPicture.asset("assets/menu_book_black.svg"),
+                        leading: SvgPicture.asset(Assets.menuBookBlack),
                         title: Text(translation(context).dailyReflection),
                         trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
                         onTap: () {

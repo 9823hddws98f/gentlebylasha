@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sleeptales/utils/get.dart';
+import 'package:sleeptales/constants/assets.dart';
 
 import '/domain/blocs/user/user_bloc.dart';
-import '/language_constants.dart';
 import '/utils/app_theme.dart';
+import '/utils/get.dart';
 import '/utils/tx_button.dart';
+import '../constants/language_constants.dart';
 import '../utils/global_functions.dart';
 
 class OnBoarding01Screen extends StatefulWidget {
@@ -29,13 +30,13 @@ class _OnBoarding01ScreenState extends State<OnBoarding01Screen> {
 
   // TODO: Move these to assets
   static const _icons = [
-    'images/icon_water.png',
-    'images/icon_running.png',
-    'images/icon_rock.png',
-    'images/icon_sun.png',
-    'images/icon_moon.png',
-    'images/icon_smile.png',
-    'images/icon_leaf.png',
+    Assets.iconWater,
+    Assets.iconRunning,
+    Assets.iconRock,
+    Assets.iconSun,
+    Assets.iconMoon,
+    Assets.iconSmile,
+    Assets.iconLeaf,
   ];
 
   final List<String> options = [];

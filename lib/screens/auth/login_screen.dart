@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '/domain/blocs/authentication/auth_repository.dart';
 import '/helper/validators.dart';
-import '/language_constants.dart';
+import '../../constants/language_constants.dart';
 import '/screens/auth/signup_sheet.dart';
 import '/screens/forgot_password_screen.dart';
 import '/screens/home_screen.dart';

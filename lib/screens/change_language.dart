@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '/widgets/topbar_widget.dart';
-import '../language_constants.dart';
+import '../constants/language_constants.dart';
 import '../languages.dart';
 import '../main.dart';
 

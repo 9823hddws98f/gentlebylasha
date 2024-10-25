@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sleeptales/widgets/input/password_edit_text.dart';
+import '/widgets/input/password_edit_text.dart';
 
 import '/utils/colors.dart';
 import '/widgets/topbar_widget.dart';

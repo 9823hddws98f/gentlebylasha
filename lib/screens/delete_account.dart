@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '/language_constants.dart';
+import '../constants/language_constants.dart';
 import '/utils/colors.dart';
 import '/utils/firestore_helper.dart';
 import '/utils/global_functions.dart';

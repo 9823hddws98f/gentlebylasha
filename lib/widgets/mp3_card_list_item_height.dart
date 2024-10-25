@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sleeptales/constants/assets.dart';
 
 class Mp3Item extends StatelessWidget {
   final String imageUrl;
@@ -42,7 +43,7 @@ class Mp3Item extends StatelessWidget {
                         borderRadius:
                             BorderRadius.circular(20), // Adjust the radius as needed
                         child: Image.asset(
-                          "images/placeholder_image.jpg",
+                          Assets.placeholderImage,
                           fit: BoxFit.cover,
                         )),
                   ),
