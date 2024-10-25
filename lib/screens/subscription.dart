@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sleeptales/utils/app_theme.dart';
 
 import '/screens/home_screen.dart';
-import '/utils/colors.dart';
 import '/utils/global_functions.dart';
 import '/utils/tx_button.dart';
 
@@ -15,46 +15,55 @@ class SubscriptionScreen extends StatefulWidget {
 class _SubscriptionScreenState extends State<SubscriptionScreen> {
   bool _isAnnuallySelected = true;
 
+  late ColorScheme _colors;
+
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Unlock Sleeptales',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.w500,
+  Widget build(BuildContext context) {
+    _colors = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: CustomScrollView(slivers: [
+        SliverToBoxAdapter(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 16),
+              Text(
+                'Unlock Sleeptales',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            _buildBenefitItem('Every week new content'),
-            _buildBenefitItem('More then 100 + sleep stories & guided meditations'),
-            _buildBenefitItem('Cancel anytime without questions'),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _buildSubscriptionButton(
-                      'Annually',
-                      '47,00,- \$ per month',
-                      _isAnnuallySelected,
-                      () => setState(() => _isAnnuallySelected = true)),
-                  SizedBox(height: 16.0),
-                  _buildSubscriptionButton(
-                      'Monthly',
-                      '11,99,-\$ per month',
-                      !_isAnnuallySelected,
-                      () => setState(() => _isAnnuallySelected = false)),
-                ],
+              _buildBenefitItem('Every week new content'),
+              _buildBenefitItem('More then 100 + sleep stories & guided meditations'),
+              _buildBenefitItem('Cancel anytime without questions'),
+              SizedBox(height: 16.0),
+              _buildSubscriptionButton(
+                'Annually',
+                47,
+                _isAnnuallySelected,
+                () => setState(() => _isAnnuallySelected = true),
               ),
-            ),
-            Spacer(),
-            TxButton.filled(
+              SizedBox(height: 16.0),
+              _buildSubscriptionButton(
+                'Monthly',
+                60,
+                !_isAnnuallySelected,
+                () => setState(() => _isAnnuallySelected = false),
+              ),
+            ],
+          ),
+        ),
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: Container(
+            margin: EdgeInsets.only(bottom: 16),
+            alignment: Alignment.bottomCenter,
+            child: TxButton.filled(
               label: Text('Try for free and subscribe'),
               onPressVoid: () {
-                // TODO: Implement
+                // TODO: Implement subscription
                 // showLoaderDialog(context, 'Signing up...');
                 // Auth auth = Auth();
                 // // TODO: This should happen right after oauth sign in.
@@ -82,77 +91,61 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                 // // pushRemoveAll(context, HomeScreen());
               },
             ),
-            SizedBox(height: 48),
+          ),
+        )
+      ]),
+    );
+  }
+
+  Widget _buildBenefitItem(String text) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Row(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: _colors.primary,
+              ),
+              child: Icon(Icons.check, size: 18, color: Colors.white),
+            ),
+            SizedBox(width: 16),
+            Expanded(child: Text(text))
           ],
         ),
       );
 
-  Widget _buildBenefitItem(String text) {
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          child: Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.blue,
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(2),
-              child: Icon(Icons.check, size: 15, color: Colors.white),
-            ),
-          ),
-        ),
-        SizedBox(width: 16),
-        Expanded(
-          child: Text(
-            text,
-            style: TextStyle(fontSize: 18),
-          ),
-        )
-      ],
-    );
-  }
-
   Widget _buildSubscriptionButton(
-      String buttonText, String priceText, bool isSelected, VoidCallback onPressed) {
-    return Column(
-      children: [
-        TextButton(
-          style: TextButton.styleFrom(
-            backgroundColor: isSelected ? blueAccentColor : lightBlueWithOpacity,
-            foregroundColor: isSelected ? Colors.white : lightBlueColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-          onPressed: onPressed,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  buttonText,
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  priceText,
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    color: Colors.white,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-              ],
-            ),
+    String buttonText,
+    double price,
+    bool isSelected,
+    VoidCallback onPressed,
+  ) =>
+      TextButton(
+        style: TextButton.styleFrom(
+          backgroundColor: isSelected ? _colors.primary : _colors.surfaceContainerLowest,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: AppTheme.smallBorderRadius,
           ),
         ),
-      ],
-    );
-  }
+        onPressed: onPressed,
+        child: Padding(
+          padding: EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(buttonText),
+              Row(
+                children: [
+                  Text(
+                    '\$${price.toStringAsFixed(2)}',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Text(' / Month'),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
 }

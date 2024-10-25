@@ -5,13 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../domain/blocs/user/app_user.dart';
 import '../domain/models/audiofile_model.dart';
 import '../domain/models/block.dart';
 import '../domain/models/category_block.dart';
 import '../domain/models/category_model.dart';
 import '../domain/models/collection_model.dart';
 import '../domain/models/sub_categories.dart';
-import '../domain/blocs/user/app_user.dart';
 import 'global_functions.dart';
 
 final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -470,7 +470,7 @@ Future<bool> updateUserEmailAndData(
 
       // Update user data in Firestore
       DocumentReference userRef =
-          FirebaseFirestore.instance.collection('User').doc(user.uid);
+          FirebaseFirestore.instance.collection('users').doc(user.uid);
       await userRef.update({
         'email': newEmail,
         'name': newName,
@@ -573,7 +573,7 @@ Future<bool> deleteUserAccount() async {
       await user.delete();
 
       // Delete user document from the Users collection
-      await FirebaseFirestore.instance.collection('User').doc(uid).delete();
+      await FirebaseFirestore.instance.collection('users').doc(uid).delete();
 
       await FirebaseFirestore.instance.collection('favorites').doc(uid).delete();
 

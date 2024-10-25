@@ -17,6 +17,8 @@ import '/widgets/input/password_edit_text.dart';
 import 'onboarding_bottom_sheet.dart';
 
 class LoginScreen extends StatefulWidget {
+  static const routeName = '/login';
+
   const LoginScreen({super.key});
 
   @override

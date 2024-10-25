@@ -18,9 +18,7 @@ class OnboardingBottomSheet extends StatefulWidget {
 class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
   int _selectedPage = 1;
 
-  void _navigateTo(int page) => setState(() {
-        _selectedPage = page;
-      });
+  void _navigateTo(int page) => setState(() => _selectedPage = page);
 
   @override
   Widget build(BuildContext context) => PopScope(

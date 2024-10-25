@@ -26,16 +26,11 @@ Future<Locale> getLocale() async {
   return _locale(languageCode);
 }
 
-Locale _locale(String languageCode) {
-  switch (languageCode) {
-    case ENGLISH:
-      return const Locale(ENGLISH, '');
-    case GERMAN:
-      return const Locale(GERMAN, '');
-    default:
-      return const Locale(ENGLISH, '');
-  }
-}
+Locale _locale(String languageCode) => switch (languageCode) {
+      ENGLISH => const Locale(ENGLISH, ''),
+      GERMAN => const Locale(GERMAN, ''),
+      _ => const Locale(ENGLISH, '')
+    };
 
 AppLocalizations translation(BuildContext context) {
   return AppLocalizations.of(context)!;

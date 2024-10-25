@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sleeptales/domain/blocs/authentication/auth_repository.dart';
+import 'package:sleeptales/domain/blocs/user/user_bloc.dart';
 import 'package:sleeptales/utils/get.dart';
+import 'package:sleeptales/widgets/app_scaffold/app_scaffold.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
 import '/helper/scrollcontroller_helper.dart';
@@ -28,6 +30,8 @@ import 'music_player_screen.dart';
 PanelController panelController = PanelController();
 
 class HomeScreen extends StatefulWidget {
+  static const routeName = '/dashboard';
+
   const HomeScreen({super.key});
 
   @override
@@ -35,6 +39,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
+  final UserBloc userBloc = Get.the<UserBloc>();
+
   int _selectedIndex = 0;
   List<String> playlist = [];
   MediaItem? item;
@@ -174,7 +180,7 @@ class HomeScreenState extends State<HomeScreen> {
           }
           return true;
         },
-        child: Scaffold(
+        child: AppScaffold(
           body: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -187,267 +193,277 @@ class HomeScreenState extends State<HomeScreen> {
                   stops: [0.0926, 1.0],
                 ),
               ),
-              child: Stack(
-                children: [
-                  Offstage(
-                    offstage: _selectedIndex != 0,
-                    child: Navigator(
-                      key: _navigatorKeys[0],
-                      onGenerateRoute: (routeSettings) => MaterialPageRoute(
-                          builder: (_) => ForMeScreen(
-                              showPanel, _scrollControllerHelper, openExploreTab)),
-                    ),
-                  ),
-                  Offstage(
-                    offstage: _selectedIndex != 1,
-                    child: Navigator(
-                      key: _navigatorKeys[1],
-                      onGenerateRoute: (routeSettings) =>
-                          MaterialPageRoute(builder: (_) => ExploreScreen(showPanel)),
-                    ),
-                  ),
-                  Offstage(
-                    offstage: _selectedIndex != 2,
-                    child: Navigator(
-                      key: _navigatorKeys[2],
-                      onGenerateRoute: (routeSettings) => MaterialPageRoute(
-                          builder: (_) => ProfileSettingsScreen(showPanel)),
-                    ),
-                  ),
-                  Visibility(
-                      visible: panelVisibility,
-                      maintainState: true,
-                      child: Listener(
-                        onPointerMove: (PointerMoveEvent event) {
-                          if (event.delta.dy > 3) {
-                            if (panelController.isAttached) {
-                              if (panelController.isPanelClosed && panelVisibility) {
-                                _hidePanel();
-                              }
-                            }
-                          }
-                        },
-                        child: SlidingUpPanel(
-                          key: _panelKey,
-                          maxHeight: MediaQuery.of(context).size.height,
-                          minHeight: defaultTargetPlatform == TargetPlatform.android
-                              ? (kBottomNavigationBarHeight + 78)
-                              : MediaQuery.of(context).padding.bottom +
-                                  kBottomNavigationBarHeight +
-                                  78,
-                          controller: panelController,
-                          panelBuilder: () => Stack(
-                            children: [
-                              MusicPlayerScreen(
-                                playList: playlist.length > 1 ? true : false,
-                                panelControllerNest: panelController,
-                              ),
-                              if (panelController.isAttached)
-                                ValueListenableBuilder<bool>(
-                                    valueListenable: bottomSheetVisible,
-                                    builder: (BuildContext context, bool value,
-                                        Widget? child) {
-                                      return AnimatedOpacity(
-                                        opacity: value ? 1.0 : 0.0,
-                                        duration: Duration(milliseconds: 100),
-                                        child: Container(
-                                            height: 78,
-                                            decoration: BoxDecoration(
-                                              gradient: LinearGradient(
-                                                begin: Alignment.topCenter,
-                                                end: Alignment.bottomCenter,
-                                                colors: [
-                                                  gradientColorOne,
-                                                  gradientColorTwo,
-                                                ],
-                                                stops: [0.0926, 1.0],
-                                              ),
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(16),
-                                                topRight: Radius.circular(16),
-                                              ),
-                                            ),
-                                            child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      panelController.open();
-                                                    },
-                                                    child: Row(
-                                                      children: [
-                                                        ValueListenableBuilder(
-                                                          valueListenable: getIt<
-                                                                  PageManager>()
-                                                              .currentMediaItemNotifier,
-                                                          builder: (BuildContext context,
-                                                              MediaItem mediaItem,
-                                                              Widget? child) {
-                                                            return Container(
-                                                              child: ClipRRect(
-                                                                borderRadius:
-                                                                    BorderRadius.only(
-                                                                        topLeft: Radius
-                                                                            .circular(
-                                                                                16)),
-                                                                child: CachedNetworkImage(
-                                                                  imageUrl: mediaItem
-                                                                      .artUri
-                                                                      .toString(),
-                                                                  width: 72,
-                                                                  height: 72,
-                                                                  fit: BoxFit.cover,
-                                                                  errorWidget: (context,
-                                                                          url, error) =>
-                                                                      ClipRRect(
-                                                                          borderRadius:
-                                                                              BorderRadius
-                                                                                  .circular(
-                                                                                      20), // Adjust the radius as needed
-                                                                          child:
-                                                                              Image.asset(
-                                                                            "images/placeholder_image.jpg",
-                                                                            fit: BoxFit
-                                                                                .cover,
-                                                                          )),
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
-                                                        SizedBox(
-                                                          width: 5,
-                                                        ),
-                                                        Expanded(
-                                                            child:
-                                                                CurrentSongTitleSmall()),
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment.end,
-                                                          mainAxisSize: MainAxisSize.min,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment.center,
-                                                          children: [
-                                                            SizedBox(
-                                                              width: 10,
-                                                            ),
-                                                            ValueListenableBuilder(
-                                                              valueListenable:
-                                                                  getIt<PageManager>()
-                                                                      .progressNotifier,
-                                                              builder:
-                                                                  (BuildContext context,
-                                                                      ProgressBarState
-                                                                          progress,
-                                                                      Widget? child) {
-                                                                return Container(
-                                                                    child: Text(
-                                                                  "${progress.current.inMinutes.remainder(60).toString().padLeft(2, '0')}:${progress.current.inSeconds.remainder(60).toString().padLeft(2, '0')}",
-                                                                  style: TextStyle(
-                                                                      color: Colors.white,
-                                                                      fontSize: 14),
-                                                                ));
-                                                              },
-                                                            ),
-                                                            PlayButtonNew(),
-                                                          ],
-                                                        ),
+              child: true
+                  ? Placeholder()
+                  : Stack(
+                      children: [
+                        Offstage(
+                          offstage: _selectedIndex != 0,
+                          child: Navigator(
+                            key: _navigatorKeys[0],
+                            onGenerateRoute: (routeSettings) => MaterialPageRoute(
+                                builder: (_) => ForMeScreen(
+                                    showPanel, _scrollControllerHelper, openExploreTab)),
+                          ),
+                        ),
+                        Offstage(
+                          offstage: _selectedIndex != 1,
+                          child: Navigator(
+                            key: _navigatorKeys[1],
+                            onGenerateRoute: (routeSettings) => MaterialPageRoute(
+                                builder: (_) => ExploreScreen(showPanel)),
+                          ),
+                        ),
+                        Offstage(
+                          offstage: _selectedIndex != 2,
+                          child: Navigator(
+                            key: _navigatorKeys[2],
+                            onGenerateRoute: (routeSettings) => MaterialPageRoute(
+                                builder: (_) => ProfileSettingsScreen(showPanel)),
+                          ),
+                        ),
+                        Visibility(
+                            visible: panelVisibility,
+                            maintainState: true,
+                            child: Listener(
+                              onPointerMove: (PointerMoveEvent event) {
+                                if (event.delta.dy > 3) {
+                                  if (panelController.isAttached) {
+                                    if (panelController.isPanelClosed &&
+                                        panelVisibility) {
+                                      _hidePanel();
+                                    }
+                                  }
+                                }
+                              },
+                              child: SlidingUpPanel(
+                                key: _panelKey,
+                                maxHeight: MediaQuery.of(context).size.height,
+                                minHeight: defaultTargetPlatform == TargetPlatform.android
+                                    ? (kBottomNavigationBarHeight + 78)
+                                    : MediaQuery.of(context).padding.bottom +
+                                        kBottomNavigationBarHeight +
+                                        78,
+                                controller: panelController,
+                                panelBuilder: () => Stack(
+                                  children: [
+                                    MusicPlayerScreen(
+                                      playList: playlist.length > 1 ? true : false,
+                                      panelControllerNest: panelController,
+                                    ),
+                                    if (panelController.isAttached)
+                                      ValueListenableBuilder<bool>(
+                                          valueListenable: bottomSheetVisible,
+                                          builder: (BuildContext context, bool value,
+                                              Widget? child) {
+                                            return AnimatedOpacity(
+                                              opacity: value ? 1.0 : 0.0,
+                                              duration: Duration(milliseconds: 100),
+                                              child: Container(
+                                                  height: 78,
+                                                  decoration: BoxDecoration(
+                                                    gradient: LinearGradient(
+                                                      begin: Alignment.topCenter,
+                                                      end: Alignment.bottomCenter,
+                                                      colors: [
+                                                        gradientColorOne,
+                                                        gradientColorTwo,
                                                       ],
+                                                      stops: [0.0926, 1.0],
+                                                    ),
+                                                    borderRadius: BorderRadius.only(
+                                                      topLeft: Radius.circular(16),
+                                                      topRight: Radius.circular(16),
                                                     ),
                                                   ),
-                                                  if (item?.extras?["categories"] !=
-                                                      "Soundscape")
-                                                    AudioProgressBarHome()
-                                                ])),
-                                      );
-                                    })
-                            ],
+                                                  child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment.start,
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            panelController.open();
+                                                          },
+                                                          child: Row(
+                                                            children: [
+                                                              ValueListenableBuilder(
+                                                                valueListenable: getIt<
+                                                                        PageManager>()
+                                                                    .currentMediaItemNotifier,
+                                                                builder: (BuildContext
+                                                                        context,
+                                                                    MediaItem mediaItem,
+                                                                    Widget? child) {
+                                                                  return Container(
+                                                                    child: ClipRRect(
+                                                                      borderRadius:
+                                                                          BorderRadius.only(
+                                                                              topLeft: Radius
+                                                                                  .circular(
+                                                                                      16)),
+                                                                      child:
+                                                                          CachedNetworkImage(
+                                                                        imageUrl: mediaItem
+                                                                            .artUri
+                                                                            .toString(),
+                                                                        width: 72,
+                                                                        height: 72,
+                                                                        fit: BoxFit.cover,
+                                                                        errorWidget: (context,
+                                                                                url,
+                                                                                error) =>
+                                                                            ClipRRect(
+                                                                                borderRadius:
+                                                                                    BorderRadius.circular(
+                                                                                        20), // Adjust the radius as needed
+                                                                                child: Image
+                                                                                    .asset(
+                                                                                  "images/placeholder_image.jpg",
+                                                                                  fit: BoxFit
+                                                                                      .cover,
+                                                                                )),
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ),
+                                                              SizedBox(
+                                                                width: 5,
+                                                              ),
+                                                              Expanded(
+                                                                  child:
+                                                                      CurrentSongTitleSmall()),
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment.end,
+                                                                mainAxisSize:
+                                                                    MainAxisSize.min,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  SizedBox(
+                                                                    width: 10,
+                                                                  ),
+                                                                  ValueListenableBuilder(
+                                                                    valueListenable: getIt<
+                                                                            PageManager>()
+                                                                        .progressNotifier,
+                                                                    builder: (BuildContext
+                                                                            context,
+                                                                        ProgressBarState
+                                                                            progress,
+                                                                        Widget? child) {
+                                                                      return Container(
+                                                                          child: Text(
+                                                                        "${progress.current.inMinutes.remainder(60).toString().padLeft(2, '0')}:${progress.current.inSeconds.remainder(60).toString().padLeft(2, '0')}",
+                                                                        style: TextStyle(
+                                                                            color: Colors
+                                                                                .white,
+                                                                            fontSize: 14),
+                                                                      ));
+                                                                    },
+                                                                  ),
+                                                                  PlayButtonNew(),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        if (item?.extras?["categories"] !=
+                                                            "Soundscape")
+                                                          AudioProgressBarHome()
+                                                      ])),
+                                            );
+                                          })
+                                  ],
+                                ),
+                                onPanelSlide: (double pos) {
+                                  if (pos > 0.08) {
+                                    bottomSheetVisible.value = false;
+                                  } else {
+                                    bottomSheetVisible.value = true;
+                                  }
+                                },
+                                color: Colors.transparent,
+                              ),
+                            )),
+                        Positioned(
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            child: ValueListenableBuilder<bool>(
+                                valueListenable: bottomSheetVisible,
+                                builder:
+                                    (BuildContext context, bool value, Widget? child) {
+                                  return AnimatedOpacity(
+                                      opacity: value ? 1.0 : 0.0,
+                                      duration: Duration(milliseconds: 300),
+                                      child: Container(
+                                        height: defaultTargetPlatform ==
+                                                TargetPlatform.android
+                                            ? kBottomNavigationBarHeight + 2
+                                            : (MediaQuery.of(context).padding.bottom +
+                                                kBottomNavigationBarHeight +
+                                                2),
+                                        color: lightBlueColor,
+                                        //padding: EdgeInsets.only(top: 2,bottom: defaultTargetPlatform == TargetPlatform.android ? 2.h : 0.0,),
+                                        child: BottomNavigationBar(
+                                          elevation: 0.0,
+                                          //iconSize: 26,
+                                          items: <BottomNavigationBarItem>[
+                                            BottomNavigationBarItem(
+                                              icon: _selectedIndex == 0
+                                                  ? const Icon(
+                                                      CupertinoIcons.house_fill,
+                                                    )
+                                                  : const Icon(
+                                                      CupertinoIcons.house,
+                                                    ),
+                                              label: translation(context).home,
+                                            ),
+                                            BottomNavigationBarItem(
+                                              icon: _selectedIndex == 1
+                                                  ? SvgPicture.asset(
+                                                      "assets/search_icon_filled.svg",
+                                                    )
+                                                  : SvgPicture.asset(
+                                                      "assets/search_icon.svg",
+                                                    ),
+                                              label: translation(context).explore,
+                                            ),
+                                            BottomNavigationBarItem(
+                                              icon: _selectedIndex == 2
+                                                  ? SvgPicture.asset(
+                                                      "assets/user_icon_filled.svg",
+                                                    )
+                                                  : SvgPicture.asset(
+                                                      "assets/user_icon.svg",
+                                                    ),
+                                              label: translation(context).profile,
+                                            ),
+                                          ],
+                                          currentIndex: _selectedIndex,
+                                          selectedItemColor: Colors.white,
+                                          unselectedItemColor: Colors.white,
+                                          backgroundColor: lightBlueColor,
+                                          onTap: onItemTapped,
+                                        ),
+                                      ));
+                                })),
+                        Positioned(
+                          bottom: 120,
+                          right: 20,
+                          child: FloatingActionButton(
+                            child: Icon(Icons.logo_dev),
+                            onPressed: () {
+                              Get.the<AuthRepository>().logOut();
+                            },
                           ),
-                          onPanelSlide: (double pos) {
-                            if (pos > 0.08) {
-                              bottomSheetVisible.value = false;
-                            } else {
-                              bottomSheetVisible.value = true;
-                            }
-                          },
-                          color: Colors.transparent,
                         ),
-                      )),
-                  Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      child: ValueListenableBuilder<bool>(
-                          valueListenable: bottomSheetVisible,
-                          builder: (BuildContext context, bool value, Widget? child) {
-                            return AnimatedOpacity(
-                                opacity: value ? 1.0 : 0.0,
-                                duration: Duration(milliseconds: 300),
-                                child: Container(
-                                  height: defaultTargetPlatform == TargetPlatform.android
-                                      ? kBottomNavigationBarHeight + 2
-                                      : (MediaQuery.of(context).padding.bottom +
-                                          kBottomNavigationBarHeight +
-                                          2),
-                                  color: lightBlueColor,
-                                  //padding: EdgeInsets.only(top: 2,bottom: defaultTargetPlatform == TargetPlatform.android ? 2.h : 0.0,),
-                                  child: BottomNavigationBar(
-                                    elevation: 0.0,
-                                    //iconSize: 26,
-                                    items: <BottomNavigationBarItem>[
-                                      BottomNavigationBarItem(
-                                        icon: _selectedIndex == 0
-                                            ? const Icon(
-                                                CupertinoIcons.house_fill,
-                                              )
-                                            : const Icon(
-                                                CupertinoIcons.house,
-                                              ),
-                                        label: translation(context).home,
-                                      ),
-                                      BottomNavigationBarItem(
-                                        icon: _selectedIndex == 1
-                                            ? SvgPicture.asset(
-                                                "assets/search_icon_filled.svg",
-                                              )
-                                            : SvgPicture.asset(
-                                                "assets/search_icon.svg",
-                                              ),
-                                        label: translation(context).explore,
-                                      ),
-                                      BottomNavigationBarItem(
-                                        icon: _selectedIndex == 2
-                                            ? SvgPicture.asset(
-                                                "assets/user_icon_filled.svg",
-                                              )
-                                            : SvgPicture.asset(
-                                                "assets/user_icon.svg",
-                                              ),
-                                        label: translation(context).profile,
-                                      ),
-                                    ],
-                                    currentIndex: _selectedIndex,
-                                    selectedItemColor: Colors.white,
-                                    unselectedItemColor: Colors.white,
-                                    backgroundColor: lightBlueColor,
-                                    onTap: onItemTapped,
-                                  ),
-                                ));
-                          })),
-                  Positioned(
-                    bottom: 120,
-                    right: 20,
-                    child: FloatingActionButton(
-                      child: Icon(Icons.logo_dev),
-                      onPressed: () {
-                        Get.the<AuthRepository>().logOut();
-                      },
-                    ),
-                  ),
-                ],
-              )),
+                      ],
+                    )),
         ));
   }
 

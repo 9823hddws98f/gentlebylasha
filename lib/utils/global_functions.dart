@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sleeptales/domain/blocs/user/user_bloc.dart';
+import 'package:sleeptales/utils/get.dart';
 
 import '/screens/auth/login_screen.dart';
 import '/utils/colors.dart';
@@ -32,25 +34,8 @@ fetchCategoriesArrayAndSave() async {
 }
 
 Future<AppUser> getUser() async {
-  final Future<SharedPreferences> prefs0 = SharedPreferences.getInstance();
-  final SharedPreferences prefs = await prefs0;
-  String? jsonString = prefs.getString('goals');
-  List<dynamic> list = [];
-  if (jsonString != null) {
-    list = jsonDecode(jsonString);
-    // Do something with the list
-  }
   // TODO: Implement correctly
-  return AppUser(
-    id: prefs.getString("user_id") ?? '',
-    email: prefs.getString("email") ?? '',
-    name: prefs.getString("name") ?? '',
-    goals: list as List<String>?,
-    language: prefs.getString("language") ?? '',
-    heardFrom: prefs.getString("heardfrom") ?? '',
-    photoURL: prefs.getString("photourl") ?? '',
-    createdAt: DateTime.now(),
-  );
+  return Get.the<UserBloc>().state.user;
 }
 
 Future<void> saveTimeOfDay(String id, TimeOfDay time) async {

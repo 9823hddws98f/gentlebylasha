@@ -11,13 +11,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:sleeptales/screens/auth/login_screen.dart';
 import 'package:sleeptales/utils/get.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 import '/screens/home_screen.dart';
-import '/utils/route_constant.dart';
 import 'domain/blocs/authentication/app_bloc.dart';
 import 'domain/blocs/user/user_bloc.dart';
 import 'domain/services/service_locator.dart';
@@ -29,7 +29,9 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   tz.initializeTimeZones();
   //TODO: await initializeNotifications();
 
@@ -44,18 +46,17 @@ Future<void> main() async {
   await session.configure(AudioSessionConfiguration.music());
   await setupServiceLocator();
 
-  String initialRoute = loginPath;
-  if (FirebaseAuth.instance.currentUser != null) {
-    initialRoute = dashboard;
+  bool isWaitingForAuth = true;
+  if (FirebaseAuth.instance.currentUser == null) {
+    isWaitingForAuth = false;
+    FlutterNativeSplash.remove();
   }
 
   runApp(
     DevicePreview(
       enabled: !kReleaseMode && Platform.isMacOS,
-      data: DevicePreviewData(
-        isDarkMode: true,
-      ),
-      builder: (context) => MyApp(initialRoute: initialRoute),
+      data: DevicePreviewData(isDarkMode: true),
+      builder: (context) => MyApp(isWaitingForAuth: isWaitingForAuth),
     ),
   );
 }
@@ -101,9 +102,9 @@ void subscribeToTopic(String topic) async {
 }
 
 class MyApp extends StatefulWidget {
-  final String initialRoute;
+  final bool isWaitingForAuth;
 
-  const MyApp({super.key, required this.initialRoute});
+  const MyApp({super.key, required this.isWaitingForAuth});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -115,6 +116,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final userBloc = Get.the<UserBloc>();
+  final appBloc = Get.the<AppBloc>();
+
   Locale? _locale;
 
   void setLocale(Locale locale) => setState(() => _locale = locale);
@@ -126,38 +130,41 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
-  Widget build(BuildContext context) => BlocProvider(
-        create: (context) => Get.the<AppBloc>(),
-        child: BlocListener<AppBloc, AppState>(
+  Widget build(BuildContext context) => BlocProvider.value(
+        value: appBloc,
+        child: BlocConsumer<AppBloc, AppState>(
           listener: (context, state) {
             if (state.status == AppStatus.loading) {
-              Get.the<UserBloc>().add(
+              userBloc.add(
                 UserLoaded(
                   state.user.toAppUser(),
-                  Get.the<AppBloc>(),
+                  appBloc,
                 ),
               );
-            } else if (state.status == AppStatus.authenticated) {
-              Get.the<UserBloc>().add(UserLoaded(
-                state.user.toAppUser(),
-                Get.the<AppBloc>(),
-              ));
+            } else if (state.status == AppStatus.authenticated &&
+                widget.isWaitingForAuth) {
+              FlutterNativeSplash.remove();
             }
           },
-          child: MaterialApp(
-            title: 'Gentle',
-            debugShowCheckedModeBanner: false,
-            locale: _locale,
-            theme: AppTheme.buildTheme(dark: false),
-            darkTheme: AppTheme.buildTheme(dark: true),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            initialRoute: widget.initialRoute,
-            routes: {
-              loginPath: (context) => const LoginScreen(),
-              dashboard: (context) => const HomeScreen(),
-            },
-          ),
+          builder: (context, state) =>
+              state.status == AppStatus.authenticated && widget.isWaitingForAuth
+                  ? MaterialApp(
+                      title: 'Gentle',
+                      debugShowCheckedModeBanner: false,
+                      locale: _locale,
+                      theme: AppTheme.buildTheme(dark: false),
+                      darkTheme: AppTheme.buildTheme(dark: true),
+                      localizationsDelegates: AppLocalizations.localizationsDelegates,
+                      supportedLocales: AppLocalizations.supportedLocales,
+                      initialRoute: widget.isWaitingForAuth
+                          ? HomeScreen.routeName
+                          : LoginScreen.routeName,
+                      routes: {
+                        LoginScreen.routeName: (_) => const LoginScreen(),
+                        HomeScreen.routeName: (_) => const HomeScreen(),
+                      },
+                    )
+                  : const SizedBox(child: CircularProgressIndicator()),
         ),
       );
 }

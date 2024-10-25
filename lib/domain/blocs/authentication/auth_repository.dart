@@ -59,7 +59,7 @@ class AuthRepository {
         email: email,
         password: password,
       );
-      await _initUserInDBIfNeeded(user);
+      await _initUserInDBIfNeeded(user, name);
       return user;
     } catch (e) {
       if (e is FirebaseAuthException && e.code == 'email-already-in-use') {
@@ -110,7 +110,8 @@ class AuthRepository {
     }
   }
 
-  Future<void> _initUserInDBIfNeeded(UserCredential userCredential) async {
+  Future<void> _initUserInDBIfNeeded(UserCredential userCredential,
+      [String? name]) async {
     if (userCredential.additionalUserInfo?.isNewUser == false) return;
     final user = userCredential.user!;
     return await FirebaseFirestore.instance
@@ -119,7 +120,7 @@ class AuthRepository {
         .set(AppUser(
           id: user.uid,
           email: user.email!,
-          name: user.displayName ?? '',
+          name: name ?? user.displayName ?? '',
           photoURL: user.photoURL ?? '',
           language: 'en',
           createdAt: DateTime.now(),
