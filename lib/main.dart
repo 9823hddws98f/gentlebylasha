@@ -16,13 +16,13 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 import '/screens/auth/login_screen.dart';
-import '/screens/home_screen.dart';
 import '/utils/get.dart';
 import 'constants/language_constants.dart';
 import 'domain/blocs/authentication/app_bloc.dart';
 import 'domain/blocs/user/user_bloc.dart';
 import 'domain/services/service_locator.dart';
 import 'firebase_options.dart';
+import 'screens/home/home_screen.dart';
 import 'utils/app_theme.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =

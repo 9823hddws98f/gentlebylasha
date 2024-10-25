@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 
 import '/domain/blocs/authentication/auth_repository.dart';
 import '/helper/validators.dart';
-import '../../constants/language_constants.dart';
 import '/screens/auth/signup_sheet.dart';
 import '/screens/forgot_password_screen.dart';
-import '/screens/home_screen.dart';
 import '/utils/enums.dart';
 import '/utils/get.dart';
 import '/utils/global_functions.dart';
@@ -14,6 +12,8 @@ import '/utils/modals.dart';
 import '/utils/tx_button.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/input/password_edit_text.dart';
+import '../../constants/language_constants.dart';
+import '../home/home_screen.dart';
 import 'onboarding_bottom_sheet.dart';
 
 class LoginScreen extends StatefulWidget {

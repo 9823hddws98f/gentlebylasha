@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sleeptales/constants/assets.dart';
+import 'package:sleeptales/utils/app_theme.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
 import '/screens/timer_picker_screen.dart';
@@ -19,7 +20,7 @@ import '../notifiers/progress_notifier.dart';
 import '../notifiers/repeat_notifier.dart';
 import '../page_manager.dart';
 import '../utils/colors.dart';
-import 'home_screen.dart';
+import 'home/home_screen.dart';
 
 class MusicPlayerScreen extends StatefulWidget {
   final bool playList;
@@ -132,8 +133,8 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
         child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
+                topLeft: AppTheme.smallBorderRadius.topLeft,
+                topRight: AppTheme.smallBorderRadius.topRight,
               ),
               gradient: LinearGradient(
                 begin: Alignment.topCenter,

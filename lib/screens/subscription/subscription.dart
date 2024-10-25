@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '/utils/app_theme.dart';
 
-import '/screens/home_screen.dart';
+import '/screens/home/home_screen.dart';
+import '/utils/app_theme.dart';
 import '/utils/global_functions.dart';
 import '/utils/tx_button.dart';
 

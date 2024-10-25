@@ -10,6 +10,7 @@ class TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: move to appbar
     return Stack(
       children: [
         // if(Platform.isIOS)

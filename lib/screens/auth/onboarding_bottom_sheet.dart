@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '/screens/onboarding01.dart';
 import '/screens/onboarding02.dart';
-import '/screens/subscription.dart';
+import '/screens/subscription/subscription.dart';
 import '/utils/app_theme.dart';
 
 class OnboardingBottomSheet extends StatefulWidget {

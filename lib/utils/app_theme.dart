@@ -40,16 +40,17 @@ class AppTheme {
     surfaceContainerHighest: Color.fromARGB(255, 39, 55, 96),
     surfaceContainerLowest: Color(0xff0E1529),
     onSurfaceVariant: Color(0xFF99A1B7),
-    outline: Color(0xFF363843),
+    outline: Color(0xFF323849),
   );
 
   static ThemeData buildTheme({required bool dark}) {
     final colors = dark ? darkColors : lightColors;
     const borderShape = RoundedRectangleBorder(borderRadius: smallBorderRadius);
-    final appBarBackground = dark ? const Color(0xFF0D0E12) : const Color(0xFF0B0C10);
+    final appBarBackground =
+        dark ? colors.surfaceContainerLowest : const Color(0xFF0B0C10);
     final buttonStyle = ButtonStyle(
       shape: WidgetStateProperty.all(borderShape),
-      minimumSize: WidgetStateProperty.all(Size(double.infinity, 48)),
+      minimumSize: WidgetStateProperty.all(Size(0, 48)),
       textStyle: WidgetStateProperty.all(TextStyle(
         fontSize: 16,
         fontFamily: fontFamily,
@@ -59,7 +60,8 @@ class AppTheme {
     return ThemeData(
       brightness: dark ? Brightness.dark : Brightness.light,
       colorScheme: colors,
-      scaffoldBackgroundColor: dark ? const Color(0xff0E1529) : const Color(0xFFFDFDFC),
+      scaffoldBackgroundColor:
+          dark ? colors.surfaceContainerLowest : const Color(0xFFFDFDFC),
       fontFamily: fontFamily,
       extensions: dark ? {TxColorExtensions.dark()} : {TxColorExtensions.light()},
       filledButtonTheme: FilledButtonThemeData(style: buttonStyle),
@@ -80,9 +82,14 @@ class AppTheme {
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: appBarBackground,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        titleSpacing: 0,
+        scrolledUnderElevation: 0.8,
+        centerTitle: false,
+        titleSpacing: 24,
+        titleTextStyle: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.w600,
+          fontFamily: fontFamily,
+        ),
       ),
       drawerTheme: DrawerThemeData(
         backgroundColor: appBarBackground,
@@ -121,6 +128,16 @@ class AppTheme {
           fontSize: 20,
           fontFamily: titleFont,
         ),
+      ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        selectedItemColor: colors.onPrimary,
+        unselectedItemColor: colors.onPrimary.withValues(alpha: 0.5),
+        selectedLabelStyle: TextStyle(fontSize: 12, fontFamily: fontFamily),
+        unselectedLabelStyle: TextStyle(fontSize: 12, fontFamily: fontFamily),
+        backgroundColor: colors.surfaceContainerLowest,
+      ),
+      dividerTheme: DividerThemeData(
+        color: colors.outline,
       ),
     );
   }
