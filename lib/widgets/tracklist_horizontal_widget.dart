@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sleeptales/domain/services/audio_panel_manager.dart';
+import 'package:sleeptales/utils/get.dart';
 
 import '../domain/models/audiofile_model.dart';
 import '../domain/services/service_locator.dart';
@@ -12,12 +14,13 @@ class TrackListHorizontal extends StatelessWidget {
   Function panelFunction;
   bool musicList;
 
-  TrackListHorizontal(
-      {super.key,
-      required this.audiList,
-      required this.tap,
-      required this.musicList,
-      required this.panelFunction});
+  TrackListHorizontal({
+    super.key,
+    required this.audiList,
+    required this.tap,
+    required this.musicList,
+    required this.panelFunction,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +49,7 @@ class TrackListHorizontal extends StatelessWidget {
                   //Navigator.of(context).push( SlideFromBottomPageRoute(page: MusicPlayerScreen( audioFile: audiList[index],playList: true,)));
                 } else {
                   playTrack(audiList[index]);
+                  Get.the<AudioPanelManager>().showPanel(false);
                   panelFunction(false);
                   //Navigator.of(context).push( SlideFromBottomPageRoute(page: MusicPlayerScreen( audioFile: audiList[index],playList: false,)));
                 }

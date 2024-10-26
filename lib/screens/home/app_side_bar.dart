@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sleeptales/constants/assets.dart';
-import 'package:sleeptales/constants/navigation.dart';
 import 'package:sleeptales/domain/blocs/authentication/auth_repository.dart';
+import 'package:sleeptales/domain/cubits/navigation.dart';
 import 'package:sleeptales/utils/get.dart';
 
 class AppSideBar extends StatefulWidget {

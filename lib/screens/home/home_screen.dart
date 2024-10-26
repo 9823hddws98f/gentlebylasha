@@ -4,24 +4,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sleeptales/domain/services/audio_panel_manager.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
-import '/constants/navigation.dart';
 import '/domain/blocs/user/app_user.dart';
-import '/domain/services/service_locator.dart';
-import '/helper/scrollcontroller_helper.dart';
-import '/notifiers/play_button_notifier.dart';
-import '/notifiers/progress_notifier.dart';
+import '/domain/cubits/navigation.dart';
 import '/page_manager.dart';
 import '/screens/music_player_screen.dart';
-import '/utils/colors.dart';
+import '/utils/get.dart';
 import '/utils/global_functions.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
 import 'app_bottom_bar.dart';
 import 'app_side_bar.dart';
-import 'music_panel_preview.dart';
-
-PanelController panelController = PanelController();
+import 'widgets/music_panel_preview.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/dashboard';
@@ -34,6 +29,7 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   final _navigationCubit = NavigationCubit();
+  final _audioPanelManager = Get.the<AudioPanelManager>();
 
   final _allNavItems = AppNavigation.allNavItems;
 
@@ -42,56 +38,32 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
     vsync: this,
   );
 
-  List<String> playlist = [];
-  MediaItem? item;
-  final ScrollControllerHelper _scrollControllerHelper = ScrollControllerHelper();
-  ValueNotifier<bool> bottomSheetVisible = ValueNotifier<bool>(true);
-  bool gestureCheck = false;
-  double panelVisibility = 0;
+  final _bottomSheetVisible = ValueNotifier<bool>(true);
 
-  final _panelKey = GlobalKey();
+  List<String> _playlist = [];
+  MediaItem? _item;
 
   @override
   void initState() {
     super.initState();
-    getIt<PageManager>().init();
-    getIt<PageManager>().currentMediaItemNotifier.value = MediaItem(id: "", title: "");
-    getIt<PageManager>().playlistNotifier.addListener(_onPlaylistChanged);
+    Get.the<PageManager>().init();
+    Get.the<PageManager>().currentMediaItemNotifier.value = MediaItem(id: "", title: "");
+    Get.the<PageManager>().playlistNotifier.addListener(_onPlaylistChanged);
     fetchFavoriteTracksList();
   }
 
   @override
   void dispose() {
     super.dispose();
-    getIt<PageManager>().currentMediaItemNotifier.removeListener(_onMediaItemChanged);
-    getIt<PageManager>().playlistNotifier.removeListener(_onPlaylistChanged);
+    Get.the<PageManager>().currentMediaItemNotifier.removeListener(_onMediaItemChanged);
+    Get.the<PageManager>().playlistNotifier.removeListener(_onPlaylistChanged);
     // TODO:  _audioPlayerAnimCtrl.dispose();
-  }
-
-  void showPanel(bool dontShowPanel) {
-    debugPrint("panel function parameter $dontShowPanel");
-    if (panelController.isAttached) {
-      panelVisibility = 1;
-      if (!dontShowPanel) {
-        panelController.open();
-      }
-    } else {
-      panelVisibility = 1;
-      Future.delayed(Duration(seconds: 2), () {
-        if (panelController.isAttached) {
-          if (!dontShowPanel) {
-            panelController.open();
-          }
-        }
-      });
-    }
-    setState(() {});
   }
 
   void _onPlaylistChanged() {
     setState(() {
       if (mounted) {
-        playlist = getIt<PageManager>().playlistNotifier.value;
+        _playlist = Get.the<PageManager>().playlistNotifier.value;
       }
     });
   }
@@ -99,7 +71,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
   void _onMediaItemChanged() {
     setState(() {
       if (mounted) {
-        item = getIt<PageManager>().currentMediaItemNotifier.value;
+        _item = Get.the<PageManager>().currentMediaItemNotifier.value;
       }
     });
   }
@@ -135,7 +107,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
 
   void _hidePanel() {
     setState(() {
-      panelVisibility = 0;
+      _audioPanelManager.panelVisibility.value = 0;
     });
   }
 
@@ -234,7 +206,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
 
   Widget _buildSlidingPanel(double height, double bottom) =>
       TweenAnimationBuilder<double>(
-        tween: Tween(begin: 0, end: panelVisibility),
+        tween: Tween(begin: 0, end: _audioPanelManager.panelVisibility.value),
         duration: Durations.short3,
         curve: Easing.standard,
         builder: (context, value, child) => Transform.translate(
@@ -244,47 +216,43 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
         child: Listener(
           onPointerMove: (event) {
             if (event.delta.dy > 3 &&
-                panelController.isAttached &&
-                panelController.isPanelClosed &&
-                panelVisibility > 0) {
+                _audioPanelManager.panelController.isAttached &&
+                _audioPanelManager.panelController.isPanelClosed &&
+                _audioPanelManager.panelVisibility.value > 0) {
               _hidePanel();
             }
           },
           child: SlidingUpPanel(
-            key: _panelKey,
+            controller: _audioPanelManager.panelController,
             maxHeight: height,
             minHeight: bottom + AppBottomBar.height + 78,
-            controller: panelController,
+            color: Colors.transparent,
             onPanelSlide: (pos) {
               _audioPlayerAnimCtrl.value = pos;
-              if (pos > 0.08) {
-                bottomSheetVisible.value = false;
-              } else {
-                bottomSheetVisible.value = true;
-              }
+              // TODO: TEST <= or >
+              _bottomSheetVisible.value = pos <= 0.08;
             },
             panelBuilder: () => Stack(
               children: [
                 MusicPlayerScreen(
-                  playList: playlist.length > 1 ? true : false,
-                  panelControllerNest: panelController,
+                  playList: _playlist.length > 1 ? true : false,
+                  panelControllerNest: _audioPanelManager.panelController,
                 ),
-                if (panelController.isAttached)
+                if (_audioPanelManager.panelController.isAttached)
                   AnimatedBuilder(
                     animation: _audioPlayerAnimCtrl,
                     builder: (context, child) => Opacity(
                       opacity: 1 -
                           CurvedAnimation(
-                                  parent: _audioPlayerAnimCtrl,
-                                  curve: Curves.fastEaseInToSlowEaseOut)
-                              .value,
+                            parent: _audioPlayerAnimCtrl,
+                            curve: Curves.fastEaseInToSlowEaseOut,
+                          ).value,
                       child: child!,
                     ),
                     child: MusicPanelPreview(),
                   )
               ],
             ),
-            color: Colors.transparent,
           ),
         ),
       );
@@ -307,94 +275,5 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
   void handleDeepLink(Uri uri) {
     String trackId = uri.queryParameters['trackId'] ?? '';
     showToast(trackId);
-  }
-}
-
-class PlayButtonNew extends StatelessWidget {
-  const PlayButtonNew({super.key});
-  @override
-  Widget build(BuildContext context) {
-    final pageManager = getIt<PageManager>();
-    return ValueListenableBuilder<ButtonState>(
-      valueListenable: pageManager.playButtonNotifier,
-      builder: (_, value, __) => switch (value) {
-        ButtonState.loading => Container(
-            margin: EdgeInsets.all(8),
-            height: 24,
-            width: 24,
-            child: const CircularProgressIndicator(
-              color: Colors.white,
-            ),
-          ),
-        ButtonState.paused => IconButton(
-            icon: const Icon(Icons.play_arrow),
-            iconSize: 24,
-            onPressed: pageManager.play,
-          ),
-        ButtonState.playing => IconButton(
-            icon: const Icon(Icons.pause),
-            iconSize: 24,
-            onPressed: pageManager.pause,
-          )
-      },
-    );
-  }
-}
-
-class AudioProgressBarHome extends StatelessWidget {
-  const AudioProgressBarHome({super.key});
-  @override
-  Widget build(BuildContext context) {
-    final pageManager = getIt<PageManager>();
-    return ValueListenableBuilder<ProgressBarState>(
-      valueListenable: pageManager.progressNotifier,
-      builder: (_, value, __) {
-        return SliderTheme(
-            data: SliderTheme.of(context).copyWith(
-              thumbColor: Colors.white,
-              thumbShape: RoundSliderThumbShape(enabledThumbRadius: 0),
-              overlayColor: Colors.white.withAlpha(32),
-              overlayShape: RoundSliderOverlayShape(overlayRadius: 0),
-              activeTrackColor: Colors.white,
-              inactiveTrackColor: transparentWhite,
-            ),
-            child: Padding(
-                padding: EdgeInsets.zero,
-                child: Slider(
-                  value: value.current.inSeconds.toDouble(),
-                  min: 0.0,
-                  max: value.total.inSeconds.toDouble(),
-                  onChanged: (double value) {
-                    //_audioPlayer.seek(Duration(seconds: value.toInt()));
-                  },
-                )));
-      },
-    );
-  }
-}
-
-class CurrentSongTitleSmall extends StatelessWidget {
-  const CurrentSongTitleSmall({super.key});
-  @override
-  Widget build(BuildContext context) {
-    final pageManager = getIt<PageManager>();
-    return ValueListenableBuilder<MediaItem>(
-      valueListenable: pageManager.currentMediaItemNotifier,
-      builder: (_, mediaItem, __) {
-        return Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Text(
-            mediaItem.title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-        );
-      },
-    );
   }
 }

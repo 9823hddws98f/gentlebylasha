@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sleeptales/utils/common_extensions.dart';
 
-import '/constants/navigation.dart';
+import '../../domain/cubits/navigation.dart';
 
 class AppBottomBar extends StatefulWidget {
   const AppBottomBar({super.key});

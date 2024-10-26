@@ -7,7 +7,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sleeptales/constants/assets.dart';
+import 'package:sleeptales/domain/services/audio_panel_manager.dart';
 import 'package:sleeptales/utils/app_theme.dart';
+import 'package:sleeptales/utils/get.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
 import '/screens/timer_picker_screen.dart';
@@ -20,7 +22,6 @@ import '../notifiers/progress_notifier.dart';
 import '../notifiers/repeat_notifier.dart';
 import '../page_manager.dart';
 import '../utils/colors.dart';
-import 'home/home_screen.dart';
 
 class MusicPlayerScreen extends StatefulWidget {
   final bool playList;
@@ -32,6 +33,8 @@ class MusicPlayerScreen extends StatefulWidget {
 }
 
 class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
+  final _audioPanelManager = Get.the<AudioPanelManager>();
+
   final _audioHandler = getIt<AudioHandler>();
   AppUser? user;
   bool isPlaying = false;
@@ -199,8 +202,9 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                             //widget.onPopUpClosed();
                                             //Navigator.of(context).pop();
 
-                                            if (panelController.isAttached) {
-                                              panelController.close();
+                                            if (_audioPanelManager
+                                                .panelController.isAttached) {
+                                              _audioPanelManager.panelController.close();
                                             }
                                           },
                                           backgroundColor: transparentWhite,

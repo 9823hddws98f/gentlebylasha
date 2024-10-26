@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sleeptales/constants/assets.dart';
+import 'package:sleeptales/domain/services/audio_panel_manager.dart';
+import 'package:sleeptales/utils/get.dart';
 
 import '/screens/playlist_screen.dart';
 import '/screens/track_list.dart';
@@ -27,6 +29,7 @@ class ForMeScreen extends StatefulWidget {
 }
 
 class _ForMeState extends State<ForMeScreen> {
+  final _audioPanelManager = Get.the<AudioPanelManager>();
   bool isLoading = true;
   bool categoryBlocksIsLoading = true;
   List<AudioTrack> recentlyPlayed = [];
@@ -183,14 +186,13 @@ class _ForMeState extends State<ForMeScreen> {
                       TextButton(
                           onPressed: () {
                             pushName(
-                                context,
-                                TrackListScreen(
-                                  heading: "Recently Played",
-                                  list: recentlyPlayed,
-                                  panelFunction: () {
-                                    // TODO: widget.panelFunction
-                                  },
-                                ));
+                              context,
+                              TrackListScreen(
+                                heading: "Recently Played",
+                                list: recentlyPlayed,
+                                panelFunction: () => _audioPanelManager.showPanel(false),
+                              ),
+                            );
                           },
                           child: Text(
                             "See all",
@@ -206,9 +208,7 @@ class _ForMeState extends State<ForMeScreen> {
                         tap: () {},
                         audiList: recentlyPlayed,
                         musicList: false,
-                        panelFunction: () {
-                          // TODO: widget.panelFunction
-                        },
+                        panelFunction: () => _audioPanelManager.showPanel(false),
                       ),
                     ),
             ],
@@ -289,9 +289,8 @@ class _ForMeState extends State<ForMeScreen> {
                                                 context,
                                                 PlayListScreen(
                                                   list: tracks,
-                                                  panelFunction: () {
-                                                    // TODO: widget.panelFunction
-                                                  },
+                                                  panelFunction: () =>
+                                                      _audioPanelManager.showPanel(false),
                                                   block: block,
                                                 ));
                                           } else {
@@ -300,9 +299,8 @@ class _ForMeState extends State<ForMeScreen> {
                                                 TrackListScreen(
                                                   heading: block.title,
                                                   list: tracks,
-                                                  panelFunction: () {
-                                                    // TODO: widget.panelFunction
-                                                  },
+                                                  panelFunction: () =>
+                                                      _audioPanelManager.showPanel(false),
                                                 ));
                                           }
                                         },
@@ -323,9 +321,8 @@ class _ForMeState extends State<ForMeScreen> {
                                       audiList: tracks,
                                       musicList:
                                           block.blockType == "series" ? true : false,
-                                      panelFunction: () {
-                                        // TODO: widget.panelFunction
-                                      },
+                                      panelFunction: () =>
+                                          _audioPanelManager.showPanel(false),
                                     )),
                           ],
                         );

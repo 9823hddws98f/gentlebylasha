@@ -1,11 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:sleeptales/constants/assets.dart';
-import 'package:sleeptales/utils/app_theme.dart';
 
+import '/constants/assets.dart';
+import '/domain/services/audio_panel_manager.dart';
 import '/page_manager.dart';
+import '/screens/home/widgets/audio_progress_bar_home.dart';
+import '/screens/home/widgets/current_song_title_small.dart';
+import '/screens/home/widgets/play_button_new.dart';
+import '/utils/app_theme.dart';
 import '/utils/get.dart';
-import 'home_screen.dart';
 
 class MusicPanelPreview extends StatelessWidget {
   MusicPanelPreview({super.key});
@@ -13,6 +16,7 @@ class MusicPanelPreview extends StatelessWidget {
   static const height = 78.0;
 
   final _pageManager = Get.the<PageManager>();
+  final _audioPanelManager = Get.the<AudioPanelManager>();
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +30,7 @@ class MusicPanelPreview extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             GestureDetector(
-              onTap: () => panelController.open(),
+              onTap: () => _audioPanelManager.panelController.open(),
               child: Row(
                 children: [
                   ValueListenableBuilder(
