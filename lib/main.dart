@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:audio_session/audio_session.dart';
 import 'package:device_preview/device_preview.dart';
@@ -106,13 +107,15 @@ class MyApp extends StatefulWidget {
 
   const MyApp({super.key, required this.isWaitingForAuth});
 
-  @override
-  State<MyApp> createState() => _MyAppState();
+  static final navigatorKey = GlobalKey<NavigatorState>();
 
   static void setLocale(BuildContext context, Locale newLocale) {
     _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
     state?.setLocale(newLocale);
   }
+
+  @override
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -133,38 +136,41 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) => BlocProvider.value(
         value: appBloc,
         child: BlocConsumer<AppBloc, AppState>(
-          listener: (context, state) {
-            if (state.status == AppStatus.loading) {
-              userBloc.add(
-                UserLoaded(
-                  state.user.toAppUser(),
-                  appBloc,
-                ),
-              );
-            } else if (state.status == AppStatus.authenticated &&
-                widget.isWaitingForAuth) {
-              FlutterNativeSplash.remove();
-            }
-          },
-          builder: (context, state) => !widget.isWaitingForAuth
-              ? MaterialApp(
-                  title: 'Gentle',
-                  debugShowCheckedModeBanner: false,
-                  locale: _locale,
-                  theme: AppTheme.buildTheme(dark: false),
-                  darkTheme: AppTheme.buildTheme(dark: true),
-                  localizationsDelegates: AppLocalizations.localizationsDelegates,
-                  supportedLocales: AppLocalizations.supportedLocales,
-                  initialRoute: widget.isWaitingForAuth
-                      ? HomeScreen.routeName
-                      : LoginScreen.routeName,
-                  routes: {
-                    LoginScreen.routeName: (_) => const LoginScreen(),
-                    HomeScreen.routeName: (_) => const HomeScreen(),
-                  },
-                )
-              : const SizedBox(child: CircularProgressIndicator()),
-        ),
+            listener: (context, state) {
+              if (state.status == AppStatus.loading) {
+                userBloc.add(
+                  UserLoaded(
+                    state.user.toAppUser(),
+                    appBloc,
+                  ),
+                );
+              } else if (state.status == AppStatus.authenticated &&
+                  widget.isWaitingForAuth) {
+                FlutterNativeSplash.remove();
+              }
+            },
+            builder: (context, state) => state.status == AppStatus.loading
+                ? const SizedBox(child: CircularProgressIndicator())
+                : MaterialApp(
+                    title: 'Gentle',
+                    debugShowCheckedModeBanner: false,
+                    locale: _locale,
+                    theme: AppTheme.buildTheme(dark: false),
+                    darkTheme: AppTheme.buildTheme(dark: true),
+                    scrollBehavior: const ScrollBehavior().copyWith(
+                      dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.touch},
+                    ),
+                    navigatorKey: MyApp.navigatorKey,
+                    localizationsDelegates: AppLocalizations.localizationsDelegates,
+                    supportedLocales: AppLocalizations.supportedLocales,
+                    initialRoute: widget.isWaitingForAuth
+                        ? HomeScreen.routeName
+                        : LoginScreen.routeName,
+                    routes: {
+                      LoginScreen.routeName: (_) => const LoginScreen(),
+                      HomeScreen.routeName: (_) => const HomeScreen(),
+                    },
+                  )),
       );
 }
 

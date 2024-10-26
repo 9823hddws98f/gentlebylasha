@@ -7,20 +7,20 @@ class AppValidators {
 
   static String? Function(String?) emailValidator(BuildContext context) => (value) {
         if (value?.isEmpty ?? true) {
-          return translation(context).enterEmail;
+          return translation().enterEmail;
         }
         if (!RegExp(_emailRegex).hasMatch(value!)) {
-          return translation(context).enterValidEmail;
+          return translation().enterValidEmail;
         }
         return null;
       };
 
   static String? Function(String?) passwordValidator(BuildContext context) => (value) {
         if (value?.isEmpty ?? true) {
-          return translation(context).enterPassword;
+          return translation().enterPassword;
         }
         if (value!.length < 6) {
-          return translation(context).passwordCaracterLimit;
+          return translation().passwordCaracterLimit;
         }
         return null;
       };

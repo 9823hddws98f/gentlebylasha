@@ -29,7 +29,7 @@ class _DeleteAccountScreen extends State<DeleteAccountScreen> {
                   child: Column(
                     children: [
                       TopBar(
-                          heading: translation(context).deleteAccount,
+                          heading: translation().deleteAccount,
                           onPress: () {
                             Navigator.pop(context);
                           }),
@@ -39,7 +39,7 @@ class _DeleteAccountScreen extends State<DeleteAccountScreen> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16),
                         child: Text(
-                          translation(context).deleteAccountMessage,
+                          translation().deleteAccountMessage,
                           textAlign: TextAlign.start,
                           style: TextStyle(fontSize: 18),
                         ),
@@ -47,7 +47,7 @@ class _DeleteAccountScreen extends State<DeleteAccountScreen> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16),
                         child: Text(
-                          translation(context).deleteAccountDescription,
+                          translation().deleteAccountDescription,
                           textAlign: TextAlign.start,
                           style: TextStyle(fontSize: 18),
                         ),
@@ -58,7 +58,7 @@ class _DeleteAccountScreen extends State<DeleteAccountScreen> {
                       Padding(
                         padding: EdgeInsets.all(16),
                         child: CustomButton(
-                            title: translation(context).deleteAccount,
+                            title: translation().deleteAccount,
                             onPress: () async {
                               showLoaderDialog(context, "Deleting account...");
                               bool check = await deleteUserAccount();

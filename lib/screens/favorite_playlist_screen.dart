@@ -167,7 +167,7 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     TopBar(
-                        heading: translation(context).favoritePlaylist,
+                        heading: translation().favoritePlaylist,
                         onPress: () {
                           Navigator.pop(context);
                         }),

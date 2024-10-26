@@ -19,6 +19,7 @@ import '../../page_manager.dart';
 import '../../utils/global_functions.dart';
 import '../music_player_screen.dart';
 import 'app_bottom_bar.dart';
+import 'app_side_bar.dart';
 import 'music_panel_preview.dart';
 
 PanelController panelController = PanelController();
@@ -33,13 +34,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
-  late final List<Widget> _navigationScreens = [
+  late final List<Widget> _mobileNavScreens = [
     ForMeScreen(showPanel, _scrollControllerHelper, openExploreTab),
     ExploreScreen(showPanel),
     ProfileSettingsScreen(showPanel),
   ];
 
-  late final _bottomSheetAnimationController = AnimationController(
+  late final List<Widget> _desktopNavScreens = [
+    ForMeScreen(showPanel, _scrollControllerHelper, openExploreTab),
+    ExploreScreen(showPanel),
+    ProfileSettingsScreen(showPanel),
+  ];
+
+  late final _audioPlayerAnimCtrl = AnimationController(
     duration: const Duration(milliseconds: 300),
     vsync: this,
   );
@@ -76,7 +83,6 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
   @override
   void initState() {
     super.initState();
-
     _navigatorKeys = List.generate(3, (_) => GlobalKey<NavigatorState>());
     getIt<PageManager>().init();
     getIt<PageManager>().currentMediaItemNotifier.value = MediaItem(id: "", title: "");
@@ -191,26 +197,43 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
       },
       child: AppScaffold(
         bodyPadding: EdgeInsets.zero,
-        body: Stack(
-          children: [
-            for (int i = 0; i < _navigationScreens.length; i++) _buildNavigationScreen(i),
-            _buildSlidingPanel(height, bottom),
-          ],
-        ),
-        bottomNavigationBar: AnimatedBuilder(
-          animation: _bottomSheetAnimationController,
-          builder: (context, child) => Transform.translate(
-            offset: Offset(
-              0,
-              _bottomSheetAnimationController.value * (AppBottomBar.height + bottom),
-            ),
-            child: child,
-          ),
-          child: AppBottomBar(onSelect: _selectScreen),
-        ),
+        body: (context, isMobile) =>
+            isMobile ? _buildMobile(height, bottom) : _buildDesktop(height, bottom),
       ),
     );
   }
+
+  Widget _buildMobile(double height, double bottom) => Stack(
+        children: [
+          for (int i = 0; i < _mobileNavScreens.length; i++) _buildNavigationScreen(i),
+          _buildSlidingPanel(height, bottom),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: AnimatedBuilder(
+              animation: _audioPlayerAnimCtrl,
+              builder: (context, child) => Transform.translate(
+                offset: Offset(
+                  0,
+                  _audioPlayerAnimCtrl.value * (AppBottomBar.height + bottom),
+                ),
+                child: child,
+              ),
+              child: AppBottomBar(onSelect: _selectScreen),
+            ),
+          )
+        ],
+      );
+
+  Widget _buildDesktop(double height, double bottom) => AppSideBar(
+        onSelect: _selectScreen,
+        child: Stack(
+          children: _desktopNavScreens
+              .asMap()
+              .entries
+              .map((x) => _buildNavigationScreen(x.key))
+              .toList(),
+        ),
+      );
 
   Widget _buildSlidingPanel(double height, double bottom) =>
       TweenAnimationBuilder<double>(
@@ -236,7 +259,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
             minHeight: bottom + AppBottomBar.height + 78,
             controller: panelController,
             onPanelSlide: (pos) {
-              _bottomSheetAnimationController.value = pos;
+              _audioPlayerAnimCtrl.value = pos;
               if (pos > 0.08) {
                 bottomSheetVisible.value = false;
               } else {
@@ -251,11 +274,11 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
                 ),
                 if (panelController.isAttached)
                   AnimatedBuilder(
-                    animation: _bottomSheetAnimationController,
+                    animation: _audioPlayerAnimCtrl,
                     builder: (context, child) => Opacity(
                       opacity: 1 -
                           CurvedAnimation(
-                                  parent: _bottomSheetAnimationController,
+                                  parent: _audioPlayerAnimCtrl,
                                   curve: Curves.fastEaseInToSlowEaseOut)
                               .value,
                       child: child!,
@@ -274,7 +297,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
         child: Navigator(
           key: _navigatorKeys[index],
           onGenerateRoute: (routeSettings) => MaterialPageRoute(
-            builder: (context) => _navigationScreens[index],
+            builder: (context) => _mobileNavScreens[index],
           ),
         ),
       );

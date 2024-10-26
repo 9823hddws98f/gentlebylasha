@@ -897,13 +897,13 @@ class _ForMeState extends State<ForMeScreen> {
 
   String _getGreeting(int hour) {
     if (hour >= 5 && hour < 12) {
-      return translation(context).goodMorning;
+      return translation().goodMorning;
     } else if (hour >= 12 && hour < 17) {
-      return translation(context).goodAfternoon;
+      return translation().goodAfternoon;
     } else if (hour >= 17 && hour < 21) {
-      return translation(context).goodEvening;
+      return translation().goodEvening;
     } else {
-      return translation(context).goodNight;
+      return translation().goodNight;
     }
   }
 

@@ -132,7 +132,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     TopBar(
-                        heading: translation(context).favoriteList,
+                        heading: translation().favoriteList,
                         onPress: () {
                           Navigator.pop(context);
                         }),

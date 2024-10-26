@@ -49,7 +49,7 @@ class _ChangeLanguageScreen extends State<ChangeLanguageScreen> {
                   child: Column(
                     children: [
                       TopBar(
-                          heading: translation(context).changeLanguage,
+                          heading: translation().changeLanguage,
                           onPress: () {
                             Navigator.pop(context);
                           }),

@@ -1,37 +1,31 @@
 import 'package:flutter/material.dart';
 
+import '/utils/common_extensions.dart';
+
 class AppScaffold extends StatelessWidget {
   const AppScaffold({
     super.key,
     this.appBar,
     required this.body,
     this.resizeToAvoidBottomInset,
-    this.bottomNavigationBar,
     this.bodyPadding = const EdgeInsets.fromLTRB(16, 0, 16, 0),
   });
 
-  final PreferredSizeWidget? appBar;
-  final Widget body;
+  final PreferredSizeWidget? Function(BuildContext context, bool isMobile)? appBar;
+  final Widget Function(BuildContext context, bool isMobile) body;
   final bool? resizeToAvoidBottomInset;
-  final Widget? bottomNavigationBar;
   final EdgeInsetsGeometry bodyPadding;
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: appBar,
-        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-        body: Stack(
-          children: [
-            Padding(
-              padding: bodyPadding,
-              child: body,
-            ),
-            if (bottomNavigationBar != null)
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: bottomNavigationBar!,
-              ),
-          ],
-        ),
-      );
+  Widget build(BuildContext context) {
+    final isMobile = context.isMobile;
+    return Scaffold(
+      appBar: appBar?.call(context, isMobile),
+      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+      body: Padding(
+        padding: bodyPadding,
+        child: body(context, isMobile),
+      ),
+    );
+  }
 }

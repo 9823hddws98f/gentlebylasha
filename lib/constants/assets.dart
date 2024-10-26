@@ -1,4 +1,6 @@
 class Assets {
+  static const String logo = 'assets/gentle_logo.svg';
+
   // General icons
   static const String articleIcon = 'assets/article_icon.svg';
   static const String homeIcon = 'assets/home_icon.svg';
@@ -37,6 +39,7 @@ class Assets {
   static const String backgroundImage = 'images/background_image.png';
   static const String imageBackground = 'images/image_background.png';
   static const String launchScreenBackground = 'images/launch_screen_background.jpg';
+  static const String loginDesktopBackground = 'images/login_desktop_background.png';
 
   // Miscellaneous images
   static const String placeholderImage = 'images/placeholder_image.jpg';

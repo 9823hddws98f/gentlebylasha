@@ -33,7 +33,7 @@ class _PasswordEditTextState extends State<PasswordEditText> {
         onSaved: widget.onSaved,
         onFieldSubmitted: widget.onFieldSubmitted,
         decoration: InputDecoration(
-          hintText: translation(context).password,
+          hintText: translation().password,
           suffixIcon: InkWell(
             onTap: () => setState(() => _obscureText = !_obscureText),
             child: Padding(

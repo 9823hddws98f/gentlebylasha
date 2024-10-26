@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'tx_color_extensions.dart';
 
 class AppTheme {
-  static const fontFamily = 'Poppins';
-  static const titleFont = 'Poppins';
+  static const fontFamily = 'Matter'; //'Poppins';
+  static const titleFont = 'Matter'; //'Poppins';
   static const smallBorderRadius = BorderRadius.all(Radius.circular(8));
   static const largeBorderRadius = BorderRadius.all(Radius.circular(30));
 
@@ -68,6 +68,12 @@ class AppTheme {
       textButtonTheme: TextButtonThemeData(style: buttonStyle),
       outlinedButtonTheme: OutlinedButtonThemeData(style: buttonStyle),
       elevatedButtonTheme: ElevatedButtonThemeData(style: buttonStyle),
+      textTheme: TextTheme(
+        headlineLarge: TextStyle(
+          fontSize: 48,
+          fontFamily: titleFont,
+        ),
+      ),
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
           borderRadius: smallBorderRadius,

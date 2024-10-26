@@ -1,20 +1,24 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:sleeptales/utils/command_trigger.dart';
+import 'package:flutter_svg/svg.dart';
 
+import '/constants/assets.dart';
+import '/constants/language_constants.dart';
 import '/domain/blocs/authentication/auth_repository.dart';
 import '/helper/validators.dart';
 import '/screens/auth/signup_sheet.dart';
-import '/screens/forgot_password_screen.dart';
+import '/screens/home/home_screen.dart';
+import '/utils/command_trigger.dart';
+import '/utils/common_extensions.dart';
 import '/utils/enums.dart';
 import '/utils/get.dart';
 import '/utils/global_functions.dart';
 import '/utils/modals.dart';
 import '/utils/tx_button.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
+import '/widgets/app_scaffold/custom_app_bar.dart';
 import '/widgets/input/password_edit_text.dart';
-import '../../constants/language_constants.dart';
-import '../home/home_screen.dart';
+import 'forgot_password_modal.dart';
 import 'onboarding_bottom_sheet.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -33,110 +37,162 @@ class LoginScreenState extends State<LoginScreen> {
   final _trigger = ActionTrigger();
   bool _dirty = false;
 
+  late final tr = translation();
+
   String? _email;
   String? _password;
 
   @override
   Widget build(BuildContext context) => AppScaffold(
-        body: SafeArea(
-          child: Form(
+        appBar: (context, isMobile) => isMobile
+            ? AdaptiveAppBar(
+                title: tr.login,
+                centerTitle: true,
+              )
+            : null,
+        bodyPadding: EdgeInsets.zero,
+        body: (context, isMobile) {
+          final theme = Theme.of(context);
+          return Form(
             key: _formKey,
             autovalidateMode:
                 _dirty ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
-            child: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Column(
+            child: isMobile
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: _buildContent(),
+                  )
+                : Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(
-                        translation(context).login,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(height: 24),
-                      TextFormField(
-                        validator: AppValidators.emailValidator(context),
-                        keyboardType: TextInputType.emailAddress,
-                        textInputAction: TextInputAction.next,
-                        decoration: InputDecoration(
-                          hintText: translation(context).email,
+                      Expanded(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          physics: const NeverScrollableScrollPhysics(),
+                          reverse: true,
+                          child: FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Container(
+                              padding: EdgeInsets.all(100),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                color: theme.colorScheme.surface,
+                              ),
+                              child: Image.asset(
+                                Assets.loginDesktopBackground,
+                              ),
+                            ),
+                          ),
                         ),
-                        onSaved: (value) => _email = value,
                       ),
-                      SizedBox(height: 8),
-                      PasswordEditText(
-                        onFieldSubmitted: (_) => _trigger.trigger(),
-                        onSaved: (value) => _password = value,
+                      Expanded(
+                        child: Center(
+                          child: Container(
+                            padding: const EdgeInsets.fromLTRB(32, 64, 32, 32),
+                            width: ResponsiveHelper.desktopContentWidth,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SvgPicture.asset(Assets.logo),
+                                SizedBox(height: 64),
+                                Text(
+                                  'Welcome back!\nLog in to your account',
+                                  style: theme.textTheme.headlineLarge,
+                                ),
+                                SizedBox(height: 32),
+                                Expanded(child: _buildContent()),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
-                      SizedBox(height: 16),
-                      Center(child: _buildForgotPasswordButton()),
-                      SizedBox(height: 24),
-                      TxButton.filled(
-                        onPressVoid: _loginWithEmail,
-                        showSuccess: false,
-                        trigger: _trigger,
-                        label: Text(translation(context).login),
-                      ),
-                      SizedBox(height: 24),
-                      Row(
-                        children: [
-                          Expanded(child: Divider()),
-                          SizedBox(width: 8),
-                          Text('Or'),
-                          SizedBox(width: 8),
-                          Expanded(child: Divider()),
-                        ],
-                      ),
-                      SizedBox(height: 24),
-                      _buildGoogleLoginButton(),
-                      SizedBox(height: 16),
-                      _buildAppleLoginButton(),
-                      SizedBox(height: 16),
                     ],
                   ),
-                ),
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Container(
-                    alignment: Alignment.bottomCenter,
-                    margin: EdgeInsets.only(bottom: 24),
-                    child: TxButton.text(
-                        label: Text(translation(context).signUp),
-                        showSuccess: false,
-                        onPressVoid: () => Modals.show(
-                              context,
-                              showDragHandle: true,
-                              useSafeArea: true,
-                              scrollable: true,
-                              initialSize: 0.9,
-                              builder: (context, controller) => SignupSheet(
-                                onSignup: _showNewUserSheet,
-                              ),
-                            )),
+          );
+        },
+      );
+
+  Widget _buildContent() => CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(height: 24),
+                TextFormField(
+                  validator: AppValidators.emailValidator(context),
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  decoration: InputDecoration(
+                    hintText: tr.email,
                   ),
+                  onSaved: (value) => _email = value,
                 ),
+                SizedBox(height: 8),
+                PasswordEditText(
+                  onFieldSubmitted: (_) => _trigger.trigger(),
+                  onSaved: (value) => _password = value,
+                ),
+                SizedBox(height: 16),
+                Center(child: _buildForgotPasswordButton()),
+                SizedBox(height: 24),
+                TxButton.filled(
+                  onPressVoid: _loginWithEmail,
+                  showSuccess: false,
+                  trigger: _trigger,
+                  label: Text(tr.login),
+                ),
+                SizedBox(height: 24),
+                Row(
+                  children: [
+                    Expanded(child: Divider()),
+                    SizedBox(width: 8),
+                    Text('Or'),
+                    SizedBox(width: 8),
+                    Expanded(child: Divider()),
+                  ],
+                ),
+                SizedBox(height: 24),
+                _buildGoogleLoginButton(),
+                SizedBox(height: 16),
+                _buildAppleLoginButton(),
+                SizedBox(height: 16),
               ],
             ),
           ),
-        ),
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: Container(
+              alignment: Alignment.bottomCenter,
+              margin: EdgeInsets.only(bottom: 24),
+              child: TxButton.text(
+                label: Text(tr.signUp),
+                showSuccess: false,
+                onPressVoid: () => Modals.show(
+                  context,
+                  showDragHandle: true,
+                  useSafeArea: true,
+                  scrollable: true,
+                  initialSize: 0.9,
+                  builder: (context, controller) => SignupSheet(
+                    onSignup: _showNewUserSheet,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       );
 
   // TODO: add forgot password
   Widget _buildForgotPasswordButton() => TextButton(
-        child: Text(translation(context).forgotYourPassword),
-        onPressed: () => showModalBottomSheet(
-          context: context,
-          showDragHandle: true,
-          isScrollControlled: true,
-          useSafeArea: true,
-          builder: (context) => ForgotPasswordModal(),
-        ),
+        child: Text(tr.forgotYourPassword),
+        onPressed: () => ForgotPasswordModal.show(context),
       );
 
   Widget _buildGoogleLoginButton() => TxButton.filled(
         color: RoleColor.mono,
-        label: Text(translation(context).continueWithGoogle),
+        label: Text(tr.continueWithGoogle),
         onPressVoid: () => _login(
           signIn: _auth.signInWithGoogle,
           authProvider: 'Google',
@@ -145,7 +201,7 @@ class LoginScreenState extends State<LoginScreen> {
 
   Widget _buildAppleLoginButton() => TxButton.filled(
         color: RoleColor.mono,
-        label: Text(translation(context).continueWithApple),
+        label: Text(tr.continueWithApple),
         onPress: () => _login(
           signIn: _auth.signInWithApple,
           authProvider: 'Apple',
@@ -178,7 +234,7 @@ class LoginScreenState extends State<LoginScreen> {
     if (!mounted) return success;
 
     if (userCredential == null) {
-      showToast('${translation(context).unableToAuth} $authProvider');
+      showToast('${tr.unableToAuth} $authProvider');
       return success;
     }
 

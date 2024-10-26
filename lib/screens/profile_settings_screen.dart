@@ -36,11 +36,11 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final tr = translation(context);
+    final tr = translation();
     final colors = Theme.of(context).colorScheme;
     return AppScaffold(
-      appBar: _buildAppBar(tr, colors),
-      body: SingleChildScrollView(
+      appBar: (context, isMobile) => _buildAppBar(tr, colors),
+      body: (context, isMobile) => SingleChildScrollView(
         padding: EdgeInsets.symmetric(vertical: 16) + EdgeInsets.only(bottom: 170),
         child: Column(
           children: [

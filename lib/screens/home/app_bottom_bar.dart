@@ -19,7 +19,7 @@ class _AppBottomBarState extends State<AppBottomBar> {
 
   @override
   Widget build(BuildContext context) {
-    final tr = translation(context);
+    final tr = translation();
     final bottom = MediaQuery.paddingOf(context).bottom;
     return SizedBox(
       height: AppBottomBar.height + bottom,

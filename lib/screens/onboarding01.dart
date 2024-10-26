@@ -43,7 +43,7 @@ class _OnBoarding01ScreenState extends State<OnBoarding01Screen> {
 
   @override
   Widget build(BuildContext context) {
-    final tr = translation(context);
+    final tr = translation();
     final colors = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.all(24),

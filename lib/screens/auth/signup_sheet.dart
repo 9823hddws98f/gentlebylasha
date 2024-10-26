@@ -29,7 +29,7 @@ class _SignupSheetState extends State<SignupSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final tr = translation(context);
+    final tr = translation();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Form(

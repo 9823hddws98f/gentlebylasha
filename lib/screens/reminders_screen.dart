@@ -29,7 +29,7 @@ class _RemindersScreen extends State<RemindersScreen> {
                   child: Column(
                     children: [
                       TopBar(
-                          heading: translation(context).reminders,
+                          heading: translation().reminders,
                           onPress: () {
                             Navigator.pop(context);
                           }),
@@ -38,7 +38,7 @@ class _RemindersScreen extends State<RemindersScreen> {
                       ),
                       ListTile(
                         leading: SvgPicture.asset(Assets.spaBlack),
-                        title: Text(translation(context).mindfulnessAndMeditation),
+                        title: Text(translation().mindfulnessAndMeditation),
                         trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
                         onTap: () {
                           pushName(
@@ -58,7 +58,7 @@ class _RemindersScreen extends State<RemindersScreen> {
                       ),
                       ListTile(
                         leading: Icon(Icons.alarm, color: Colors.white),
-                        title: Text(translation(context).bedtime),
+                        title: Text(translation().bedtime),
                         trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
                         onTap: () {
                           pushName(
@@ -78,7 +78,7 @@ class _RemindersScreen extends State<RemindersScreen> {
                       ),
                       ListTile(
                         leading: Icon(Icons.mood, color: Colors.white),
-                        title: Text(translation(context).moodCheckIn),
+                        title: Text(translation().moodCheckIn),
                         trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
                         onTap: () {
                           pushName(
@@ -97,7 +97,7 @@ class _RemindersScreen extends State<RemindersScreen> {
                       ),
                       ListTile(
                         leading: SvgPicture.asset(Assets.localFloristBlack),
-                        title: Text(translation(context).gratitudeCheckIn),
+                        title: Text(translation().gratitudeCheckIn),
                         trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
                         onTap: () {
                           pushName(
@@ -116,7 +116,7 @@ class _RemindersScreen extends State<RemindersScreen> {
                       ),
                       ListTile(
                         leading: SvgPicture.asset(Assets.menuBookBlack),
-                        title: Text(translation(context).dailyReflection),
+                        title: Text(translation().dailyReflection),
                         trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
                         onTap: () {
                           pushName(
@@ -134,7 +134,7 @@ class _RemindersScreen extends State<RemindersScreen> {
                       ),
                       ListTile(
                         leading: Icon(Icons.dark_mode, color: Colors.white),
-                        title: Text(translation(context).sleepCheckIn),
+                        title: Text(translation().sleepCheckIn),
                         trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
                         onTap: () {
                           pushName(

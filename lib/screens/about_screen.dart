@@ -29,7 +29,7 @@ class _AboutScreen extends State<AboutScreen> {
                   child: Column(
                     children: [
                       TopBar(
-                          heading: translation(context).about,
+                          heading: translation().about,
                           onPress: () {
                             Navigator.pop(context);
                           }),
@@ -42,7 +42,7 @@ class _AboutScreen extends State<AboutScreen> {
                           width: 20,
                           height: 20,
                         ),
-                        title: Text(translation(context).workWithUs),
+                        title: Text(translation().workWithUs),
                         onTap: () {},
                       ),
                       ListTile(
@@ -51,7 +51,7 @@ class _AboutScreen extends State<AboutScreen> {
                           width: 20,
                           height: 20,
                         ),
-                        title: Text(translation(context).termsOfService),
+                        title: Text(translation().termsOfService),
                         onTap: () {},
                       ),
                       ListTile(
@@ -60,7 +60,7 @@ class _AboutScreen extends State<AboutScreen> {
                           width: 20,
                           height: 20,
                         ),
-                        title: Text(translation(context).privacyPolicy),
+                        title: Text(translation().privacyPolicy),
                         onTap: () {},
                       ),
                     ],
