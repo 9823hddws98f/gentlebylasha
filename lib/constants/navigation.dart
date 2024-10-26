@@ -43,13 +43,13 @@ class AppNavigation {
     NavItem(
       index: 2,
       title: 'My Library',
-      icon: CarbonIcons.person,
+      icon: CarbonIcons.user_avatar,
       screen: const ExploreScreen(),
     ),
     NavItem(
       index: 3,
       title: 'More',
-      icon: CarbonIcons.person,
+      icon: CarbonIcons.user_avatar,
       screen: const ProfileSettingsScreen(),
     )
   ];
