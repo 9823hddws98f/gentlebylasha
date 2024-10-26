@@ -24,8 +24,7 @@ import '../constants/language_constants.dart';
 import 'edit_profile_screen.dart';
 
 class ProfileSettingsScreen extends StatefulWidget {
-  final Function panelFunction;
-  const ProfileSettingsScreen(this.panelFunction, {super.key});
+  const ProfileSettingsScreen({super.key});
 
   @override
   State<ProfileSettingsScreen> createState() => _ProfileSettingsScreenState();
@@ -50,7 +49,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               colors: colors,
               onTap: () => pushName(
                 context,
-                FavoritesScreen(panelFunction: widget.panelFunction),
+                FavoritesScreen(),
               ),
             ),
             _buildListTile(
@@ -59,7 +58,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               colors: colors,
               onTap: () => pushName(
                 context,
-                FavoritePlaylistScreen(panelFunction: widget.panelFunction),
+                FavoritePlaylistScreen(),
               ),
             ),
             _buildListTile(
@@ -74,12 +73,6 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               title: tr.changePassword,
               colors: colors,
               onTap: () => pushName(context, ChangePasswordScreen()),
-            ),
-            _buildListTile(
-              icon: Icons.punch_clock_rounded,
-              title: tr.reminders,
-              colors: colors,
-              onTap: () => pushName(context, RemindersScreen()),
             ),
             _buildListTile(
               icon: Icons.punch_clock_rounded,

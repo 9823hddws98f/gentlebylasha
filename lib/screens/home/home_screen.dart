@@ -5,19 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
+import '/constants/navigation.dart';
+import '/domain/blocs/user/app_user.dart';
+import '/domain/services/service_locator.dart';
 import '/helper/scrollcontroller_helper.dart';
-import '/screens/explore_screen.dart';
-import '/screens/forme_screen.dart';
-import '/screens/profile_settings_screen.dart';
+import '/notifiers/play_button_notifier.dart';
+import '/notifiers/progress_notifier.dart';
+import '/page_manager.dart';
+import '/screens/music_player_screen.dart';
 import '/utils/colors.dart';
+import '/utils/global_functions.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
-import '../../domain/blocs/user/app_user.dart';
-import '../../domain/services/service_locator.dart';
-import '../../notifiers/play_button_notifier.dart';
-import '../../notifiers/progress_notifier.dart';
-import '../../page_manager.dart';
-import '../../utils/global_functions.dart';
-import '../music_player_screen.dart';
 import 'app_bottom_bar.dart';
 import 'app_side_bar.dart';
 import 'music_panel_preview.dart';
@@ -34,28 +32,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
-  late final List<Widget> _mobileNavScreens = [
-    ForMeScreen(showPanel, _scrollControllerHelper, openExploreTab),
-    ExploreScreen(showPanel),
-    ProfileSettingsScreen(showPanel),
-  ];
-
-  late final List<Widget> _desktopNavScreens = [
-    ForMeScreen(showPanel, _scrollControllerHelper, openExploreTab),
-    ExploreScreen(showPanel),
-    ProfileSettingsScreen(showPanel),
-  ];
-
   late final _audioPlayerAnimCtrl = AnimationController(
-    duration: const Duration(milliseconds: 300),
+    duration: Durations.short4,
     vsync: this,
   );
 
   int _selectedIndex = 0;
+
   List<String> playlist = [];
   MediaItem? item;
   final ScrollControllerHelper _scrollControllerHelper = ScrollControllerHelper();
-  //PanelController _panelController = PanelController();
   ValueNotifier<bool> bottomSheetVisible = ValueNotifier<bool>(true);
   bool gestureCheck = false;
   double panelVisibility = 0;
@@ -64,16 +50,10 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
   final _panelKey = GlobalKey();
 
   void _selectScreen(int index) {
-    // TODO: INVERSTIGATE THIS THINGAMAJIGGERY
-    final NavigatorState currentNavigator = _navigatorKeys[_selectedIndex].currentState!;
-    if (currentNavigator.canPop()) {
-      currentNavigator.pop();
-      if (currentNavigator.canPop()) {
-        currentNavigator.pop();
-      }
-    }
     setState(() {
       if (_selectedIndex == index) {
+        final currentNavigator = _navigatorKeys[_selectedIndex].currentState!;
+        currentNavigator.popUntil((route) => route.isFirst);
         _scrollControllerHelper.scrollToTop();
       }
       _selectedIndex = index;
@@ -83,7 +63,8 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
   @override
   void initState() {
     super.initState();
-    _navigatorKeys = List.generate(3, (_) => GlobalKey<NavigatorState>());
+    _navigatorKeys = List.generate(
+        AppNavigation.desktopNavItems.length, (_) => GlobalKey<NavigatorState>());
     getIt<PageManager>().init();
     getIt<PageManager>().currentMediaItemNotifier.value = MediaItem(id: "", title: "");
     getIt<PageManager>().playlistNotifier.addListener(_onPlaylistChanged);
@@ -95,6 +76,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
     super.dispose();
     getIt<PageManager>().currentMediaItemNotifier.removeListener(_onMediaItemChanged);
     getIt<PageManager>().playlistNotifier.removeListener(_onPlaylistChanged);
+    // TODO:  _audioPlayerAnimCtrl.dispose();
   }
 
   void openExploreTab() {
@@ -205,7 +187,8 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
 
   Widget _buildMobile(double height, double bottom) => Stack(
         children: [
-          for (int i = 0; i < _mobileNavScreens.length; i++) _buildNavigationScreen(i),
+          for (final item in AppNavigation.mobileNavItems)
+            _buildNavigationScreen(item, item.index),
           _buildSlidingPanel(height, bottom),
           Align(
             alignment: Alignment.bottomCenter,
@@ -227,10 +210,8 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
   Widget _buildDesktop(double height, double bottom) => AppSideBar(
         onSelect: _selectScreen,
         child: Stack(
-          children: _desktopNavScreens
-              .asMap()
-              .entries
-              .map((x) => _buildNavigationScreen(x.key))
+          children: AppNavigation.desktopNavItems
+              .map((item) => _buildNavigationScreen(item, item.index))
               .toList(),
         ),
       );
@@ -292,12 +273,12 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
         ),
       );
 
-  Widget _buildNavigationScreen(int index) => Offstage(
+  Widget _buildNavigationScreen(NavItem item, int index) => Offstage(
         offstage: _selectedIndex != index,
         child: Navigator(
           key: _navigatorKeys[index],
           onGenerateRoute: (routeSettings) => MaterialPageRoute(
-            builder: (context) => _mobileNavScreens[index],
+            builder: (context) => item.screen!,
           ),
         ),
       );

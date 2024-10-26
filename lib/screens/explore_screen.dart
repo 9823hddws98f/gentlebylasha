@@ -14,9 +14,7 @@ import '../utils/global_functions.dart';
 import '../widgets/custom_tab_button.dart';
 
 class ExploreScreen extends StatefulWidget {
-  final Function panelFunction;
-
-  const ExploreScreen(this.panelFunction, {super.key});
+  const ExploreScreen({super.key});
   @override
   State<ExploreScreen> createState() => _ExploreScreenState();
 }
@@ -167,7 +165,7 @@ class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateM
                               speaker: track.speaker,
                               onPress: () {
                                 playTrack(track);
-                                widget.panelFunction(false);
+                                // TODO: widget.panelFunction(false);
                               },
                             );
                           }).toList(),
@@ -220,8 +218,9 @@ class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateM
                     children: List<Widget>.generate(
                       categories.length > 8 ? 8 : categories.length,
                       (int index) {
-                        return TabsSubCategoryScreen(
-                            categories[index], widget.panelFunction);
+                        return TabsSubCategoryScreen(categories[index], () {
+                          // TODO:      widget.panelFunction,
+                        });
                       },
                     ),
                   ),

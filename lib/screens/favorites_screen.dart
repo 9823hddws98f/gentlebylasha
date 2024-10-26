@@ -4,21 +4,20 @@ import 'package:audio_service/audio_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../constants/language_constants.dart';
 import '/utils/colors.dart';
 import '/utils/global_functions.dart';
 import '/widgets/custom_tab_button.dart';
 import '/widgets/track_list_item.dart';
-import '../domain/models/audiofile_model.dart';
+import '../constants/language_constants.dart';
 import '../domain/blocs/user/app_user.dart';
-import '../page_manager.dart';
+import '../domain/models/audiofile_model.dart';
 import '../domain/services/service_locator.dart';
+import '../page_manager.dart';
 import '../widgets/shimmerwidgets/shimmer_mp3_card_tracklist_item.dart';
 import '../widgets/topbar_widget.dart';
 
 class FavoritesScreen extends StatefulWidget {
-  final Function panelFunction;
-  const FavoritesScreen({super.key, required this.panelFunction});
+  const FavoritesScreen({super.key});
 
   @override
   State<FavoritesScreen> createState() => _FavoritesScreenState();
@@ -176,7 +175,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                         },
                                       ),
                                       favoriteList[index].trackId);
-                                  widget.panelFunction();
+                                  // TODO:     widget.panelFunction();
                                 },
                               );
                             }),

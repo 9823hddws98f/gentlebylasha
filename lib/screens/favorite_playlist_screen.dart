@@ -3,20 +3,19 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../constants/language_constants.dart';
 import '/screens/playlist_tracks_screen.dart';
 import '/utils/colors.dart';
 import '/utils/global_functions.dart';
 import '/widgets/custom_tab_button.dart';
 import '/widgets/playlist_item.dart';
 import '/widgets/shimmerwidgets/shimmer_playlist_item.dart';
+import '../constants/language_constants.dart';
 import '../domain/blocs/user/app_user.dart';
 import '../domain/models/block.dart';
 import '../widgets/topbar_widget.dart';
 
 class FavoritePlaylistScreen extends StatefulWidget {
-  final Function panelFunction;
-  const FavoritePlaylistScreen({super.key, required this.panelFunction});
+  const FavoritePlaylistScreen({super.key});
 
   @override
   State<FavoritePlaylistScreen> createState() => _FavoritePlaylistScreenState();
@@ -188,7 +187,6 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen> {
                                   pushName(
                                       context,
                                       PlayListTracksScreen(
-                                          panelFunction: widget.panelFunction,
                                           block: favoritePlaylist[index]));
                                 },
                                 favoriteTap: () {

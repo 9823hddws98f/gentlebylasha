@@ -13,7 +13,6 @@ import '../domain/blocs/user/app_user.dart';
 import '../domain/models/audiofile_model.dart';
 import '../domain/models/block.dart';
 import '../domain/models/category_block.dart';
-import '../helper/scrollcontroller_helper.dart';
 import '../widgets/custom_tab_button.dart';
 import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_height.dart';
 import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_small.dart';
@@ -21,11 +20,8 @@ import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_width.dart';
 import '../widgets/tracklist_horizontal_widget.dart';
 
 class ForMeScreen extends StatefulWidget {
-  final Function panelFunction;
-  final Function openExploreTab;
-  final ScrollControllerHelper scrollControllerHelper;
-  const ForMeScreen(this.panelFunction, this.scrollControllerHelper, this.openExploreTab,
-      {super.key});
+  const ForMeScreen({super.key});
+
   @override
   State<ForMeScreen> createState() => _ForMeState();
 }
@@ -73,7 +69,7 @@ class _ForMeState extends State<ForMeScreen> {
         ),
       ),
       child: SingleChildScrollView(
-        controller: widget.scrollControllerHelper.scrollController,
+        // TODO: controller: widget.scrollControllerHelper.scrollController,
         child: Column(
           children: [
             // Gif at the top with text overlay
@@ -148,7 +144,7 @@ class _ForMeState extends State<ForMeScreen> {
                       child: CustomTabButton(
                         title: categoryBlocks[index].name,
                         onPress: () {
-                          widget.openExploreTab();
+                          // TODO:    widget.openExploreTab();
                           indexNotifier.value = index;
                           indexNotifier.notifyListeners();
                         },
@@ -191,7 +187,9 @@ class _ForMeState extends State<ForMeScreen> {
                                 TrackListScreen(
                                   heading: "Recently Played",
                                   list: recentlyPlayed,
-                                  panelFunction: widget.panelFunction,
+                                  panelFunction: () {
+                                    // TODO: widget.panelFunction
+                                  },
                                 ));
                           },
                           child: Text(
@@ -208,7 +206,9 @@ class _ForMeState extends State<ForMeScreen> {
                         tap: () {},
                         audiList: recentlyPlayed,
                         musicList: false,
-                        panelFunction: widget.panelFunction,
+                        panelFunction: () {
+                          // TODO: widget.panelFunction
+                        },
                       ),
                     ),
             ],
@@ -289,7 +289,9 @@ class _ForMeState extends State<ForMeScreen> {
                                                 context,
                                                 PlayListScreen(
                                                   list: tracks,
-                                                  panelFunction: widget.panelFunction,
+                                                  panelFunction: () {
+                                                    // TODO: widget.panelFunction
+                                                  },
                                                   block: block,
                                                 ));
                                           } else {
@@ -298,7 +300,9 @@ class _ForMeState extends State<ForMeScreen> {
                                                 TrackListScreen(
                                                   heading: block.title,
                                                   list: tracks,
-                                                  panelFunction: widget.panelFunction,
+                                                  panelFunction: () {
+                                                    // TODO: widget.panelFunction
+                                                  },
                                                 ));
                                           }
                                         },
@@ -319,7 +323,9 @@ class _ForMeState extends State<ForMeScreen> {
                                       audiList: tracks,
                                       musicList:
                                           block.blockType == "series" ? true : false,
-                                      panelFunction: widget.panelFunction,
+                                      panelFunction: () {
+                                        // TODO: widget.panelFunction
+                                      },
                                     )),
                           ],
                         );

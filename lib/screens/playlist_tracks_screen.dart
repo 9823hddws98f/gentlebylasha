@@ -21,11 +21,9 @@ import '../widgets/shimmerwidgets/shimmer_series_track_widget.dart';
 
 class PlayListTracksScreen extends StatefulWidget {
   final Block block;
-  final Function panelFunction;
 
   const PlayListTracksScreen({
     super.key,
-    required this.panelFunction,
     required this.block,
   });
 
@@ -390,15 +388,15 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                     onPress: () {
                       if (currentPlaylistIsPlaying && playing) {
                         getIt<PageManager>().pause();
-                        widget.panelFunction(true);
+                        // TODO:    widget.panelFunction(true);
                       } else if (currentPlaylistIsPlaying && !playing) {
                         getIt<PageManager>().loadPlaylist(tracksList, 0);
                         getIt<PageManager>().play();
-                        widget.panelFunction(true);
+                        // TODO:     widget.panelFunction(true);
                       } else {
                         getIt<PageManager>().loadPlaylist(tracksList, 0);
                         getIt<PageManager>().play();
-                        widget.panelFunction(false);
+                        // TODO:     widget.panelFunction(false);
                       }
                     },
                     color: tracksList.isEmpty ? Colors.grey : Colors.white,
@@ -436,7 +434,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                                   audioTrack: tracksList[index],
                                   tap: () {
                                     getIt<PageManager>().loadPlaylist(tracksList, index);
-                                    widget.panelFunction(false);
+                                    // TODO:    widget.panelFunction(false);
                                   },
                                   onTapPlayPause: () {
                                     if (currentPlaylistIsPlaying &&
@@ -448,7 +446,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                                       getIt<PageManager>()
                                           .loadPlaylist(tracksList, index);
                                       getIt<PageManager>().play();
-                                      widget.panelFunction(true);
+                                      // TODO:    widget.panelFunction(true);
                                     }
                                   },
                                   favoriteTap: () {
@@ -471,7 +469,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                                   audioTrack: tracksList[index],
                                   tap: () {
                                     getIt<PageManager>().loadPlaylist(tracksList, index);
-                                    widget.panelFunction(false);
+                                    // TODO:      widget.panelFunction(false);
                                   },
                                   favoriteTap: () async {
                                     if (isTrackFavorited(tracksList[index].trackId)) {
