@@ -30,6 +30,7 @@ class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+    return Placeholder();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(

@@ -5,6 +5,9 @@ import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sleeptales/constants/assets.dart';
+import 'package:sleeptales/constants/navigation.dart';
+import 'package:sleeptales/domain/blocs/authentication/auth_repository.dart';
+import 'package:sleeptales/utils/get.dart';
 
 class AppSideBar extends StatefulWidget {
   const AppSideBar({super.key, required this.onSelect, required this.child});
@@ -17,19 +20,6 @@ class AppSideBar extends StatefulWidget {
 }
 
 class _AppSideBarState extends State<AppSideBar> {
-  static const _mainItems = [
-    {'icon': CarbonIcons.home, 'title': 'Home'},
-    {'icon': CarbonIcons.search, 'title': 'Explore'},
-    {'icon': CarbonIcons.user_avatar, 'title': 'My Library'},
-    {'icon': CarbonIcons.timer, 'title': 'Meditation'},
-  ];
-
-  static const _secondaryItems = [
-    {'icon': CarbonIcons.user_avatar, 'title': 'More'},
-    {'icon': CarbonIcons.help, 'title': 'Customer Support'},
-    {'icon': CarbonIcons.logout, 'title': 'Logout'},
-  ];
-
   static const _duration = Durations.medium4;
 
   bool _isExpanded = true;
@@ -53,7 +43,7 @@ class _AppSideBarState extends State<AppSideBar> {
               curve: Easing.standard,
               builder: (context, animation, child) => Container(
                 color: theme.colorScheme.surface,
-                width: lerpDouble(70, 240, animation),
+                width: lerpDouble(66, 240, animation),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -64,46 +54,45 @@ class _AppSideBarState extends State<AppSideBar> {
                     ),
                     SizedBox(height: 24),
                     Divider(),
-                    SizedBox(height: 16),
+                    SizedBox(height: 8),
                     Padding(
                       padding: EdgeInsetsTween(
                         begin: const EdgeInsets.symmetric(horizontal: 8),
                         end: const EdgeInsets.symmetric(horizontal: 15),
                       ).transform(animation),
                       child: Column(
-                        children: List.generate(
-                          _mainItems.length,
-                          (index) => _buildButton(
-                            index,
-                            label: _mainItems[index]['title'] as String,
-                            icon: _mainItems[index]['icon'] as IconData,
-                            selected: _selectedIndex == index,
-                            colorScheme: theme.colorScheme,
-                            animation: animation,
-                            onPressed: () => _select(index),
-                          ),
-                        ),
+                        children: AppNavigation.desktopNavItems
+                            .take(4)
+                            .map(
+                              (item) => _buildButton(
+                                item.index,
+                                label: item.title,
+                                icon: item.icon,
+                                selected: _selectedIndex == item.index,
+                                colorScheme: theme.colorScheme,
+                                animation: animation,
+                                onPressed: () => _select(item.index),
+                              ),
+                            )
+                            .toList(),
                       ),
                     ),
+                    SizedBox(height: 8),
                     Divider(),
+                    SizedBox(height: 8),
                     Padding(
                       padding: EdgeInsetsTween(
                         begin: const EdgeInsets.symmetric(horizontal: 8),
                         end: const EdgeInsets.symmetric(horizontal: 15),
                       ).transform(animation),
-                      child: Column(
-                        children: List.generate(
-                          _secondaryItems.length,
-                          (index) => _buildButton(
-                            index,
-                            label: _secondaryItems[index]['title'] as String,
-                            icon: _secondaryItems[index]['icon'] as IconData,
-                            selected: _mainItems.length + index == _selectedIndex,
-                            colorScheme: theme.colorScheme,
-                            animation: animation,
-                            onPressed: () => _select(_mainItems.length + index),
-                          ),
-                        ),
+                      child: _buildButton(
+                        -1,
+                        label: 'Logout',
+                        icon: CarbonIcons.logout,
+                        selected: false,
+                        colorScheme: theme.colorScheme,
+                        animation: animation,
+                        onPressed: () => Get.the<AuthRepository>().logOut(),
                       ),
                     ),
                   ],
@@ -149,8 +138,8 @@ class _AppSideBarState extends State<AppSideBar> {
     required void Function() onPressed,
   }) =>
       Container(
-        height: 60,
-        margin: const EdgeInsets.only(bottom: 16),
+        height: 56,
+        margin: const EdgeInsets.symmetric(vertical: 4),
         child: FilledButton(
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(

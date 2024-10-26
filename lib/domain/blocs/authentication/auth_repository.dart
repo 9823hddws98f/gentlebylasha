@@ -1,8 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:sleeptales/main.dart';
+import 'package:sleeptales/screens/auth/login_screen.dart';
+import 'package:sleeptales/utils/modals.dart';
 
 import '/domain/blocs/authentication/appuser_model.dart';
 import '/domain/blocs/user/app_user.dart';
@@ -32,7 +36,19 @@ class AuthRepository {
     );
   }
 
-  Future<void> logOut() => _firebaseAuth!.signOut();
+  Future<void> logOut() async {
+    final confirmed = await Modals.confirm(
+      MyApp.navigatorKey.currentState!.context,
+      text: 'Logout',
+      content: const Text('Are you sure you want to logout?'),
+    );
+    if (confirmed != true) return;
+    await _firebaseAuth!.signOut();
+    MyApp.navigatorKey.currentState!.pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+      (route) => false,
+    );
+  }
 
   Future<UserCredential?> signInWithEmail(String email, String password) async {
     try {

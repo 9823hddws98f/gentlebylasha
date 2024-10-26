@@ -1,3 +1,4 @@
+import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 
 import '/screens/explore_screen.dart';
@@ -6,17 +7,51 @@ import '/screens/profile_settings_screen.dart';
 
 class AppNavigation {
   static const mobileNavItems = [
-    NavItem(index: 0, title: 'For Me', icon: Icons.person, screen: ForMeScreen()),
-    NavItem(index: 1, title: 'Explore', icon: Icons.explore, screen: ExploreScreen()),
     NavItem(
-        index: 2, title: 'Profile', icon: Icons.person, screen: ProfileSettingsScreen()),
+      index: 0,
+      title: 'Home',
+      icon: CarbonIcons.home,
+      screen: ForMeScreen(),
+    ),
+    NavItem(
+      index: 1,
+      title: 'Explore',
+      icon: CarbonIcons.search,
+      screen: ExploreScreen(),
+    ),
+    NavItem(
+      index: 2,
+      title: 'Profile',
+      icon: CarbonIcons.user_avatar,
+      screen: ProfileSettingsScreen(),
+    ),
   ];
 
-  static const desktopNavItems = [
-    NavItem(index: 0, title: 'Home', icon: Icons.home, screen: ForMeScreen()),
-    NavItem(index: 1, title: 'Explore', icon: Icons.explore, screen: ExploreScreen()),
-    NavItem(index: 2, title: 'My Library', icon: Icons.person, screen: ExploreScreen()),
-    NavItem(index: 3, title: 'More', icon: Icons.person, screen: ProfileSettingsScreen()),
+  static final desktopNavItems = [
+    NavItem(
+      index: 0,
+      title: 'Home',
+      icon: CarbonIcons.home,
+      screen: const ForMeScreen(),
+    ),
+    NavItem(
+      index: 1,
+      title: 'Explore',
+      icon: CarbonIcons.search,
+      screen: const ExploreScreen(),
+    ),
+    NavItem(
+      index: 2,
+      title: 'My Library',
+      icon: CarbonIcons.person,
+      screen: const ExploreScreen(),
+    ),
+    NavItem(
+      index: 3,
+      title: 'More',
+      icon: CarbonIcons.person,
+      screen: const ProfileSettingsScreen(),
+    )
   ];
 }
 

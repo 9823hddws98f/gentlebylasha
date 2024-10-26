@@ -15,17 +15,17 @@ class Modals {
       await showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('დაადასტურეთ'),
-          content: content ?? Text(text ?? 'გსურთ დაადასტუროთ მოქმედება?'),
+          title: const Text('Confirm'),
+          content: content ?? Text(text ?? 'Are you sure you want to confirm?'),
           actions: [
             TxButton.text(
-              label: const Text('არა'),
+              label: const Text('No'),
               color: RoleColor.secondary,
               showSuccess: false,
               onPressVoid: () => Navigator.pop(context, false),
             ),
             TxButton.text(
-              label: const Text('დიახ'),
+              label: const Text('Yes'),
               showSuccess: false,
               onPressVoid: () => Navigator.pop(context, true),
             ),
@@ -35,12 +35,12 @@ class Modals {
 
   static Future<bool> confirmPop(BuildContext context) => confirm(
         context,
-        text: 'ცვლილებები არ არის შენახული. ნამდვილად გსურთ გამოსვლა?',
+        text: 'Changes are not saved. Are you sure you want to leave?',
       );
 
   static Future<bool> confirmDelete(BuildContext context) => confirm(
         context,
-        text: 'ნამდვილად გსურთ ჩანაწერის წაშლა?',
+        text: 'Are you sure you want to delete this item?',
       );
 
   static Future<void> pickDateRange(
@@ -71,7 +71,7 @@ class Modals {
                   height: 60,
                   child: TxButton.text(
                     icon: Icons.clear,
-                    label: const Text('გასუფთავება'),
+                    label: const Text('Clear'),
                     color: RoleColor.secondary,
                     onPressVoid: () => onChange(null),
                     onSuccess: () {

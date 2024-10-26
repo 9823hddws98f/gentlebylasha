@@ -1,7 +1,5 @@
-import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
-
-import '/constants/language_constants.dart';
+import 'package:sleeptales/constants/navigation.dart';
 
 class AppBottomBar extends StatefulWidget {
   const AppBottomBar({super.key, required this.onSelect});
@@ -18,40 +16,28 @@ class _AppBottomBarState extends State<AppBottomBar> {
   int _selectedIndex = 0;
 
   @override
-  Widget build(BuildContext context) {
-    final tr = translation();
-    final bottom = MediaQuery.paddingOf(context).bottom;
-    return SizedBox(
-      height: AppBottomBar.height + bottom,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(color: Theme.of(context).colorScheme.outline, width: 1),
+  Widget build(BuildContext context) => SizedBox(
+        height: AppBottomBar.height + MediaQuery.paddingOf(context).bottom,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(color: Theme.of(context).colorScheme.outline, width: 1),
+            ),
+          ),
+          position: DecorationPosition.foreground,
+          child: BottomNavigationBar(
+            currentIndex: _selectedIndex,
+            items: AppNavigation.mobileNavItems
+                .map((e) => BottomNavigationBarItem(
+                      icon: Icon(e.icon),
+                      label: e.title,
+                    ))
+                .toList(),
+            onTap: (index) {
+              setState(() => _selectedIndex = index);
+              widget.onSelect(index);
+            },
           ),
         ),
-        position: DecorationPosition.foreground,
-        child: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          items: [
-            BottomNavigationBarItem(
-              icon: const Icon(CarbonIcons.home),
-              label: tr.home,
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(CarbonIcons.search),
-              label: tr.explore,
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(CarbonIcons.user_avatar),
-              label: tr.profile,
-            ),
-          ],
-          onTap: (index) {
-            setState(() => _selectedIndex = index);
-            widget.onSelect(index);
-          },
-        ),
-      ),
-    );
-  }
+      );
 }
