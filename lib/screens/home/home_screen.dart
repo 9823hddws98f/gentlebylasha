@@ -3,6 +3,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
 import '/constants/navigation.dart';
@@ -32,12 +33,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+  final _navigationCubit = NavigationCubit();
+
+  final _allNavItems = AppNavigation.allNavItems;
+
   late final _audioPlayerAnimCtrl = AnimationController(
     duration: Durations.short4,
     vsync: this,
   );
-
-  int _selectedIndex = 0;
 
   List<String> playlist = [];
   MediaItem? item;
@@ -45,26 +48,12 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
   ValueNotifier<bool> bottomSheetVisible = ValueNotifier<bool>(true);
   bool gestureCheck = false;
   double panelVisibility = 0;
-  late List<GlobalKey<NavigatorState>> _navigatorKeys;
 
   final _panelKey = GlobalKey();
-
-  void _selectScreen(int index) {
-    setState(() {
-      if (_selectedIndex == index) {
-        final currentNavigator = _navigatorKeys[_selectedIndex].currentState!;
-        currentNavigator.popUntil((route) => route.isFirst);
-        _scrollControllerHelper.scrollToTop();
-      }
-      _selectedIndex = index;
-    });
-  }
 
   @override
   void initState() {
     super.initState();
-    _navigatorKeys = List.generate(
-        AppNavigation.desktopNavItems.length, (_) => GlobalKey<NavigatorState>());
     getIt<PageManager>().init();
     getIt<PageManager>().currentMediaItemNotifier.value = MediaItem(id: "", title: "");
     getIt<PageManager>().playlistNotifier.addListener(_onPlaylistChanged);
@@ -77,11 +66,6 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
     getIt<PageManager>().currentMediaItemNotifier.removeListener(_onMediaItemChanged);
     getIt<PageManager>().playlistNotifier.removeListener(_onPlaylistChanged);
     // TODO:  _audioPlayerAnimCtrl.dispose();
-  }
-
-  void openExploreTab() {
-    _selectScreen(1);
-    setState(() {});
   }
 
   void showPanel(bool dontShowPanel) {
@@ -159,28 +143,31 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
   Widget build(BuildContext context) {
     final height = MediaQuery.sizeOf(context).height;
     final bottom = MediaQuery.paddingOf(context).bottom;
-    return WillPopScope(
-      onWillPop: () async {
-        // TODO: FIX
-        final NavigatorState currentNavigator =
-            _navigatorKeys[_selectedIndex].currentState!;
-        if (currentNavigator.canPop()) {
-          currentNavigator.pop();
-          return false;
-        } else {
-          if (panelController.isAttached) {
-            if (panelController.isPanelOpen) {
-              panelController.close();
-              return false;
-            }
-          }
-        }
-        return true;
-      },
-      child: AppScaffold(
-        bodyPadding: EdgeInsets.zero,
-        body: (context, isMobile) =>
-            isMobile ? _buildMobile(height, bottom) : _buildDesktop(height, bottom),
+    return BlocProvider.value(
+      value: _navigationCubit,
+      child: WillPopScope(
+        onWillPop: () async {
+          // TODO: FIX
+          // final currentNavigator =
+          //     AppNavigation.allNavItems[_navigationCubit.state.index].navigatorKey.currentState!;
+          // if (currentNavigator.canPop()) {
+          //   currentNavigator.pop();
+          //   return false;
+          // } else {
+          //   if (panelController.isAttached) {
+          //     if (panelController.isPanelOpen) {
+          //       panelController.close();
+          //       return false;
+          //     }
+          //   }
+          // }
+          return true;
+        },
+        child: AppScaffold(
+          bodyPadding: EdgeInsets.zero,
+          body: (context, isMobile) =>
+              isMobile ? _buildMobile(height, bottom) : _buildDesktop(height, bottom),
+        ),
       ),
     );
   }
@@ -188,7 +175,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
   Widget _buildMobile(double height, double bottom) => Stack(
         children: [
           for (final item in AppNavigation.mobileNavItems)
-            _buildNavigationScreen(item, item.index),
+            _buildNavigationScreen(item, true),
           _buildSlidingPanel(height, bottom),
           Align(
             alignment: Alignment.bottomCenter,
@@ -201,20 +188,49 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
                 ),
                 child: child,
               ),
-              child: AppBottomBar(onSelect: _selectScreen),
+              child: AppBottomBar(),
             ),
           )
         ],
       );
 
   Widget _buildDesktop(double height, double bottom) => AppSideBar(
-        onSelect: _selectScreen,
         child: Stack(
           children: AppNavigation.desktopNavItems
-              .map((item) => _buildNavigationScreen(item, item.index))
+              .map((item) => _buildNavigationScreen(item, false))
               .toList(),
         ),
       );
+
+  Widget _buildNavigationScreen(NavItem item, bool isMobile) {
+    return BlocBuilder<NavigationCubit, NavItem>(
+      builder: (context, state) {
+        // HACK
+        _handleBadRoute(isMobile, state, context);
+        return Offstage(
+          offstage: state.index != item.index,
+          child: Navigator(
+            key: item.navigatorKey,
+            onGenerateRoute: (routeSettings) => MaterialPageRoute(
+              builder: (context) => item.screen!,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _handleBadRoute(bool isMobile, NavItem state, BuildContext context) {
+    if (isMobile && AppNavigation.mobileNavItems.contains(_allNavItems[state.index])) {
+      return;
+    } else if (!isMobile &&
+        AppNavigation.desktopNavItems.contains(_allNavItems[state.index])) {
+      return;
+    }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context.read<NavigationCubit>().select(_allNavItems[0]);
+    });
+  }
 
   Widget _buildSlidingPanel(double height, double bottom) =>
       TweenAnimationBuilder<double>(
@@ -273,16 +289,6 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
         ),
       );
 
-  Widget _buildNavigationScreen(NavItem item, int index) => Offstage(
-        offstage: _selectedIndex != index,
-        child: Navigator(
-          key: _navigatorKeys[index],
-          onGenerateRoute: (routeSettings) => MaterialPageRoute(
-            builder: (context) => item.screen!,
-          ),
-        ),
-      );
-
   void initDeepLinking() async {
     // Platform messages are asynchronous, so we initialize in an async method.
     try {
@@ -311,30 +317,25 @@ class PlayButtonNew extends StatelessWidget {
     final pageManager = getIt<PageManager>();
     return ValueListenableBuilder<ButtonState>(
       valueListenable: pageManager.playButtonNotifier,
-      builder: (_, value, __) {
-        switch (value) {
-          case ButtonState.loading:
-            return Container(
-              margin: EdgeInsets.all(8),
-              height: 24,
-              width: 24,
-              child: const CircularProgressIndicator(
-                color: Colors.white,
-              ),
-            );
-          case ButtonState.paused:
-            return IconButton(
-              icon: const Icon(Icons.play_arrow),
-              iconSize: 24,
-              onPressed: pageManager.play,
-            );
-          case ButtonState.playing:
-            return IconButton(
-              icon: const Icon(Icons.pause),
-              iconSize: 24,
-              onPressed: pageManager.pause,
-            );
-        }
+      builder: (_, value, __) => switch (value) {
+        ButtonState.loading => Container(
+            margin: EdgeInsets.all(8),
+            height: 24,
+            width: 24,
+            child: const CircularProgressIndicator(
+              color: Colors.white,
+            ),
+          ),
+        ButtonState.paused => IconButton(
+            icon: const Icon(Icons.play_arrow),
+            iconSize: 24,
+            onPressed: pageManager.play,
+          ),
+        ButtonState.playing => IconButton(
+            icon: const Icon(Icons.pause),
+            iconSize: 24,
+            onPressed: pageManager.pause,
+          )
       },
     );
   }

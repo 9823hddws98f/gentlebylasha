@@ -916,10 +916,10 @@ class _ForMeState extends State<ForMeScreen> {
   void setFirstName() async {
     AppUser user = await getUser();
     String? fullName = user.name;
-    valueNotifierName.value = fullName!;
-    List<String> words = fullName.split(' ');
+    // valueNotifierName.value = fullName!;
+    // List<String> words = fullName.split(' ');
     setState(() {
-      nickName = words.first;
+      // nickName = words.first;
     });
   }
 

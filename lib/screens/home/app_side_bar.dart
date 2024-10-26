@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sleeptales/constants/assets.dart';
 import 'package:sleeptales/constants/navigation.dart';
@@ -10,9 +11,8 @@ import 'package:sleeptales/domain/blocs/authentication/auth_repository.dart';
 import 'package:sleeptales/utils/get.dart';
 
 class AppSideBar extends StatefulWidget {
-  const AppSideBar({super.key, required this.onSelect, required this.child});
+  const AppSideBar({super.key, required this.child});
 
-  final void Function(int) onSelect;
   final Widget child;
 
   @override
@@ -23,11 +23,9 @@ class _AppSideBarState extends State<AppSideBar> {
   static const _duration = Durations.medium4;
 
   bool _isExpanded = true;
-  int _selectedIndex = 0;
 
-  void _select(int index) {
-    setState(() => _selectedIndex = index);
-    widget.onSelect(index);
+  void _select(NavItem item) {
+    context.read<NavigationCubit>().select(item);
   }
 
   @override
@@ -55,26 +53,27 @@ class _AppSideBarState extends State<AppSideBar> {
                     SizedBox(height: 24),
                     Divider(),
                     SizedBox(height: 8),
-                    Padding(
-                      padding: EdgeInsetsTween(
-                        begin: const EdgeInsets.symmetric(horizontal: 8),
-                        end: const EdgeInsets.symmetric(horizontal: 15),
-                      ).transform(animation),
-                      child: Column(
-                        children: AppNavigation.desktopNavItems
-                            .take(4)
-                            .map(
-                              (item) => _buildButton(
-                                item.index,
-                                label: item.title,
-                                icon: item.icon,
-                                selected: _selectedIndex == item.index,
-                                colorScheme: theme.colorScheme,
-                                animation: animation,
-                                onPressed: () => _select(item.index),
-                              ),
-                            )
-                            .toList(),
+                    BlocBuilder<NavigationCubit, NavItem>(
+                      builder: (context, state) => Padding(
+                        padding: EdgeInsetsTween(
+                          begin: const EdgeInsets.symmetric(horizontal: 8),
+                          end: const EdgeInsets.symmetric(horizontal: 15),
+                        ).transform(animation),
+                        child: Column(
+                          children: AppNavigation.desktopNavItems
+                              .map(
+                                (item) => _buildButton(
+                                  item.index,
+                                  label: item.title,
+                                  icon: item.icon,
+                                  selected: state.index == item.index,
+                                  colorScheme: theme.colorScheme,
+                                  animation: animation,
+                                  onPressed: () => _select(item),
+                                ),
+                              )
+                              .toList(),
+                        ),
                       ),
                     ),
                     SizedBox(height: 8),

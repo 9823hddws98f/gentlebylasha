@@ -1,20 +1,21 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:sleeptales/constants/navigation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sleeptales/utils/common_extensions.dart';
+
+import '/constants/navigation.dart';
 
 class AppBottomBar extends StatefulWidget {
-  const AppBottomBar({super.key, required this.onSelect});
+  const AppBottomBar({super.key});
 
   static const height = 53.0;
-
-  final Function(int) onSelect;
 
   @override
   State<AppBottomBar> createState() => _AppBottomBarState();
 }
 
 class _AppBottomBarState extends State<AppBottomBar> {
-  int _selectedIndex = 0;
-
   @override
   Widget build(BuildContext context) => SizedBox(
         height: AppBottomBar.height + MediaQuery.paddingOf(context).bottom,
@@ -25,18 +26,23 @@ class _AppBottomBarState extends State<AppBottomBar> {
             ),
           ),
           position: DecorationPosition.foreground,
-          child: BottomNavigationBar(
-            currentIndex: _selectedIndex,
-            items: AppNavigation.mobileNavItems
-                .map((e) => BottomNavigationBarItem(
-                      icon: Icon(e.icon),
-                      label: e.title,
-                    ))
-                .toList(),
-            onTap: (index) {
-              setState(() => _selectedIndex = index);
-              widget.onSelect(index);
-            },
+          child: BlocBuilder<NavigationCubit, NavItem>(
+            builder: (context, state) => BottomNavigationBar(
+              currentIndex: min(AppNavigation.mobileNavItems.length - 1, state.index),
+              items: AppNavigation.mobileNavItems
+                  .map((e) => BottomNavigationBarItem(
+                        icon: Icon(e.icon),
+                        label: e.title,
+                      ))
+                  .toList(),
+              onTap: (index) {
+                context.read<NavigationCubit>().select(
+                      context.isMobile
+                          ? AppNavigation.mobileNavItems[index]
+                          : AppNavigation.desktopNavItems[index],
+                    );
+              },
+            ),
           ),
         ),
       );
