@@ -8,6 +8,8 @@ class AppTheme {
   static const smallBorderRadius = BorderRadius.all(Radius.circular(8));
   static const largeBorderRadius = BorderRadius.all(Radius.circular(30));
 
+  static const sidePadding = 16.0;
+
   static const lightColors = ColorScheme(
     brightness: Brightness.light,
     primary: Color(0xFF1B84FF),

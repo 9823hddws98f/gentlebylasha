@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sleeptales/utils/app_theme.dart';
 
 import '/utils/common_extensions.dart';
 
@@ -8,7 +9,7 @@ class AppScaffold extends StatelessWidget {
     this.appBar,
     required this.body,
     this.resizeToAvoidBottomInset,
-    this.bodyPadding = const EdgeInsets.fromLTRB(16, 0, 16, 0),
+    this.bodyPadding = const EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
   });
 
   final PreferredSizeWidget? Function(BuildContext context, bool isMobile)? appBar;

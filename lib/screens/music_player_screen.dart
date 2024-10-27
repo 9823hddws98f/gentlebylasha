@@ -24,9 +24,10 @@ import '../page_manager.dart';
 import '../utils/colors.dart';
 
 class MusicPlayerScreen extends StatefulWidget {
-  final bool playList;
+  final bool isPlaylist;
   final PanelController? panelControllerNest;
-  const MusicPlayerScreen({super.key, required this.playList, this.panelControllerNest});
+  const MusicPlayerScreen(
+      {super.key, required this.isPlaylist, this.panelControllerNest});
 
   @override
   State<MusicPlayerScreen> createState() => _MusicPlayerScreenState();
@@ -336,7 +337,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                     ] else if (mediaItem
                                                                 .extras?["categories"] ==
                                                             "Music" &&
-                                                        widget.playList) ...[
+                                                        widget.isPlaylist) ...[
                                                       IconButton(
                                                         icon: Icon(
                                                           Icons.shuffle,
@@ -357,7 +358,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                     ] else if (mediaItem
                                                                 .extras?["categories"] ==
                                                             "Music" &&
-                                                        widget.playList == false) ...[
+                                                        widget.isPlaylist == false) ...[
                                                       SizedBox(
                                                         height: 32,
                                                         width: 32,
@@ -372,7 +373,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                         onPressed: () {},
                                                       ),
                                                     ],
-                                                    if (widget.playList) ...[
+                                                    if (widget.isPlaylist) ...[
                                                       if (pageManagerNew
                                                           .isFirstSongNotifier.value) ...{
                                                         if (pageManagerNew
@@ -431,7 +432,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                       ),
                                                     ],
                                                     PlayButton(),
-                                                    if (widget.playList) ...[
+                                                    if (widget.isPlaylist) ...[
                                                       if (pageManagerNew
                                                           .isLastSongNotifier.value) ...{
                                                         if (!(pageManagerNew
@@ -487,7 +488,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                                         },
                                                       ),
                                                     ],
-                                                    if (widget.playList) ...[
+                                                    if (widget.isPlaylist) ...[
                                                       IconButton(
                                                         icon: Icon(
                                                           getIt<PageManager>()

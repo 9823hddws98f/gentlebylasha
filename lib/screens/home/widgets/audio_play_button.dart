@@ -4,8 +4,8 @@ import '/domain/services/service_locator.dart';
 import '/notifiers/play_button_notifier.dart';
 import '/page_manager.dart';
 
-class PlayButtonNew extends StatelessWidget {
-  const PlayButtonNew({super.key});
+class AudioPlayButton extends StatelessWidget {
+  const AudioPlayButton({super.key});
   @override
   Widget build(BuildContext context) {
     final pageManager = getIt<PageManager>();
