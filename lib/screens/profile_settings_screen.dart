@@ -2,11 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:sleeptales/domain/blocs/user/user_bloc.dart';
-import 'package:sleeptales/utils/get.dart';
 
 import '/constants/assets.dart';
+import '/domain/blocs/user/user_bloc.dart';
 import '/screens/about_screen.dart';
 import '/screens/change_language.dart';
 import '/screens/change_password_screen.dart';
@@ -18,9 +16,10 @@ import '/screens/manage_subscription.dart';
 import '/screens/reminders_screen.dart';
 import '/utils/app_theme.dart';
 import '/utils/common_extensions.dart';
+import '/utils/get.dart';
 import '/utils/global_functions.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
-import '../constants/language_constants.dart';
+import '../domain/services/language_constants.dart';
 import 'edit_profile_screen.dart';
 
 class ProfileSettingsScreen extends StatefulWidget {
@@ -30,15 +29,14 @@ class ProfileSettingsScreen extends StatefulWidget {
   State<ProfileSettingsScreen> createState() => _ProfileSettingsScreenState();
 }
 
-class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
+class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Translation {
   final userBloc = Get.the<UserBloc>();
 
   @override
   Widget build(BuildContext context) {
-    final tr = translation();
     final colors = Theme.of(context).colorScheme;
     return AppScaffold(
-      appBar: (context, isMobile) => _buildAppBar(tr, colors),
+      appBar: (context, isMobile) => _buildAppBar(colors),
       body: (context, isMobile) => SingleChildScrollView(
         padding: EdgeInsets.symmetric(vertical: 16) + EdgeInsets.only(bottom: 170),
         child: Column(
@@ -106,7 +104,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               icon: Icons.info,
               title: tr.about,
               colors: colors,
-              onTap: () => pushName(context, const AboutScreen()),
+              onTap: () => pushName(context, AboutScreen()),
             ),
             _buildListTile(
               icon: Icons.account_circle,
@@ -127,7 +125,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     );
   }
 
-  AppBar _buildAppBar(AppLocalizations tr, ColorScheme colors) {
+  AppBar _buildAppBar(ColorScheme colors) {
     return AppBar(
       title: Text(tr.myProfile),
       bottom: PreferredSize(

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '/domain/blocs/user/user_bloc.dart';
+import '/domain/services/language_constants.dart';
 import '/utils/get.dart';
 import '/utils/global_functions.dart';
 import '/utils/tx_button.dart';
-import '../constants/language_constants.dart';
 
 class OnBoarding02Screen extends StatefulWidget {
   final VoidCallback onSubmit;
@@ -15,7 +15,7 @@ class OnBoarding02Screen extends StatefulWidget {
   State<OnBoarding02Screen> createState() => _OnBoarding02ScreenState();
 }
 
-class _OnBoarding02ScreenState extends State<OnBoarding02Screen> {
+class _OnBoarding02ScreenState extends State<OnBoarding02Screen> with Translation {
   static const _options = [
     'Billboard',
     'App Store or Google',
@@ -32,61 +32,58 @@ class _OnBoarding02ScreenState extends State<OnBoarding02Screen> {
   String? _selectedOption;
 
   @override
-  Widget build(BuildContext context) {
-    final tr = translation();
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(top: 10),
-            child: Text(
-              'How did you hear about Sleepytales?',
-              style: TextStyle(fontSize: 18),
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Text(
+                'How did you hear about Sleepytales?',
+                style: TextStyle(fontSize: 18),
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 30, 0, 20),
-            child: Column(
-              children: _options
-                  .map(
-                    (entry) => RadioListTile(
-                      dense: true,
-                      contentPadding: EdgeInsets.zero,
-                      activeColor: Colors.white,
-                      title: Text(
-                        entry,
-                        style: TextStyle(fontSize: 18),
+            Padding(
+              padding: EdgeInsets.fromLTRB(0, 30, 0, 20),
+              child: Column(
+                children: _options
+                    .map(
+                      (entry) => RadioListTile(
+                        dense: true,
+                        contentPadding: EdgeInsets.zero,
+                        activeColor: Colors.white,
+                        title: Text(
+                          entry,
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        value: entry,
+                        groupValue: _selectedOption,
+                        onChanged: (value) => setState(() {
+                          _selectedOption = value;
+                        }),
                       ),
-                      value: entry,
-                      groupValue: _selectedOption,
-                      onChanged: (value) => setState(() {
-                        _selectedOption = value;
-                      }),
-                    ),
-                  )
-                  .toList(),
+                    )
+                    .toList(),
+              ),
             ),
-          ),
-          SizedBox(height: 24),
-          TxButton.filled(
-            label: Text(tr.continueText),
-            onPressVoid: () {
-              if (_selectedOption == null) {
-                showToast("Please select a option first");
-              } else {
-                final bloc = Get.the<UserBloc>();
-                bloc.add(
-                  UserModified(
-                    bloc.state.user.copyWith(heardFrom: _selectedOption!),
-                  ),
-                );
-                widget.onSubmit();
-              }
-            },
-          )
-        ],
-      ),
-    );
-  }
+            SizedBox(height: 24),
+            TxButton.filled(
+              label: Text(tr.continueText),
+              onPressVoid: () {
+                if (_selectedOption == null) {
+                  showToast("Please select a option first");
+                } else {
+                  final bloc = Get.the<UserBloc>();
+                  bloc.add(
+                    UserModified(
+                      bloc.state.user.copyWith(heardFrom: _selectedOption!),
+                    ),
+                  );
+                  widget.onSubmit();
+                }
+              },
+            )
+          ],
+        ),
+      );
 }

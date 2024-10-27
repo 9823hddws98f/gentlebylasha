@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '/domain/services/audio_panel_manager.dart';
+import '/utils/get.dart';
 import '/widgets/track_list_item.dart';
 import '../domain/models/audiofile_model.dart';
 import '../utils/global_functions.dart';
@@ -9,13 +11,11 @@ import '../widgets/topbar_widget.dart';
 class TrackListScreen extends StatefulWidget {
   final String heading;
   final List<AudioTrack> list;
-  final Function panelFunction;
 
   const TrackListScreen({
     super.key,
     required this.heading,
     required this.list,
-    required this.panelFunction,
   });
 
   @override
@@ -23,6 +23,8 @@ class TrackListScreen extends StatefulWidget {
 }
 
 class _TrackListScreenState extends State<TrackListScreen> {
+  final _audioPanelManager = Get.the<AudioPanelManager>();
+
   @override
   void initState() {
     super.initState();
@@ -68,7 +70,7 @@ class _TrackListScreenState extends State<TrackListScreen> {
                                     mp3Duration: widget.list[index].length,
                                     tap: () {
                                       playTrack(widget.list[index]);
-                                      widget.panelFunction(false);
+                                      _audioPanelManager.showPanel(false);
                                     },
                                   );
                                 }),

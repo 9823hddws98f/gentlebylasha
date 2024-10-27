@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
+import '/domain/blocs/user/app_user.dart';
+import '/domain/models/audiofile_model.dart';
+import '/domain/models/category_model.dart';
+import '/domain/models/collection_model.dart';
 import '/screens/track_list.dart';
 import '/utils/colors.dart';
 import '/utils/firestore_helper.dart';
 import '/utils/global_functions.dart';
+import '/widgets/shimmerwidgets/shimmer_mp3_card_list_item_height.dart';
+import '/widgets/shimmerwidgets/shimmer_mp3_card_list_item_small.dart';
+import '/widgets/shimmerwidgets/shimmer_mp3_card_list_item_width.dart';
 import '/widgets/tracklist_horizontal_widget.dart';
 import '/widgets/width_tracklist_horizontal_widget.dart';
-import '../domain/models/audiofile_model.dart';
-import '../domain/models/category_model.dart';
-import '../domain/models/collection_model.dart';
-import '../domain/blocs/user/app_user.dart';
-import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_height.dart';
-import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_small.dart';
-import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_width.dart';
 
 class TabsScreen extends StatefulWidget {
   final Categories category;
@@ -82,7 +82,6 @@ class _TabsScreen extends State<TabsScreen> {
                                   TrackListScreen(
                                     heading: "New & Worthy",
                                     list: audioList1,
-                                    panelFunction: widget.panelFunction,
                                   ));
                             },
                             child: Text(
@@ -96,10 +95,9 @@ class _TabsScreen extends State<TabsScreen> {
                   : SizedBox(
                       height: 231,
                       child: WidthTrackListHorizontal(
-                        audiList: audioList1,
-                        tap: () {},
+                        trackList: audioList1,
+                        onTap: () {},
                         musicList: false,
-                        panelFunction: widget.panelFunction,
                       ),
                     ),
             ],
@@ -125,7 +123,6 @@ class _TabsScreen extends State<TabsScreen> {
                                   TrackListScreen(
                                     heading: "Recently Played",
                                     list: recentlyPlayed,
-                                    panelFunction: widget.panelFunction,
                                   ));
                             },
                             child: Text(
@@ -139,10 +136,9 @@ class _TabsScreen extends State<TabsScreen> {
                   : SizedBox(
                       height: 231,
                       child: TrackListHorizontal(
-                        tap: () {},
-                        audiList: recentlyPlayed,
+                        onTap: () {},
+                        trackList: recentlyPlayed,
                         musicList: widget.category.categoryName == "Music" ? true : false,
-                        panelFunction: widget.panelFunction,
                       )
 
                       // ListView.separated(
@@ -192,7 +188,6 @@ class _TabsScreen extends State<TabsScreen> {
                                   TrackListScreen(
                                     heading: "Popular ${widget.category.categoryName}",
                                     list: popularCat,
-                                    panelFunction: widget.panelFunction,
                                   ));
                             },
                             child: Text(
@@ -206,10 +201,9 @@ class _TabsScreen extends State<TabsScreen> {
                   : SizedBox(
                       height: 231,
                       child: TrackListHorizontal(
-                        tap: () {},
-                        audiList: popularCat,
+                        onTap: () {},
+                        trackList: popularCat,
                         musicList: widget.category.categoryName == "Music" ? true : false,
-                        panelFunction: widget.panelFunction,
                       )),
             ],
 
@@ -247,7 +241,6 @@ class _TabsScreen extends State<TabsScreen> {
                                           TrackListScreen(
                                             heading: topCollection[index].collectionTitle,
                                             list: topCollection[index].collectionTracks,
-                                            panelFunction: widget.panelFunction,
                                           ));
                                     },
                                     child: Text(
@@ -262,12 +255,12 @@ class _TabsScreen extends State<TabsScreen> {
                             : SizedBox(
                                 height: 231,
                                 child: TrackListHorizontal(
-                                    tap: () {},
-                                    audiList: topCollection[index].collectionTracks,
-                                    musicList: widget.category.categoryName == "Music"
-                                        ? true
-                                        : false,
-                                    panelFunction: widget.panelFunction),
+                                  onTap: () {},
+                                  trackList: topCollection[index].collectionTracks,
+                                  musicList: widget.category.categoryName == "Music"
+                                      ? true
+                                      : false,
+                                ),
                               ),
                       ],
                     );

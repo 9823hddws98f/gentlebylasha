@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '/domain/services/language_constants.dart';
 import '/helper/validators.dart';
-import '../../constants/language_constants.dart';
 
 class PasswordEditText extends StatefulWidget {
   const PasswordEditText({
@@ -19,7 +19,7 @@ class PasswordEditText extends StatefulWidget {
   State<PasswordEditText> createState() => _PasswordEditTextState();
 }
 
-class _PasswordEditTextState extends State<PasswordEditText> {
+class _PasswordEditTextState extends State<PasswordEditText> with Translation {
   bool _obscureText = true;
 
   @override
@@ -33,7 +33,7 @@ class _PasswordEditTextState extends State<PasswordEditText> {
         onSaved: widget.onSaved,
         onFieldSubmitted: widget.onFieldSubmitted,
         decoration: InputDecoration(
-          hintText: translation().password,
+          hintText: tr.password,
           suffixIcon: InkWell(
             onTap: () => setState(() => _obscureText = !_obscureText),
             child: Padding(

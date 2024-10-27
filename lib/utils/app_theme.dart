@@ -92,7 +92,7 @@ class AppTheme {
         backgroundColor: appBarBackground,
         scrolledUnderElevation: 0.8,
         centerTitle: false,
-        titleSpacing: 24,
+        titleSpacing: sidePadding,
         titleTextStyle: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.w600,

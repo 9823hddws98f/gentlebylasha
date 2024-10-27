@@ -3,10 +3,10 @@ import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
 import '/domain/services/audio_panel_manager.dart';
 import '/page_manager.dart';
-import '/screens/home/app_bottom_bar.dart';
-import '/screens/home/widgets/audio_panel_preview.dart';
 import '/screens/music_player_screen.dart';
 import '/utils/get.dart';
+import '../app_bottom_bar.dart';
+import 'audio_panel_preview.dart';
 
 class SlidingPanel extends StatelessWidget {
   SlidingPanel({

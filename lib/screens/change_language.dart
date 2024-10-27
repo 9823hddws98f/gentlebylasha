@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '/utils/get.dart';
 import '/widgets/topbar_widget.dart';
-import '../constants/language_constants.dart';
+import '../domain/services/language_constants.dart';
 import '../languages.dart';
 import '../main.dart';
 
@@ -13,12 +14,14 @@ class ChangeLanguageScreen extends StatefulWidget {
   State<ChangeLanguageScreen> createState() => _ChangeLanguageScreen();
 }
 
-class _ChangeLanguageScreen extends State<ChangeLanguageScreen> {
+class _ChangeLanguageScreen extends State<ChangeLanguageScreen> with Translation {
+  final _translationService = Get.the<TranslationService>();
   // default selection
   int languageIndex = 0;
 
   Future<void> _handleLanguageChange(int index) async {
-    final locale = await setLocale(Language.languageList().elementAt(index).languageCode);
+    final locale = await _translationService
+        .setLocale(Language.languageList().elementAt(index).languageCode);
 
     if (!mounted) return;
     MyApp.setLocale(context, locale);
@@ -27,7 +30,7 @@ class _ChangeLanguageScreen extends State<ChangeLanguageScreen> {
   }
 
   Future<void> getCurrentLanguageIndex() async {
-    String languageCode = await getLanguageCode();
+    String languageCode = await _translationService.getLanguageCode();
     if (languageCode == "de") {
       languageIndex = 1;
     } else {
@@ -49,7 +52,7 @@ class _ChangeLanguageScreen extends State<ChangeLanguageScreen> {
                   child: Column(
                     children: [
                       TopBar(
-                          heading: translation().changeLanguage,
+                          heading: tr.changeLanguage,
                           onPress: () {
                             Navigator.pop(context);
                           }),

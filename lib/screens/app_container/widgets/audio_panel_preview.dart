@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '/constants/assets.dart';
 import '/domain/services/audio_panel_manager.dart';
 import '/page_manager.dart';
-import '/screens/home/widgets/audio_progress_bar_home.dart';
+import 'audio_progress_bar_home.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
 import 'audio_play_button.dart';

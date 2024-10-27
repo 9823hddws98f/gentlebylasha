@@ -2,10 +2,12 @@ import 'package:audio_service/audio_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sleeptales/constants/assets.dart';
 
+import '/constants/assets.dart';
+import '/domain/services/audio_panel_manager.dart';
 import '/notifiers/play_button_notifier.dart';
 import '/utils/colors.dart';
+import '/utils/get.dart';
 import '/widgets/custom_btn.dart';
 import '/widgets/series_track_image_widget.dart';
 import '../domain/blocs/user/app_user.dart';
@@ -19,12 +21,10 @@ import '../widgets/series_track_widget.dart';
 class PlayListScreen extends StatefulWidget {
   final Block block;
   final List<AudioTrack> list;
-  final Function panelFunction;
 
   const PlayListScreen({
     super.key,
     required this.list,
-    required this.panelFunction,
     required this.block,
   });
 
@@ -33,6 +33,8 @@ class PlayListScreen extends StatefulWidget {
 }
 
 class _PlayListScreenState extends State<PlayListScreen> {
+  final _audioPanelManager = Get.the<AudioPanelManager>();
+
   AppUser? user;
   bool favoritePlayListLoading = false;
   List<String> favoritesList = [];
@@ -373,15 +375,15 @@ class _PlayListScreenState extends State<PlayListScreen> {
                     onPress: () {
                       if (currentPlaylistIsPlaying && playing) {
                         getIt<PageManager>().pause();
-                        widget.panelFunction(true);
+                        showPanel(true);
                       } else if (currentPlaylistIsPlaying && !playing) {
                         getIt<PageManager>().loadPlaylist(widget.list, 0);
                         getIt<PageManager>().play();
-                        widget.panelFunction(true);
+                        showPanel(true);
                       } else {
                         getIt<PageManager>().loadPlaylist(widget.list, 0);
                         getIt<PageManager>().play();
-                        widget.panelFunction(false);
+                        showPanel(false);
                       }
                     },
                     color: Colors.white,
@@ -417,7 +419,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
                             audioTrack: widget.list[index],
                             tap: () {
                               getIt<PageManager>().loadPlaylist(widget.list, index);
-                              widget.panelFunction(false);
+                              showPanel(false);
                             },
                             onTapPlayPause: () {
                               if (currentPlaylistIsPlaying &&
@@ -427,7 +429,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
                               } else {
                                 getIt<PageManager>().loadPlaylist(widget.list, index);
                                 getIt<PageManager>().play();
-                                widget.panelFunction(true);
+                                showPanel(true);
                               }
                             },
                             favoriteTap: () {
@@ -449,7 +451,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
                             audioTrack: widget.list[index],
                             tap: () {
                               getIt<PageManager>().loadPlaylist(widget.list, index);
-                              widget.panelFunction(false);
+                              showPanel(false);
                             },
                             favoriteTap: () async {
                               if (isTrackFavorited(widget.list[index].trackId)) {
@@ -483,6 +485,8 @@ class _PlayListScreenState extends State<PlayListScreen> {
       ),
     ));
   }
+
+  void showPanel(bool value) => _audioPanelManager.showPanel(value);
 
   Future<void> getFavArray() async {
     favoritesList = await getFavoriteListFromSharedPref();

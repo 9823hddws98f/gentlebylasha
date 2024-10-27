@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
+import '/domain/blocs/user/app_user.dart';
+import '/domain/models/audiofile_model.dart';
+import '/domain/models/block.dart';
+import '/domain/models/collection_model.dart';
+import '/domain/models/sub_categories.dart';
 import '/screens/playlist_screen.dart';
 import '/screens/track_list.dart';
 import '/utils/colors.dart';
 import '/utils/firestore_helper.dart';
 import '/utils/global_functions.dart';
+import '/widgets/shimmerwidgets/shimmer_mp3_card_list_item_height.dart';
 import '/widgets/tracklist_horizontal_widget.dart';
-import '../domain/models/audiofile_model.dart';
-import '../domain/models/block.dart';
-import '../domain/models/collection_model.dart';
-import '../domain/models/sub_categories.dart';
-import '../domain/blocs/user/app_user.dart';
-import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_height.dart';
 
 class SubCategoriesTab extends StatefulWidget {
   final SubCategory subCategory;
@@ -137,20 +137,20 @@ class _SubCategoriesTab extends State<SubCategoriesTab> {
                                           onPressed: () {
                                             if (block.blockType == "series") {
                                               pushName(
-                                                  context,
-                                                  PlayListScreen(
-                                                    list: tracks,
-                                                    panelFunction: widget.panelFunction,
-                                                    block: block,
-                                                  ));
+                                                context,
+                                                PlayListScreen(
+                                                  list: tracks,
+                                                  block: block,
+                                                ),
+                                              );
                                             } else {
                                               pushName(
-                                                  context,
-                                                  TrackListScreen(
-                                                    heading: block.title,
-                                                    list: tracks,
-                                                    panelFunction: widget.panelFunction,
-                                                  ));
+                                                context,
+                                                TrackListScreen(
+                                                  heading: block.title,
+                                                  list: tracks,
+                                                ),
+                                              );
                                             }
                                           },
                                           child: Text(
@@ -166,12 +166,12 @@ class _SubCategoriesTab extends State<SubCategoriesTab> {
                                   : SizedBox(
                                       height: 231,
                                       child: TrackListHorizontal(
-                                        tap: () {},
-                                        audiList: tracks,
+                                        onTap: () {},
+                                        trackList: tracks,
                                         musicList:
                                             block.blockType == "series" ? true : false,
-                                        panelFunction: widget.panelFunction,
-                                      )),
+                                      ),
+                                    ),
                               Padding(
                                 padding: EdgeInsets.all(16),
                                 child: Divider(

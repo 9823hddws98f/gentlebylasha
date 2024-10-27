@@ -9,9 +9,9 @@ import '/utils/global_functions.dart';
 import '/widgets/custom_tab_button.dart';
 import '/widgets/playlist_item.dart';
 import '/widgets/shimmerwidgets/shimmer_playlist_item.dart';
-import '../constants/language_constants.dart';
 import '../domain/blocs/user/app_user.dart';
 import '../domain/models/block.dart';
+import '../domain/services/language_constants.dart';
 import '../widgets/topbar_widget.dart';
 
 class FavoritePlaylistScreen extends StatefulWidget {
@@ -21,7 +21,8 @@ class FavoritePlaylistScreen extends StatefulWidget {
   State<FavoritePlaylistScreen> createState() => _FavoritePlaylistScreenState();
 }
 
-class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen> {
+class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen>
+    with Translation {
   bool exception = false;
   bool isLoading = true;
   List<Block> favoritePlaylist = [];
@@ -166,7 +167,7 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     TopBar(
-                        heading: translation().favoritePlaylist,
+                        heading: tr.favoritePlaylist,
                         onPress: () {
                           Navigator.pop(context);
                         }),

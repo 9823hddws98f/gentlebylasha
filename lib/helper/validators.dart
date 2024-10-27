@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:sleeptales/utils/get.dart';
 
-import '../constants/language_constants.dart';
+import '/domain/services/language_constants.dart';
 
 class AppValidators {
   static const _emailRegex = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
+  static final tr = Get.the<TranslationService>().translation();
 
   static String? Function(String?) emailValidator(BuildContext context) => (value) {
         if (value?.isEmpty ?? true) {
-          return translation().enterEmail;
+          return tr.enterEmail;
         }
         if (!RegExp(_emailRegex).hasMatch(value!)) {
-          return translation().enterValidEmail;
+          return tr.enterValidEmail;
         }
         return null;
       };
 
   static String? Function(String?) passwordValidator(BuildContext context) => (value) {
         if (value?.isEmpty ?? true) {
-          return translation().enterPassword;
+          return tr.enterPassword;
         }
         if (value!.length < 6) {
-          return translation().passwordCaracterLimit;
+          return tr.passwordCaracterLimit;
         }
         return null;
       };

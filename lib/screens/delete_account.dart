@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../constants/language_constants.dart';
 import '/utils/colors.dart';
 import '/utils/firestore_helper.dart';
 import '/utils/global_functions.dart';
 import '/widgets/custom_btn.dart';
 import '/widgets/topbar_widget.dart';
+import '../domain/services/language_constants.dart';
 
 class DeleteAccountScreen extends StatefulWidget {
   final String? email;
@@ -15,7 +15,7 @@ class DeleteAccountScreen extends StatefulWidget {
   State<DeleteAccountScreen> createState() => _DeleteAccountScreen();
 }
 
-class _DeleteAccountScreen extends State<DeleteAccountScreen> {
+class _DeleteAccountScreen extends State<DeleteAccountScreen> with Translation {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +29,7 @@ class _DeleteAccountScreen extends State<DeleteAccountScreen> {
                   child: Column(
                     children: [
                       TopBar(
-                          heading: translation().deleteAccount,
+                          heading: tr.deleteAccount,
                           onPress: () {
                             Navigator.pop(context);
                           }),
@@ -39,7 +39,7 @@ class _DeleteAccountScreen extends State<DeleteAccountScreen> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16),
                         child: Text(
-                          translation().deleteAccountMessage,
+                          tr.deleteAccountMessage,
                           textAlign: TextAlign.start,
                           style: TextStyle(fontSize: 18),
                         ),
@@ -47,7 +47,7 @@ class _DeleteAccountScreen extends State<DeleteAccountScreen> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16),
                         child: Text(
-                          translation().deleteAccountDescription,
+                          tr.deleteAccountDescription,
                           textAlign: TextAlign.start,
                           style: TextStyle(fontSize: 18),
                         ),
@@ -58,7 +58,7 @@ class _DeleteAccountScreen extends State<DeleteAccountScreen> {
                       Padding(
                         padding: EdgeInsets.all(16),
                         child: CustomButton(
-                            title: translation().deleteAccount,
+                            title: tr.deleteAccount,
                             onPress: () async {
                               showLoaderDialog(context, "Deleting account...");
                               bool check = await deleteUserAccount();

@@ -5,17 +5,13 @@ import 'package:sleeptales/constants/assets.dart';
 import '/screens/reminder_setup.dart';
 import '/utils/global_functions.dart';
 import '/widgets/topbar_widget.dart';
-import '../constants/language_constants.dart';
+import '../domain/services/language_constants.dart';
 
-class RemindersScreen extends StatefulWidget {
+class RemindersScreen extends StatelessWidget with Translation {
   final String? email;
-  const RemindersScreen({super.key, this.email});
 
-  @override
-  State<RemindersScreen> createState() => _RemindersScreen();
-}
+  RemindersScreen({super.key, this.email});
 
-class _RemindersScreen extends State<RemindersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +25,7 @@ class _RemindersScreen extends State<RemindersScreen> {
                   child: Column(
                     children: [
                       TopBar(
-                          heading: translation().reminders,
+                          heading: tr.reminders,
                           onPress: () {
                             Navigator.pop(context);
                           }),
@@ -38,7 +34,7 @@ class _RemindersScreen extends State<RemindersScreen> {
                       ),
                       ListTile(
                         leading: SvgPicture.asset(Assets.spaBlack),
-                        title: Text(translation().mindfulnessAndMeditation),
+                        title: Text(tr.mindfulnessAndMeditation),
                         trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
                         onTap: () {
                           pushName(
@@ -58,7 +54,7 @@ class _RemindersScreen extends State<RemindersScreen> {
                       ),
                       ListTile(
                         leading: Icon(Icons.alarm, color: Colors.white),
-                        title: Text(translation().bedtime),
+                        title: Text(tr.bedtime),
                         trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
                         onTap: () {
                           pushName(
@@ -78,7 +74,7 @@ class _RemindersScreen extends State<RemindersScreen> {
                       ),
                       ListTile(
                         leading: Icon(Icons.mood, color: Colors.white),
-                        title: Text(translation().moodCheckIn),
+                        title: Text(tr.moodCheckIn),
                         trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
                         onTap: () {
                           pushName(
@@ -97,7 +93,7 @@ class _RemindersScreen extends State<RemindersScreen> {
                       ),
                       ListTile(
                         leading: SvgPicture.asset(Assets.localFloristBlack),
-                        title: Text(translation().gratitudeCheckIn),
+                        title: Text(tr.gratitudeCheckIn),
                         trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
                         onTap: () {
                           pushName(
@@ -116,7 +112,7 @@ class _RemindersScreen extends State<RemindersScreen> {
                       ),
                       ListTile(
                         leading: SvgPicture.asset(Assets.menuBookBlack),
-                        title: Text(translation().dailyReflection),
+                        title: Text(tr.dailyReflection),
                         trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
                         onTap: () {
                           pushName(
@@ -134,7 +130,7 @@ class _RemindersScreen extends State<RemindersScreen> {
                       ),
                       ListTile(
                         leading: Icon(Icons.dark_mode, color: Colors.white),
-                        title: Text(translation().sleepCheckIn),
+                        title: Text(tr.sleepCheckIn),
                         trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
                         onTap: () {
                           pushName(
@@ -155,10 +151,5 @@ class _RemindersScreen extends State<RemindersScreen> {
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 }

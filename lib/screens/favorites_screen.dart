@@ -8,9 +8,9 @@ import '/utils/colors.dart';
 import '/utils/global_functions.dart';
 import '/widgets/custom_tab_button.dart';
 import '/widgets/track_list_item.dart';
-import '../constants/language_constants.dart';
 import '../domain/blocs/user/app_user.dart';
 import '../domain/models/audiofile_model.dart';
+import '../domain/services/language_constants.dart';
 import '../domain/services/service_locator.dart';
 import '../page_manager.dart';
 import '../widgets/shimmerwidgets/shimmer_mp3_card_tracklist_item.dart';
@@ -23,7 +23,7 @@ class FavoritesScreen extends StatefulWidget {
   State<FavoritesScreen> createState() => _FavoritesScreenState();
 }
 
-class _FavoritesScreenState extends State<FavoritesScreen> {
+class _FavoritesScreenState extends State<FavoritesScreen> with Translation {
   bool exception = false;
   bool isLoading = true;
   List<AudioTrack> favoriteList = [];
@@ -131,7 +131,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     TopBar(
-                        heading: translation().favoriteList,
+                        heading: tr.favoriteList,
                         onPress: () {
                           Navigator.pop(context);
                         }),

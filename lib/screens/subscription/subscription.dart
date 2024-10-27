@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '/screens/home/home_screen.dart';
+import '../app_container/app_container.dart';
 import '/utils/app_theme.dart';
 import '/utils/global_functions.dart';
 import '/utils/tx_button.dart';
@@ -86,7 +86,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                 //   //showToast("We have sent email verification link on your provided email. kindly verify your email");
                 //   await saveUser(user);
                 //   Navigator.pop(context);
-                pushRemoveAll(context, HomeScreen());
+                pushRemoveAll(context, AppContainer());
                 // }
                 // // pushRemoveAll(context, HomeScreen());
               },

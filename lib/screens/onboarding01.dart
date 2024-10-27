@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:sleeptales/constants/assets.dart';
 
+import '/constants/assets.dart';
 import '/domain/blocs/user/user_bloc.dart';
+import '/domain/services/language_constants.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
+import '/utils/global_functions.dart';
 import '/utils/tx_button.dart';
-import '../constants/language_constants.dart';
-import '../utils/global_functions.dart';
 
 class OnBoarding01Screen extends StatefulWidget {
   final VoidCallback onSubmit;
@@ -17,7 +17,7 @@ class OnBoarding01Screen extends StatefulWidget {
   State<OnBoarding01Screen> createState() => _OnBoarding01ScreenState();
 }
 
-class _OnBoarding01ScreenState extends State<OnBoarding01Screen> {
+class _OnBoarding01ScreenState extends State<OnBoarding01Screen> with Translation {
   static const _options = [
     'Reduce Anxiety',
     'Improve Performance',
@@ -43,7 +43,6 @@ class _OnBoarding01ScreenState extends State<OnBoarding01Screen> {
 
   @override
   Widget build(BuildContext context) {
-    final tr = translation();
     final colors = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.all(24),

@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '/constants/assets.dart';
-import '/constants/language_constants.dart';
 import '/domain/blocs/authentication/auth_repository.dart';
 import '/helper/validators.dart';
 import '/screens/auth/signup_sheet.dart';
-import '/screens/home/home_screen.dart';
+import '/utils/app_theme.dart';
 import '/utils/command_trigger.dart';
 import '/utils/common_extensions.dart';
 import '/utils/enums.dart';
@@ -18,7 +17,9 @@ import '/utils/tx_button.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/app_scaffold/custom_app_bar.dart';
 import '/widgets/input/password_edit_text.dart';
-import 'forgot_password_modal.dart';
+import '../../domain/services/language_constants.dart';
+import '../app_container/app_container.dart';
+import 'forgot_password_sheet.dart';
 import 'onboarding_bottom_sheet.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -30,14 +31,12 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => LoginScreenState();
 }
 
-class LoginScreenState extends State<LoginScreen> {
+class LoginScreenState extends State<LoginScreen> with Translation {
   final _auth = Get.the<AuthRepository>();
 
   final _formKey = GlobalKey<FormState>();
   final _trigger = ActionTrigger();
   bool _dirty = false;
-
-  late final tr = translation();
 
   String? _email;
   String? _password;
@@ -59,7 +58,7 @@ class LoginScreenState extends State<LoginScreen> {
                 _dirty ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
             child: isMobile
                 ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
                     child: _buildContent(),
                   )
                 : Row(
@@ -187,7 +186,7 @@ class LoginScreenState extends State<LoginScreen> {
   // TODO: add forgot password
   Widget _buildForgotPasswordButton() => TextButton(
         child: Text(tr.forgotYourPassword),
-        onPressed: () => ForgotPasswordModal.show(context),
+        onPressed: () => ForgotPasswordSheet.show(context),
       );
 
   Widget _buildGoogleLoginButton() => TxButton.filled(
@@ -241,7 +240,7 @@ class LoginScreenState extends State<LoginScreen> {
     if (userCredential.additionalUserInfo!.isNewUser) {
       _showNewUserSheet(userCredential);
     } else {
-      pushRemoveAll(context, HomeScreen());
+      pushRemoveAll(context, AppContainer());
     }
     return success;
   }

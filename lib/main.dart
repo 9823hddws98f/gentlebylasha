@@ -18,12 +18,12 @@ import 'package:timezone/data/latest.dart' as tz;
 
 import '/screens/auth/login_screen.dart';
 import '/utils/get.dart';
-import 'constants/language_constants.dart';
 import 'domain/blocs/authentication/app_bloc.dart';
 import 'domain/blocs/user/user_bloc.dart';
+import 'domain/services/language_constants.dart';
 import 'domain/services/service_locator.dart';
 import 'firebase_options.dart';
-import 'screens/home/home_screen.dart';
+import 'screens/app_container/app_container.dart';
 import 'utils/app_theme.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -119,8 +119,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final userBloc = Get.the<UserBloc>();
-  final appBloc = Get.the<AppBloc>();
+  final _userBloc = Get.the<UserBloc>();
+  final _appBloc = Get.the<AppBloc>();
+  final _translation = Get.the<TranslationService>();
 
   Locale? _locale;
 
@@ -128,20 +129,20 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void didChangeDependencies() {
-    getLocale().then(setLocale);
+    _translation.getLocale().then(setLocale);
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) => BlocProvider.value(
-        value: appBloc,
+        value: _appBloc,
         child: BlocConsumer<AppBloc, AppState>(
             listener: (context, state) {
               if (state.status == AppStatus.loading) {
-                userBloc.add(
+                _userBloc.add(
                   UserLoaded(
                     state.user.toAppUser(),
-                    appBloc,
+                    _appBloc,
                   ),
                 );
               } else if (state.status == AppStatus.authenticated &&
@@ -164,11 +165,11 @@ class _MyAppState extends State<MyApp> {
                     localizationsDelegates: AppLocalizations.localizationsDelegates,
                     supportedLocales: AppLocalizations.supportedLocales,
                     initialRoute: widget.isWaitingForAuth
-                        ? HomeScreen.routeName
+                        ? AppContainer.routeName
                         : LoginScreen.routeName,
                     routes: {
                       LoginScreen.routeName: (_) => const LoginScreen(),
-                      HomeScreen.routeName: (_) => const HomeScreen(),
+                      AppContainer.routeName: (_) => const AppContainer(),
                     },
                   )),
       );

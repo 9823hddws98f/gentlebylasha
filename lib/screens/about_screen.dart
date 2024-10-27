@@ -3,19 +3,13 @@ import 'package:flutter_svg/svg.dart';
 import 'package:sleeptales/constants/assets.dart';
 
 import '/widgets/topbar_widget.dart';
-import '../constants/language_constants.dart';
+import '../domain/services/language_constants.dart';
 
-class AboutScreen extends StatefulWidget {
+class AboutScreen extends StatelessWidget with Translation {
   final String? email;
-  const AboutScreen({super.key, this.email});
 
-  @override
-  State<AboutScreen> createState() {
-    return _AboutScreen();
-  }
-}
+  AboutScreen({super.key, this.email});
 
-class _AboutScreen extends State<AboutScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +23,7 @@ class _AboutScreen extends State<AboutScreen> {
                   child: Column(
                     children: [
                       TopBar(
-                          heading: translation().about,
+                          heading: tr.about,
                           onPress: () {
                             Navigator.pop(context);
                           }),
@@ -42,7 +36,7 @@ class _AboutScreen extends State<AboutScreen> {
                           width: 20,
                           height: 20,
                         ),
-                        title: Text(translation().workWithUs),
+                        title: Text(tr.workWithUs),
                         onTap: () {},
                       ),
                       ListTile(
@@ -51,7 +45,7 @@ class _AboutScreen extends State<AboutScreen> {
                           width: 20,
                           height: 20,
                         ),
-                        title: Text(translation().termsOfService),
+                        title: Text(tr.termsOfService),
                         onTap: () {},
                       ),
                       ListTile(
@@ -60,7 +54,7 @@ class _AboutScreen extends State<AboutScreen> {
                           width: 20,
                           height: 20,
                         ),
-                        title: Text(translation().privacyPolicy),
+                        title: Text(tr.privacyPolicy),
                         onTap: () {},
                       ),
                     ],
@@ -68,10 +62,5 @@ class _AboutScreen extends State<AboutScreen> {
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 }

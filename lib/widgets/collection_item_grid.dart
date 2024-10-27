@@ -8,12 +8,13 @@ class CollectionItemGrid extends StatelessWidget {
   final String mp3Category;
   final Function() tap;
 
-  const CollectionItemGrid(
-      {super.key,
-      required this.imageUrl,
-      required this.mp3Name,
-      required this.mp3Category,
-      required this.tap});
+  const CollectionItemGrid({
+    super.key,
+    required this.imageUrl,
+    required this.mp3Name,
+    required this.mp3Category,
+    required this.tap,
+  });
 
   @override
   Widget build(BuildContext context) {

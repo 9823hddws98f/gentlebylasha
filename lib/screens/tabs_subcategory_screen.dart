@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
+import '/domain/blocs/user/app_user.dart';
+import '/domain/models/audiofile_model.dart';
+import '/domain/models/block.dart';
+import '/domain/models/category_block.dart';
+import '/domain/models/collection_model.dart';
+import '/domain/models/sub_categories.dart';
 import '/screens/playlist_screen.dart';
 import '/screens/subcategories_tab.dart';
 import '/screens/track_list.dart';
 import '/utils/colors.dart';
 import '/utils/firestore_helper.dart';
 import '/utils/global_functions.dart';
-import '../domain/models/audiofile_model.dart';
-import '../domain/models/block.dart';
-import '../domain/models/category_block.dart';
-import '../domain/models/collection_model.dart';
-import '../domain/models/sub_categories.dart';
-import '../domain/blocs/user/app_user.dart';
-import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_height.dart';
-import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_small.dart';
-import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_width.dart';
-import '../widgets/tracklist_horizontal_widget.dart';
+import '/widgets/shimmerwidgets/shimmer_mp3_card_list_item_height.dart';
+import '/widgets/shimmerwidgets/shimmer_mp3_card_list_item_small.dart';
+import '/widgets/shimmerwidgets/shimmer_mp3_card_list_item_width.dart';
+import '/widgets/tracklist_horizontal_widget.dart';
 
 class TabsSubCategoryScreen extends StatefulWidget {
   final CategoryBlock category;
@@ -150,8 +150,6 @@ class _TabsSubCategoryScreen extends State<TabsSubCategoryScreen>
                                                           context,
                                                           PlayListScreen(
                                                             list: tracks,
-                                                            panelFunction:
-                                                                widget.panelFunction,
                                                             block: block,
                                                           ));
                                                     } else {
@@ -160,8 +158,6 @@ class _TabsSubCategoryScreen extends State<TabsSubCategoryScreen>
                                                           TrackListScreen(
                                                             heading: block.title,
                                                             list: tracks,
-                                                            panelFunction:
-                                                                widget.panelFunction,
                                                           ));
                                                     }
                                                     //pushName(context, TrackListScreen(heading:block.title,list: tracks,panelFunction: widget.panelFunction,));
@@ -179,13 +175,13 @@ class _TabsSubCategoryScreen extends State<TabsSubCategoryScreen>
                                           : SizedBox(
                                               height: 231,
                                               child: TrackListHorizontal(
-                                                tap: () {},
-                                                audiList: tracks,
+                                                onTap: () {},
+                                                trackList: tracks,
                                                 musicList: block.blockType == "series"
                                                     ? true
                                                     : false,
-                                                panelFunction: widget.panelFunction,
-                                              )),
+                                              ),
+                                            ),
                                       Padding(
                                         padding: EdgeInsets.all(16),
                                         child: Divider(

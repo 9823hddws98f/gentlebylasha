@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sleeptales/utils/app_theme.dart';
 
+import '/utils/app_theme.dart';
 import '/utils/common_extensions.dart';
 
 class AppScaffold extends StatelessWidget {
@@ -12,7 +12,7 @@ class AppScaffold extends StatelessWidget {
     this.bodyPadding = const EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
   });
 
-  final PreferredSizeWidget? Function(BuildContext context, bool isMobile)? appBar;
+  final Widget? Function(BuildContext context, bool isMobile)? appBar;
   final Widget Function(BuildContext context, bool isMobile) body;
   final bool? resizeToAvoidBottomInset;
   final EdgeInsetsGeometry bodyPadding;
@@ -21,7 +21,7 @@ class AppScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     final isMobile = context.isMobile;
     return Scaffold(
-      appBar: appBar?.call(context, isMobile),
+      appBar: appBar?.call(context, isMobile) as PreferredSizeWidget?,
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
       body: Padding(
         padding: bodyPadding,

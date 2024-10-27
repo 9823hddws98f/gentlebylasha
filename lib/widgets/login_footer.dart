@@ -4,13 +4,15 @@ class LoginFooter extends StatelessWidget {
   final String sentenceText;
   final String loginSingUpText;
   final Function() onPress;
-  MainAxisAlignment alignment;
-  LoginFooter(
-      {super.key,
-      required this.sentenceText,
-      required this.loginSingUpText,
-      required this.alignment,
-      required this.onPress});
+  final MainAxisAlignment alignment;
+
+  const LoginFooter({
+    super.key,
+    required this.sentenceText,
+    required this.loginSingUpText,
+    required this.alignment,
+    required this.onPress,
+  });
 
   @override
   Widget build(BuildContext context) {

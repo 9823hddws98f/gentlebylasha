@@ -1,32 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:sleeptales/domain/blocs/authentication/auth_repository.dart';
-import 'package:sleeptales/utils/command_trigger.dart';
-import 'package:sleeptales/utils/get.dart';
-import 'package:sleeptales/utils/global_functions.dart';
-import 'package:sleeptales/utils/tx_button.dart';
 
-import '/constants/language_constants.dart';
+import '/domain/blocs/authentication/auth_repository.dart';
+import '/domain/services/language_constants.dart';
 import '/helper/validators.dart';
+import '/utils/app_theme.dart';
+import '/utils/command_trigger.dart';
+import '/utils/get.dart';
+import '/utils/global_functions.dart';
 import '/utils/modals.dart';
+import '/utils/tx_button.dart';
 
-class ForgotPasswordModal extends StatefulWidget {
+class ForgotPasswordSheet extends StatefulWidget {
   final ScrollController controller;
 
-  const ForgotPasswordModal(this.controller, {super.key});
+  const ForgotPasswordSheet(this.controller, {super.key});
 
   static Future<void> show(BuildContext context) => Modals.show(
         context,
         initialSize: 0.5,
         minSize: 0.5,
         maxSize: 0.6,
-        builder: (context, controller) => ForgotPasswordModal(controller),
+        builder: (context, controller) => ForgotPasswordSheet(controller),
       );
 
   @override
-  State<ForgotPasswordModal> createState() => ForgotPasswordState();
+  State<ForgotPasswordSheet> createState() => ForgotPasswordState();
 }
 
-class ForgotPasswordState extends State<ForgotPasswordModal> {
+class ForgotPasswordState extends State<ForgotPasswordSheet> with Translation {
   static final _formKey = GlobalKey<FormState>();
 
   final _trigger = ActionTrigger();
@@ -38,7 +39,7 @@ class ForgotPasswordState extends State<ForgotPasswordModal> {
     return Form(
       key: _formKey,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
         child: CustomScrollView(
           controller: widget.controller,
           slivers: [
@@ -47,7 +48,7 @@ class ForgotPasswordState extends State<ForgotPasswordModal> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    translation().forgotYourPassword,
+                    tr.forgotYourPassword,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
@@ -59,9 +60,7 @@ class ForgotPasswordState extends State<ForgotPasswordModal> {
                   TextFormField(
                     validator: AppValidators.emailValidator(context),
                     keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      hintText: translation().email,
-                    ),
+                    decoration: InputDecoration(hintText: tr.email),
                     onFieldSubmitted: (value) => _trigger.trigger(),
                     onSaved: (value) => setState(() => _email = value),
                   ),

@@ -73,7 +73,6 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
                                       TrackListScreen(
                                         heading: "Recently Played",
                                         list: recentlyPlayed,
-                                        panelFunction: widget.panelFunction,
                                       ));
                                 },
                                 child: Text(
@@ -87,10 +86,9 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
                       : SizedBox(
                           height: 231,
                           child: TrackListHorizontal(
-                            tap: () {},
-                            audiList: recentlyPlayed,
+                            onTap: () {},
+                            trackList: recentlyPlayed,
                             musicList: widget.category.name == "Music" ? true : false,
-                            panelFunction: widget.panelFunction,
                           )),
                 ],
 
@@ -130,7 +128,6 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
                                                     topCollection[index].collectionTitle,
                                                 list:
                                                     topCollection[index].collectionTracks,
-                                                panelFunction: widget.panelFunction,
                                               ));
                                         },
                                         child: Text(
@@ -145,11 +142,10 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
                                 : SizedBox(
                                     height: 231,
                                     child: TrackListHorizontal(
-                                      tap: () {},
-                                      audiList: topCollection[index].collectionTracks,
+                                      onTap: () {},
+                                      trackList: topCollection[index].collectionTracks,
                                       musicList:
                                           widget.category.name == "Music" ? true : false,
-                                      panelFunction: widget.panelFunction,
                                     )),
                           ],
                         );

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/screens/explore_screen.dart';
-import '/screens/forme_screen.dart';
+import '../../screens/home/home_screen.dart';
 import '/screens/profile_settings_screen.dart';
 
 class NavigationCubit extends Cubit<NavItem> {
@@ -27,7 +27,7 @@ class AppNavigation {
       index: 0,
       title: 'Home',
       icon: CarbonIcons.home,
-      screen: ForMeScreen(),
+      screen: HomeScreen(),
     ),
     NavItem(
       index: 1,
