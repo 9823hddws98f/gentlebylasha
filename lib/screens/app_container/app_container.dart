@@ -98,7 +98,7 @@ class AppContainerState extends State<AppContainer> with SingleTickerProviderSta
         children: [
           for (final item in AppNavigation.mobileNavItems)
             _buildNavigationScreen(item, true),
-          _buildSlidingPanel(),
+          SlidingPanel(controller: _audioPlayerAnimCtrl),
           Align(
             alignment: Alignment.bottomCenter,
             child: AnimatedBuilder(
@@ -123,8 +123,6 @@ class AppContainerState extends State<AppContainer> with SingleTickerProviderSta
               .toList(),
         ),
       );
-
-  Widget _buildSlidingPanel() => SlidingPanel(controller: _audioPlayerAnimCtrl);
 
   Widget _buildNavigationScreen(NavItem item, bool isMobile) =>
       BlocBuilder<NavigationCubit, NavItem>(

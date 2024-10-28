@@ -36,7 +36,7 @@ class PageManager {
     _listenToPlaying();
   }
 
-  Future<void> playSinglePlaylist(MediaItem mediaItem, String trackId) async {
+  void playSinglePlaylist(MediaItem mediaItem, String trackId) {
     isBufferingDone = false;
     if (currentMediaItemNotifier.value.id != trackId) {
       playlistNotifier.value = [];
@@ -113,8 +113,7 @@ class PageManager {
         playButtonNotifier.value = ButtonState.paused;
         if (!isBufferingDone) {
           if (processingState == AudioProcessingState.ready) {
-            play();
-            isBufferingDone = true;
+            pause();
           }
         }
       } else if (processingState != AudioProcessingState.completed) {
@@ -164,9 +163,9 @@ class PageManager {
     if (check) {
       _audioHandler.mediaItem.listen((mediaItem) {
         currentSongTitleNotifier.value = mediaItem?.title ?? '';
-        currentMediaItemNotifier.value = mediaItem ?? MediaItem(id: "", title: "");
+        currentMediaItemNotifier.value = mediaItem ?? MediaItem(id: '', title: '');
         if (mediaItem != null) {
-          if (mediaItem.id != "") {
+          if (mediaItem.id != '') {
             addToRecentlyPlayed(mediaItem.id);
             incrementPlayCount(mediaItem.id);
           }

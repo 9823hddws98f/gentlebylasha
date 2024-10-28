@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sleeptales/widgets/mp3_list_item.dart';
 
 import '/domain/models/audiofile_model.dart';
 import '/domain/models/block.dart';
@@ -8,6 +7,7 @@ import '/screens/track_list.dart';
 import '/utils/app_theme.dart';
 import '/utils/firestore_helper.dart';
 import '/utils/tx_loader.dart';
+import '/widgets/mp3_list_item.dart';
 import '/widgets/tracklist_horizontal_widget.dart';
 import 'block_header.dart';
 

@@ -4,8 +4,8 @@ import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
 import '/domain/services/audio_panel_manager.dart';
 import '/page_manager.dart';
-import '/screens/music_player_screen.dart';
 import '/utils/get.dart';
+import '../../music_player/music_player_screen.dart';
 import '../app_bottom_bar.dart';
 import 'audio_panel_preview.dart';
 
@@ -43,7 +43,7 @@ class SlidingPanel extends StatelessWidget {
                 _panelController.isAttached &&
                 _panelController.isPanelClosed &&
                 _panelVisibility.value > 0) {
-              _panelManager.hidePanel();
+              _panelManager.hide();
             }
           },
           child: child,
@@ -66,13 +66,16 @@ class SlidingPanel extends StatelessWidget {
             if (_panelController.isAttached)
               AnimatedBuilder(
                 animation: controller,
-                builder: (context, child) => Opacity(
-                  opacity: 1 -
-                      CurvedAnimation(
-                        parent: controller,
-                        curve: Curves.fastEaseInToSlowEaseOut,
-                      ).value,
-                  child: child!,
+                builder: (context, child) => IgnorePointer(
+                  ignoring: controller.value > 0.5,
+                  child: Opacity(
+                    opacity: 1 -
+                        CurvedAnimation(
+                          parent: controller,
+                          curve: Curves.fastEaseInToSlowEaseOut,
+                        ).value,
+                    child: child!,
+                  ),
                 ),
                 child: AudioPanelPreview(),
               )

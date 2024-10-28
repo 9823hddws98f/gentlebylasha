@@ -205,21 +205,21 @@ showLoaderDialog(BuildContext context, String message) {
 }
 
 void playTrack(AudioTrack audioTrack) {
-  //getIt<PageManager>().init();
   getIt<PageManager>().playSinglePlaylist(
-      MediaItem(
-        id: audioTrack.trackId,
-        album: audioTrack.speaker,
-        title: audioTrack.title,
-        displayDescription: audioTrack.description,
-        artUri: Uri.parse(audioTrack.imageBackground),
-        extras: {
-          'url': audioTrack.trackUrl,
-          'id': audioTrack.trackId,
-          'categories': audioTrack.categories[0].categoryName
-        },
-      ),
-      audioTrack.trackId);
+    MediaItem(
+      id: audioTrack.trackId,
+      album: audioTrack.speaker,
+      title: audioTrack.title,
+      displayDescription: audioTrack.description,
+      artUri: Uri.parse(audioTrack.imageBackground),
+      extras: {
+        'url': audioTrack.trackUrl,
+        'id': audioTrack.trackId,
+        'categories': audioTrack.categories[0].categoryName
+      },
+    ),
+    audioTrack.trackId,
+  );
 }
 
 // Save the list of model objects to shared preferences

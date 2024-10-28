@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import '/domain/blocs/authentication/app_bloc.dart';
 import '/domain/blocs/authentication/auth_repository.dart';
 import '/domain/blocs/user/user_bloc.dart';
+import '/domain/cubits/favorites.dart';
 import '/domain/services/user_service.dart';
 import '/page_manager.dart';
 import '/utils/get.dart';
@@ -26,6 +27,11 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<AudioPanelManager>(() => AudioPanelManager.instance);
   getIt.registerLazySingleton<TranslationService>(() => TranslationService.instance);
   getIt.registerLazySingleton<TracksService>(() => TracksService.instance);
+  getIt.registerLazySingleton<FavoritesCubit>(() => FavoritesCubit.instance);
   // page state
   getIt.registerLazySingleton<PageManager>(() => PageManager());
+}
+
+Future<void> initServices() async {
+  await Get.the<FavoritesCubit>().init();
 }

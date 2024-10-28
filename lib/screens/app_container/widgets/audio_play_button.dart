@@ -1,36 +1,39 @@
+import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 
-import '/domain/services/service_locator.dart';
 import '/notifiers/play_button_notifier.dart';
 import '/page_manager.dart';
+import '/utils/get.dart';
 
 class AudioPlayButton extends StatelessWidget {
-  const AudioPlayButton({super.key});
+  AudioPlayButton({super.key, this.large = false});
+
+  final bool large;
+
+  final _pageManager = Get.the<PageManager>();
+
   @override
-  Widget build(BuildContext context) {
-    final pageManager = getIt<PageManager>();
-    return ValueListenableBuilder<ButtonState>(
-      valueListenable: pageManager.playButtonNotifier,
-      builder: (_, value, __) => switch (value) {
-        ButtonState.loading => Container(
-            margin: EdgeInsets.all(8),
-            height: 24,
-            width: 24,
-            child: const CircularProgressIndicator(
-              color: Colors.white,
+  Widget build(BuildContext context) => ValueListenableBuilder<ButtonState>(
+        valueListenable: _pageManager.playButtonNotifier,
+        builder: (_, value, __) => switch (value) {
+          ButtonState.loading => IconButton(
+              icon: const CircularProgressIndicator(),
+              padding: large ? EdgeInsets.all(24) : null,
+              iconSize: large ? 32 : null,
+              onPressed: null,
             ),
-          ),
-        ButtonState.paused => IconButton(
-            icon: const Icon(Icons.play_arrow),
-            iconSize: 24,
-            onPressed: pageManager.play,
-          ),
-        ButtonState.playing => IconButton(
-            icon: const Icon(Icons.pause),
-            iconSize: 24,
-            onPressed: pageManager.pause,
-          )
-      },
-    );
-  }
+          ButtonState.paused => IconButton(
+              icon: const Icon(CarbonIcons.play_filled_alt),
+              padding: large ? EdgeInsets.all(24) : null,
+              iconSize: large ? 32 : null,
+              onPressed: _pageManager.play,
+            ),
+          ButtonState.playing => IconButton(
+              icon: const Icon(CarbonIcons.pause_filled),
+              padding: large ? EdgeInsets.all(24) : null,
+              iconSize: large ? 32 : null,
+              onPressed: _pageManager.pause,
+            )
+        },
+      );
 }

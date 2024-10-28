@@ -12,18 +12,18 @@ class AudioPanelManager {
   AudioPanelManager._();
   static AudioPanelManager instance = AudioPanelManager._();
 
-  void hidePanel() {
+  void hide() {
     panelVisibility.value = 0;
     _pageManager.stop();
   }
 
-  void _unhidePanel() {
+  void _unhide() {
     panelVisibility.value = 1;
     panelController.open();
   }
 
-  void showPanel(bool dontShowPanel) async {
-    _unhidePanel();
+  void maximize(bool dontShowPanel) async {
+    _unhide();
     while (!panelController.isAttached) {
       await Future.delayed(Duration(milliseconds: 100));
     }
@@ -32,4 +32,6 @@ class AudioPanelManager {
     }
     _pageManager.play();
   }
+
+  void minimize() => panelController.close();
 }

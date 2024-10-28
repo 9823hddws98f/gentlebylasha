@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:sleeptales/widgets/shimmerwidgets/shimmerize.dart';
 
 import '/constants/assets.dart';
 import '/utils/app_theme.dart';
+import '/widgets/shimmerwidgets/shimmerize.dart';
 
 class Mp3ListItem extends StatelessWidget {
   final String imageUrl;
@@ -29,7 +29,7 @@ class Mp3ListItem extends StatelessWidget {
   static const wideWidth = 242.0;
   static const narrowWidth = 164.0;
 
-  static final borderRadius = BorderRadius.circular(18);
+  static final borderRadius = BorderRadius.circular(12);
 
   @override
   Widget build(context) {
@@ -77,7 +77,7 @@ class Mp3ListItem extends StatelessWidget {
       : _buildPlaceholderImage();
 
   Widget _buildPlaceholderImage() => ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: borderRadius,
         child: Image.asset(Assets.placeholderImage, fit: BoxFit.cover),
       );
 

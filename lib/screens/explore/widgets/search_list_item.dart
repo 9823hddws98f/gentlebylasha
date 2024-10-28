@@ -4,13 +4,6 @@ import 'package:flutter/material.dart';
 import '/utils/app_theme.dart';
 
 class SearchListItem extends StatelessWidget {
-  final String imageUrl;
-  final String name;
-  final String category;
-  final String duration;
-  final String speaker;
-  final VoidCallback onPress;
-
   const SearchListItem({
     super.key,
     required this.imageUrl,
@@ -20,6 +13,13 @@ class SearchListItem extends StatelessWidget {
     required this.speaker,
     required this.onPress,
   });
+
+  final String imageUrl;
+  final String name;
+  final String category;
+  final String duration;
+  final String speaker;
+  final VoidCallback onPress;
 
   @override
   Widget build(BuildContext context) {

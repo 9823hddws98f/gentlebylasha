@@ -6,10 +6,12 @@ import '/domain/services/crud_service.dart';
 
 enum ActivityType {
   subscription,
+  favorite,
   user;
 
   String get displayName => switch (this) {
         subscription => 'Subscription',
+        favorite => 'Favorite',
         user => 'User',
       };
 }

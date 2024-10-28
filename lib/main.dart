@@ -137,7 +137,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) => BlocProvider.value(
         value: _appBloc,
         child: BlocConsumer<AppBloc, AppState>(
-            listener: (context, state) {
+            listener: (context, state) async {
               if (state.status == AppStatus.loading) {
                 _userBloc.add(
                   UserLoaded(
@@ -147,6 +147,7 @@ class _MyAppState extends State<MyApp> {
                 );
               } else if (state.status == AppStatus.authenticated &&
                   widget.isWaitingForAuth) {
+                await initServices();
                 FlutterNativeSplash.remove();
               }
             },

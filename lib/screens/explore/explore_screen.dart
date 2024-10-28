@@ -1,22 +1,22 @@
 import 'package:animations/animations.dart';
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:sleeptales/domain/services/audio_panel_manager.dart';
-import 'package:sleeptales/domain/services/tracks_service.dart';
-import 'package:sleeptales/utils/get.dart';
-import 'package:sleeptales/utils/tx_loader.dart';
-import 'package:sleeptales/widgets/input/tx_search_bar.dart';
 
 import '/domain/models/audiofile_model.dart';
 import '/domain/models/category_block.dart';
+import '/domain/services/audio_panel_manager.dart';
+import '/domain/services/tracks_service.dart';
 import '/screens/home/category_list.dart';
 import '/screens/tabs_subcategory_screen.dart';
 import '/utils/app_theme.dart';
+import '/utils/get.dart';
 import '/utils/global_functions.dart';
+import '/utils/tx_loader.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
-import 'explore/widgets/search_list_item.dart';
+import '/widgets/input/tx_search_bar.dart';
 import '/widgets/shared_axis_switcher.dart';
+import 'widgets/search_list_item.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
@@ -30,16 +30,8 @@ class _ExploreScreenState extends State<ExploreScreen>
   final _trackService = Get.the<TracksService>();
   final _audioPanelManager = Get.the<AudioPanelManager>();
 
-  static const _searchSuggestions = [
-    'Happiness',
-    'Anxiety',
-    'Rain',
-    'Soundscapes',
-    'Sleep',
-    'Meditations'
-  ];
-
   final _txLoader = TxLoader();
+  final _scrollController = ScrollController();
   TabController? _tabController;
 
   List<AudioTrack> _tracks = [];
@@ -59,6 +51,7 @@ class _ExploreScreenState extends State<ExploreScreen>
         body: (context, isMobile) {
           final colors = Theme.of(context).colorScheme;
           return NestedScrollView(
+            controller: _scrollController,
             headerSliverBuilder: (context, value) => [
               _buildSearchbar(colors.outline),
               _buildCategoriesList(),
@@ -69,7 +62,7 @@ class _ExploreScreenState extends State<ExploreScreen>
               child: _isSearching
                   ? _buildSearchView(colors)
                   : _categories.isEmpty
-                      ? Placeholder()
+                      ? Center(child: Text('No categories found'))
                       : TabBarView(
                           physics: NeverScrollableScrollPhysics(),
                           controller: _tabController,
@@ -88,10 +81,7 @@ class _ExploreScreenState extends State<ExploreScreen>
   Widget _buildSearchView(ColorScheme colors) {
     if (_error != null) return Text('Error: $_error');
     if (_txLoader.loading) {
-      return Padding(
-        padding: EdgeInsets.all(16),
-        child: CircularProgressIndicator(),
-      );
+      return Center(child: CircularProgressIndicator());
     } else if (_tracks.isEmpty) {
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -167,6 +157,12 @@ class _ExploreScreenState extends State<ExploreScreen>
       );
 
   Future<void> _handleSearch(String query) {
+    if (!mounted) return Future.value();
+    _scrollController.animateTo(
+      0,
+      duration: Durations.medium1,
+      curve: Easing.standard,
+    );
     if (_error != null) {
       setState(() => _error = null);
     }

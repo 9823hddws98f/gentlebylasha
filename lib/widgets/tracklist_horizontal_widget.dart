@@ -41,13 +41,13 @@ class TrackListHorizontal extends StatelessWidget {
               isWide: isWide,
               category: track.categories.firstOrNull?.categoryName ?? '',
               duration: track.length,
-              onTap: () {
+              onTap: () async {
                 if (musicList) {
                   _pageManager.loadPlaylist(trackList, index);
                 } else {
                   playTrack(track);
                 }
-                _audioPanelManager.showPanel(false);
+                _audioPanelManager.maximize(false);
               },
             );
           },
