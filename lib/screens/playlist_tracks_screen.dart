@@ -2,8 +2,8 @@ import 'package:audio_service/audio_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sleeptales/constants/assets.dart';
 
+import '/constants/assets.dart';
 import '/utils/colors.dart';
 import '/widgets/custom_btn.dart';
 import '/widgets/series_track_image_widget.dart';
@@ -12,7 +12,6 @@ import '../domain/blocs/user/app_user.dart';
 import '../domain/models/audiofile_model.dart';
 import '../domain/models/block.dart';
 import '../domain/services/service_locator.dart';
-import '../notifiers/play_button_notifier.dart';
 import '../page_manager.dart';
 import '../utils/firestore_helper.dart';
 import '../utils/global_functions.dart';
@@ -69,10 +68,8 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
     });
 
     _onPlaylistChanged();
-    _onPlayingButtonStateChnaged();
     currentPlayingMediaItem();
     getIt<PageManager>().playlistNotifier.addListener(_onPlaylistChanged);
-    getIt<PageManager>().playButtonNotifier.addListener(_onPlayingButtonStateChnaged);
     getIt<PageManager>().currentMediaItemNotifier.addListener(currentPlayingMediaItem);
   }
 
@@ -80,18 +77,6 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
     setState(() {
       if (mounted) {
         currentMediaItem = getIt<PageManager>().currentMediaItemNotifier.value;
-      }
-    });
-  }
-
-  void _onPlayingButtonStateChnaged() {
-    setState(() {
-      if (mounted) {
-        if (getIt<PageManager>().playButtonNotifier.value == ButtonState.paused) {
-          playing = false;
-        } else {
-          playing = true;
-        }
       }
     });
   }

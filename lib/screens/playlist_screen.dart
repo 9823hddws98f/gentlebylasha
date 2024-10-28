@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 
 import '/constants/assets.dart';
 import '/domain/services/audio_panel_manager.dart';
-import '/notifiers/play_button_notifier.dart';
 import '/utils/colors.dart';
 import '/utils/get.dart';
 import '/widgets/custom_btn.dart';
@@ -68,10 +67,8 @@ class _PlayListScreenState extends State<PlayListScreen> {
       });
     });
     _onPlaylistChanged();
-    _onPlayingButtonStateChnaged();
     currentPlayingMediaItem();
     getIt<PageManager>().playlistNotifier.addListener(_onPlaylistChanged);
-    getIt<PageManager>().playButtonNotifier.addListener(_onPlayingButtonStateChnaged);
     getIt<PageManager>().currentMediaItemNotifier.addListener(currentPlayingMediaItem);
   }
 
@@ -79,18 +76,6 @@ class _PlayListScreenState extends State<PlayListScreen> {
     setState(() {
       if (mounted) {
         currentMediaItem = getIt<PageManager>().currentMediaItemNotifier.value;
-      }
-    });
-  }
-
-  void _onPlayingButtonStateChnaged() {
-    setState(() {
-      if (mounted) {
-        if (getIt<PageManager>().playButtonNotifier.value == ButtonState.paused) {
-          playing = false;
-        } else {
-          playing = true;
-        }
       }
     });
   }

@@ -7,7 +7,6 @@ import '/utils/firestore_helper.dart';
 import 'domain/models/audiofile_model.dart';
 import 'domain/services/playlist_repository.dart';
 import 'domain/services/service_locator.dart';
-import 'notifiers/play_button_notifier.dart';
 import 'notifiers/progress_notifier.dart';
 import 'notifiers/repeat_notifier.dart';
 
@@ -19,25 +18,20 @@ class PageManager {
   final progressNotifier = ProgressNotifier();
   final repeatButtonNotifier = RepeatButtonNotifier();
   final isFirstSongNotifier = ValueNotifier<bool>(true);
-  final playButtonNotifier = PlayButtonNotifier();
   final isLastSongNotifier = ValueNotifier<bool>(true);
   final isShuffleModeEnabledNotifier = ValueNotifier<bool>(false);
   final _audioHandler = getIt<AudioHandler>();
-  bool isBufferingDone = true;
   bool check = true;
 
   void init() async {
     _listenToChangesInPlaylist();
-    _listenToPlaybackState();
     _listenToCurrentPosition();
     _listenToBufferedPosition();
     _listenToTotalDuration();
     _listenToChangesInSong();
-    _listenToPlaying();
   }
 
   void playSinglePlaylist(MediaItem mediaItem, String trackId) {
-    isBufferingDone = false;
     if (currentMediaItemNotifier.value.id != trackId) {
       playlistNotifier.value = [];
       playlistIdNotifier.value = [];
@@ -46,7 +40,6 @@ class PageManager {
   }
 
   Future<void> loadPlaylist(List<AudioTrack> list, int index) async {
-    isBufferingDone = false;
     if (currentMediaItemNotifier.value.id != list[index].trackId) {
       playlistNotifier.value = [];
       playlistIdNotifier.value = [];
@@ -88,42 +81,16 @@ class PageManager {
     });
   }
 
-  bool _listenToPlaying() {
-    bool isPlaying = false;
-    _audioHandler.playbackState.listen((playbackState) {
-      isPlaying = playbackState.playing;
-    });
-    return isPlaying;
-  }
-
   void stopTrackAfter(Duration duration) {
     Timer(duration, () {
       pause();
     });
   }
 
-  void _listenToPlaybackState() {
-    _audioHandler.playbackState.listen((playbackState) {
-      final isPlaying = playbackState.playing;
-      final processingState = playbackState.processingState;
-      if (processingState == AudioProcessingState.loading ||
-          processingState == AudioProcessingState.buffering) {
-        playButtonNotifier.value = ButtonState.loading;
-      } else if (!isPlaying) {
-        playButtonNotifier.value = ButtonState.paused;
-        if (!isBufferingDone) {
-          if (processingState == AudioProcessingState.ready) {
-            pause();
-          }
-        }
-      } else if (processingState != AudioProcessingState.completed) {
-        playButtonNotifier.value = ButtonState.playing;
-      } else {
-        _audioHandler.seek(Duration.zero);
-        _audioHandler.pause();
-        isBufferingDone = false;
-      }
-    });
+  Stream<PlaybackState> listenPlaybackState() async* {
+    await for (final playbackState in _audioHandler.playbackState) {
+      yield playbackState;
+    }
   }
 
   void _listenToCurrentPosition() {
