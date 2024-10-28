@@ -45,7 +45,6 @@ class SearchListItem extends StatelessWidget {
         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
         overflow: TextOverflow.ellipsis,
       ),
-      // Start of Selection
       subtitle: [category, speaker].any((s) => s.isNotEmpty)
           ? Text(
               [category, speaker].where((s) => s.isNotEmpty).join(' • '),
