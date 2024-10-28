@@ -1,59 +1,75 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:sleeptales/widgets/shimmerwidgets/shimmerize.dart';
 
 import '/constants/assets.dart';
+import '/utils/app_theme.dart';
 
 class Mp3ListItem extends StatelessWidget {
   final String imageUrl;
-  final String mp3Name;
-  final String mp3Category;
-  final String mp3Duration;
+  final String name;
+  final String category;
+  final String duration;
   final VoidCallback onTap;
-  final bool isWidthOriented;
+  final bool isWide;
 
   const Mp3ListItem({
     super.key,
     required this.imageUrl,
-    required this.mp3Name,
-    required this.mp3Category,
-    required this.mp3Duration,
+    required this.name,
+    required this.category,
+    required this.duration,
     required this.onTap,
-    this.isWidthOriented = false,
+    this.isWide = false,
   });
 
+  static const height = 164.0;
+
+  static const wideWidth = 242.0;
+  static const narrowWidth = 164.0;
+
+  static final borderRadius = BorderRadius.circular(18);
+
   @override
-  Widget build(BuildContext context) => GestureDetector(
-        onTap: onTap,
+  Widget build(context) {
+    final ColorScheme(:primary, :onSurfaceVariant) = Theme.of(context).colorScheme;
+    return GestureDetector(
+      onTap: onTap,
+      child: SizedBox(
+        width: isWide ? wideWidth : narrowWidth,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildImage(),
+            _buildImage(primary),
             const SizedBox(height: 8),
-            _buildTextContent(),
+            _buildTextContent(onSurfaceVariant),
           ],
         ),
-      );
+      ),
+    );
+  }
 
-  Widget _buildImage() => Stack(
-        children: [
-          SizedBox(
-            height: isWidthOriented ? 185 : 175,
-            width: isWidthOriented ? 282 : 187,
-            child: _buildNetworkImage(),
-          ),
-          Positioned(
-            bottom: 12,
-            left: 12,
-            child: _buildDurationIndicator(),
-          ),
-        ],
+  Widget _buildImage(Color color) => SizedBox(
+        height: height,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            _buildNetworkImage(),
+            Positioned(
+              bottom: 12,
+              left: 12,
+              child: _buildDurationIndicator(color),
+            ),
+          ],
+        ),
       );
 
   Widget _buildNetworkImage() => imageUrl.isNotEmpty
       ? CachedNetworkImage(
           imageUrl: imageUrl,
           imageBuilder: (context, imageProvider) => ClipRRect(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: borderRadius,
             child: Image(image: imageProvider, fit: BoxFit.cover),
           ),
           errorWidget: (_, __, ___) => _buildPlaceholderImage(),
@@ -65,53 +81,77 @@ class Mp3ListItem extends StatelessWidget {
         child: Image.asset(Assets.placeholderImage, fit: BoxFit.cover),
       );
 
-  Widget _buildDurationIndicator() => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+  Widget _buildDurationIndicator(Color color) => Container(
+        padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(10),
+          color: color,
+          borderRadius: AppTheme.smallBorderRadius,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.play_arrow, size: 12),
-            const SizedBox(width: 2),
+            const Icon(CarbonIcons.play_filled_alt, size: 10),
+            const SizedBox(width: 4),
             Text(
-              "$mp3Duration min",
-              style: const TextStyle(fontSize: 7, fontWeight: FontWeight.bold),
+              '$duration min',
+              style: const TextStyle(
+                fontSize: 7,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
       );
 
-  Widget _buildTextContent() => isWidthOriented
-      ? Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildTruncatedText(mp3Name, 35, 14, FontWeight.bold),
-            const SizedBox(height: 2),
-            _buildTruncatedText(mp3Category, 35, 10, FontWeight.normal),
-          ],
-        )
-      : Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildTruncatedText(mp3Category, 25, 10, FontWeight.normal),
-            const SizedBox(height: 2),
-            _buildTruncatedText(mp3Name, 25, 14, FontWeight.bold),
-          ],
-        );
+  Widget _buildTextContent(Color secondaryColor) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            name,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            category,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 10,
+              color: secondaryColor,
+            ),
+          ),
+        ],
+      );
 
-  Widget _buildTruncatedText(
-    String text,
-    int maxLength,
-    double fontSize,
-    FontWeight fontWeight,
-  ) =>
-      Text(
-        text.length > maxLength ? "${text.substring(0, maxLength)}..." : text,
-        overflow: TextOverflow.ellipsis,
-        maxLines: 1,
-        style: TextStyle(fontSize: fontSize, fontWeight: fontWeight),
+  static Widget shimmer([bool isWide = false]) => SizedBox(
+        width: isWide ? wideWidth : narrowWidth,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Shimmerize(
+              child: SizedBox(
+                height: height,
+                width: double.infinity,
+                child: Material(borderRadius: borderRadius),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Shimmerize(
+              child: SizedBox(
+                height: 14,
+                width: 100,
+                child: Material(borderRadius: AppTheme.smallBorderRadius),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Shimmerize(
+              child: SizedBox(
+                height: 14,
+                width: 50,
+                child: Material(borderRadius: AppTheme.smallBorderRadius),
+              ),
+            ),
+          ],
+        ),
       );
 }

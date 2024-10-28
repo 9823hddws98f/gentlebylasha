@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sleeptales/widgets/app_scaffold/adaptive_app_bar.dart';
 
 import '/constants/assets.dart';
 import '/domain/blocs/user/user_bloc.dart';
@@ -125,9 +126,9 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Tran
     );
   }
 
-  AppBar _buildAppBar(ColorScheme colors) {
-    return AppBar(
-      title: Text(tr.myProfile),
+  Widget _buildAppBar(ColorScheme colors) {
+    return AdaptiveAppBar(
+      title: tr.myProfile,
       bottom: PreferredSize(
         preferredSize: Size.fromHeight(76),
         child: Container(

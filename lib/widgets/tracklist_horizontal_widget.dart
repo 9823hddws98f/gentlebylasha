@@ -2,66 +2,55 @@ import 'package:flutter/material.dart';
 
 import '/domain/models/audiofile_model.dart';
 import '/domain/services/audio_panel_manager.dart';
-import '/domain/services/service_locator.dart';
 import '/page_manager.dart';
+import '/utils/app_theme.dart';
 import '/utils/get.dart';
 import '/utils/global_functions.dart';
-import 'mp3_card_list_item_height.dart';
+import 'mp3_list_item.dart';
 
 class TrackListHorizontal extends StatelessWidget {
   final List<AudioTrack> trackList;
-  final VoidCallback onTap;
+  final bool isWide;
   final bool musicList;
 
   TrackListHorizontal({
     super.key,
     required this.trackList,
-    required this.onTap,
-    required this.musicList,
+    this.isWide = false,
+    this.musicList = false,
   });
 
+  static const height = 208.0;
+
   final _audioPanelManager = Get.the<AudioPanelManager>();
+  final _pageManager = Get.the<PageManager>();
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 231,
-      child: ListView.separated(
-        padding: EdgeInsets.only(left: 16),
-        scrollDirection: Axis.horizontal,
-        itemCount: trackList.length,
-        separatorBuilder: (BuildContext context, int index) {
-          return SizedBox(width: 16);
-        },
-        itemBuilder: (BuildContext context, int index) {
-          return Mp3Item(
-              imageUrl: trackList[index].thumbnail,
-              mp3Name: trackList[index].title,
-              mp3Category: trackList[index].categories.isEmpty
-                  ? ""
-                  : trackList[index].categories[0].categoryName,
-              mp3Duration: trackList[index].length,
-              tap: () {
+  Widget build(BuildContext context) => SizedBox(
+        height: height,
+        child: ListView.separated(
+          padding: EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
+          separatorBuilder: (context, index) => SizedBox(width: 16),
+          scrollDirection: Axis.horizontal,
+          itemCount: trackList.length,
+          itemBuilder: (context, index) {
+            final track = trackList[index];
+            return Mp3ListItem(
+              imageUrl: track.thumbnail,
+              name: track.title,
+              isWide: isWide,
+              category: track.categories.firstOrNull?.categoryName ?? '',
+              duration: track.length,
+              onTap: () {
                 if (musicList) {
-                  //getIt<PageManager>().init();
-                  getIt<PageManager>().loadPlaylist(trackList, index);
-                  _audioPanelManager.showPanel(false);
-                  //Navigator.of(context).push( SlideFromBottomPageRoute(page: MusicPlayerScreen( audioFile: audiList[index],playList: true,)));
+                  _pageManager.loadPlaylist(trackList, index);
                 } else {
-                  playTrack(trackList[index]);
-                  _audioPanelManager.showPanel(false);
-                  //Navigator.of(context).push( SlideFromBottomPageRoute(page: MusicPlayerScreen( audioFile: audiList[index],playList: false,)));
+                  playTrack(track);
                 }
-              });
-        },
-      ),
-    );
-  }
-
-  // Widget _buildShimmerListViewHeight() => SizedBox(
-  //       height: 231,
-  //       child: ListView.builder(
-  //         itemBuilder: (context, index) => _buildShimmerListViewHeightWithTitle(),
-  //       ),
-  //     );
+                _audioPanelManager.showPanel(false);
+              },
+            );
+          },
+        ),
+      );
 }

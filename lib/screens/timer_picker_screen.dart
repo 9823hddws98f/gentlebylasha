@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sleeptales/widgets/app_scaffold/adaptive_app_bar.dart';
 
 import '/page_manager.dart';
 import '/utils/colors.dart';
@@ -40,15 +41,8 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.close),
-          onPressed: () {
-            Navigator.of(context)
-                .pop(); // Pop the screen when the cross button is pressed
-          },
-        ),
+      appBar: AdaptiveAppBar(
+        title: 'Sleep Timer',
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

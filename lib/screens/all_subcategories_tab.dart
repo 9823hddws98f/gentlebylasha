@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sleeptales/widgets/mp3_list_item.dart';
 
 import '/screens/track_list.dart';
 import '/utils/colors.dart';
@@ -9,7 +10,6 @@ import '../domain/models/audiofile_model.dart';
 import '../domain/models/category_block.dart';
 import '../domain/models/collection_model.dart';
 import '../domain/models/sub_categories.dart';
-import '../widgets/shimmerwidgets/shimmer_mp3_card_list_item_height.dart';
 
 class AllSubCategoriesTab extends StatefulWidget {
   final List<SubCategory> subCategories;
@@ -83,13 +83,10 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
                       )),
                   recentlyPlayed.isEmpty
                       ? _buildShimmerListViewHeight()
-                      : SizedBox(
-                          height: 231,
-                          child: TrackListHorizontal(
-                            onTap: () {},
-                            trackList: recentlyPlayed,
-                            musicList: widget.category.name == "Music" ? true : false,
-                          )),
+                      : TrackListHorizontal(
+                          trackList: recentlyPlayed,
+                          musicList: widget.category.name == 'Music',
+                        ),
                 ],
 
                 if (!collectionsIsLoading && topCollection.isNotEmpty) ...[
@@ -139,14 +136,10 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
                                 )),
                             topCollection[index].collectionTracks.isEmpty
                                 ? _buildShimmerListViewHeight()
-                                : SizedBox(
-                                    height: 231,
-                                    child: TrackListHorizontal(
-                                      onTap: () {},
-                                      trackList: topCollection[index].collectionTracks,
-                                      musicList:
-                                          widget.category.name == "Music" ? true : false,
-                                    )),
+                                : TrackListHorizontal(
+                                    trackList: topCollection[index].collectionTracks,
+                                    musicList: widget.category.name == 'Music',
+                                  ),
                           ],
                         );
                       },
@@ -212,7 +205,7 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
               return SizedBox(width: 16);
             },
             itemBuilder: (BuildContext context, int index) {
-              return Mp3ListItemShimmerHeight();
+              return Mp3ListItem.shimmer();
             },
           ),
         )
@@ -231,7 +224,7 @@ class _AllSubCategoriesTab extends State<AllSubCategoriesTab> {
           return SizedBox(width: 16);
         },
         itemBuilder: (BuildContext context, int index) {
-          return Mp3ListItemShimmerHeight();
+          return Mp3ListItem.shimmer();
         },
       ),
     );

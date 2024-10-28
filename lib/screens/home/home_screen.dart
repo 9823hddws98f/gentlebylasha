@@ -1,70 +1,79 @@
 import 'package:flutter/material.dart';
-import 'package:sleeptales/utils/app_theme.dart';
 
 import '/domain/models/audiofile_model.dart';
 import '/domain/models/block.dart';
 import '/domain/services/language_constants.dart';
 import '/screens/home/block_header.dart';
 import '/screens/track_list.dart';
+import '/utils/app_theme.dart';
 import '/utils/firestore_helper.dart';
+import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
-import '/widgets/shimmerwidgets/shimmer_mp3_card_list_item_height.dart';
-import '/widgets/shimmerwidgets/shimmer_mp3_card_list_item_width.dart';
-import '/widgets/width_tracklist_horizontal_widget.dart';
+import '/widgets/mp3_list_item.dart';
+import '/widgets/tracklist_horizontal_widget.dart';
 import 'category_list.dart';
-import 'track_list_loader.dart';
+import 'track_bloc_loader.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _ForMeState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _ForMeState extends State<HomeScreen> with Translation {
+class _HomeScreenState extends State<HomeScreen> with Translation {
   List<AudioTrack> _recentlyPlayed = [];
   List<Block> _blockList = [];
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     getPageBlocks();
-    fetchRecentlyPlayedTracks();
   }
 
   @override
   Widget build(BuildContext context) => AppScaffold(
-        appBar: (context, isMobile) => AppBar(
-          title: Text(tr.home),
+        appBar: (context, isMobile) => AdaptiveAppBar(
+          title: tr.home,
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(68),
             child: Column(
               children: [
-                CategoryList(),
+                CategoryList(
+                  onTap: (categoryBlock) {
+                    // TODO: open explore tab
+                    // indexNotifier.value = index;
+                    // indexNotifier.notifyListeners();
+                  },
+                ),
+                SizedBox(height: 16),
                 Divider(height: 1),
               ],
             ),
           ),
         ),
         bodyPadding: EdgeInsets.zero,
-        body: (context, isMobile) {
-          final colors = Theme.of(context).colorScheme;
-          final seeAllColor = colors.onSurfaceVariant;
-          return CustomScrollView(
-            cacheExtent: 600,
-            slivers: [
-              SliverToBoxAdapter(child: _buildRecentlyPlayed(seeAllColor)),
-              _blockList.isEmpty
-                  ? SliverList.builder(
-                      itemBuilder: (_, index) => _buildShimmerListViewHeightWithTitle())
-                  : SliverList.builder(
-                      itemCount: _blockList.length,
-                      itemBuilder: (context, index) => TrackListLoader(_blockList[index]),
-                    ),
-              SliverToBoxAdapter(child: SizedBox(height: 150)),
-            ],
-          );
-        },
+        body: (context, isMobile) => CustomScrollView(
+          cacheExtent: 600,
+          slivers: [
+            const SliverToBoxAdapter(child: SizedBox(height: 8)),
+            SliverToBoxAdapter(
+              child: _buildRecentlyPlayed(Theme.of(context).colorScheme.onSurfaceVariant),
+            ),
+            const SliverToBoxAdapter(child: Divider()),
+            _blockList.isEmpty
+                ? SliverList.separated(
+                    separatorBuilder: (_, __) => Divider(),
+                    itemBuilder: (_, __) => TrackBlockLoader.shimmer(),
+                  )
+                : SliverList.separated(
+                    separatorBuilder: (_, __) => Divider(),
+                    itemCount: _blockList.length,
+                    itemBuilder: (_, index) => TrackBlockLoader(_blockList[index]),
+                  ),
+            SliverToBoxAdapter(child: SizedBox(height: 150)),
+          ],
+        ),
       );
 
   Widget _buildRecentlyPlayed(Color seeAllColor) => Column(
@@ -80,51 +89,32 @@ class _ForMeState extends State<HomeScreen> with Translation {
           ),
           _recentlyPlayed.isEmpty
               ? _buildShimmerListViewWidth()
-              : SizedBox(
-                  height: 231,
-                  child: WidthTrackListHorizontal(
-                    onTap: () {},
-                    trackList: _recentlyPlayed,
-                    musicList: false,
-                  ),
+              : TrackListHorizontal(
+                  trackList: _recentlyPlayed,
+                  isWide: true,
                 ),
         ],
       );
 
   Widget _buildShimmerListViewWidth() => SizedBox(
-        height: 231,
+        height: TrackListHorizontal.height,
         child: ListView.separated(
           padding: EdgeInsets.only(left: AppTheme.sidePadding),
           scrollDirection: Axis.horizontal,
           itemCount: 3,
           separatorBuilder: (context, index) => SizedBox(width: 16),
-          itemBuilder: (context, index) => Mp3ListItemShimmer(),
+          itemBuilder: (context, index) => Mp3ListItem.shimmer(true),
         ),
       );
 
-  Widget _buildShimmerListViewHeightWithTitle() => Column(
-        children: [
-          BlockHeader.shimmer(),
-          SizedBox(
-            height: 231,
-            child: ListView.separated(
-              padding: EdgeInsets.only(left: AppTheme.sidePadding),
-              scrollDirection: Axis.horizontal,
-              itemCount: 3,
-              separatorBuilder: (context, index) => SizedBox(width: 16),
-              itemBuilder: (context, index) => Mp3ListItemShimmerHeight(),
-            ),
-          )
-        ],
-      );
-
-  Future<void> getPageBlocks() async {
-    _blockList = await getHomePageBlocks();
-    setState(() {});
-  }
-
-  void fetchRecentlyPlayedTracks() async {
-    _recentlyPlayed = await getRecentlyPlayedTracks();
-    setState(() {});
+  void getPageBlocks() async {
+    final blocks = await getHomePageBlocks();
+    final recentlyPlayed = await getRecentlyPlayedTracks();
+    if (mounted) {
+      setState(() {
+        _blockList = blocks;
+        _recentlyPlayed = recentlyPlayed;
+      });
+    }
   }
 }

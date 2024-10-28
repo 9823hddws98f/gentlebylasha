@@ -5,7 +5,7 @@ import 'tx_color_extensions.dart';
 class AppTheme {
   static const fontFamily = 'Matter'; //'Poppins';
   static const titleFont = 'Matter'; //'Poppins';
-  static const smallBorderRadius = BorderRadius.all(Radius.circular(8));
+  static const smallBorderRadius = BorderRadius.all(Radius.circular(10));
   static const largeBorderRadius = BorderRadius.all(Radius.circular(30));
 
   static const sidePadding = 16.0;
@@ -92,11 +92,11 @@ class AppTheme {
         backgroundColor: appBarBackground,
         scrolledUnderElevation: 0.8,
         centerTitle: false,
-        titleSpacing: sidePadding,
+        titleSpacing: 0,
         titleTextStyle: TextStyle(
           fontSize: 24,
-          fontWeight: FontWeight.w600,
-          fontFamily: fontFamily,
+          fontWeight: FontWeight.w500,
+          fontFamily: titleFont,
         ),
       ),
       drawerTheme: DrawerThemeData(

@@ -8,11 +8,9 @@ import '/screens/track_list.dart';
 import '/utils/colors.dart';
 import '/utils/firestore_helper.dart';
 import '/utils/global_functions.dart';
-import '/widgets/shimmerwidgets/shimmer_mp3_card_list_item_height.dart';
+import '/widgets/mp3_list_item.dart';
 import '/widgets/shimmerwidgets/shimmer_mp3_card_list_item_small.dart';
-import '/widgets/shimmerwidgets/shimmer_mp3_card_list_item_width.dart';
 import '/widgets/tracklist_horizontal_widget.dart';
-import '/widgets/width_tracklist_horizontal_widget.dart';
 
 class TabsScreen extends StatefulWidget {
   final Categories category;
@@ -92,13 +90,9 @@ class _TabsScreen extends State<TabsScreen> {
                   )),
               audioList1.isEmpty
                   ? _buildShimmerListViewWidth()
-                  : SizedBox(
-                      height: 231,
-                      child: WidthTrackListHorizontal(
-                        trackList: audioList1,
-                        onTap: () {},
-                        musicList: false,
-                      ),
+                  : TrackListHorizontal(
+                      trackList: audioList1,
+                      musicList: false,
                     ),
             ],
             // Heading and horizontal list view of cards
@@ -133,37 +127,10 @@ class _TabsScreen extends State<TabsScreen> {
                   )),
               recentlyPlayed.isEmpty
                   ? _buildShimmerListViewHeight()
-                  : SizedBox(
-                      height: 231,
-                      child: TrackListHorizontal(
-                        onTap: () {},
-                        trackList: recentlyPlayed,
-                        musicList: widget.category.categoryName == "Music" ? true : false,
-                      )
-
-                      // ListView.separated(
-                      //   padding: EdgeInsets.only(left:16),
-                      //   scrollDirection: Axis.horizontal,
-                      //   itemCount: recentlyPlayed.length < 10?recentlyPlayed.length:10,
-                      //   separatorBuilder: (BuildContext context, int index) {
-                      //     return SizedBox(width: 16);
-                      //   },
-                      //   itemBuilder: (BuildContext context, int index) {
-                      //     return Mp3Item(
-                      //       imageUrl: recentlyPlayed[index].imageBackground,
-                      //       mp3Name: recentlyPlayed[index].title,
-                      //       mp3Category: recentlyPlayed[index].categories[0],
-                      //       mp3Duration: recentlyPlayed[index].length,
-                      //       tap: (){
-                      //
-                      //         playTrack(recentlyPlayed[index]);
-                      //         Navigator.of(context).push( SlideFromBottomPageRoute(page: MusicPlayerScreen( audioFile: recentlyPlayed[index],playList: false)));
-                      //
-                      //       },
-                      //     );
-                      //   },
-                      // ),
-                      ),
+                  : TrackListHorizontal(
+                      trackList: recentlyPlayed,
+                      musicList: widget.category.categoryName == 'Music',
+                    ),
             ],
 
             if (popularIsLoading || popularCat.isNotEmpty) ...[
@@ -198,13 +165,10 @@ class _TabsScreen extends State<TabsScreen> {
                   )),
               popularCat.isEmpty
                   ? _buildShimmerListViewHeight()
-                  : SizedBox(
-                      height: 231,
-                      child: TrackListHorizontal(
-                        onTap: () {},
-                        trackList: popularCat,
-                        musicList: widget.category.categoryName == "Music" ? true : false,
-                      )),
+                  : TrackListHorizontal(
+                      trackList: popularCat,
+                      musicList: widget.category.categoryName == 'Music',
+                    ),
             ],
 
             if (!collectionsIsLoading && topCollection.isNotEmpty) ...[
@@ -252,15 +216,9 @@ class _TabsScreen extends State<TabsScreen> {
                             )),
                         topCollection[index].collectionTracks.isEmpty
                             ? _buildShimmerListViewHeight()
-                            : SizedBox(
-                                height: 231,
-                                child: TrackListHorizontal(
-                                  onTap: () {},
-                                  trackList: topCollection[index].collectionTracks,
-                                  musicList: widget.category.categoryName == "Music"
-                                      ? true
-                                      : false,
-                                ),
+                            : TrackListHorizontal(
+                                trackList: topCollection[index].collectionTracks,
+                                musicList: widget.category.categoryName == 'Music',
                               ),
                       ],
                     );
@@ -304,7 +262,7 @@ class _TabsScreen extends State<TabsScreen> {
           return SizedBox(width: 16);
         },
         itemBuilder: (BuildContext context, int index) {
-          return Mp3ListItemShimmer();
+          return Mp3ListItem.shimmer(true);
         },
       ),
     );
@@ -321,7 +279,7 @@ class _TabsScreen extends State<TabsScreen> {
           return SizedBox(width: 16);
         },
         itemBuilder: (BuildContext context, int index) {
-          return Mp3ListItemShimmerHeight();
+          return Mp3ListItem.shimmer();
         },
       ),
     );

@@ -10,13 +10,12 @@ import '/screens/track_list.dart';
 import '/utils/colors.dart';
 import '/utils/firestore_helper.dart';
 import '/utils/global_functions.dart';
-import '/widgets/shimmerwidgets/shimmer_mp3_card_list_item_height.dart';
+import '/widgets/mp3_list_item.dart';
 import '/widgets/tracklist_horizontal_widget.dart';
 
 class SubCategoriesTab extends StatefulWidget {
   final SubCategory subCategory;
-  final Function panelFunction;
-  const SubCategoriesTab(this.subCategory, this.panelFunction, {super.key});
+  const SubCategoriesTab(this.subCategory, {super.key});
   @override
   State<SubCategoriesTab> createState() => _SubCategoriesTab();
 }
@@ -163,14 +162,9 @@ class _SubCategoriesTab extends State<SubCategoriesTab> {
                               ),
                               tracks.isEmpty
                                   ? _buildShimmerListViewHeight()
-                                  : SizedBox(
-                                      height: 231,
-                                      child: TrackListHorizontal(
-                                        onTap: () {},
-                                        trackList: tracks,
-                                        musicList:
-                                            block.blockType == "series" ? true : false,
-                                      ),
+                                  : TrackListHorizontal(
+                                      trackList: tracks,
+                                      musicList: block.blockType == 'series',
                                     ),
                               Padding(
                                 padding: EdgeInsets.all(16),
@@ -282,7 +276,7 @@ class _SubCategoriesTab extends State<SubCategoriesTab> {
               return SizedBox(width: 16);
             },
             itemBuilder: (BuildContext context, int index) {
-              return Mp3ListItemShimmerHeight();
+              return Mp3ListItem.shimmer();
             },
           ),
         )
@@ -301,7 +295,7 @@ class _SubCategoriesTab extends State<SubCategoriesTab> {
           return SizedBox(width: 16);
         },
         itemBuilder: (BuildContext context, int index) {
-          return Mp3ListItemShimmerHeight();
+          return Mp3ListItem.shimmer();
         },
       ),
     );
@@ -341,7 +335,7 @@ class _SubCategoriesTab extends State<SubCategoriesTab> {
               return SizedBox(width: 16);
             },
             itemBuilder: (BuildContext context, int index) {
-              return Mp3ListItemShimmerHeight();
+              return Mp3ListItem.shimmer();
             },
           ),
         )

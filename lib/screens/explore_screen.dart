@@ -1,281 +1,233 @@
 import 'dart:async';
 
+import 'package:animations/animations.dart';
+import 'package:carbon_icons/carbon_icons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
+import '/domain/models/audiofile_model.dart';
+import '/domain/models/category_block.dart';
+import '/screens/home/category_list.dart';
 import '/screens/tabs_subcategory_screen.dart';
-import '/utils/firestore_helper.dart';
+import '/utils/app_theme.dart';
+import '/utils/global_functions.dart';
+import '/widgets/app_scaffold/adaptive_app_bar.dart';
+import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/search_list_item.dart';
-import '../domain/models/audiofile_model.dart';
-import '../domain/models/category_block.dart';
-import '../utils/colors.dart';
-import '../utils/global_functions.dart';
-import '../widgets/custom_tab_button.dart';
+import '/widgets/shared_axis_switcher.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
+
   @override
   State<ExploreScreen> createState() => _ExploreScreenState();
 }
 
-class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateMixin {
-  bool _showSearchList = false;
-  late TabController tabController;
-  final TextEditingController _controller = TextEditingController();
-  String searchText = "";
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final list = ['Happiness', 'Anxiety', 'Rain', 'Soundscapes', 'Sleep', 'Meditations'];
-  List<CategoryBlock> categories = [];
+class _ExploreScreenState extends State<ExploreScreen>
+    with SingleTickerProviderStateMixin {
+  final firestore = FirebaseFirestore.instance;
 
-  @override
-  Widget build(BuildContext context) {
-    return Placeholder();
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              gradientColorOne,
-              gradientColorTwo,
-            ],
-            stops: [0.0926, 1.0],
-          ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            SizedBox(
-              height: 50,
-            ),
-            Text(
-              "Explore",
-              style: TextStyle(fontSize: 20),
-            ),
-            Container(
-              padding: EdgeInsets.fromLTRB(16, 30, 16, 5),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Title, narrator, genre',
-                          hintStyle: TextStyle(color: Colors.grey),
-                          border: InputBorder.none,
-                          prefixIcon: Icon(
-                            Icons.search,
-                            color: Colors.white54,
-                          ),
-                        ),
-                        onTap: () {
-                          setState(() {
-                            _showSearchList = true;
-                          });
-                        },
-                        controller: _controller,
-                        onChanged: (value) {
-                          setState(() {
-                            _showSearchList = value.isNotEmpty;
-                            searchText = value;
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (_showSearchList) ...[
-              if (searchText.isEmpty) ...[
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(16, 10, 0, 0),
-                    child: Text(
-                      "Popular",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 22),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: 5,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(list[index], style: TextStyle(color: Colors.white)),
-                        onTap: () {
-                          setState(() {
-                            _controller.text = list[index];
-                            searchText = list[index];
-                          });
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ],
-              if (searchText.isNotEmpty)
-                StreamBuilder<List<DocumentSnapshot>>(
-                  stream: searchTracksNew(searchText),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    }
+  static const _searchSuggestions = [
+    'Happiness',
+    'Anxiety',
+    'Rain',
+    'Soundscapes',
+    'Sleep',
+    'Meditations'
+  ];
 
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Padding(
-                        padding: EdgeInsets.all(16),
-                        child: CircularProgressIndicator(color: Colors.white),
-                      );
-                    } else if (snapshot.connectionState == ConnectionState.done &&
-                        snapshot.data == null) {
-                      return Padding(
-                        padding: EdgeInsets.only(top: 30),
-                        child: Text(
-                          "Couldn't find $searchText",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      );
-                    }
+  final _searchFocusNode = FocusNode();
+  final _controller = TextEditingController();
 
-                    if (snapshot.data != null) {
-                      return Expanded(
-                        child: ListView(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.fromLTRB(16, 16, 16, 165),
-                          children: snapshot.data!.map((document) {
-                            AudioTrack track = AudioTrack.fromFirestore(document);
-                            return SearchListItem(
-                              imageUrl: track.thumbnail,
-                              mp3Name: track.title,
-                              mp3Category: track.categories.isNotEmpty
-                                  ? track.categories[0].categoryName
-                                  : '',
-                              mp3Duration: track.length,
-                              speaker: track.speaker,
-                              onPress: () {
-                                playTrack(track);
-                                // TODO: widget.panelFunction(false);
-                              },
-                            );
-                          }).toList(),
-                        ),
-                      );
-                    } else {
-                      return Padding(
-                        padding: EdgeInsets.only(top: 30),
-                        child: Text(
-                          "Couldn't find $searchText",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      );
-                    }
-                  },
-                )
-            ],
-            if (!_showSearchList)
-              if (categories.isNotEmpty) ...[
-                SizedBox(
-                  height: 50, // adjust the height as needed
-                  child: TabBar(
-                    padding: EdgeInsets.zero,
-                    indicatorPadding: EdgeInsets.zero,
-                    labelPadding: EdgeInsets.all(5),
-                    indicatorColor: Colors.transparent,
-                    controller: tabController,
-                    isScrollable: true,
-                    tabs: List<Widget>.generate(
-                      categories.length > 8 ? 8 : categories.length,
-                      (int index) {
-                        return CustomTabButton(
-                          title: categories[index].name,
-                          onPress: () {
-                            tabController.animateTo(index);
-                            setState(() {});
-                          },
-                          color: tabController.index == index
-                              ? tabSelectedColor
-                              : tabUnselectedColor,
-                          textColor: Colors.white,
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: TabBarView(
-                    controller: tabController,
-                    children: List<Widget>.generate(
-                      categories.length > 8 ? 8 : categories.length,
-                      (int index) {
-                        return TabsSubCategoryScreen(categories[index], () {
-                          // TODO:      widget.panelFunction,
-                        });
-                      },
-                    ),
-                  ),
-                ),
-              ]
-          ],
-        ),
-      ),
-    );
-  }
+  int? _selectedTabIndex;
+
+  late TabController _tabController;
+
+  List<CategoryBlock> _categories = [];
+
+  String get _searchText => _controller.text;
 
   @override
   void initState() {
     super.initState();
-    getCategoriesList();
-    tabController = TabController(length: 0, vsync: this);
+
+    _searchFocusNode.addListener(() {
+      setState(() {});
+    });
 
     // Add a listener to indexNotifier
     indexNotifier.addListener(() {
       int newIndex = indexNotifier.value;
 
-      tabController.animateTo(newIndex);
+      _tabController.animateTo(newIndex);
     });
-  }
-
-  void _updateTabControllerLength(int newLength) {
-    setState(() {
-      tabController = TabController(length: newLength, vsync: this);
-    });
-    tabController.addListener(() {
-      setState(() {});
-    });
-  }
-
-  void getCategoriesList() async {
-    categories = await getCategoryBlocks();
-    if (categories.isNotEmpty) {
-      _updateTabControllerLength(categories.length);
-    }
-    setState(() {});
   }
 
   @override
-  void dispose() {
-    tabController.dispose();
-    super.dispose();
-  }
+  Widget build(BuildContext context) => AppScaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: (context, isMobile) => AdaptiveAppBar(
+          title: 'Explore',
+        ),
+        bodyPadding: EdgeInsets.zero,
+        body: (context, isMobile) {
+          final colors = Theme.of(context).colorScheme;
+          return NestedScrollView(
+              headerSliverBuilder: (context, value) => [
+                    _buildSearchbar(colors.outline),
+                    _buildCategoriesList(),
+                  ],
+              body: SharedAxisSwitcher(
+                disableFillColor: true,
+                transitionType: SharedAxisTransitionType.scaled,
+                child: _searchFocusNode.hasFocus
+                    ? Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          if (_searchText.isEmpty) ...[
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(16, 10, 0, 0),
+                                child: Text(
+                                  "Popular",
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(fontSize: 22),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: 5,
+                                itemBuilder: (context, index) => ListTile(
+                                  title: Text(_searchSuggestions[index]),
+                                  onTap: () =>
+                                      _controller.text = _searchSuggestions[index],
+                                ),
+                              ),
+                            ),
+                          ],
+                          if (_searchText.isNotEmpty)
+                            StreamBuilder<List<DocumentSnapshot>>(
+                              stream: searchTracksNew(_searchText),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
+                                if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                }
 
-  // Stream<QuerySnapshot> searchTracks(String query) {
-  //   return firestore
-  //       .collection('Tracks')
-  //       .where('categories', arrayContains: query)
-  //       .snapshots();
-  // }
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return Padding(
+                                    padding: EdgeInsets.all(16),
+                                    child: CircularProgressIndicator(color: Colors.white),
+                                  );
+                                } else if (snapshot.connectionState ==
+                                        ConnectionState.done &&
+                                    snapshot.data == null) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(top: 30),
+                                    child: Text(
+                                      "Couldn't find $_searchText",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  );
+                                }
+
+                                if (snapshot.data != null) {
+                                  return Expanded(
+                                    child: ListView(
+                                      shrinkWrap: true,
+                                      padding: EdgeInsets.fromLTRB(16, 16, 16, 165),
+                                      children: snapshot.data!.map((document) {
+                                        AudioTrack track =
+                                            AudioTrack.fromFirestore(document);
+                                        return SearchListItem(
+                                          imageUrl: track.thumbnail,
+                                          mp3Name: track.title,
+                                          mp3Category: track.categories.isNotEmpty
+                                              ? track.categories[0].categoryName
+                                              : '',
+                                          mp3Duration: track.length,
+                                          speaker: track.speaker,
+                                          onPress: () {
+                                            playTrack(track);
+                                            // TODO: widget.panelFunction(false);
+                                          },
+                                        );
+                                      }).toList(),
+                                    ),
+                                  );
+                                } else {
+                                  return Padding(
+                                    padding: EdgeInsets.only(top: 30),
+                                    child: Text(
+                                      "Couldn't find $_searchText",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  );
+                                }
+                              },
+                            )
+                        ],
+                      )
+                    : _categories.isEmpty
+                        ? Placeholder()
+                        : TabBarView(
+                            physics: NeverScrollableScrollPhysics(),
+                            controller: _tabController,
+                            children: _categories
+                                .map((category) => TabsSubCategoryScreen(
+                                      category,
+                                      key: ValueKey(category.id),
+                                    ))
+                                .toList(),
+                          ),
+              ));
+        },
+      );
+
+  Widget _buildCategoriesList() => SliverAppBar(
+        pinned: true,
+        toolbarHeight: 72,
+        title: Column(
+          children: [
+            CategoryList(
+              selectedTabIndex: _selectedTabIndex,
+              onLoad: (items) => setState(() {
+                _tabController = TabController(length: items.length, vsync: this);
+                _categories = items;
+              }),
+              onTap: (categoryBlock) {
+                _tabController.animateTo(_categories.indexOf(categoryBlock));
+                setState(() {
+                  _selectedTabIndex = _categories.indexOf(categoryBlock);
+                });
+              },
+            ),
+            SizedBox(height: 16),
+          ],
+        ),
+      );
+
+  Widget _buildSearchbar(Color outlineColor) => SliverAppBar(
+        floating: true,
+        toolbarHeight: 72,
+        titleSpacing: AppTheme.sidePadding,
+        title: TextFormField(
+          focusNode: _searchFocusNode,
+          decoration: InputDecoration(
+            prefixIcon: Icon(CarbonIcons.search),
+            hintText: 'Search',
+            border: OutlineInputBorder(borderRadius: AppTheme.smallBorderRadius),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: AppTheme.smallBorderRadius,
+              borderSide: BorderSide(color: outlineColor),
+            ),
+          ),
+          controller: _controller,
+        ),
+      );
 
   Stream<List<DocumentSnapshot>> searchTracksNew(String query) {
     final CollectionReference tracksCollection =
@@ -318,8 +270,8 @@ class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateM
     }
 
     // Check for categories and handle category-based queries
-    if (categories.isNotEmpty) {
-      final matchedCategory = categories.firstWhereOrNull(
+    if (_categories.isNotEmpty) {
+      final matchedCategory = _categories.firstWhereOrNull(
         (category) => category.name.toLowerCase().contains(normalizedQuery),
       );
 

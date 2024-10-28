@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  animations: ^2.0.11
   app_links: ^6.3.2
   audio_service: ^0.18.9
   audio_session: ^0.1.13

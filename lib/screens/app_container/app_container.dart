@@ -38,6 +38,11 @@ class AppContainerState extends State<AppContainer> with SingleTickerProviderSta
     super.initState();
     Get.the<PageManager>().init();
     Get.the<PageManager>().currentMediaItemNotifier.value = MediaItem(id: '', title: '');
+  }
+
+  @override
+  void didUpdateWidget(covariant AppContainer oldWidget) {
+    super.didUpdateWidget(oldWidget);
     _fetchFavoriteTracksList();
   }
 
@@ -82,28 +87,9 @@ class AppContainerState extends State<AppContainer> with SingleTickerProviderSta
     final bottom = MediaQuery.paddingOf(context).bottom;
     return BlocProvider.value(
       value: _navigationCubit,
-      child: WillPopScope(
-        onWillPop: () async {
-          // TODO: FIX
-          // final currentNavigator =
-          //     AppNavigation.allNavItems[_navigationCubit.state.index].navigatorKey.currentState!;
-          // if (currentNavigator.canPop()) {
-          //   currentNavigator.pop();
-          //   return false;
-          // } else {
-          //   if (panelController.isAttached) {
-          //     if (panelController.isPanelOpen) {
-          //       panelController.close();
-          //       return false;
-          //     }
-          //   }
-          // }
-          return true;
-        },
-        child: AppScaffold(
-          bodyPadding: EdgeInsets.zero,
-          body: (context, isMobile) => isMobile ? _buildMobile(bottom) : _buildDesktop(),
-        ),
+      child: AppScaffold(
+        bodyPadding: EdgeInsets.zero,
+        body: (context, isMobile) => isMobile ? _buildMobile(bottom) : _buildDesktop(),
       ),
     );
   }
@@ -140,22 +126,21 @@ class AppContainerState extends State<AppContainer> with SingleTickerProviderSta
 
   Widget _buildSlidingPanel() => SlidingPanel(controller: _audioPlayerAnimCtrl);
 
-  Widget _buildNavigationScreen(NavItem item, bool isMobile) {
-    return BlocBuilder<NavigationCubit, NavItem>(
-      builder: (context, state) {
-        _handleBadRoute(isMobile, state, context);
-        return Offstage(
-          offstage: state.index != item.index,
-          child: Navigator(
-            key: item.navigatorKey,
-            onGenerateRoute: (routeSettings) => MaterialPageRoute(
-              builder: (context) => item.screen!,
+  Widget _buildNavigationScreen(NavItem item, bool isMobile) =>
+      BlocBuilder<NavigationCubit, NavItem>(
+        builder: (context, state) {
+          _handleBadRoute(isMobile, state, context);
+          return Offstage(
+            offstage: state.index != item.index,
+            child: Navigator(
+              key: item.navigatorKey,
+              onGenerateRoute: (routeSettings) => MaterialPageRoute(
+                builder: (context) => item.screen!,
+              ),
             ),
-          ),
-        );
-      },
-    );
-  }
+          );
+        },
+      );
 
   // HACK
   void _handleBadRoute(bool isMobile, NavItem state, BuildContext context) {

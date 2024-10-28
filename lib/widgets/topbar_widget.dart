@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '/utils/colors.dart';
 import '/widgets/circle_icon_button.dart';
+import 'app_scaffold/adaptive_app_bar.dart';
 
 class TopBar extends StatelessWidget {
   final String heading;
@@ -10,6 +11,10 @@ class TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return AdaptiveAppBar(
+      title: heading,
+      centerTitle: false,
+    );
     // TODO: move to appbar
     return Stack(
       children: [

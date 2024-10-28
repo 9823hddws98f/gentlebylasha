@@ -204,7 +204,7 @@ showLoaderDialog(BuildContext context, String message) {
   );
 }
 
-playTrack(AudioTrack audioTrack) {
+void playTrack(AudioTrack audioTrack) {
   //getIt<PageManager>().init();
   getIt<PageManager>().playSinglePlaylist(
       MediaItem(

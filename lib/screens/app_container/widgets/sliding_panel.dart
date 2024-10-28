@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
@@ -20,7 +21,7 @@ class SlidingPanel extends StatelessWidget {
   final AnimationController controller;
 
   PanelController get _panelController => _panelManager.panelController;
-  ValueNotifier<double> get _panelVisibility => _panelManager.panelVisibility;
+  ValueListenable<double> get _panelVisibility => _panelManager.panelVisibility;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,7 @@ class SlidingPanel extends StatelessWidget {
                 _panelController.isAttached &&
                 _panelController.isPanelClosed &&
                 _panelVisibility.value > 0) {
-              _panelVisibility.value = 0;
+              _panelManager.hidePanel();
             }
           },
           child: child,

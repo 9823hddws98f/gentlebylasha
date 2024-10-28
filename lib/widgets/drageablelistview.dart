@@ -4,7 +4,7 @@ import '../domain/models/audiofile_model.dart';
 import '../domain/services/service_locator.dart';
 import '../page_manager.dart';
 import '../utils/global_functions.dart';
-import 'mp3_card_list_item_width.dart';
+import 'mp3_list_item.dart';
 
 class WidthTrackListHorizontalNew extends StatelessWidget {
   final List<AudioTrack> audiList;
@@ -39,12 +39,12 @@ class WidthTrackListHorizontalNew extends StatelessWidget {
           (index) => Mp3ListItem(
             key: Key('$index'),
             imageUrl: audiList[index].thumbnail,
-            mp3Name: audiList[index].title,
-            mp3Category: audiList[index].categories.isEmpty
+            name: audiList[index].title,
+            category: audiList[index].categories.isEmpty
                 ? ""
                 : audiList[index].categories[0].categoryName,
-            mp3Duration: audiList[index].length,
-            onPress: () {
+            duration: audiList[index].length,
+            onTap: () {
               if (musicList) {
                 getIt<PageManager>().loadPlaylist(audiList, index);
                 panelFunction();

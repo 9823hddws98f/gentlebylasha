@@ -14,12 +14,16 @@ class BlockHeader extends StatelessWidget {
   final String title;
   final Widget? seeAll;
 
+  static const _padding = EdgeInsets.fromLTRB(
+    AppTheme.sidePadding,
+    8,
+    AppTheme.sidePadding,
+    16,
+  );
+
   @override
   Widget build(BuildContext context) => Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: AppTheme.sidePadding,
-          vertical: 16,
-        ),
+        padding: _padding,
         child: Row(
           children: [
             Expanded(
@@ -47,17 +51,14 @@ class BlockHeader extends StatelessWidget {
       );
 
   static Widget shimmer() => Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: AppTheme.sidePadding,
-          vertical: 16,
-        ),
+        padding: _padding,
         child: Row(
           children: [
             Shimmerize(
               child: Card(
                 child: SizedBox(
                   width: 100,
-                  height: 30,
+                  height: 20,
                 ),
               ),
             ),
@@ -65,8 +66,8 @@ class BlockHeader extends StatelessWidget {
             Shimmerize(
               child: Card(
                 child: SizedBox(
-                  width: 70,
-                  height: 30,
+                  width: 40,
+                  height: 20,
                 ),
               ),
             )
