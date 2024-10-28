@@ -5,12 +5,13 @@ import '/domain/blocs/authentication/app_bloc.dart';
 import '/domain/blocs/authentication/auth_repository.dart';
 import '/domain/blocs/user/user_bloc.dart';
 import '/domain/services/user_service.dart';
+import '/page_manager.dart';
 import '/utils/get.dart';
-import '../../page_manager.dart';
 import 'audio_handler.dart';
 import 'audio_panel_manager.dart';
 import 'language_constants.dart';
 import 'playlist_repository.dart';
+import 'tracks_service.dart';
 
 GetIt getIt = GetIt.instance;
 
@@ -24,6 +25,7 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<UserBloc>(() => UserBloc(Get.the<UsersService>()));
   getIt.registerLazySingleton<AudioPanelManager>(() => AudioPanelManager.instance);
   getIt.registerLazySingleton<TranslationService>(() => TranslationService.instance);
+  getIt.registerLazySingleton<TracksService>(() => TracksService.instance);
   // page state
   getIt.registerLazySingleton<PageManager>(() => PageManager());
 }

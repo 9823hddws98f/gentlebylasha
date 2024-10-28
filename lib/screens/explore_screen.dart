@@ -1,10 +1,11 @@
-import 'dart:async';
-
 import 'package:animations/animations.dart';
 import 'package:carbon_icons/carbon_icons.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:sleeptales/domain/services/audio_panel_manager.dart';
+import 'package:sleeptales/domain/services/tracks_service.dart';
+import 'package:sleeptales/utils/get.dart';
+import 'package:sleeptales/utils/tx_loader.dart';
+import 'package:sleeptales/widgets/input/tx_search_bar.dart';
 
 import '/domain/models/audiofile_model.dart';
 import '/domain/models/category_block.dart';
@@ -26,7 +27,8 @@ class ExploreScreen extends StatefulWidget {
 
 class _ExploreScreenState extends State<ExploreScreen>
     with SingleTickerProviderStateMixin {
-  final firestore = FirebaseFirestore.instance;
+  final _trackService = Get.the<TracksService>();
+  final _audioPanelManager = Get.the<AudioPanelManager>();
 
   static const _searchSuggestions = [
     'Happiness',
@@ -37,176 +39,121 @@ class _ExploreScreenState extends State<ExploreScreen>
     'Meditations'
   ];
 
-  final _searchFocusNode = FocusNode();
-  final _controller = TextEditingController();
+  final _txLoader = TxLoader();
+  TabController? _tabController;
 
-  int? _selectedTabIndex;
-
-  late TabController _tabController;
-
+  List<AudioTrack> _tracks = [];
   List<CategoryBlock> _categories = [];
+  String? _error;
 
-  String get _searchText => _controller.text;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _searchFocusNode.addListener(() {
-      setState(() {});
-    });
-
-    // Add a listener to indexNotifier
-    indexNotifier.addListener(() {
-      int newIndex = indexNotifier.value;
-
-      _tabController.animateTo(newIndex);
-    });
-  }
+  String _query = '';
+  bool get _isSearching => _query.isNotEmpty;
 
   @override
   Widget build(BuildContext context) => AppScaffold(
         resizeToAvoidBottomInset: false,
+        bodyPadding: EdgeInsets.zero,
         appBar: (context, isMobile) => AdaptiveAppBar(
           title: 'Explore',
         ),
-        bodyPadding: EdgeInsets.zero,
         body: (context, isMobile) {
           final colors = Theme.of(context).colorScheme;
           return NestedScrollView(
-              headerSliverBuilder: (context, value) => [
-                    _buildSearchbar(colors.outline),
-                    _buildCategoriesList(),
-                  ],
-              body: SharedAxisSwitcher(
-                disableFillColor: true,
-                transitionType: SharedAxisTransitionType.scaled,
-                child: _searchFocusNode.hasFocus
-                    ? Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          if (_searchText.isEmpty) ...[
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(16, 10, 0, 0),
-                                child: Text(
-                                  "Popular",
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(fontSize: 22),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: ListView.builder(
-                                itemCount: 5,
-                                itemBuilder: (context, index) => ListTile(
-                                  title: Text(_searchSuggestions[index]),
-                                  onTap: () =>
-                                      _controller.text = _searchSuggestions[index],
-                                ),
-                              ),
-                            ),
-                          ],
-                          if (_searchText.isNotEmpty)
-                            StreamBuilder<List<DocumentSnapshot>>(
-                              stream: searchTracksNew(_searchText),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
-                                if (snapshot.hasError) {
-                                  return Text('Error: ${snapshot.error}');
-                                }
-
-                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return Padding(
-                                    padding: EdgeInsets.all(16),
-                                    child: CircularProgressIndicator(color: Colors.white),
-                                  );
-                                } else if (snapshot.connectionState ==
-                                        ConnectionState.done &&
-                                    snapshot.data == null) {
-                                  return Padding(
-                                    padding: EdgeInsets.only(top: 30),
-                                    child: Text(
-                                      "Couldn't find $_searchText",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  );
-                                }
-
-                                if (snapshot.data != null) {
-                                  return Expanded(
-                                    child: ListView(
-                                      shrinkWrap: true,
-                                      padding: EdgeInsets.fromLTRB(16, 16, 16, 165),
-                                      children: snapshot.data!.map((document) {
-                                        AudioTrack track =
-                                            AudioTrack.fromFirestore(document);
-                                        return SearchListItem(
-                                          imageUrl: track.thumbnail,
-                                          mp3Name: track.title,
-                                          mp3Category: track.categories.isNotEmpty
-                                              ? track.categories[0].categoryName
-                                              : '',
-                                          mp3Duration: track.length,
-                                          speaker: track.speaker,
-                                          onPress: () {
-                                            playTrack(track);
-                                            // TODO: widget.panelFunction(false);
-                                          },
-                                        );
-                                      }).toList(),
-                                    ),
-                                  );
-                                } else {
-                                  return Padding(
-                                    padding: EdgeInsets.only(top: 30),
-                                    child: Text(
-                                      "Couldn't find $_searchText",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  );
-                                }
-                              },
-                            )
-                        ],
-                      )
-                    : _categories.isEmpty
-                        ? Placeholder()
-                        : TabBarView(
-                            physics: NeverScrollableScrollPhysics(),
-                            controller: _tabController,
-                            children: _categories
-                                .map((category) => TabsSubCategoryScreen(
-                                      category,
-                                      key: ValueKey(category.id),
-                                    ))
-                                .toList(),
-                          ),
-              ));
+            headerSliverBuilder: (context, value) => [
+              _buildSearchbar(colors.outline),
+              _buildCategoriesList(),
+            ],
+            body: SharedAxisSwitcher(
+              disableFillColor: true,
+              transitionType: SharedAxisTransitionType.scaled,
+              child: _isSearching
+                  ? _buildSearchView(colors)
+                  : _categories.isEmpty
+                      ? Placeholder()
+                      : TabBarView(
+                          physics: NeverScrollableScrollPhysics(),
+                          controller: _tabController,
+                          children: _categories
+                              .map((category) => TabsSubCategoryScreen(
+                                    category,
+                                    key: ValueKey(category.id),
+                                  ))
+                              .toList(),
+                        ),
+            ),
+          );
         },
       );
 
+  Widget _buildSearchView(ColorScheme colors) {
+    if (_error != null) return Text('Error: $_error');
+    if (_txLoader.loading) {
+      return Padding(
+        padding: EdgeInsets.all(16),
+        child: CircularProgressIndicator(),
+      );
+    } else if (_tracks.isEmpty) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(CarbonIcons.search, size: 62, color: colors.onSurfaceVariant),
+          const SizedBox(height: 16),
+          Text.rich(
+            TextSpan(
+              style: TextStyle(color: colors.onSurfaceVariant),
+              children: [
+                TextSpan(text: 'Couldn\'t find "'),
+                TextSpan(
+                  text: _query,
+                  style: const TextStyle(fontWeight: FontWeight.w500),
+                ),
+                TextSpan(text: '"'),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+    return ListView.separated(
+      itemCount: _tracks.length,
+      padding: EdgeInsets.only(bottom: 150),
+      separatorBuilder: (context, index) => const SizedBox(height: 2),
+      itemBuilder: (context, index) {
+        final track = _tracks[index];
+        return SearchListItem(
+          imageUrl: track.thumbnail,
+          name: track.title,
+          category: track.categories.firstOrNull?.categoryName ?? '',
+          duration: track.length,
+          speaker: track.speaker,
+          onPress: () {
+            playTrack(track);
+            _audioPanelManager.showPanel(false);
+          },
+        );
+      },
+    );
+  }
+
   Widget _buildCategoriesList() => SliverAppBar(
         pinned: true,
-        toolbarHeight: 72,
-        title: Column(
-          children: [
-            CategoryList(
-              selectedTabIndex: _selectedTabIndex,
-              onLoad: (items) => setState(() {
-                _tabController = TabController(length: items.length, vsync: this);
-                _categories = items;
-              }),
-              onTap: (categoryBlock) {
-                _tabController.animateTo(_categories.indexOf(categoryBlock));
-                setState(() {
-                  _selectedTabIndex = _categories.indexOf(categoryBlock);
-                });
-              },
-            ),
-            SizedBox(height: 16),
-          ],
+        toolbarHeight: 62,
+        title: ValueListenableBuilder(
+          valueListenable: indexNotifier,
+          builder: (context, index, child) => CategoryList(
+            selectedTabIndex: index,
+            onLoad: (items) => setState(() {
+              _tabController = TabController(length: items.length, vsync: this);
+              _categories = items;
+            }),
+            onTap: _isSearching
+                ? null
+                : (categoryBlock) {
+                    _tabController!.animateTo(_categories.indexOf(categoryBlock));
+                    indexNotifier.value = _categories.indexOf(categoryBlock);
+                  },
+          ),
         ),
       );
 
@@ -214,84 +161,29 @@ class _ExploreScreenState extends State<ExploreScreen>
         floating: true,
         toolbarHeight: 72,
         titleSpacing: AppTheme.sidePadding,
-        title: TextFormField(
-          focusNode: _searchFocusNode,
-          decoration: InputDecoration(
-            prefixIcon: Icon(CarbonIcons.search),
-            hintText: 'Search',
-            border: OutlineInputBorder(borderRadius: AppTheme.smallBorderRadius),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: AppTheme.smallBorderRadius,
-              borderSide: BorderSide(color: outlineColor),
-            ),
-          ),
-          controller: _controller,
+        title: TxSearchBar(
+          onSearch: _handleSearch,
         ),
       );
 
-  Stream<List<DocumentSnapshot>> searchTracksNew(String query) {
-    final CollectionReference tracksCollection =
-        FirebaseFirestore.instance.collection('Tracks');
-    final normalizedQuery = query.toLowerCase();
-
-    final StreamController<List<DocumentSnapshot>> controller =
-        StreamController<List<DocumentSnapshot>>();
-
-    void processQuerySnapshot(Stream<QuerySnapshot> queryStream) {
-      queryStream.listen((snapshot) async {
-        debugPrint('Query returned ${snapshot.docs.length} documents');
-
-        // Filter documents locally for case-insensitive matching
-        final filteredDocs = snapshot.docs.where((doc) {
-          final title =
-              (doc.data() as Map<String, dynamic>)['title']?.toString().toLowerCase() ??
-                  '';
-          return title.contains(normalizedQuery);
-        }).toList();
-
-        if (filteredDocs.isNotEmpty) {
-          // Emit the filtered documents
-          controller.add(filteredDocs);
-        } else {
-          // If no title matches, perform the speaker query
-          final speakerSnapshot = await tracksCollection
-              .where('speaker',
-                  isGreaterThanOrEqualTo: query.substring(0, 1).toUpperCase())
-              .where('speaker',
-                  isLessThanOrEqualTo: '${query.substring(0, 1).toUpperCase()}\uf8ff')
-              .get();
-
-          debugPrint('Speaker query returned ${speakerSnapshot.docs.length} documents');
-
-          // Emit speaker query results
-          controller.add(speakerSnapshot.docs);
-        }
+  Future<void> _handleSearch(String query) {
+    if (_error != null) {
+      setState(() => _error = null);
+    }
+    if (query.isEmpty) {
+      setState(() {
+        _tracks = [];
+        _query = '';
       });
+      return Future.value();
     }
-
-    // Check for categories and handle category-based queries
-    if (_categories.isNotEmpty) {
-      final matchedCategory = _categories.firstWhereOrNull(
-        (category) => category.name.toLowerCase().contains(normalizedQuery),
-      );
-
-      if (matchedCategory != null) {
-        final categoryStream = tracksCollection
-            .where('categories', arrayContains: matchedCategory.id)
-            .snapshots();
-        return categoryStream.map((snapshot) => snapshot.docs);
-      }
-    }
-
-    // Perform the query on the title field and handle results
-    final titleStream = tracksCollection
-        .where('title', isGreaterThanOrEqualTo: query.substring(0, 1).toUpperCase())
-        .where('title',
-            isLessThanOrEqualTo: '${query.substring(0, 1).toUpperCase()}\uf8ff')
-        .snapshots();
-
-    processQuerySnapshot(titleStream);
-
-    return controller.stream;
+    return _txLoader.load(
+      () => _trackService.searchTracks(query),
+      ensure: () => mounted,
+      onSuccess: (tracks) => setState(() {
+        _tracks = tracks;
+        _query = query;
+      }),
+    );
   }
 }

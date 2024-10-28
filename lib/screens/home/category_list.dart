@@ -58,7 +58,9 @@ class _CategoryListState extends State<CategoryList> {
                 index,
                 colors,
                 label: _categoryBlocks[index].name,
-                onTap: () => widget.onTap?.call(_categoryBlocks[index]),
+                onTap: widget.onTap == null
+                    ? null
+                    : () => widget.onTap!(_categoryBlocks[index]),
               ),
             ),
     );
@@ -68,7 +70,7 @@ class _CategoryListState extends State<CategoryList> {
     int index,
     ColorScheme colors, {
     required String label,
-    required VoidCallback onTap,
+    required VoidCallback? onTap,
   }) =>
       FilledButton(
         style: FilledButton.styleFrom(
