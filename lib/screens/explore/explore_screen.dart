@@ -53,7 +53,7 @@ class _ExploreScreenState extends State<ExploreScreen>
           return NestedScrollView(
             controller: _scrollController,
             headerSliverBuilder: (context, value) => [
-              _buildSearchbar(colors.outline),
+              _buildSearchbar(isMobile, colors.outline),
               _buildCategoriesList(),
             ],
             body: SharedAxisSwitcher(
@@ -108,6 +108,7 @@ class _ExploreScreenState extends State<ExploreScreen>
     return ListView.separated(
       itemCount: _tracks.length,
       padding: EdgeInsets.only(bottom: 150),
+      cacheExtent: 1000,
       separatorBuilder: (context, index) => const SizedBox(height: 2),
       itemBuilder: (context, index) {
         final track = _tracks[index];
@@ -147,8 +148,9 @@ class _ExploreScreenState extends State<ExploreScreen>
         ),
       );
 
-  Widget _buildSearchbar(Color outlineColor) => SliverAppBar(
+  Widget _buildSearchbar(bool isMobile, Color outlineColor) => SliverAppBar(
         floating: true,
+        pinned: !isMobile,
         toolbarHeight: 72,
         titleSpacing: AppTheme.sidePadding,
         title: TxSearchBar(

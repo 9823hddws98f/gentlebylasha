@@ -10,8 +10,8 @@ import 'audio_play_button.dart';
 import 'audio_progress_bar_home.dart';
 import 'current_song_title_small.dart';
 
-class AudioPanelPreview extends StatelessWidget {
-  AudioPanelPreview({super.key});
+class MobileMusicPreview extends StatelessWidget {
+  MobileMusicPreview({super.key});
 
   static const height = 72.0;
 

@@ -5,10 +5,11 @@ import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:sleeptales/constants/assets.dart';
-import 'package:sleeptales/domain/blocs/authentication/auth_repository.dart';
-import 'package:sleeptales/domain/cubits/navigation.dart';
-import 'package:sleeptales/utils/get.dart';
+
+import '/constants/assets.dart';
+import '/domain/blocs/authentication/auth_repository.dart';
+import '/domain/cubits/navigation.dart';
+import '/utils/get.dart';
 
 class AppSideBar extends StatefulWidget {
   const AppSideBar({super.key, required this.child});
@@ -30,7 +31,7 @@ class _AppSideBarState extends State<AppSideBar> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final colors = Theme.of(context).colorScheme;
     return Stack(
       children: [
         Row(
@@ -40,7 +41,7 @@ class _AppSideBarState extends State<AppSideBar> {
               tween: Tween<double>(begin: 1, end: _isExpanded ? 1 : 0),
               curve: Easing.standard,
               builder: (context, animation, child) => Container(
-                color: theme.colorScheme.surface,
+                color: colors.surface,
                 width: lerpDouble(66, 240, animation),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -67,7 +68,7 @@ class _AppSideBarState extends State<AppSideBar> {
                                   label: item.title,
                                   icon: item.icon,
                                   selected: state.index == item.index,
-                                  colorScheme: theme.colorScheme,
+                                  colorScheme: colors,
                                   animation: animation,
                                   onPressed: () => _select(item),
                                 ),
@@ -89,7 +90,7 @@ class _AppSideBarState extends State<AppSideBar> {
                         label: 'Logout',
                         icon: CarbonIcons.logout,
                         selected: false,
-                        colorScheme: theme.colorScheme,
+                        colorScheme: colors,
                         animation: animation,
                         onPressed: () => Get.the<AuthRepository>().logOut(),
                       ),
@@ -98,34 +99,50 @@ class _AppSideBarState extends State<AppSideBar> {
                 ),
               ),
             ),
-            Expanded(
-              child: widget.child,
-            ),
+            _buildBody(colors),
           ],
         ),
-        TweenAnimationBuilder(
-          duration: _duration,
-          tween: Tween<double>(begin: 1, end: _isExpanded ? 1 : 0),
-          curve: Easing.standard,
-          builder: (context, animation, child) => Padding(
-            padding: EdgeInsets.only(left: lerpDouble(15, 220, animation)!, top: 30),
-            child: Transform.rotate(
-              angle: lerpDouble(0, pi, animation)!,
-              child: child!,
-            ),
-          ),
-          child: IconButton(
-            style: IconButton.styleFrom(
-              backgroundColor: theme.colorScheme.surface,
-              side: BorderSide(color: theme.colorScheme.outline),
-            ),
-            icon: const Icon(CarbonIcons.chevron_right),
-            onPressed: () => setState(() => _isExpanded = !_isExpanded),
-          ),
-        ),
+        _buildCollapseButton(colors),
       ],
     );
   }
+
+  Widget _buildBody(ColorScheme colors) => Expanded(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 48),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Material(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+                side: BorderSide(color: colors.outline),
+              ),
+              child: widget.child,
+            ),
+          ),
+        ),
+      );
+
+  Widget _buildCollapseButton(ColorScheme colors) => TweenAnimationBuilder(
+        duration: _duration,
+        tween: Tween<double>(begin: 1, end: _isExpanded ? 1 : 0),
+        curve: Easing.standard,
+        builder: (context, animation, child) => Padding(
+          padding: EdgeInsets.only(left: lerpDouble(15, 220, animation)!, top: 30),
+          child: Transform.rotate(
+            angle: lerpDouble(0, pi, animation)!,
+            child: child!,
+          ),
+        ),
+        child: IconButton(
+          style: IconButton.styleFrom(
+            backgroundColor: colors.surface,
+            side: BorderSide(color: colors.outline),
+          ),
+          icon: const Icon(CarbonIcons.chevron_right),
+          onPressed: () => setState(() => _isExpanded = !_isExpanded),
+        ),
+      );
 
   Widget _buildButton(
     int index, {

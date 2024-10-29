@@ -2,24 +2,24 @@ import 'package:audio_service/audio_service.dart';
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:sleeptales/main.dart';
 
 import '/notifiers/repeat_notifier.dart';
 import '/page_manager.dart';
-import '/screens/app_container/widgets/audio_play_button.dart';
 import '/screens/timer_picker_screen.dart';
 import '/utils/app_theme.dart';
 import '/utils/common_extensions.dart';
 import '/utils/get.dart';
 import '/utils/global_functions.dart';
 import '/widgets/circle_icon_button.dart';
+import '/widgets/music/audio_play_button.dart';
 import 'current_song_title.dart';
 import 'favorite_button.dart';
 
 class ControlButtons extends StatefulWidget {
-  const ControlButtons({super.key, required this.mediaItem, this.isPlaylist = false});
+  const ControlButtons({super.key, required this.mediaItem});
 
   final MediaItem mediaItem;
-  final bool isPlaylist;
 
   @override
   State<ControlButtons> createState() => _ControlButtonsState();
@@ -49,54 +49,62 @@ class _ControlButtonsState extends State<ControlButtons> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: IconButton(
-              icon: Icon(CarbonIcons.arrow_left),
-              onPressed: () => Navigator.maybePop(context),
-            ),
-          ),
+          MyApp.isMobile
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: IconButton(
+                    icon: Icon(CarbonIcons.arrow_left),
+                    onPressed: () => Navigator.maybePop(context),
+                  ),
+                )
+              : SizedBox(height: 32),
           SizedBox(height: 16),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
-              child: Column(
-                children: [
-                  CurrentSongTitle(),
-                  SizedBox(height: 16),
-                  Expanded(
-                    child: Text(
-                      widget.mediaItem.displayDescription ?? '',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+            child: ValueListenableBuilder(
+              valueListenable: _pageManager.playlistNotifier,
+              builder: (context, playlist, child) {
+                final isPlaylist = playlist.isNotEmpty;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
+                  child: Column(
                     children: [
-                      FavoriteButton(trackId: widget.mediaItem.extras!['id']),
-                      _buildShareButton(),
-                      // TODO: Check this if its correct or not. may need to be [0]
-                      if (_categories != 'Sleep Story' && _categories != 'Meditation')
-                        _buildTimerButton(),
-                      if (widget.isPlaylist) _buildShuffleButton(primary),
-                    ].interleaveWith(SizedBox(width: 20)),
-                  ),
-                  SizedBox(height: 40),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      _buildRepeatButton(primary),
-                      widget.isPlaylist ? _buildSkipBackward() : _buildSeekBackward(),
-                      AudioPlayButton(large: true),
-                      widget.isPlaylist ? _buildSkipForward() : _buildSeekForward(),
-                      _buildStopButton(),
+                      CurrentSongTitle(),
+                      SizedBox(height: 16),
+                      Expanded(
+                        child: Text(
+                          widget.mediaItem.displayDescription ?? '',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FavoriteButton(trackId: widget.mediaItem.extras!['id']),
+                          _buildShareButton(),
+                          // TODO: Check this if its correct or not. may need to be [0]
+                          if (_categories != 'Sleep Story' && _categories != 'Meditation')
+                            _buildTimerButton(),
+                          if (isPlaylist) _buildShuffleButton(primary),
+                        ].interleaveWith(SizedBox(width: 20)),
+                      ),
+                      SizedBox(height: 40),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          _buildRepeatButton(primary),
+                          isPlaylist ? _buildSkipBackward() : _buildSeekBackward(),
+                          AudioPlayButton(large: true),
+                          isPlaylist ? _buildSkipForward() : _buildSeekForward(),
+                          _buildStopButton(),
+                        ],
+                      ),
+                      SizedBox(height: 40),
                     ],
                   ),
-                  SizedBox(height: 40),
-                ],
-              ),
+                );
+              },
             ),
           ),
         ],

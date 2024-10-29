@@ -4,10 +4,10 @@ import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
 import '/domain/services/audio_panel_manager.dart';
 import '/page_manager.dart';
+import '/screens/app_container/app_bottom_bar.dart';
+import '/screens/music_player/music_player_screen.dart';
 import '/utils/get.dart';
-import '../../music_player/music_player_screen.dart';
-import '../app_bottom_bar.dart';
-import 'audio_panel_preview.dart';
+import '/widgets/music/mobile_music_preview.dart';
 
 class SlidingPanel extends StatelessWidget {
   SlidingPanel({
@@ -34,7 +34,7 @@ class SlidingPanel extends StatelessWidget {
         duration: Durations.short3,
         curve: Easing.standard,
         builder: (context, value, child) => Transform.translate(
-          offset: Offset(0, (1 - value) * AudioPanelPreview.height),
+          offset: Offset(0, (1 - value) * MobileMusicPreview.height),
           child: child!,
         ),
         child: Listener(
@@ -52,17 +52,12 @@ class SlidingPanel extends StatelessWidget {
       child: SlidingUpPanel(
         controller: _panelController,
         maxHeight: height,
-        minHeight: bottom + AppBottomBar.height + AudioPanelPreview.height,
+        minHeight: bottom + AppBottomBar.height + MobileMusicPreview.height,
         color: Colors.transparent,
         onPanelSlide: (pos) => controller.value = pos,
         panelBuilder: () => Stack(
           children: [
-            ValueListenableBuilder(
-              valueListenable: _pageManager.playlistNotifier,
-              builder: (context, playlist, child) => MusicPlayerScreen(
-                isPlaylist: playlist.length > 1,
-              ),
-            ),
+            MusicPlayerScreen(),
             if (_panelController.isAttached)
               AnimatedBuilder(
                 animation: controller,
@@ -77,7 +72,7 @@ class SlidingPanel extends StatelessWidget {
                     child: child!,
                   ),
                 ),
-                child: AudioPanelPreview(),
+                child: MobileMusicPreview(),
               )
           ],
         ),

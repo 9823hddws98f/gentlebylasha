@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sleeptales/main.dart';
 
 import '/utils/app_theme.dart';
-import '/utils/common_extensions.dart';
 
 class AppScaffold extends StatelessWidget {
   const AppScaffold({
@@ -19,7 +19,7 @@ class AppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = context.isMobile;
+    final isMobile = MyApp.isMobile;
     return Scaffold(
       appBar: appBar?.call(context, isMobile) as PreferredSizeWidget?,
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,

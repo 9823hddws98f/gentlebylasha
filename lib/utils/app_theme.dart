@@ -121,7 +121,7 @@ class AppTheme {
           fontFamily: titleFont,
           color: colors.onSurface,
         ),
-        shape: borderShape,
+        shape: RoundedRectangleBorder(borderRadius: largeBorderRadius),
         elevation: 0,
       ),
       datePickerTheme: DatePickerThemeData(

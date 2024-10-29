@@ -11,9 +11,9 @@ import '/page_manager.dart';
 import '/utils/get.dart';
 import '/utils/global_functions.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
+import '/widgets/music/sliding_panel.dart';
 import 'app_bottom_bar.dart';
 import 'app_side_bar.dart';
-import 'widgets/sliding_panel.dart';
 
 class AppContainer extends StatefulWidget {
   static const routeName = '/dashboard';

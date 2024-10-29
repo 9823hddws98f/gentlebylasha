@@ -109,6 +109,15 @@ class MyApp extends StatefulWidget {
 
   const MyApp({super.key, required this.isWaitingForAuth});
 
+  static const mobileWidth = 700.0;
+  static const desktopContentWidth = 500.0;
+
+  static bool get isMobile {
+    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) return true;
+    // return MediaQuery.sizeOf(this).width < mobileWidth;
+    return MediaQuery.sizeOf(navigatorKey.currentContext!).width < mobileWidth;
+  }
+
   static final navigatorKey = GlobalKey<NavigatorState>();
 
   // TODO: THIS DOESNT REFRESH CORRECTLY

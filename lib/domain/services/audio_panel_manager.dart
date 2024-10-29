@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:sleeptales/page_manager.dart';
-import 'package:sleeptales/utils/get.dart';
+import 'package:sleeptales/main.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
+
+import '/page_manager.dart';
+import '/utils/get.dart';
 
 class AudioPanelManager {
   final panelController = PanelController();
@@ -23,12 +25,14 @@ class AudioPanelManager {
   }
 
   void maximize(bool dontShowPanel) async {
-    _unhide();
-    while (!panelController.isAttached) {
-      await Future.delayed(Duration(milliseconds: 100));
-    }
-    if (!dontShowPanel) {
-      panelController.open();
+    if (MyApp.isMobile) {
+      _unhide();
+      while (!panelController.isAttached) {
+        await Future.delayed(Duration(milliseconds: 100));
+      }
+      if (!dontShowPanel) {
+        panelController.open();
+      }
     }
     _pageManager.play();
   }

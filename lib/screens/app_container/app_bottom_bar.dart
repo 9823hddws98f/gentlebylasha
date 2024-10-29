@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sleeptales/utils/common_extensions.dart';
 
-import '../../domain/cubits/navigation.dart';
+import '/domain/cubits/navigation.dart';
+import '/main.dart';
 
 class AppBottomBar extends StatefulWidget {
   const AppBottomBar({super.key});
@@ -37,7 +37,7 @@ class _AppBottomBarState extends State<AppBottomBar> {
                   .toList(),
               onTap: (index) {
                 context.read<NavigationCubit>().select(
-                      context.isMobile
+                      MyApp.isMobile
                           ? AppNavigation.mobileNavItems[index]
                           : AppNavigation.desktopNavItems[index],
                     );

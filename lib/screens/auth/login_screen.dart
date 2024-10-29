@@ -1,24 +1,24 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sleeptales/main.dart';
 
 import '/constants/assets.dart';
 import '/domain/blocs/authentication/auth_repository.dart';
+import '/domain/services/language_constants.dart';
 import '/helper/validators.dart';
+import '/screens/app_container/app_container.dart';
 import '/screens/auth/signup_sheet.dart';
 import '/utils/app_theme.dart';
 import '/utils/command_trigger.dart';
-import '/utils/common_extensions.dart';
 import '/utils/enums.dart';
 import '/utils/get.dart';
 import '/utils/global_functions.dart';
 import '/utils/modals.dart';
 import '/utils/tx_button.dart';
+import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/input/password_edit_text.dart';
-import '../../domain/services/language_constants.dart';
-import '../../widgets/app_scaffold/adaptive_app_bar.dart';
-import '../app_container/app_container.dart';
 import 'forgot_password_sheet.dart';
 import 'onboarding_bottom_sheet.dart';
 
@@ -88,7 +88,7 @@ class LoginScreenState extends State<LoginScreen> with Translation {
                         child: Center(
                           child: Container(
                             padding: const EdgeInsets.fromLTRB(32, 64, 32, 32),
-                            width: ResponsiveHelper.desktopContentWidth,
+                            width: MyApp.desktopContentWidth,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

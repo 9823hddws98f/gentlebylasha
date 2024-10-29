@@ -2,7 +2,9 @@ import 'package:animations/animations.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carbon_icons/carbon_icons.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sleeptales/main.dart';
 
 import '/constants/assets.dart';
 import '/domain/services/audio_panel_manager.dart';
@@ -14,9 +16,7 @@ import 'widgets/audio_progress_bar.dart';
 import 'widgets/control_buttons.dart';
 
 class MusicPlayerScreen extends StatefulWidget {
-  final bool isPlaylist;
-
-  const MusicPlayerScreen({super.key, required this.isPlaylist});
+  const MusicPlayerScreen({super.key});
 
   @override
   State<MusicPlayerScreen> createState() => _MusicPlayerScreenState();
@@ -36,7 +36,9 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
   void _toggleHide() => setState(() => _hide = !_hide);
 
   @override
-  Widget build(BuildContext context) => PopScope(
+  Widget build(BuildContext context) => MyApp.isMobile ? _buildMobile() : _buildDesktop();
+
+  Widget _buildMobile() => PopScope(
         canPop: false,
         onPopInvokedWithResult: (didPop, result) => _audioPanelManager.minimize(),
         child: DecoratedBox(
@@ -50,7 +52,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                   mediaItem.id.isNotEmpty
                       ? Stack(
                           children: [
-                            _buildArtwork(mediaItem.artUri),
+                            _buildArtwork(mediaItem.artUri, true),
                             SafeArea(
                               child: Column(
                                 children: [
@@ -61,10 +63,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                       reverse: !_hide,
                                       child: _hide
                                           ? SizedBox()
-                                          : ControlButtons(
-                                              mediaItem: mediaItem,
-                                              isPlaylist: widget.isPlaylist,
-                                            ),
+                                          : ControlButtons(mediaItem: mediaItem),
                                     ),
                                   ),
                                   _buildProgressBar(mediaItem),
@@ -74,7 +73,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                           ],
                         )
                       : Center(
-                          child: CircularProgressIndicator(
+                          child: CupertinoActivityIndicator(
                             color: Colors.white,
                           ),
                         ),
@@ -83,9 +82,40 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
         ),
       );
 
-  Widget _buildArtwork(Uri? artUri) => Positioned.fill(
+  Widget _buildDesktop() => ValueListenableBuilder(
+        valueListenable: _pageManager.currentMediaItemNotifier,
+        builder: (context, mediaItem, child) =>
+            // TODO: Figure out why this is empty for couple of seconds
+            mediaItem.id.isNotEmpty
+                ? Row(
+                    children: [
+                      Expanded(child: _buildArtwork(mediaItem.artUri, false)),
+                      SizedBox(width: 32),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: SharedAxisSwitcher(
+                                transitionType: SharedAxisTransitionType.scaled,
+                                disableFillColor: true,
+                                reverse: !_hide,
+                                child: _hide
+                                    ? SizedBox()
+                                    : ControlButtons(mediaItem: mediaItem),
+                              ),
+                            ),
+                            _buildProgressBar(mediaItem),
+                          ],
+                        ),
+                      )
+                    ],
+                  )
+                : Center(child: CupertinoActivityIndicator(color: Colors.white)),
+      );
+
+  Widget _buildArtwork(Uri? artUri, bool isMobile) => Positioned.fill(
         child: ClipRRect(
-          borderRadius: _borderRadius,
+          borderRadius: isMobile ? _borderRadius : BorderRadius.all(Radius.circular(18)),
           child: DecoratedBox(
             position: DecorationPosition.foreground,
             decoration: BoxDecoration(
