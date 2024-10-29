@@ -1526,7 +1526,7 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 6ef4a1c7eb2a61ee1f74727d7f6ce2e72acf1414
   FirebaseMessaging: c9ec7b90c399c7a6100297e9d16f8a27fc7f7152
   FirebaseSharedSwift: 505dae2d05969dbf6d43749a642bb1bf230f0252
-  flutter_local_notifications: 3805ca215b2fb7f397d78b66db91f6a747af52e4
+  flutter_local_notifications: 4b427ffabf278fc6ea9484c97505e231166927a5
   flutter_secure_storage_macos: 59459653abe1adb92abbc8ea747d79f8d19866c9
   flutter_timezone: 6b906d1740654acb16e50b639835628fea851037
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24

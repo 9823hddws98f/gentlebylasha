@@ -163,7 +163,11 @@ class _MyAppState extends State<MyApp> {
                     theme: AppTheme.buildTheme(dark: false),
                     darkTheme: AppTheme.buildTheme(dark: true),
                     scrollBehavior: const ScrollBehavior().copyWith(
-                      dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.touch},
+                      dragDevices: {
+                        PointerDeviceKind.mouse,
+                        PointerDeviceKind.touch,
+                        PointerDeviceKind.trackpad,
+                      },
                     ),
                     navigatorKey: MyApp.navigatorKey,
                     localizationsDelegates: AppLocalizations.localizationsDelegates,
