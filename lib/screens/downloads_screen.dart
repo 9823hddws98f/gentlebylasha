@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sleeptales/constants/assets.dart';
-
-import '/widgets/topbar_widget.dart';
+import 'package:sleeptales/widgets/app_scaffold/adaptive_app_bar.dart';
+import 'package:sleeptales/widgets/app_scaffold/app_scaffold.dart';
 
 class DownloadsScreen extends StatefulWidget {
   final String? email;
@@ -19,54 +19,44 @@ class _DownloadsScreen extends State<DownloadsScreen> {
   final mp3Files = <String>[];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: SingleChildScrollView(
-              child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Column(
-                    children: [
-                      TopBar(
-                          heading: "Downloads",
-                          onPress: () {
-                            Navigator.pop(context);
-                          }),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.dark_mode, color: Colors.white),
-                        title: Text('Delete sleep stories'),
-                        trailing: Text(
-                          "Zero KB",
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                        onTap: () {},
-                      ),
-                      ListTile(
-                        leading: SvgPicture.asset(Assets.spaBlack),
-                        title: Text('Delete guided meditations'),
-                        trailing: Text(
-                          "Zero KB",
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                        onTap: () {},
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.music_note, color: Colors.white),
-                        title: Text('Delete music'),
-                        trailing: Text(
-                          "Zero KB",
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                        onTap: () {},
-                      ),
-                    ],
-                  ))),
-        ),
+    return AppScaffold(
+      appBar: (context, isMobile) => AdaptiveAppBar(
+        title: 'Downloads',
+      ),
+      bodyPadding: EdgeInsets.zero,
+      body: (context, isMobile) => ListView(
+        children: [
+          SizedBox(
+            height: 20,
+          ),
+          ListTile(
+            leading: Icon(Icons.dark_mode, color: Colors.white),
+            title: Text('Delete sleep stories'),
+            trailing: Text(
+              "Zero KB",
+              style: TextStyle(color: Colors.grey),
+            ),
+            onTap: () {},
+          ),
+          ListTile(
+            leading: SvgPicture.asset(Assets.spaBlack),
+            title: Text('Delete guided meditations'),
+            trailing: Text(
+              "Zero KB",
+              style: TextStyle(color: Colors.grey),
+            ),
+            onTap: () {},
+          ),
+          ListTile(
+            leading: Icon(Icons.music_note, color: Colors.white),
+            title: Text('Delete music'),
+            trailing: Text(
+              "Zero KB",
+              style: TextStyle(color: Colors.grey),
+            ),
+            onTap: () {},
+          ),
+        ],
       ),
     );
   }

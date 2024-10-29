@@ -41,6 +41,8 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  // go to immersive mode
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
 
   await FlutterTimezone.getAvailableTimezones();
   final session = await AudioSession.instance;
@@ -109,6 +111,7 @@ class MyApp extends StatefulWidget {
 
   static final navigatorKey = GlobalKey<NavigatorState>();
 
+  // TODO: THIS DOESNT REFRESH CORRECTLY
   static void setLocale(BuildContext context, Locale newLocale) {
     _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
     state?.setLocale(newLocale);

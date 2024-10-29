@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:sleeptales/widgets/app_scaffold/adaptive_app_bar.dart';
+import 'package:sleeptales/widgets/app_scaffold/app_scaffold.dart';
 
 import '/domain/models/collection_model.dart';
 import '/screens/track_list.dart';
 import '/utils/global_functions.dart';
 import '/widgets/collection_item_grid.dart';
 import '/widgets/shimmerwidgets/shimmer_mp3_card_list_item_small.dart';
-import '/widgets/topbar_widget.dart';
 
 class CollectionListScreen extends StatefulWidget {
   final String heading;
@@ -26,19 +27,17 @@ class CollectionListScreen extends StatefulWidget {
 class _CollectionListScreenState extends State<CollectionListScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
+    return AppScaffold(
+      appBar: (context, isMobile) => AdaptiveAppBar(
+        title: widget.heading,
+      ),
+      body: (context, isMobile) => SafeArea(
         child: SizedBox(
           child: Padding(
             padding: EdgeInsets.all(10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                TopBar(
-                    heading: widget.heading,
-                    onPress: () {
-                      Navigator.pop(context);
-                    }),
                 SizedBox(
                   height: 20,
                 ),

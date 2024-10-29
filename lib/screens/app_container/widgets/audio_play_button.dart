@@ -13,49 +13,49 @@ class AudioPlayButton extends StatelessWidget {
   final _pageManager = Get.the<PageManager>();
 
   @override
-  Widget build(BuildContext context) => StreamBuilder(
-        stream: _pageManager.listenPlaybackState(),
-        builder: (_, snapshot) {
-          final processingState = snapshot.data?.processingState;
-          if (!snapshot.hasData ||
-              processingState == AudioProcessingState.loading ||
-              processingState == AudioProcessingState.buffering) {
-            return IconButton(
-              icon: SizedBox(
-                width: 32,
-                height: 32,
-                child: CupertinoActivityIndicator(
-                  color: Colors.white,
-                ),
+  Widget build(BuildContext context) => IconButtonTheme(
+        data: IconButtonThemeData(
+          style: IconButtonTheme.of(context).style?.copyWith(
+                padding: large ? WidgetStatePropertyAll(EdgeInsets.all(24)) : null,
+                iconSize: large ? WidgetStatePropertyAll(32) : null,
               ),
-              padding: large ? EdgeInsets.all(24) : null,
-              iconSize: large ? 32 : null,
-              onPressed: () {},
-            );
-          } else if (processingState == AudioProcessingState.completed) {
-            return IconButton(
-              icon: Icon(Icons.replay),
-              padding: large ? EdgeInsets.all(24) : null,
-              iconSize: large ? 32 : null,
-              onPressed: () => _pageManager.seek(Duration.zero),
-            );
-          } else {
-            return TweenAnimationBuilder<double>(
-              tween: Tween<double>(begin: 0, end: snapshot.data!.playing ? 0 : 1),
-              duration: Durations.short4,
-              curve: Easing.standard,
-              builder: (context, value, child) => IconButton(
-                icon: AnimatedIcon(
-                  icon: AnimatedIcons.pause_play,
-                  progress: AlwaysStoppedAnimation(value),
+        ),
+        child: StreamBuilder(
+          stream: _pageManager.listenPlaybackState(),
+          builder: (_, snapshot) {
+            final processingState = snapshot.data?.processingState;
+            if (!snapshot.hasData ||
+                processingState == AudioProcessingState.loading ||
+                processingState == AudioProcessingState.buffering) {
+              return IconButton(
+                icon: SizedBox(
+                  width: 32,
+                  height: 32,
+                  child: CupertinoActivityIndicator(color: Colors.white),
                 ),
-                padding: large ? EdgeInsets.all(24) : null,
-                iconSize: large ? 32 : null,
-                onPressed:
-                    snapshot.data!.playing ? _pageManager.pause : _pageManager.play,
-              ),
-            );
-          }
-        },
+                onPressed: () {},
+              );
+            } else if (processingState == AudioProcessingState.completed) {
+              return IconButton(
+                icon: Icon(Icons.replay),
+                onPressed: () => _pageManager.seek(Duration.zero),
+              );
+            } else {
+              return TweenAnimationBuilder<double>(
+                tween: Tween<double>(begin: 0, end: snapshot.data!.playing ? 0 : 1),
+                duration: Durations.medium2,
+                curve: Easing.standard,
+                builder: (context, value, child) => IconButton(
+                  icon: AnimatedIcon(
+                    icon: AnimatedIcons.pause_play,
+                    progress: AlwaysStoppedAnimation(value),
+                  ),
+                  onPressed:
+                      snapshot.data!.playing ? _pageManager.pause : _pageManager.play,
+                ),
+              );
+            }
+          },
+        ),
       );
 }

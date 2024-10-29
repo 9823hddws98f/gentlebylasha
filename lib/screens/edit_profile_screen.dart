@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import '/widgets/input/password_edit_text.dart';
+import 'package:sleeptales/helper/validators.dart';
 
 import '/utils/colors.dart';
-import '/widgets/topbar_widget.dart';
+import '/widgets/app_scaffold/adaptive_app_bar.dart';
+import '/widgets/app_scaffold/app_scaffold.dart';
+import '/widgets/input/password_edit_text.dart';
 import '../utils/firestore_helper.dart';
 import '../utils/global_functions.dart';
 import '../widgets/custom_btn.dart';
@@ -16,22 +18,10 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreen extends State<EditProfileScreen> {
-  late String email;
-  late String name;
-  bool curPassShow = true;
-  final formKey = GlobalKey<FormState>();
-  void toggleCurPassVisibility() {
-    setState(() {
-      curPassShow = false;
-    });
-  }
+  String? _email;
+  String? _name;
 
-  @override
-  void dispose() {
-    email = "";
-    name = "";
-    super.dispose();
-  }
+  final _formKey = GlobalKey<FormState>();
 
   void showDialogPass() {
     String currentPass = "";
@@ -107,113 +97,83 @@ class _EditProfileScreen extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: SingleChildScrollView(
-              child: Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Column(
-                    children: [
-                      TopBar(
-                          heading: "Edit profile",
-                          onPress: () {
-                            Navigator.pop(context);
-                          }),
-                      Form(
-                          key: formKey,
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 30, 0, 10),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child:
-                                      Text("Your Name:", style: TextStyle(fontSize: 16)),
-                                ),
-                              ),
-                              // CustomeEditTextFullName(
-                              //   hint: "",
-                              //   validator: (value) {
-                              //     if (value.isEmpty) {
-                              //       return "Please enter your name";
-                              //     }
-                              //     return null;
-                              //   },
-                              //   inputType: TextInputType.name,
-                              //   onchange: (String value) {
-                              //     setState(() {
-                              //       name = value;
-                              //     });
-                              //   },
-                              // ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text("Email:", style: TextStyle(fontSize: 16)),
-                                ),
-                              ),
-                              // CustomeEditText(
-                              //   hint: "",
-                              //   validator: (value) {
-                              //     if (value.isEmpty) {
-                              //       return "Please enter email";
-                              //     } else if (!(RegExp(
-                              //             r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                              //         .hasMatch(value))) {
-                              //       return "Please enter a valid email";
-                              //     }
-                              //     return null;
-                              //   },
-                              //   inputType: TextInputType.emailAddress,
-                              //   // controller: provider.email,
-                              //   onchange: (String value) {
-                              //     setState(() {
-                              //       email = value;
-                              //     });
-                              //   },
-                              // ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                            ],
-                          )),
-                      Padding(
-                          padding: EdgeInsets.only(top: 50),
-                          child: CustomButton(
-                            onPress: () async {
-                              if (formKey.currentState!.validate()) {
-                                bool aa = await isEmailAndPasswordUserLoggedIn();
-                                if (aa) {
-                                  showDialogPass();
-                                } else {
-                                  showToast(
-                                      "Only users signed up with email and password can update email");
-                                }
-                              } else {
-                                showToast("Invalid input");
-                              }
-                            },
-                            title: "Update",
-                            color: Colors.white,
-                            textColor: Colors.black,
-                          ))
-                    ],
-                  ))),
-        ),
+    return AppScaffold(
+      appBar: (context, isMobile) => AdaptiveAppBar(
+        title: 'Edit profile',
+      ),
+      body: (context, isMobile) => ListView(
+        children: [
+          Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('Your Name:', style: TextStyle(fontSize: 16)),
+                    ),
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      hintText: 'Enter your name',
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter your name';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) => _name = value ?? '',
+                  ),
+                  SizedBox(height: 5),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('Email:', style: TextStyle(fontSize: 16)),
+                    ),
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.emailAddress,
+                    onFieldSubmitted: (_) => _submit(),
+                    decoration: InputDecoration(
+                      hintText: 'Enter your email',
+                    ),
+                    validator: AppValidators.emailValidator(context),
+                    onSaved: (value) => _email = value ?? '',
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                ],
+              )),
+          Padding(
+            padding: EdgeInsets.only(top: 50),
+            child: CustomButton(
+              onPress: _submit,
+              title: 'Update',
+              color: Colors.white,
+              textColor: Colors.black,
+            ),
+          )
+        ],
       ),
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
+  void _submit() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      bool aa = await isEmailAndPasswordUserLoggedIn();
+      if (aa) {
+        showDialogPass();
+      } else {
+        showToast('Only users signed up with email and password can update email');
+      }
+    } else {
+      showToast('Invalid input');
+    }
   }
 }
 

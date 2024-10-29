@@ -1,7 +1,8 @@
+import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:sleeptales/domain/cubits/favorites.dart';
-import 'package:sleeptales/utils/get.dart';
 
+import '/domain/cubits/favorites.dart';
+import '/utils/get.dart';
 import '/utils/tx_loader.dart';
 import '/widgets/circle_icon_button.dart';
 
@@ -28,11 +29,11 @@ class _FavoriteButtonState extends State<FavoriteButton> {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme(:primary, :surface) = Theme.of(context).colorScheme;
+    final primary = Theme.of(context).colorScheme.primary;
     return CircleIconButton(
-      icon: _favorite ? Icons.favorite : Icons.favorite_border,
+      icon: _favorite ? CarbonIcons.favorite_filled : CarbonIcons.favorite,
       onPressed: _toggleFavorite,
-      backgroundColor: (_favorite ? primary : surface).withValues(alpha: 0.6),
+      iconColor: _favorite ? primary : null,
     );
   }
 

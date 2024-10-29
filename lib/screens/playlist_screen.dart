@@ -303,7 +303,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
                     SizedBox(
                       width: 40,
                       height: 40,
-                      child: widget.block.authorImage != null
+                      child: widget.block.authorImage.isNotEmpty
                           ? CachedNetworkImage(
                               imageUrl: widget.block.authorImage,
                               imageBuilder: (context, imageProvider) => CircleAvatar(

@@ -4,6 +4,7 @@ class CircleIconButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onPressed;
   final Color? backgroundColor;
+  final Color? iconColor;
   final double? size;
   final double? iconSize;
 
@@ -12,6 +13,7 @@ class CircleIconButton extends StatelessWidget {
     required this.icon,
     required this.onPressed,
     this.backgroundColor,
+    this.iconColor,
     this.size,
     this.iconSize,
   });
@@ -21,6 +23,7 @@ class CircleIconButton extends StatelessWidget {
     return IconButton.filled(
       onPressed: onPressed,
       icon: Icon(icon),
+      color: iconColor,
       iconSize: iconSize,
       style: IconButton.styleFrom(
         backgroundColor: backgroundColor,

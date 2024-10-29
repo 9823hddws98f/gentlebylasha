@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:audio_service/audio_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sleeptales/widgets/app_scaffold/adaptive_app_bar.dart';
+import 'package:sleeptales/widgets/app_scaffold/app_scaffold.dart';
 
 import '/utils/colors.dart';
 import '/utils/global_functions.dart';
@@ -14,7 +16,6 @@ import '../domain/services/language_constants.dart';
 import '../domain/services/service_locator.dart';
 import '../page_manager.dart';
 import '../widgets/shimmerwidgets/shimmer_mp3_card_tracklist_item.dart';
-import '../widgets/topbar_widget.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
@@ -122,108 +123,97 @@ class _FavoritesScreenState extends State<FavoritesScreen> with Translation {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SizedBox(
-            child: Padding(
-                padding: EdgeInsets.all(10),
+    // TODO: CLEANUP
+    return AppScaffold(
+      appBar: (text, isMobile) => AdaptiveAppBar(
+        title: tr.favoriteList,
+      ),
+      body: (context, isMobile) => Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 20,
+          ),
+          if (favoriteList.isNotEmpty && !isLoading) ...[
+            Expanded(
+                child: SingleChildScrollView(
+              padding: EdgeInsets.only(bottom: 165),
+              child: GridView.builder(
+                  itemCount: favoriteList.length,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: 0.81),
+                  itemBuilder: (BuildContext context, int index) {
+                    return TrackListItemSmall(
+                      imageUrl: favoriteList[index].imageBackground,
+                      mp3Name: favoriteList[index].title,
+                      mp3Category: favoriteList[index].categories[0].categoryName,
+                      mp3Duration: favoriteList[index].length,
+                      tap: () {
+                        getIt<PageManager>().playSinglePlaylist(
+                            MediaItem(
+                              id: favoriteList[index].trackId,
+                              album: favoriteList[index].title,
+                              title: favoriteList[index].title,
+                              displayDescription: favoriteList[index].description,
+                              artUri: Uri.parse(favoriteList[index].imageBackground),
+                              extras: {
+                                'url': favoriteList[index].trackUrl,
+                                'id': favoriteList[index].trackId,
+                                'categories': favoriteList[index].categories
+                              },
+                            ),
+                            favoriteList[index].trackId);
+                        // TODO:     widget.panelFunction();
+                      },
+                    );
+                  }),
+            ))
+          ] else if (favoriteList.isEmpty && exception) ...[
+            Expanded(
+                child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text(
+                "Something went wrong",
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              CustomTabButton(
+                  title: "Retry",
+                  onPress: () {
+                    fetchFavoriteTracks();
+                  },
+                  color: Colors.white,
+                  textColor: textColor)
+            ]))
+          ] else if (favoriteList.isEmpty && !exception && !isLoading) ...[
+            Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    TopBar(
-                        heading: tr.favoriteList,
-                        onPress: () {
-                          Navigator.pop(context);
-                        }),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    if (favoriteList.isNotEmpty && !isLoading) ...[
-                      Expanded(
-                          child: SingleChildScrollView(
-                        padding: EdgeInsets.only(bottom: 165),
-                        child: GridView.builder(
-                            itemCount: favoriteList.length,
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 16,
-                                mainAxisSpacing: 16,
-                                childAspectRatio: 0.81),
-                            itemBuilder: (BuildContext context, int index) {
-                              return TrackListItemSmall(
-                                imageUrl: favoriteList[index].imageBackground,
-                                mp3Name: favoriteList[index].title,
-                                mp3Category:
-                                    favoriteList[index].categories[0].categoryName,
-                                mp3Duration: favoriteList[index].length,
-                                tap: () {
-                                  getIt<PageManager>().playSinglePlaylist(
-                                      MediaItem(
-                                        id: favoriteList[index].trackId,
-                                        album: favoriteList[index].title,
-                                        title: favoriteList[index].title,
-                                        displayDescription:
-                                            favoriteList[index].description,
-                                        artUri: Uri.parse(
-                                            favoriteList[index].imageBackground),
-                                        extras: {
-                                          'url': favoriteList[index].trackUrl,
-                                          'id': favoriteList[index].trackId,
-                                          'categories': favoriteList[index].categories
-                                        },
-                                      ),
-                                      favoriteList[index].trackId);
-                                  // TODO:     widget.panelFunction();
-                                },
-                              );
-                            }),
-                      ))
-                    ] else if (favoriteList.isEmpty && exception) ...[
-                      Expanded(
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                            Text(
-                              "Something went wrong",
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            CustomTabButton(
-                                title: "Retry",
-                                onPress: () {
-                                  fetchFavoriteTracks();
-                                },
-                                color: Colors.white,
-                                textColor: textColor)
-                          ]))
-                    ] else if (favoriteList.isEmpty && !exception && !isLoading) ...[
-                      Expanded(
-                          child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Center(
-                              child: Icon(
-                            Icons.favorite_border,
-                            size: 40,
-                          )),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "You have not added any favorites yet",
-                            style: TextStyle(fontSize: 16),
-                          )
-                        ],
-                      ))
-                    ] else ...[
-                      _buildShimmerListView()
-                    ],
-                  ],
-                ))),
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                    child: Icon(
+                  Icons.favorite_border,
+                  size: 40,
+                )),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  "You have not added any favorites yet",
+                  style: TextStyle(fontSize: 16),
+                )
+              ],
+            ))
+          ] else ...[
+            _buildShimmerListView()
+          ],
+        ],
       ),
     );
   }

@@ -2,11 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sleeptales/widgets/app_scaffold/adaptive_app_bar.dart';
 
 import '/constants/assets.dart';
 import '/domain/blocs/user/user_bloc.dart';
-import '/screens/about_screen.dart';
+import '/domain/services/language_constants.dart';
 import '/screens/change_language.dart';
 import '/screens/change_password_screen.dart';
 import '/screens/delete_account.dart';
@@ -19,8 +18,9 @@ import '/utils/app_theme.dart';
 import '/utils/common_extensions.dart';
 import '/utils/get.dart';
 import '/utils/global_functions.dart';
+import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
-import '../domain/services/language_constants.dart';
+import 'about/about_screen.dart';
 import 'edit_profile_screen.dart';
 
 class ProfileSettingsScreen extends StatefulWidget {

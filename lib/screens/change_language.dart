@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '/domain/services/language_constants.dart';
+import '/languages.dart';
+import '/main.dart';
 import '/utils/get.dart';
-import '/widgets/topbar_widget.dart';
-import '../domain/services/language_constants.dart';
-import '../languages.dart';
-import '../main.dart';
+import '/widgets/app_scaffold/adaptive_app_bar.dart';
+import '/widgets/app_scaffold/app_scaffold.dart';
 
 class ChangeLanguageScreen extends StatefulWidget {
   final String? email;
@@ -40,55 +41,30 @@ class _ChangeLanguageScreen extends State<ChangeLanguageScreen> with Translation
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: SingleChildScrollView(
-              child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Column(
-                    children: [
-                      TopBar(
-                          heading: tr.changeLanguage,
-                          onPress: () {
-                            Navigator.pop(context);
-                          }),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      ListTile(
-                        title: const Text('English'),
-                        trailing: languageIndex == 0
-                            ? const Icon(
-                                Icons.check,
-                                color: Colors.white,
-                              )
-                            : null,
-                        onTap: () => _handleLanguageChange(0),
-                      ),
-                      ListTile(
-                        title: const Text('Dutch'),
-                        trailing: languageIndex == 1
-                            ? const Icon(
-                                Icons.check,
-                                color: Colors.white,
-                              )
-                            : null,
-                        onTap: () => _handleLanguageChange(1),
-                      ),
-                    ],
-                  ))),
-        ),
-      ),
-    );
-  }
-
-  @override
   void initState() {
     super.initState();
     getCurrentLanguageIndex();
   }
+
+  @override
+  Widget build(BuildContext context) => AppScaffold(
+        appBar: (context, isMobile) => AdaptiveAppBar(
+          title: tr.changeLanguage,
+        ),
+        bodyPadding: EdgeInsets.zero,
+        body: (context, isMobile) => ListView(
+          children: [
+            ListTile(
+              title: const Text('English'),
+              trailing: languageIndex == 0 ? const Icon(Icons.check) : null,
+              onTap: () => _handleLanguageChange(0),
+            ),
+            ListTile(
+              title: const Text('Dutch'),
+              trailing: languageIndex == 1 ? const Icon(Icons.check) : null,
+              onTap: () => _handleLanguageChange(1),
+            ),
+          ],
+        ),
+      );
 }

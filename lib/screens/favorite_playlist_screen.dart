@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sleeptales/widgets/app_scaffold/adaptive_app_bar.dart';
+import 'package:sleeptales/widgets/app_scaffold/app_scaffold.dart';
 
 import '/screens/playlist_tracks_screen.dart';
 import '/utils/colors.dart';
@@ -12,7 +14,6 @@ import '/widgets/shimmerwidgets/shimmer_playlist_item.dart';
 import '../domain/blocs/user/app_user.dart';
 import '../domain/models/block.dart';
 import '../domain/services/language_constants.dart';
-import '../widgets/topbar_widget.dart';
 
 class FavoritePlaylistScreen extends StatefulWidget {
   const FavoritePlaylistScreen({super.key});
@@ -158,90 +159,80 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SizedBox(
-            child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    TopBar(
-                        heading: tr.favoritePlaylist,
-                        onPress: () {
-                          Navigator.pop(context);
-                        }),
-                    SizedBox(
-                      height: 20,
+    // TODO: FIX PAGE NOT RESPONSIVE
+    return AppScaffold(
+      appBar: (text, isMobile) => AdaptiveAppBar(
+        title: tr.favoritePlaylist,
+      ),
+      body: (context, isMobile) => Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 20,
+          ),
+          if (favoritePlaylist.isNotEmpty && !isLoading) ...[
+            Expanded(
+                child: SingleChildScrollView(
+              padding: EdgeInsets.only(bottom: 165),
+              child: Column(
+                children: [
+                  for (int index = 0; index < favoritePlaylist.length; index++)
+                    PlaylistItem(
+                      block: favoritePlaylist[index],
+                      tap: () {
+                        // Handle item tap
+                        pushName(context,
+                            PlayListTracksScreen(block: favoritePlaylist[index]));
+                      },
+                      favoriteTap: () {
+                        // Handle favorite tap
+                        removePlayListFavorites(favoritePlaylist[index].id);
+                      },
                     ),
-                    if (favoritePlaylist.isNotEmpty && !isLoading) ...[
-                      Expanded(
-                          child: SingleChildScrollView(
-                        padding: EdgeInsets.only(bottom: 165),
-                        child: Column(
-                          children: [
-                            for (int index = 0; index < favoritePlaylist.length; index++)
-                              PlaylistItem(
-                                block: favoritePlaylist[index],
-                                tap: () {
-                                  // Handle item tap
-                                  pushName(
-                                      context,
-                                      PlayListTracksScreen(
-                                          block: favoritePlaylist[index]));
-                                },
-                                favoriteTap: () {
-                                  // Handle favorite tap
-                                  removePlayListFavorites(favoritePlaylist[index].id);
-                                },
-                              ),
-                          ],
-                        ),
-                      ))
-                    ] else if (favoritePlaylist.isEmpty && exception) ...[
-                      Expanded(
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                            Text(
-                              "Something went wrong",
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            CustomTabButton(
-                                title: "Retry",
-                                onPress: () {
-                                  fetchFavoriteTracks();
-                                },
-                                color: Colors.white,
-                                textColor: textColor)
-                          ]))
-                    ] else if (favoritePlaylist.isEmpty && !exception && !isLoading) ...[
-                      Expanded(
-                          child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Center(
-                              child: Icon(
-                            Icons.favorite_border,
-                            size: 40,
-                          )),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "You have not added any playlists to favorites",
-                            style: TextStyle(fontSize: 16),
-                          )
-                        ],
-                      ))
-                    ] else ...[
-                      _buildShimmerListView()
-                    ],
-                  ],
-                ))),
+                ],
+              ),
+            ))
+          ] else if (favoritePlaylist.isEmpty && exception) ...[
+            Expanded(
+                child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text(
+                "Something went wrong",
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              CustomTabButton(
+                  title: "Retry",
+                  onPress: () {
+                    fetchFavoriteTracks();
+                  },
+                  color: Colors.white,
+                  textColor: textColor)
+            ]))
+          ] else if (favoritePlaylist.isEmpty && !exception && !isLoading) ...[
+            Expanded(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                    child: Icon(
+                  Icons.favorite_border,
+                  size: 40,
+                )),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  "You have not added any playlists to favorites",
+                  style: TextStyle(fontSize: 16),
+                )
+              ],
+            ))
+          ] else ...[
+            _buildShimmerListView()
+          ],
+        ],
       ),
     );
   }

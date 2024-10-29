@@ -244,16 +244,17 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
               },
             ),
             flexibleSpace: FlexibleSpaceBar(
-                centerTitle: false,
-                title: _isAppBarExpanded ? null : Text(widget.block.title),
-                background: CachedNetworkImage(
-                  imageUrl: widget.block.thumbnail,
+              centerTitle: false,
+              title: _isAppBarExpanded ? null : Text(widget.block.title),
+              background: CachedNetworkImage(
+                imageUrl: widget.block.thumbnail,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Image.asset(
+                  Assets.placeholderImage,
                   fit: BoxFit.cover,
-                  placeholder: (context, url) => Image.asset(
-                    Assets.placeholderImage,
-                    fit: BoxFit.cover,
-                  ),
-                )),
+                ),
+              ),
+            ),
           ),
           SliverList(
             delegate: SliverChildListDelegate([

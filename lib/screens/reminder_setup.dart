@@ -4,14 +4,14 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:sleeptales/widgets/app_scaffold/adaptive_app_bar.dart';
+import 'package:sleeptales/widgets/app_scaffold/app_scaffold.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import '/utils/colors.dart';
 import '/utils/global_functions.dart';
 import '/widgets/custom_btn.dart';
-import '/widgets/topbar_widget.dart';
 import '../main.dart';
 
 class ReminderSetupScreen extends StatefulWidget {
@@ -132,303 +132,279 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: SingleChildScrollView(
-              child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TopBar(
-                          heading: widget.heading,
-                          onPress: () {
-                            Navigator.pop(context);
-                          }),
-                      SizedBox(
-                        height: 60,
-                      ),
-                      Center(
-                        child: Text(
-                          widget.description,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16, height: 1.5),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 48,
-                      ),
-                      Center(
-                        child: Text(
-                          widget.description2,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 40,
-                      ),
-                      Center(
-                          child: SizedBox(
-                        height: 40,
-                        child: ElevatedButton.icon(
-                          style: ButtonStyle(
-                            padding: WidgetStateProperty.all<EdgeInsets>(
-                                EdgeInsets.symmetric(vertical: 10, horizontal: 16)),
-                            shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            )),
-                            backgroundColor: WidgetStateProperty.resolveWith<Color?>(
-                              (Set<WidgetState> states) {
-                                if (states.contains(WidgetState.pressed)) {
-                                  return lightBlueColor;
-                                }
-                                return lightBlueColor;
-                              },
-                            ),
-                          ),
-                          onPressed: () {
-                            if (switchValue) {
-                              showToast("Please turn off Get Reminders option first");
+    return AppScaffold(
+      appBar: (text, isMobile) => AdaptiveAppBar(
+        title: 'Reminder Setup',
+      ),
+      body: (context, isMobile) => ListView(
+        children: [
+          SizedBox(
+            height: 60,
+          ),
+          Center(
+            child: Text(
+              widget.description,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16, height: 1.5),
+            ),
+          ),
+          SizedBox(
+            height: 48,
+          ),
+          Center(
+            child: Text(
+              widget.description2,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+          SizedBox(
+            height: 40,
+          ),
+          Center(
+              child: SizedBox(
+            height: 40,
+            child: ElevatedButton.icon(
+              style: ButtonStyle(
+                padding: WidgetStateProperty.all<EdgeInsets>(
+                    EdgeInsets.symmetric(vertical: 10, horizontal: 16)),
+                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                )),
+                backgroundColor: WidgetStateProperty.resolveWith<Color?>(
+                  (Set<WidgetState> states) {
+                    if (states.contains(WidgetState.pressed)) {
+                      return lightBlueColor;
+                    }
+                    return lightBlueColor;
+                  },
+                ),
+              ),
+              onPressed: () {
+                if (switchValue) {
+                  showToast("Please turn off Get Reminders option first");
+                } else {
+                  _selectTime(context);
+                }
+              },
+              icon: const Icon(
+                Icons.alarm,
+                color: Colors.white,
+              ),
+              label: Text(
+                "${_selectedTime.hour}:${_selectedTime.minute}",
+              ),
+            ),
+          )),
+          SizedBox(
+            height: 48,
+          ),
+          if (widget.type == 1) ...[
+            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+              DaySelector(
+                dayInitial: "S",
+                isSelected: selectedDays[6],
+                onSelected: (bool selected) {
+                  if (!switchValue) {
+                    setState(() {
+                      selectedDays[6] = selected;
+                    });
+                  } else {
+                    showToast("Please turn off reminder first to make changes");
+                  }
+                },
+              ),
+              DaySelector(
+                dayInitial: "M",
+                isSelected: selectedDays[0],
+                onSelected: (bool selected) {
+                  if (!switchValue) {
+                    setState(() {
+                      selectedDays[0] = selected;
+                    });
+                  } else {
+                    showToast("Please turn off reminder first to make changes");
+                  }
+                },
+              ),
+              DaySelector(
+                dayInitial: "T",
+                isSelected: selectedDays[1],
+                onSelected: (bool selected) {
+                  if (!switchValue) {
+                    setState(() {
+                      selectedDays[1] = selected;
+                    });
+                  } else {
+                    showToast("Please turn off reminder first to make changes");
+                  }
+                },
+              ),
+              DaySelector(
+                dayInitial: "W",
+                isSelected: selectedDays[2],
+                onSelected: (bool selected) {
+                  if (!switchValue) {
+                    setState(() {
+                      selectedDays[2] = selected;
+                    });
+                  } else {
+                    showToast("Please turn off reminder first to make changes");
+                  }
+                },
+              ),
+              DaySelector(
+                dayInitial: "T",
+                isSelected: selectedDays[3],
+                onSelected: (bool selected) {
+                  if (!switchValue) {
+                    setState(() {
+                      selectedDays[3] = selected;
+                    });
+                  } else {
+                    showToast("Please turn off reminder first to make changes");
+                  }
+                },
+              ),
+              DaySelector(
+                dayInitial: "F",
+                isSelected: selectedDays[4],
+                onSelected: (bool selected) {
+                  if (!switchValue) {
+                    setState(() {
+                      selectedDays[4] = selected;
+                    });
+                  } else {
+                    showToast("Please turn off reminder first to make changes");
+                  }
+                },
+              ),
+              DaySelector(
+                dayInitial: "S",
+                isSelected: selectedDays[5],
+                onSelected: (bool selected) {
+                  if (!switchValue) {
+                    setState(() {
+                      selectedDays[5] = selected;
+                    });
+                  } else {
+                    showToast("Please turn off reminder first to make changes");
+                  }
+                },
+              ),
+            ]),
+            SizedBox(
+              height: 80,
+            ),
+          ],
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  "Get reminders",
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+              (Platform.isIOS)
+                  ? CupertinoSwitch(
+                      value: switchValue,
+                      onChanged: (value) {
+                        if (value) {
+                          if (widget.type == 1) {
+                            if (selectedDays.every((day) => day == false)) {
+                              showToast("Please select at least 1 day");
                             } else {
-                              _selectTime(context);
+                              setState(() {
+                                switchValue = value;
+                              });
+                              setWeeklyReminderNotification(
+                                  widget.heading,
+                                  widget.notificationDescription,
+                                  selectedDays,
+                                  _selectedTime);
+
+                              saveReminderValue(widget.heading, value);
                             }
-                          },
-                          icon: const Icon(
-                            Icons.alarm,
-                            color: Colors.white,
-                          ),
-                          label: Text(
-                            "${_selectedTime.hour}:${_selectedTime.minute}",
-                          ),
-                        ),
-                      )),
-                      SizedBox(
-                        height: 48,
-                      ),
-                      if (widget.type == 1) ...[
-                        Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                          DaySelector(
-                            dayInitial: "S",
-                            isSelected: selectedDays[6],
-                            onSelected: (bool selected) {
-                              if (!switchValue) {
-                                setState(() {
-                                  selectedDays[6] = selected;
-                                });
-                              } else {
-                                showToast(
-                                    "Please turn off reminder first to make changes");
-                              }
-                            },
-                          ),
-                          DaySelector(
-                            dayInitial: "M",
-                            isSelected: selectedDays[0],
-                            onSelected: (bool selected) {
-                              if (!switchValue) {
-                                setState(() {
-                                  selectedDays[0] = selected;
-                                });
-                              } else {
-                                showToast(
-                                    "Please turn off reminder first to make changes");
-                              }
-                            },
-                          ),
-                          DaySelector(
-                            dayInitial: "T",
-                            isSelected: selectedDays[1],
-                            onSelected: (bool selected) {
-                              if (!switchValue) {
-                                setState(() {
-                                  selectedDays[1] = selected;
-                                });
-                              } else {
-                                showToast(
-                                    "Please turn off reminder first to make changes");
-                              }
-                            },
-                          ),
-                          DaySelector(
-                            dayInitial: "W",
-                            isSelected: selectedDays[2],
-                            onSelected: (bool selected) {
-                              if (!switchValue) {
-                                setState(() {
-                                  selectedDays[2] = selected;
-                                });
-                              } else {
-                                showToast(
-                                    "Please turn off reminder first to make changes");
-                              }
-                            },
-                          ),
-                          DaySelector(
-                            dayInitial: "T",
-                            isSelected: selectedDays[3],
-                            onSelected: (bool selected) {
-                              if (!switchValue) {
-                                setState(() {
-                                  selectedDays[3] = selected;
-                                });
-                              } else {
-                                showToast(
-                                    "Please turn off reminder first to make changes");
-                              }
-                            },
-                          ),
-                          DaySelector(
-                            dayInitial: "F",
-                            isSelected: selectedDays[4],
-                            onSelected: (bool selected) {
-                              if (!switchValue) {
-                                setState(() {
-                                  selectedDays[4] = selected;
-                                });
-                              } else {
-                                showToast(
-                                    "Please turn off reminder first to make changes");
-                              }
-                            },
-                          ),
-                          DaySelector(
-                            dayInitial: "S",
-                            isSelected: selectedDays[5],
-                            onSelected: (bool selected) {
-                              if (!switchValue) {
-                                setState(() {
-                                  selectedDays[5] = selected;
-                                });
-                              } else {
-                                showToast(
-                                    "Please turn off reminder first to make changes");
-                              }
-                            },
-                          ),
-                        ]),
-                        SizedBox(
-                          height: 80,
-                        ),
-                      ],
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Get reminders",
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ),
-                          (Platform.isIOS)
-                              ? CupertinoSwitch(
-                                  value: switchValue,
-                                  onChanged: (value) {
-                                    if (value) {
-                                      if (widget.type == 1) {
-                                        if (selectedDays.every((day) => day == false)) {
-                                          showToast("Please select at least 1 day");
-                                        } else {
-                                          setState(() {
-                                            switchValue = value;
-                                          });
-                                          setWeeklyReminderNotification(
-                                              widget.heading,
-                                              widget.notificationDescription,
-                                              selectedDays,
-                                              _selectedTime);
-
-                                          saveReminderValue(widget.heading, value);
-                                        }
-                                      } else {
-                                        setState(() {
-                                          switchValue = value;
-                                        });
-                                        setReminderNotification(
-                                            widget.heading,
-                                            widget.notificationDescription,
-                                            _selectedTime);
-                                        saveReminderValue(widget.heading, value);
-                                      }
-                                    } else {
-                                      cancelReminderNotification(widget.reminderID);
-                                      saveReminderValue(widget.heading, value);
-                                      setState(() {
-                                        switchValue = false;
-                                      });
-                                    }
-                                  })
-                              : Switch(
-                                  value: switchValue,
-                                  onChanged: (value) {
-                                    if (value) {
-                                      if (widget.type == 1) {
-                                        if (selectedDays.every((day) => day == false)) {
-                                          showToast("Please select at least 1 day");
-                                        } else {
-                                          setState(() {
-                                            switchValue = value;
-                                          });
-                                          setWeeklyReminderNotification(
-                                              widget.heading,
-                                              widget.notificationDescription,
-                                              selectedDays,
-                                              _selectedTime);
-
-                                          saveReminderValue(widget.heading, value);
-                                        }
-                                      } else {
-                                        setState(() {
-                                          switchValue = value;
-                                        });
-                                        setReminderNotification(
-                                            widget.heading,
-                                            widget.notificationDescription,
-                                            _selectedTime);
-                                        saveReminderValue(widget.heading, value);
-                                      }
-                                    } else {
-                                      if (widget.type == 1) {
-                                        cancelReminderNotificationWeekly(
-                                            widget.reminderID);
-                                      } else {
-                                        cancelReminderNotification(widget.reminderID);
-                                      }
-                                      saveReminderValue(widget.heading, value);
-                                      setState(() {
-                                        switchValue = false;
-                                      });
-                                    }
-                                  }),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 24,
-                      ),
-                      CustomButton(
-                          title: "Save settings",
-                          onPress: () {
-                            if (widget.type == 1) {
-                              if (selectedDays.every((day) => day == false)) {
-                                showToast("Please select at least one day");
-                              } else {
-                                saveTimeOfDay(widget.heading, _selectedTime);
-                                saveDaysOfWeek(selectedDays);
-                                showToast("Settings saved");
-                              }
+                          } else {
+                            setState(() {
+                              switchValue = value;
+                            });
+                            setReminderNotification(widget.heading,
+                                widget.notificationDescription, _selectedTime);
+                            saveReminderValue(widget.heading, value);
+                          }
+                        } else {
+                          cancelReminderNotification(widget.reminderID);
+                          saveReminderValue(widget.heading, value);
+                          setState(() {
+                            switchValue = false;
+                          });
+                        }
+                      })
+                  : Switch(
+                      value: switchValue,
+                      onChanged: (value) {
+                        if (value) {
+                          if (widget.type == 1) {
+                            if (selectedDays.every((day) => day == false)) {
+                              showToast("Please select at least 1 day");
                             } else {
-                              saveTimeOfDay(widget.heading, _selectedTime);
-                              showToast("Settings saved");
+                              setState(() {
+                                switchValue = value;
+                              });
+                              setWeeklyReminderNotification(
+                                  widget.heading,
+                                  widget.notificationDescription,
+                                  selectedDays,
+                                  _selectedTime);
+
+                              saveReminderValue(widget.heading, value);
                             }
-                          },
-                          color: Colors.white,
-                          textColor: Colors.black)
-                    ],
-                  ))),
-        ),
+                          } else {
+                            setState(() {
+                              switchValue = value;
+                            });
+                            setReminderNotification(widget.heading,
+                                widget.notificationDescription, _selectedTime);
+                            saveReminderValue(widget.heading, value);
+                          }
+                        } else {
+                          if (widget.type == 1) {
+                            cancelReminderNotificationWeekly(widget.reminderID);
+                          } else {
+                            cancelReminderNotification(widget.reminderID);
+                          }
+                          saveReminderValue(widget.heading, value);
+                          setState(() {
+                            switchValue = false;
+                          });
+                        }
+                      }),
+            ],
+          ),
+          SizedBox(
+            height: 24,
+          ),
+          CustomButton(
+              title: "Save settings",
+              onPress: () {
+                if (widget.type == 1) {
+                  if (selectedDays.every((day) => day == false)) {
+                    showToast("Please select at least one day");
+                  } else {
+                    saveTimeOfDay(widget.heading, _selectedTime);
+                    saveDaysOfWeek(selectedDays);
+                    showToast("Settings saved");
+                  }
+                } else {
+                  saveTimeOfDay(widget.heading, _selectedTime);
+                  showToast("Settings saved");
+                }
+              },
+              color: Colors.white,
+              textColor: Colors.black)
+        ],
       ),
     );
   }
