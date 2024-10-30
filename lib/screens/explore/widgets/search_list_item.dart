@@ -1,5 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sleeptales/widgets/app_image.dart';
 
 import '/utils/app_theme.dart';
 
@@ -32,7 +32,7 @@ class SearchListItem extends StatelessWidget {
       ),
       leading: ClipRRect(
         borderRadius: AppTheme.smallBorderRadius,
-        child: CachedNetworkImage(
+        child: AppImage(
           imageUrl: imageUrl,
           height: 50,
           width: 50,

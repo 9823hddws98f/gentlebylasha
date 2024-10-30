@@ -1,13 +1,13 @@
 import 'package:animations/animations.dart';
 import 'package:audio_service/audio_service.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '/main.dart';
+import 'package:sleeptales/widgets/app_image.dart';
 
 import '/constants/assets.dart';
 import '/domain/services/audio_panel_manager.dart';
+import '/main.dart';
 import '/page_manager.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
@@ -130,7 +130,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
             ),
           ),
           child: (artUri != null && artUri.toString().isNotEmpty)
-              ? CachedNetworkImage(
+              ? AppImage(
                   imageUrl: artUri.toString(),
                   fit: BoxFit.cover,
                   height: double.infinity,

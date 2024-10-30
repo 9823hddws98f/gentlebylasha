@@ -1,21 +1,21 @@
 import 'package:audio_service/audio_service.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '/constants/assets.dart';
-import '/utils/colors.dart';
-import '/widgets/custom_btn.dart';
-import '/widgets/series_track_image_widget.dart';
-import '/widgets/shimmerwidgets/shimmer_series_track_image_widget.dart';
 import '/domain/blocs/user/app_user.dart';
 import '/domain/models/audiofile_model.dart';
 import '/domain/models/block.dart';
 import '/domain/services/service_locator.dart';
 import '/page_manager.dart';
+import '/utils/colors.dart';
 import '/utils/firestore_helper.dart';
 import '/utils/global_functions.dart';
+import '/widgets/app_image.dart';
+import '/widgets/custom_btn.dart';
+import '/widgets/series_track_image_widget.dart';
 import '/widgets/series_track_widget.dart';
+import '/widgets/shimmerwidgets/shimmer_series_track_image_widget.dart';
 import '/widgets/shimmerwidgets/shimmer_series_track_widget.dart';
 
 class PlayListTracksScreen extends StatefulWidget {
@@ -246,10 +246,10 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: false,
               title: _isAppBarExpanded ? null : Text(widget.block.title),
-              background: CachedNetworkImage(
+              background: AppImage(
                 imageUrl: widget.block.thumbnail,
                 fit: BoxFit.cover,
-                placeholder: (context, url) => Image.asset(
+                placeholder: (context) => Image.asset(
                   Assets.placeholderImage,
                   fit: BoxFit.cover,
                 ),
@@ -317,14 +317,14 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                     SizedBox(
                       width: 40,
                       height: 40,
-                      child: widget.block.authorImage != null
-                          ? CachedNetworkImage(
+                      child: widget.block.authorImage.isNotEmpty
+                          ? AppImage(
                               imageUrl: widget.block.authorImage,
                               imageBuilder: (context, imageProvider) => CircleAvatar(
                                 backgroundImage: imageProvider,
                                 radius: 40,
                               ),
-                              placeholder: (context, url) => Image.asset(
+                              placeholder: (context) => Image.asset(
                                 Assets.profile,
                                 fit: BoxFit.cover,
                               ),

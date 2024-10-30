@@ -1,7 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '/domain/models/audiofile_model.dart';
+import 'app_image.dart';
 
 class SeriesTrackListImageWidget extends StatelessWidget {
   final AudioTrack audioTrack;
@@ -28,7 +28,7 @@ class SeriesTrackListImageWidget extends StatelessWidget {
                 SizedBox(
                   height: 72,
                   width: 72,
-                  child: CachedNetworkImage(
+                  child: AppImage(
                     imageUrl: audioTrack.thumbnail,
                     imageBuilder: (context, imageProvider) => ClipRRect(
                       borderRadius: BorderRadius.circular(16),

@@ -1,7 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sleeptales/widgets/app_image.dart';
 
 import '/constants/assets.dart';
 import '/domain/blocs/user/user_bloc.dart';
@@ -149,13 +149,13 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Tran
                   SizedBox.square(
                     dimension: 60,
                     child: state.user.photoURL?.isNotEmpty ?? false
-                        ? CachedNetworkImage(
+                        ? AppImage(
                             imageUrl: state.user.photoURL!,
                             imageBuilder: (context, imageProvider) => CircleAvatar(
                               backgroundImage: imageProvider,
                               radius: 64,
                             ),
-                            placeholder: (context, url) => Image.asset(
+                            placeholder: (context) => Image.asset(
                               Assets.profile,
                               fit: BoxFit.cover,
                             ),

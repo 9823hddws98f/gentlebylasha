@@ -35,6 +35,7 @@ dependencies:
   audio_video_progress_bar: ^2.0.3
   bloc: ^8.1.4
   cached_network_image: ^3.4.1
+  cached_network_image_platform_interface: ^4.1.1
   carbon_icons: ^0.0.1+2
   cloud_firestore: ^5.4.4
   collection: ^1.19.0

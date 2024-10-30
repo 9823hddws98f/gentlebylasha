@@ -57,7 +57,7 @@ Future<void> main() async {
 
   runApp(
     DevicePreview(
-      enabled: !kReleaseMode && Platform.isMacOS,
+      enabled: !kReleaseMode && defaultTargetPlatform == TargetPlatform.macOS,
       data: DevicePreviewData(isDarkMode: true),
       builder: (context) => MyApp(isWaitingForAuth: isWaitingForAuth),
     ),

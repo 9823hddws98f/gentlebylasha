@@ -1,20 +1,20 @@
 import 'package:audio_service/audio_service.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sleeptales/widgets/app_image.dart';
 
 import '/constants/assets.dart';
-import '/domain/services/audio_panel_manager.dart';
-import '/utils/colors.dart';
-import '/utils/get.dart';
-import '/widgets/custom_btn.dart';
-import '/widgets/series_track_image_widget.dart';
 import '/domain/blocs/user/app_user.dart';
 import '/domain/models/audiofile_model.dart';
 import '/domain/models/block.dart';
+import '/domain/services/audio_panel_manager.dart';
 import '/domain/services/service_locator.dart';
 import '/page_manager.dart';
+import '/utils/colors.dart';
+import '/utils/get.dart';
 import '/utils/global_functions.dart';
+import '/widgets/custom_btn.dart';
+import '/widgets/series_track_image_widget.dart';
 import '/widgets/series_track_widget.dart';
 
 class PlayListScreen extends StatefulWidget {
@@ -231,16 +231,17 @@ class _PlayListScreenState extends State<PlayListScreen> {
               },
             ),
             flexibleSpace: FlexibleSpaceBar(
-                centerTitle: false,
-                title: _isAppBarExpanded ? null : Text(widget.block.title),
-                background: CachedNetworkImage(
-                  imageUrl: widget.block.thumbnail,
+              centerTitle: false,
+              title: _isAppBarExpanded ? null : Text(widget.block.title),
+              background: AppImage(
+                imageUrl: widget.block.thumbnail,
+                fit: BoxFit.cover,
+                placeholder: (context) => Image.asset(
+                  Assets.placeholderImage,
                   fit: BoxFit.cover,
-                  placeholder: (context, url) => Image.asset(
-                    Assets.placeholderImage,
-                    fit: BoxFit.cover,
-                  ),
-                )),
+                ),
+              ),
+            ),
           ),
           SliverList(
             delegate: SliverChildListDelegate([
@@ -304,13 +305,13 @@ class _PlayListScreenState extends State<PlayListScreen> {
                       width: 40,
                       height: 40,
                       child: widget.block.authorImage.isNotEmpty
-                          ? CachedNetworkImage(
+                          ? AppImage(
                               imageUrl: widget.block.authorImage,
                               imageBuilder: (context, imageProvider) => CircleAvatar(
                                 backgroundImage: imageProvider,
                                 radius: 40,
                               ),
-                              placeholder: (context, url) => Image.asset(
+                              placeholder: (context) => Image.asset(
                                 Assets.profile,
                                 fit: BoxFit.cover,
                               ),

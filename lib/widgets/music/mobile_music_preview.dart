@@ -1,5 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sleeptales/widgets/app_image.dart';
 
 import '/constants/assets.dart';
 import '/domain/services/audio_panel_manager.dart';
@@ -48,7 +48,7 @@ class MobileMusicPreview extends StatelessWidget {
                         valueListenable: _pageManager.currentMediaItemNotifier,
                         builder: (context, mediaItem, child) => ClipRRect(
                           borderRadius: AppTheme.smallBorderRadius,
-                          child: CachedNetworkImage(
+                          child: AppImage(
                             imageUrl: mediaItem.artUri.toString(),
                             fit: BoxFit.cover,
                             errorWidget: (context, url, error) => ClipRRect(

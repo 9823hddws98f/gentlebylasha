@@ -1,5 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+
+import 'app_image.dart';
 
 class TrackListItemSmall extends StatelessWidget {
   final String imageUrl;
@@ -28,7 +29,7 @@ class TrackListItemSmall extends StatelessWidget {
                 SizedBox(
                   height: 164,
                   width: double.maxFinite,
-                  child: CachedNetworkImage(
+                  child: AppImage(
                     imageUrl: imageUrl,
                     imageBuilder: (context, imageProvider) => ClipRRect(
                       borderRadius: BorderRadius.circular(20),

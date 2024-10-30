@@ -1,10 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 
 import '/constants/assets.dart';
 import '/utils/app_theme.dart';
 import '/widgets/shimmerwidgets/shimmerize.dart';
+import 'app_image.dart';
 
 class Mp3ListItem extends StatelessWidget {
   final String imageUrl;
@@ -66,7 +66,7 @@ class Mp3ListItem extends StatelessWidget {
       );
 
   Widget _buildNetworkImage() => imageUrl.isNotEmpty
-      ? CachedNetworkImage(
+      ? AppImage(
           imageUrl: imageUrl,
           imageBuilder: (context, imageProvider) => ClipRRect(
             borderRadius: borderRadius,
