@@ -11,11 +11,11 @@ import '/domain/blocs/user/user_bloc.dart';
 import '/screens/auth/login_screen.dart';
 import '/utils/colors.dart';
 import '/utils/get.dart';
-import '../domain/blocs/user/app_user.dart';
-import '../domain/models/audiofile_model.dart';
-import '../domain/models/category_model.dart';
-import '../domain/services/service_locator.dart';
-import '../page_manager.dart';
+import '/domain/blocs/user/app_user.dart';
+import '/domain/models/audiofile_model.dart';
+import '/domain/models/category_model.dart';
+import '/domain/services/service_locator.dart';
+import '/page_manager.dart';
 
 void showToast(String value) {
   if (kDebugMode) {
@@ -26,7 +26,6 @@ void showToast(String value) {
 
 ValueNotifier<String> valueNotifierName = ValueNotifier("");
 
-ValueNotifier<int> indexNotifier = ValueNotifier(0);
 List<Categories> categroiesArray = [];
 
 fetchCategoriesArrayAndSave() async {

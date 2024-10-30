@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:sleeptales/helper/validators.dart';
+import '/helper/validators.dart';
 
 import '/utils/colors.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/input/password_edit_text.dart';
-import '../utils/firestore_helper.dart';
-import '../utils/global_functions.dart';
-import '../widgets/custom_btn.dart';
+import '/utils/firestore_helper.dart';
+import '/utils/global_functions.dart';
+import '/widgets/custom_btn.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final String? email;

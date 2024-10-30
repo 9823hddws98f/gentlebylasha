@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
+import '/domain/services/audio_panel_manager.dart';
 
 import '/utils/firestore_helper.dart';
 import 'domain/models/audiofile_model.dart';
@@ -9,8 +10,11 @@ import 'domain/services/playlist_repository.dart';
 import 'domain/services/service_locator.dart';
 import 'notifiers/progress_notifier.dart';
 import 'notifiers/repeat_notifier.dart';
+import 'utils/get.dart';
 
 class PageManager {
+  final _audioHandler = Get.the<AudioHandler>();
+
   final currentSongTitleNotifier = ValueNotifier<String>('---');
   final currentMediaItemNotifier = ValueNotifier<MediaItem>(MediaItem(id: "", title: ""));
   final playlistNotifier = ValueNotifier<List<String>>([]);
@@ -20,7 +24,7 @@ class PageManager {
   final isFirstSongNotifier = ValueNotifier<bool>(true);
   final isLastSongNotifier = ValueNotifier<bool>(true);
   final isShuffleModeEnabledNotifier = ValueNotifier<bool>(false);
-  final _audioHandler = getIt<AudioHandler>();
+
   bool check = true;
 
   void init() async {
@@ -186,18 +190,11 @@ class PageManager {
 
   void repeat() {
     repeatButtonNotifier.nextState();
-    final repeatMode = repeatButtonNotifier.value;
-    switch (repeatMode) {
-      case RepeatState.off:
-        _audioHandler.setRepeatMode(AudioServiceRepeatMode.none);
-        break;
-      case RepeatState.repeatSong:
-        _audioHandler.setRepeatMode(AudioServiceRepeatMode.one);
-        break;
-      case RepeatState.repeatPlaylist:
-        _audioHandler.setRepeatMode(AudioServiceRepeatMode.all);
-        break;
-    }
+    _audioHandler.setRepeatMode(switch (repeatButtonNotifier.value) {
+      RepeatState.off => AudioServiceRepeatMode.none,
+      RepeatState.repeatSong => AudioServiceRepeatMode.one,
+      RepeatState.repeatPlaylist => AudioServiceRepeatMode.all,
+    });
   }
 
   void shuffle() {
@@ -251,5 +248,6 @@ class PageManager {
 
   void stop() {
     _audioHandler.stop();
+    Get.the<AudioPanelManager>().minimize();
   }
 }

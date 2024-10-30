@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../domain/models/audiofile_model.dart';
-import '../domain/services/service_locator.dart';
-import '../page_manager.dart';
-import '../utils/global_functions.dart';
+import '/domain/models/audiofile_model.dart';
+import '/domain/services/service_locator.dart';
+import '/page_manager.dart';
+import '/utils/global_functions.dart';
 import 'mp3_list_item.dart';
 
 class WidthTrackListHorizontalNew extends StatelessWidget {

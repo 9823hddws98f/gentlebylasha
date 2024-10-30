@@ -3,19 +3,19 @@ import 'dart:async';
 import 'package:audio_service/audio_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sleeptales/widgets/app_scaffold/adaptive_app_bar.dart';
-import 'package:sleeptales/widgets/app_scaffold/app_scaffold.dart';
+import '/widgets/app_scaffold/adaptive_app_bar.dart';
+import '/widgets/app_scaffold/app_scaffold.dart';
 
 import '/utils/colors.dart';
 import '/utils/global_functions.dart';
 import '/widgets/custom_tab_button.dart';
 import '/widgets/track_list_item.dart';
-import '../domain/blocs/user/app_user.dart';
-import '../domain/models/audiofile_model.dart';
-import '../domain/services/language_constants.dart';
-import '../domain/services/service_locator.dart';
-import '../page_manager.dart';
-import '../widgets/shimmerwidgets/shimmer_mp3_card_tracklist_item.dart';
+import '/domain/blocs/user/app_user.dart';
+import '/domain/models/audiofile_model.dart';
+import '/domain/services/language_constants.dart';
+import '/domain/services/service_locator.dart';
+import '/page_manager.dart';
+import '/widgets/shimmerwidgets/shimmer_mp3_card_tracklist_item.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});

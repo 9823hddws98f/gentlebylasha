@@ -1,30 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:sleeptales/utils/tx_loader.dart';
 
 import '/domain/models/category_block.dart';
 import '/utils/app_theme.dart';
 import '/utils/firestore_helper.dart';
+import '/utils/tx_loader.dart';
 import '/widgets/shimmerwidgets/shimmerize.dart';
 
 class CategoryList extends StatefulWidget {
   const CategoryList({
     super.key,
+    this.showSelection = true,
     this.onTap,
     this.onLoad,
-    this.selectedTabIndex,
   });
 
-  final int? selectedTabIndex;
-  final void Function(CategoryBlock categoryBlock)? onTap;
+  final bool showSelection;
+  final void Function(int index)? onTap;
   final void Function(List<CategoryBlock> categoryBlocks)? onLoad;
   @override
-  State<CategoryList> createState() => _CategoryListState();
+  State<CategoryList> createState() => CategoryListState();
 }
 
-class _CategoryListState extends State<CategoryList> {
+class CategoryListState extends State<CategoryList> {
   final _txLoader = TxLoader();
 
+  final Map<int, GlobalKey> _itemKeys = {};
+
   List<CategoryBlock> _categoryBlocks = [];
+  int _selectedIndex = 0;
+
+  void handleTap(int index) async {
+    widget.onTap?.call(index);
+    if (mounted) {
+      setState(() => _selectedIndex = index);
+    }
+
+    final key = _itemKeys[index];
+    if (key?.currentContext != null) {
+      await Scrollable.ensureVisible(
+        key!.currentContext!,
+        duration: Durations.medium1,
+        curve: Easing.standard,
+        alignment: 0.5,
+      );
+    }
+  }
 
   @override
   void initState() {
@@ -34,9 +54,7 @@ class _CategoryListState extends State<CategoryList> {
       onSuccess: (items) {
         widget.onLoad?.call(items);
         if (mounted) {
-          setState(() {
-            _categoryBlocks = items;
-          });
+          setState(() => _categoryBlocks = items);
         }
       },
     );
@@ -50,18 +68,23 @@ class _CategoryListState extends State<CategoryList> {
       child: _txLoader.loading
           ? _buildShimmer()
           : ListView.separated(
-              padding: EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
               scrollDirection: Axis.horizontal,
+              cacheExtent: 600,
+              padding: EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
               itemCount: _categoryBlocks.length,
               separatorBuilder: (context, index) => SizedBox(width: 8),
-              itemBuilder: (context, index) => _buildTabButton(
-                index,
-                colors,
-                label: _categoryBlocks[index].name,
-                onTap: widget.onTap == null
-                    ? null
-                    : () => widget.onTap!(_categoryBlocks[index]),
-              ),
+              itemBuilder: (context, index) {
+                _itemKeys[index] ??= GlobalKey();
+                return KeyedSubtree(
+                  key: _itemKeys[index],
+                  child: _buildTabButton(
+                    index,
+                    colors,
+                    label: _categoryBlocks[index].name,
+                    onTap: widget.onTap == null ? null : () => widget.onTap!(index),
+                  ),
+                );
+              },
             ),
     );
   }
@@ -74,13 +97,14 @@ class _CategoryListState extends State<CategoryList> {
   }) =>
       FilledButton(
         style: FilledButton.styleFrom(
-          backgroundColor:
-              widget.selectedTabIndex == index ? colors.primary : colors.surface,
+          backgroundColor: (widget.showSelection && _selectedIndex == index)
+              ? colors.primary
+              : colors.surface,
           foregroundColor: colors.onSurface,
           shape: RoundedRectangleBorder(borderRadius: AppTheme.smallBorderRadius),
           side: BorderSide(color: colors.outline),
         ),
-        onPressed: onTap,
+        onPressed: () => handleTap(index),
         child: Text(label),
       );
 
@@ -96,4 +120,10 @@ class _CategoryListState extends State<CategoryList> {
           ),
         ),
       );
+
+  @override
+  void dispose() {
+    _itemKeys.clear();
+    super.dispose();
+  }
 }

@@ -1,8 +1,8 @@
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:sleeptales/screens/music_player/music_player_screen.dart';
 
 import '/page_manager.dart';
+import '/screens/music_player/music_player_screen.dart';
 import '/utils/get.dart';
 
 class DesktopMusicPreview extends StatelessWidget {

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '/domain/cubits/navigation.dart';
+import '/screens/explore/explore_screen.dart';
 
 import '/domain/models/audiofile_model.dart';
 import '/domain/models/block.dart';
@@ -40,10 +43,10 @@ class _HomeScreenState extends State<HomeScreen> with Translation {
             child: Column(
               children: [
                 CategoryList(
-                  onTap: (categoryBlock) {
-                    // TODO: open explore tab
-                    // indexNotifier.value = index;
-                    // indexNotifier.notifyListeners();
+                  showSelection: false,
+                  onTap: (index) {
+                    context.read<NavigationCubit>().select(AppNavigation.allNavItems[1]);
+                    ExploreScreen.categoriesListKey.currentState?.handleTap(index);
                   },
                 ),
                 SizedBox(height: 16),

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:shimmer/shimmer.dart';
 
-import '../../utils/colors.dart';
+import '/utils/colors.dart';
 
 class ShimmerSeriesTrackListWidget extends StatelessWidget {
   const ShimmerSeriesTrackListWidget({super.key});

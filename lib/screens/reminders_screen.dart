@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:sleeptales/constants/assets.dart';
-import 'package:sleeptales/widgets/app_scaffold/adaptive_app_bar.dart';
-import 'package:sleeptales/widgets/app_scaffold/app_scaffold.dart';
+import '/constants/assets.dart';
+import '/widgets/app_scaffold/adaptive_app_bar.dart';
+import '/widgets/app_scaffold/app_scaffold.dart';
 
 import '/screens/reminder_setup.dart';
 import '/utils/global_functions.dart';
-import '../domain/services/language_constants.dart';
+import '/domain/services/language_constants.dart';
 
 class RemindersScreen extends StatelessWidget with Translation {
   final String? email;

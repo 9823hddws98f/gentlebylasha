@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sleeptales/main.dart';
+import '/main.dart';
 
 import '/utils/app_theme.dart';
 

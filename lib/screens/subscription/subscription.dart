@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../app_container/app_container.dart';
+import '/screens/app_container/app_container.dart';
 import '/utils/app_theme.dart';
 import '/utils/global_functions.dart';
 import '/utils/tx_button.dart';

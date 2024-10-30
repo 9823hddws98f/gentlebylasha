@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sleeptales/constants/assets.dart';
-import 'package:sleeptales/widgets/app_scaffold/adaptive_app_bar.dart';
-import 'package:sleeptales/widgets/app_scaffold/app_scaffold.dart';
+import '/constants/assets.dart';
+import '/widgets/app_scaffold/adaptive_app_bar.dart';
+import '/widgets/app_scaffold/app_scaffold.dart';
 
 class DownloadsScreen extends StatefulWidget {
   final String? email;

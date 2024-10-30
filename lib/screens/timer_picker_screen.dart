@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sleeptales/widgets/app_scaffold/adaptive_app_bar.dart';
+import '/widgets/app_scaffold/adaptive_app_bar.dart';
 
 import '/page_manager.dart';
 import '/utils/colors.dart';
 import '/widgets/custom_btn.dart';
-import '../domain/services/service_locator.dart';
+import '/domain/services/service_locator.dart';
 
 class SleepTimerScreen extends StatefulWidget {
   const SleepTimerScreen({super.key});

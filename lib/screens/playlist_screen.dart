@@ -9,13 +9,13 @@ import '/utils/colors.dart';
 import '/utils/get.dart';
 import '/widgets/custom_btn.dart';
 import '/widgets/series_track_image_widget.dart';
-import '../domain/blocs/user/app_user.dart';
-import '../domain/models/audiofile_model.dart';
-import '../domain/models/block.dart';
-import '../domain/services/service_locator.dart';
-import '../page_manager.dart';
-import '../utils/global_functions.dart';
-import '../widgets/series_track_widget.dart';
+import '/domain/blocs/user/app_user.dart';
+import '/domain/models/audiofile_model.dart';
+import '/domain/models/block.dart';
+import '/domain/services/service_locator.dart';
+import '/page_manager.dart';
+import '/utils/global_functions.dart';
+import '/widgets/series_track_widget.dart';
 
 class PlayListScreen extends StatefulWidget {
   final Block block;

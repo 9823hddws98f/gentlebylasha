@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:sleeptales/main.dart';
+import '/main.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
 import '/page_manager.dart';
@@ -37,5 +37,5 @@ class AudioPanelManager {
     _pageManager.play();
   }
 
-  void minimize() => panelController.close();
+  Future<void> minimize() => panelController.close();
 }

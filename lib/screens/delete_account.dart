@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:sleeptales/widgets/app_scaffold/adaptive_app_bar.dart';
-import 'package:sleeptales/widgets/app_scaffold/app_scaffold.dart';
+import '/widgets/app_scaffold/adaptive_app_bar.dart';
+import '/widgets/app_scaffold/app_scaffold.dart';
 
 import '/utils/colors.dart';
 import '/utils/firestore_helper.dart';
 import '/utils/global_functions.dart';
 import '/widgets/custom_btn.dart';
-import '../domain/services/language_constants.dart';
+import '/domain/services/language_constants.dart';
 
 class DeleteAccountScreen extends StatefulWidget {
   final String? email;

@@ -21,6 +21,8 @@ import 'widgets/search_list_item.dart';
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
 
+  static final categoriesListKey = GlobalKey<CategoryListState>();
+
   @override
   State<ExploreScreen> createState() => _ExploreScreenState();
 }
@@ -81,7 +83,10 @@ class _ExploreScreenState extends State<ExploreScreen>
   Widget _buildSearchView(ColorScheme colors) {
     if (_error != null) return Text('Error: $_error');
     if (_txLoader.loading) {
-      return Center(child: CircularProgressIndicator());
+      return Padding(
+        padding: EdgeInsets.all(16),
+        child: CircularProgressIndicator(),
+      );
     } else if (_tracks.isEmpty) {
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -130,21 +135,13 @@ class _ExploreScreenState extends State<ExploreScreen>
   Widget _buildCategoriesList() => SliverAppBar(
         pinned: true,
         toolbarHeight: 62,
-        title: ValueListenableBuilder(
-          valueListenable: indexNotifier,
-          builder: (context, index, child) => CategoryList(
-            selectedTabIndex: index,
-            onLoad: (items) => setState(() {
-              _tabController = TabController(length: items.length, vsync: this);
-              _categories = items;
-            }),
-            onTap: _isSearching
-                ? null
-                : (categoryBlock) {
-                    _tabController!.animateTo(_categories.indexOf(categoryBlock));
-                    indexNotifier.value = _categories.indexOf(categoryBlock);
-                  },
-          ),
+        title: CategoryList(
+          key: ExploreScreen.categoriesListKey,
+          onLoad: (items) => setState(() {
+            _tabController = TabController(length: items.length, vsync: this);
+            _categories = items;
+          }),
+          onTap: _isSearching ? null : (index) => _tabController?.animateTo(index),
         ),
       );
 

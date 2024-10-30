@@ -5,13 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../domain/blocs/user/app_user.dart';
-import '../domain/models/audiofile_model.dart';
-import '../domain/models/block.dart';
-import '../domain/models/category_block.dart';
-import '../domain/models/category_model.dart';
-import '../domain/models/collection_model.dart';
-import '../domain/models/sub_categories.dart';
+import '/domain/blocs/user/app_user.dart';
+import '/domain/models/audiofile_model.dart';
+import '/domain/models/block.dart';
+import '/domain/models/category_block.dart';
+import '/domain/models/category_model.dart';
+import '/domain/models/collection_model.dart';
+import '/domain/models/sub_categories.dart';
 import 'global_functions.dart';
 
 final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -292,7 +292,9 @@ Future<List<CategoryBlock>> getCategoryBlocks() async {
     return CategoryBlock.fromMap(doc);
   }).toList();
 
-  debugPrint("category length ${featuredTracks.length}");
+  if (kDebugMode) {
+    debugPrint("category length ${featuredTracks.length}");
+  }
   return featuredTracks;
 }
 

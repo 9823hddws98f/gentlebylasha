@@ -5,14 +5,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
-import 'package:sleeptales/widgets/app_scaffold/adaptive_app_bar.dart';
-import 'package:sleeptales/widgets/app_scaffold/app_scaffold.dart';
+import '/widgets/app_scaffold/adaptive_app_bar.dart';
+import '/widgets/app_scaffold/app_scaffold.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import '/utils/colors.dart';
 import '/utils/global_functions.dart';
 import '/widgets/custom_btn.dart';
-import '../main.dart';
+import '/main.dart';
 
 class ReminderSetupScreen extends StatefulWidget {
   final String heading;

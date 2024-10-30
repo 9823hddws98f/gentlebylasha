@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:shimmer/shimmer.dart';
 
-import '../../utils/colors.dart';
+import '/utils/colors.dart';
 
 class ShimmerPlaylistItem extends StatelessWidget {
   const ShimmerPlaylistItem({

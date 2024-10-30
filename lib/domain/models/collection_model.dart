@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../utils/global_functions.dart';
+import '/utils/global_functions.dart';
 import 'audiofile_model.dart';
 import 'category_model.dart';
 

@@ -1,7 +1,7 @@
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:sleeptales/main.dart';
-import 'package:sleeptales/widgets/music/desktop_music_preview.dart';
+import '/main.dart';
+import '/widgets/music/desktop_music_preview.dart';
 
 import '/utils/app_theme.dart';
 

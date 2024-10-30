@@ -4,9 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:sleeptales/main.dart';
-import 'package:sleeptales/screens/auth/login_screen.dart';
-import 'package:sleeptales/utils/modals.dart';
+import '/main.dart';
+import '/screens/auth/login_screen.dart';
+import '/utils/modals.dart';
 
 import '/domain/blocs/authentication/appuser_model.dart';
 import '/domain/blocs/user/app_user.dart';

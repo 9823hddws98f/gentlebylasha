@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/input/password_edit_text.dart';
-import '../utils/global_functions.dart';
-import '../widgets/custom_btn.dart';
+import '/utils/global_functions.dart';
+import '/widgets/custom_btn.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   final String? email;

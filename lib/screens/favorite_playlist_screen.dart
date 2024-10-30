@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sleeptales/widgets/app_scaffold/adaptive_app_bar.dart';
-import 'package:sleeptales/widgets/app_scaffold/app_scaffold.dart';
+import '/widgets/app_scaffold/adaptive_app_bar.dart';
+import '/widgets/app_scaffold/app_scaffold.dart';
 
 import '/screens/playlist_tracks_screen.dart';
 import '/utils/colors.dart';
@@ -11,9 +11,9 @@ import '/utils/global_functions.dart';
 import '/widgets/custom_tab_button.dart';
 import '/widgets/playlist_item.dart';
 import '/widgets/shimmerwidgets/shimmer_playlist_item.dart';
-import '../domain/blocs/user/app_user.dart';
-import '../domain/models/block.dart';
-import '../domain/services/language_constants.dart';
+import '/domain/blocs/user/app_user.dart';
+import '/domain/models/block.dart';
+import '/domain/services/language_constants.dart';
 
 class FavoritePlaylistScreen extends StatefulWidget {
   const FavoritePlaylistScreen({super.key});

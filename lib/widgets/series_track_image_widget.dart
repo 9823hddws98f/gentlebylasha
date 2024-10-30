@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../domain/models/audiofile_model.dart';
+import '/domain/models/audiofile_model.dart';
 
 class SeriesTrackListImageWidget extends StatelessWidget {
   final AudioTrack audioTrack;

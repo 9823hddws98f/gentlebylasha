@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sleeptales/utils/get.dart';
+import '/utils/get.dart';
 
 import '/domain/services/language_constants.dart';
 

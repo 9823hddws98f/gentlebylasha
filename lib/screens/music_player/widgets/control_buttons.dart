@@ -2,7 +2,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:sleeptales/main.dart';
+import '/main.dart';
 
 import '/notifiers/repeat_notifier.dart';
 import '/page_manager.dart';
@@ -63,7 +63,7 @@ class _ControlButtonsState extends State<ControlButtons> {
             child: ValueListenableBuilder(
               valueListenable: _pageManager.playlistNotifier,
               builder: (context, playlist, child) {
-                final isPlaylist = playlist.isNotEmpty;
+                final isPlaylist = playlist.length > 1;
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
                   child: Column(
