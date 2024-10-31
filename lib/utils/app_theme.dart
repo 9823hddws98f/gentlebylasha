@@ -97,6 +97,7 @@ class AppTheme {
           fontSize: 24,
           fontWeight: FontWeight.w500,
           fontFamily: titleFont,
+          color: colors.onSurface,
         ),
       ),
       drawerTheme: DrawerThemeData(

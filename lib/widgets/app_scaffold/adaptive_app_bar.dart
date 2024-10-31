@@ -1,9 +1,9 @@
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
-import '/main.dart';
-import '/widgets/music/desktop_music_preview.dart';
 
+import '/main.dart';
 import '/utils/app_theme.dart';
+import '/widgets/music/desktop_music_preview.dart';
 
 class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -19,13 +19,12 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.bottom,
   });
 
-  static const desktopHeight = 104.0;
-  static const mobileHeight = 56.0;
+  static const _desktopHeight = 104.0;
+  static const _mobileHeight = 56.0;
 
-  //TODO: Might be prone to wrong sizing so we should use this method for all isMobile checks
   @override
   Size get preferredSize => Size.fromHeight(
-        (MyApp.isMobile ? mobileHeight : desktopHeight) +
+        (MyApp.isMobile ? _mobileHeight : _desktopHeight) +
             (bottom?.preferredSize.height ?? 0),
       );
 
@@ -84,7 +83,7 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ],
       ),
-      toolbarHeight: isMobile ? mobileHeight : desktopHeight,
+      toolbarHeight: isMobile ? _mobileHeight : _desktopHeight,
       automaticallyImplyLeading: false,
       centerTitle: centerTitle ?? !isMobile,
       actions: [
