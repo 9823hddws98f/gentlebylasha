@@ -1,10 +1,10 @@
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 
-import '/domain/cubits/favorites.dart';
 import '/utils/get.dart';
 import '/utils/tx_loader.dart';
 import '/widgets/circle_icon_button.dart';
+import '../../../domain/cubits/favorite_tracks.dart';
 
 class FavoriteButton extends StatefulWidget {
   const FavoriteButton({super.key, required this.trackId});
@@ -16,7 +16,7 @@ class FavoriteButton extends StatefulWidget {
 }
 
 class _FavoriteButtonState extends State<FavoriteButton> {
-  final _favoritesCubit = Get.the<FavoritesCubit>();
+  final _favoritesCubit = Get.the<FavoritesTracksCubit>();
 
   final _txLoader = TxLoader();
   bool _favorite = false;

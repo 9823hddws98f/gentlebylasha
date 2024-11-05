@@ -1,14 +1,15 @@
 import 'package:audio_service/audio_service.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '/constants/assets.dart';
-import '/domain/blocs/user/app_user.dart';
+import '/domain/cubits/favorite_playlists.dart';
+import '/domain/cubits/favorite_tracks.dart';
 import '/domain/models/block_item/audio_playlist.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/service_locator.dart';
 import '/page_manager.dart';
 import '/utils/colors.dart';
+import '/utils/get.dart';
 import '/utils/global_functions.dart';
 import '/widgets/app_image.dart';
 import '/widgets/custom_btn.dart';
@@ -26,7 +27,9 @@ class PlayListTracksScreen extends StatefulWidget {
 }
 
 class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
-  AppUser? user;
+  final _favoritePlaylistsCubit = Get.the<FavoritePlaylistsCubit>();
+  final _favoriteTracksCubit = Get.the<FavoritesTracksCubit>();
+
   bool favoritePlayListLoading = false;
   List<String> favoritesList = [];
   List<String> favoritesPlayList = [];
@@ -51,7 +54,6 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
   @override
   void initState() {
     super.initState();
-    getUserFromPref();
     getFavArray();
     getFavPlayListArray();
     fetchAndSetTracks(widget.block.id);
@@ -87,106 +89,32 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
   }
 
   Future<void> addPlaylistToFavorites(String playListId) async {
-    setState(() {
-      favoritePlayListLoading = true;
-    });
-    final favoritesCollection =
-        FirebaseFirestore.instance.collection('favorites_playlist');
-    final userFavoritesDocRef = favoritesCollection.doc(user!.id);
-    final favoritesDocSnapshot = await userFavoritesDocRef.get();
-    if (favoritesDocSnapshot.exists) {
-      final favoritesData = favoritesDocSnapshot.data();
-      if (favoritesData!['playlist'] != null) {
-        List<String> favoritesDataPlayList = List.from(favoritesData['playlist']);
-        if (!favoritesDataPlayList.contains(playListId)) {
-          favoritesDataPlayList.add(playListId);
-          await userFavoritesDocRef.update({'playlist': favoritesDataPlayList});
-        }
-      } else {
-        await userFavoritesDocRef.set({
-          'playlist': [playListId]
-        });
-      }
-    } else {
-      await userFavoritesDocRef.set({
-        'playlist': [playListId]
+    setState(() => favoritePlayListLoading = true);
+    try {
+      await Get.the<FavoritePlaylistsCubit>().addPlaylistToFavorites(playListId);
+      setState(() {
+        favoritesPlayList.add(playListId);
+        favoritePlayListLoading = false;
       });
-    }
-    setState(() {
-      favoritesPlayList.add(playListId);
-      addFavoritePlayListToSharedPref(favoritesPlayList);
-      favoritePlayListLoading = false;
       showToast("Playlist added to favorites");
-    });
+    } catch (e) {
+      setState(() => favoritePlayListLoading = false);
+      showToast("Error adding playlist to favorites");
+    }
   }
 
   Future<void> removePlayListFavorites(String blockId) async {
-    setState(() {
-      favoritePlayListLoading = true;
-    });
-
+    setState(() => favoritePlayListLoading = true);
     try {
-      final favoritesRef =
-          FirebaseFirestore.instance.collection('favorites_playlist').doc(user!.id);
-      await favoritesRef.update({
-        'playlist': FieldValue.arrayRemove([blockId])
-      });
-
+      await Get.the<FavoritePlaylistsCubit>().removePlaylist(blockId);
       setState(() {
         favoritesPlayList.remove(blockId);
-        removeFromFavoritesPlayList(blockId);
         favoritePlayListLoading = false;
       });
       showToast('Playlist removed from favorites');
     } catch (e) {
-      showToast('Error removing track from favorites: $e');
-      setState(() {
-        favoritePlayListLoading = false;
-      });
-    }
-  }
-
-  Future<void> addTrackToFavorites(String trackId) async {
-    final favoritesCollection = FirebaseFirestore.instance.collection('favorites');
-    final userFavoritesDocRef = favoritesCollection.doc(user!.id);
-
-    final favoritesDocSnapshot = await userFavoritesDocRef.get();
-    if (favoritesDocSnapshot.exists) {
-      final favoritesData = favoritesDocSnapshot.data();
-      List<String> favorites = List.from(favoritesData!['favorites']);
-      if (!favorites.contains(trackId)) {
-        favorites.add(trackId);
-        await userFavoritesDocRef.update({'favorites': favorites});
-      }
-    } else {
-      await userFavoritesDocRef.set({
-        'favorites': [trackId]
-      });
-    }
-    setState(() {
-      favoritesList.add(trackId);
-      addFavoriteListToSharedPref(favoritesList);
-      showToast("Track added to favorites");
-    });
-  }
-
-  Future<void> removeFavorite(String trackId) async {
-    try {
-      final favoritesRef =
-          FirebaseFirestore.instance.collection('favorites').doc(user!.id);
-
-      await favoritesRef.update({
-        'favorites': FieldValue.arrayRemove([trackId])
-      });
-
-      setState(() {
-        favoritesList.remove(trackId);
-        removeFromFavoritesList(trackId);
-      });
-      showToast('Track removed from favorites');
-    } catch (e) {
-      showToast('Error removing track from favorites: $e');
-      setState(() {});
+      setState(() => favoritePlayListLoading = false);
+      showToast('Error removing playlist from favorites');
     }
   }
 
@@ -280,13 +208,8 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                                       ),
                                     )
                                   : IconButton(
-                                      onPressed: () {
-                                        if (isPlaylistFavorited(widget.block.id)) {
-                                          removePlayListFavorites(widget.block.id);
-                                        } else {
-                                          addPlaylistToFavorites(widget.block.id);
-                                        }
-                                      },
+                                      onPressed: () =>
+                                          togglePlaylistFavorite(widget.block.id),
                                       icon: isPlaylistFavorited(widget.block.id)
                                           ? Icon(
                                               Icons.favorite,
@@ -431,14 +354,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
               //                         // TODO:    widget.panelFunction(true);
               //                       }
               //                     },
-              //                     favoriteTap: () {
-              //                       if (isTrackFavorited(tracksList[index].trackId)) {
-              //                         removeFavorite(tracksList[index].trackId);
-              //                       } else {
-              //                         addTrackToFavorites(tracksList[index].trackId);
-              //                       }
-              //                       setState(() {});
-              //                     },
+              //                     favoriteTap: () => toggleTrackFavorite(tracksList[index].trackId),
               //                     favorite: isTrackFavorited(tracksList[index].trackId),
               //                     currentPlaying: (currentPlaylistIsPlaying &&
               //                             currentMediaItem.id ==
@@ -453,14 +369,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
               //                       getIt<PageManager>().loadPlaylist(tracksList, index);
               //                       // TODO:      widget.panelFunction(false);
               //                     },
-              //                     favoriteTap: () async {
-              //                       if (isTrackFavorited(tracksList[index].trackId)) {
-              //                         removeFavorite(tracksList[index].trackId);
-              //                       } else {
-              //                         addTrackToFavorites(tracksList[index].trackId);
-              //                       }
-              //                       setState(() {});
-              //                     },
+              //                     favoriteTap: () => toggleTrackFavorite(tracksList[index].trackId),
               //                     favorite: isTrackFavorited(tracksList[index].trackId),
               //                   ),
               //           );
@@ -498,29 +407,40 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
     setState(() {});
   }
 
-  void getUserFromPref() async {
-    user = await getUser();
+  Future<void> toggleTrackFavorite(String trackId) async {
+    try {
+      if (isTrackFavorited(trackId)) {
+        await _favoriteTracksCubit.removeFavorite(trackId);
+        favoritesList.remove(trackId);
+        removeFromFavoritesList(trackId);
+      } else {
+        await _favoriteTracksCubit.addTrackToFavorites(trackId);
+        favoritesList.add(trackId);
+        addFavoriteListToSharedPref(favoritesList);
+      }
+      setState(() {});
+    } catch (e) {
+      showToast('Error updating track favorite status');
+    }
+  }
+
+  Future<void> togglePlaylistFavorite(String playlistId) async {
+    setState(() => favoritePlayListLoading = true);
+    try {
+      if (isPlaylistFavorited(playlistId)) {
+        await _favoritePlaylistsCubit.removePlaylist(playlistId);
+        favoritesPlayList.remove(playlistId);
+      } else {
+        await _favoritePlaylistsCubit.addPlaylistToFavorites(playlistId);
+        favoritesPlayList.add(playlistId);
+      }
+      setState(() => favoritePlayListLoading = false);
+      showToast(isPlaylistFavorited(playlistId)
+          ? 'Playlist removed from favorites'
+          : 'Playlist added to favorites');
+    } catch (e) {
+      setState(() => favoritePlayListLoading = false);
+      showToast('Error updating playlist favorite status');
+    }
   }
 }
-
-// Widget _buildShimmerListViewImage(String type) {
-//   return ListView.separated(
-//     physics: NeverScrollableScrollPhysics(),
-//     shrinkWrap: true,
-//     padding: EdgeInsets.only(left: 16, right: 16, bottom: 300),
-//     itemCount: 3,
-//     itemBuilder: (BuildContext context, int index) {
-//       return Padding(
-//           padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-//           child: type == "1"
-//               ? ShimmerSeriesTrackListImageWidget()
-//               : ShimmerSeriesTrackListWidget());
-//     },
-//     separatorBuilder: (BuildContext context, int index) {
-//       return Divider(
-//         height: 1.0,
-//         color: Colors.grey,
-//       );
-    // },
-    // );
-  // }

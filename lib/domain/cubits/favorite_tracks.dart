@@ -7,9 +7,9 @@ import '/domain/services/activity_log_service.dart';
 import '/utils/get.dart';
 
 /// Cubit for managing favorite tracks using Firestore
-class FavoritesCubit extends Cubit<List<String>> with ActivityLogger {
-  static FavoritesCubit instance = FavoritesCubit._();
-  FavoritesCubit._() : super([]);
+class FavoritesTracksCubit extends Cubit<List<String>> with ActivityLogger {
+  static FavoritesTracksCubit instance = FavoritesTracksCubit._();
+  FavoritesTracksCubit._() : super([]);
 
   final _collection = FirebaseFirestore.instance.collection('favorites');
 
