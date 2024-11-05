@@ -1,20 +1,16 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:audio_session/audio_session.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:flutter_timezone/flutter_timezone.dart';
-import 'package:timezone/data/latest.dart' as tz;
+import '/app_init.dart';
 
 import '/screens/auth/login_screen.dart';
 import '/utils/get.dart';
@@ -22,7 +18,6 @@ import 'domain/blocs/authentication/app_bloc.dart';
 import 'domain/blocs/user/user_bloc.dart';
 import 'domain/services/language_constants.dart';
 import 'domain/services/service_locator.dart';
-import 'firebase_options.dart';
 import 'screens/app_container/app_container.dart';
 import 'utils/app_theme.dart';
 
@@ -33,21 +28,7 @@ Future<void> main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  tz.initializeTimeZones();
-  //TODO: await initializeNotifications();
-
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
-  // go to immersive mode
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-
-  await FlutterTimezone.getAvailableTimezones();
-  final session = await AudioSession.instance;
-  await session.configure(AudioSessionConfiguration.music());
-  await setupServiceLocator();
+  await AppInit.initialize();
 
   bool isWaitingForAuth = true;
   if (FirebaseAuth.instance.currentUser == null) {
@@ -159,7 +140,7 @@ class _MyAppState extends State<MyApp> {
                 );
               } else if (state.status == AppStatus.authenticated &&
                   widget.isWaitingForAuth) {
-                await initServices();
+                await initUserBasedServices();
                 FlutterNativeSplash.remove();
               }
             },

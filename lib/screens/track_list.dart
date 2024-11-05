@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import '/domain/models/block_item/audio_track.dart';
 
-import '/domain/models/audiofile_model.dart';
 import '/domain/services/audio_panel_manager.dart';
 import '/utils/get.dart';
 import '/utils/global_functions.dart';
@@ -45,8 +45,9 @@ class _TrackListScreenState extends State<TrackListScreen> {
             return TrackListItemSmall(
               imageUrl: track.thumbnail,
               mp3Name: track.title,
-              mp3Category: track.categories.firstOrNull?.categoryName ?? '',
-              mp3Duration: track.length,
+              mp3Category: 'ERROR!', // TODO: FIX
+              // mp3Category: track.categories.firstOrNull?.categoryName ?? '',
+              mp3Duration: track.durationString,
               tap: () {
                 playTrack(track);
                 _audioPanelManager.maximize(false);

@@ -2,18 +2,16 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '/widgets/app_scaffold/adaptive_app_bar.dart';
-import '/widgets/app_scaffold/app_scaffold.dart';
 
-import '/screens/playlist_tracks_screen.dart';
+import '/domain/blocs/user/app_user.dart';
+import '/domain/models/block_item/audio_playlist.dart';
+import '/domain/services/language_constants.dart';
 import '/utils/colors.dart';
 import '/utils/global_functions.dart';
+import '/widgets/app_scaffold/adaptive_app_bar.dart';
+import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/custom_tab_button.dart';
-import '/widgets/playlist_item.dart';
-import '/widgets/shimmerwidgets/shimmer_playlist_item.dart';
-import '/domain/blocs/user/app_user.dart';
-import '/domain/models/block.dart';
-import '/domain/services/language_constants.dart';
+import '../widgets/blocks/playlist_block_item.dart';
 
 class FavoritePlaylistScreen extends StatefulWidget {
   const FavoritePlaylistScreen({super.key});
@@ -26,7 +24,7 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen>
     with Translation {
   bool exception = false;
   bool isLoading = true;
-  List<Block> favoritePlaylist = [];
+  List<AudioPlaylist> favoritePlaylist = [];
   StreamSubscription<DocumentSnapshot>? favoritesSubscription;
   List<String> favoritesPlayList = [];
   bool favoritePlayListLoading = false;
@@ -116,8 +114,8 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen>
 
         for (var doc in tracksQuerySnapshot.docs) {
           Map<String, dynamic> data = doc.data();
-          Block block = Block.fromMap(doc.id, data);
-          favoritePlaylist.add(block);
+          AudioPlaylist playlist = AudioPlaylist.fromMap(data);
+          favoritePlaylist.add(playlist);
         }
       }
     }
@@ -177,17 +175,14 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen>
               child: Column(
                 children: [
                   for (int index = 0; index < favoritePlaylist.length; index++)
-                    PlaylistItem(
-                      block: favoritePlaylist[index],
-                      tap: () {
-                        // Handle item tap
-                        pushName(context,
-                            PlayListTracksScreen(block: favoritePlaylist[index]));
-                      },
-                      favoriteTap: () {
-                        // Handle favorite tap
-                        removePlayListFavorites(favoritePlaylist[index].id);
-                      },
+                    PlaylistBlockItem(
+                      playlist: favoritePlaylist[index],
+
+                      // TODO: Handle favorite tap
+                      // onFavoriteTap: () {
+                      //   // Handle favorite tap
+                      //   removePlayListFavorites(favoritePlaylist[index].id);
+                      // },
                     ),
                 ],
               ),
@@ -245,7 +240,7 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen>
             6,
             (index) => Padding(
               padding: EdgeInsets.only(bottom: 16),
-              child: ShimmerPlaylistItem(),
+              child: PlaylistBlockItem.shimmer(),
             ),
           ),
         ),

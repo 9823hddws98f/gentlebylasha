@@ -1,31 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:sleeptales/widgets/app_image.dart';
 
+import '/domain/models/block_item/audio_track.dart';
+import '/domain/services/audio_panel_manager.dart';
 import '/utils/app_theme.dart';
+import '/utils/get.dart';
+import '/utils/global_functions.dart';
+import '/widgets/app_image.dart';
 
 class SearchListItem extends StatelessWidget {
-  const SearchListItem({
-    super.key,
-    required this.imageUrl,
-    required this.name,
-    required this.category,
-    required this.duration,
-    required this.speaker,
-    required this.onPress,
-  });
+  SearchListItem(this.track, {super.key});
 
-  final String imageUrl;
-  final String name;
-  final String category;
-  final String duration;
-  final String speaker;
-  final VoidCallback onPress;
+  final AudioTrack track;
+
+  final _audioPanelManager = Get.the<AudioPanelManager>();
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return ListTile(
-      onTap: onPress,
+      onTap: () {
+        playTrack(track);
+        _audioPanelManager.maximize(false);
+      },
       contentPadding: const EdgeInsets.symmetric(
         horizontal: AppTheme.sidePadding,
         vertical: 4,
@@ -33,7 +29,7 @@ class SearchListItem extends StatelessWidget {
       leading: ClipRRect(
         borderRadius: AppTheme.smallBorderRadius,
         child: AppImage(
-          imageUrl: imageUrl,
+          imageUrl: track.thumbnail,
           height: 50,
           width: 50,
           fit: BoxFit.cover,
@@ -41,19 +37,12 @@ class SearchListItem extends StatelessWidget {
         ),
       ),
       title: Text(
-        name,
+        track.title,
         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
         overflow: TextOverflow.ellipsis,
       ),
-      subtitle: [category, speaker].any((s) => s.isNotEmpty)
-          ? Text(
-              [category, speaker].where((s) => s.isNotEmpty).join(' • '),
-              style: TextStyle(fontSize: 12, color: colors.onSurfaceVariant),
-              overflow: TextOverflow.ellipsis,
-            )
-          : null,
       trailing: Text(
-        '$duration min',
+        '${track.duration} min',
         style: TextStyle(fontSize: 12, color: colors.onSurfaceVariant),
       ),
     );

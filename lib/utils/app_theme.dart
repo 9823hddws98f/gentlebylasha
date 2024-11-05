@@ -6,6 +6,7 @@ class AppTheme {
   static const fontFamily = 'Matter'; //'Poppins';
   static const titleFont = 'Matter'; //'Poppins';
   static const smallBorderRadius = BorderRadius.all(Radius.circular(10));
+  static const mediumBorderRadius = BorderRadius.all(Radius.circular(14));
   static const largeBorderRadius = BorderRadius.all(Radius.circular(30));
 
   static const sidePadding = 16.0;

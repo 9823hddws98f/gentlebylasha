@@ -1,30 +1,24 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sleeptales/widgets/app_image.dart';
 
 import '/constants/assets.dart';
 import '/domain/blocs/user/app_user.dart';
-import '/domain/models/audiofile_model.dart';
-import '/domain/models/block.dart';
+import '/domain/models/block_item/audio_playlist.dart';
 import '/domain/services/audio_panel_manager.dart';
 import '/domain/services/service_locator.dart';
 import '/page_manager.dart';
 import '/utils/colors.dart';
 import '/utils/get.dart';
 import '/utils/global_functions.dart';
-import '/widgets/custom_btn.dart';
-import '/widgets/series_track_image_widget.dart';
-import '/widgets/series_track_widget.dart';
+import '/widgets/app_image.dart';
 
 class PlayListScreen extends StatefulWidget {
-  final Block block;
-  final List<AudioTrack> list;
+  final AudioPlaylist playlist;
 
   const PlayListScreen({
     super.key,
-    required this.list,
-    required this.block,
+    required this.playlist,
   });
 
   @override
@@ -85,8 +79,9 @@ class _PlayListScreenState extends State<PlayListScreen> {
       if (mounted) {
         currentPlayingList = getIt<PageManager>().playlistIdNotifier.value;
       }
-      currentPlaylistIsPlaying = currentPlayingList
-          .every((id) => widget.list.any((track) => track.trackId == id));
+      currentPlaylistIsPlaying = currentPlayingList.every(
+        (id) => widget.playlist.trackIds.any((trackId) => trackId == id),
+      );
     });
   }
 
@@ -232,9 +227,9 @@ class _PlayListScreenState extends State<PlayListScreen> {
             ),
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: false,
-              title: _isAppBarExpanded ? null : Text(widget.block.title),
+              title: _isAppBarExpanded ? null : Text(widget.playlist.title),
               background: AppImage(
-                imageUrl: widget.block.thumbnail,
+                imageUrl: widget.playlist.thumbnail,
                 fit: BoxFit.cover,
                 placeholder: (context) => Image.asset(
                   Assets.placeholderImage,
@@ -254,7 +249,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
                         children: [
                           Expanded(
                               child: Text(
-                            widget.block.title,
+                            widget.playlist.title,
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                           )),
                           Stack(
@@ -273,13 +268,13 @@ class _PlayListScreenState extends State<PlayListScreen> {
                                     )
                                   : IconButton(
                                       onPressed: () {
-                                        if (isPlaylistFavorited(widget.block.id)) {
-                                          removePlayListFavorites(widget.block.id);
+                                        if (isPlaylistFavorited(widget.playlist.id)) {
+                                          removePlayListFavorites(widget.playlist.id);
                                         } else {
-                                          addPlaylistToFavorites(widget.block.id);
+                                          addPlaylistToFavorites(widget.playlist.id);
                                         }
                                       },
-                                      icon: isPlaylistFavorited(widget.block.id)
+                                      icon: isPlaylistFavorited(widget.playlist.id)
                                           ? Icon(
                                               Icons.favorite,
                                               size: 24,
@@ -304,9 +299,9 @@ class _PlayListScreenState extends State<PlayListScreen> {
                     SizedBox(
                       width: 40,
                       height: 40,
-                      child: widget.block.authorImage.isNotEmpty
+                      child: widget.playlist.authorImage.isNotEmpty
                           ? AppImage(
-                              imageUrl: widget.block.authorImage,
+                              imageUrl: widget.playlist.authorImage,
                               imageBuilder: (context, imageProvider) => CircleAvatar(
                                 backgroundImage: imageProvider,
                                 radius: 40,
@@ -333,7 +328,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
                         Padding(
                           padding: EdgeInsets.only(left: 0),
                           child: Text(
-                            widget.block.author,
+                            widget.playlist.author,
                             style: TextStyle(
                               fontSize: 16.0,
                               fontWeight: FontWeight.bold,
@@ -343,7 +338,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
                         Padding(
                           padding: EdgeInsets.only(left: 0),
                           child: Text(
-                            widget.block.profession,
+                            widget.playlist.profession,
                             style: TextStyle(
                               fontSize: 14.0,
                             ),
@@ -354,34 +349,35 @@ class _PlayListScreenState extends State<PlayListScreen> {
                   ],
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: CustomButton(
-                    title: (currentPlaylistIsPlaying && playing) ? "Pause" : "Play",
-                    onPress: () {
-                      if (currentPlaylistIsPlaying && playing) {
-                        getIt<PageManager>().pause();
-                        showPanel(true);
-                      } else if (currentPlaylistIsPlaying && !playing) {
-                        getIt<PageManager>().loadPlaylist(widget.list, 0);
-                        getIt<PageManager>().play();
-                        showPanel(true);
-                      } else {
-                        getIt<PageManager>().loadPlaylist(widget.list, 0);
-                        getIt<PageManager>().play();
-                        showPanel(false);
-                      }
-                    },
-                    color: Colors.white,
-                    textColor: textColor),
-              ),
+              // TODO: UNCOMMENT
+              // Padding(
+              //   padding: EdgeInsets.symmetric(horizontal: 16),
+              //   child: CustomButton(
+              //       title: (currentPlaylistIsPlaying && playing) ? "Pause" : "Play",
+              //       onPress: () {
+              //         if (currentPlaylistIsPlaying && playing) {
+              //           getIt<PageManager>().pause();
+              //           showPanel(true);
+              //         } else if (currentPlaylistIsPlaying && !playing) {
+              //           getIt<PageManager>().loadPlaylist(widget.list, 0);
+              //           getIt<PageManager>().play();
+              //           showPanel(true);
+              //         } else {
+              //           getIt<PageManager>().loadPlaylist(widget.list, 0);
+              //           getIt<PageManager>().play();
+              //           showPanel(false);
+              //         }
+              //       },
+              //       color: Colors.white,
+              //       textColor: textColor),
+              // ),
               SizedBox(
                 height: 16,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
-                  widget.block.description,
+                  widget.playlist.description,
                   style: TextStyle(fontSize: 16),
                 ),
               ),
@@ -392,72 +388,41 @@ class _PlayListScreenState extends State<PlayListScreen> {
                   color: seriesDividerColor,
                 ),
               ),
-              ListView.separated(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                padding: EdgeInsets.only(left: 16, right: 16, bottom: 200),
-                itemCount: widget.list.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-                    child: widget.block.showSeriesImg != "1"
-                        ? SeriesTrackListWidget(
-                            audioTrack: widget.list[index],
-                            tap: () {
-                              getIt<PageManager>().loadPlaylist(widget.list, index);
-                              showPanel(false);
-                            },
-                            onTapPlayPause: () {
-                              if (currentPlaylistIsPlaying &&
-                                  currentMediaItem.id == widget.list[index].trackId &&
-                                  playing) {
-                                getIt<PageManager>().pause();
-                              } else {
-                                getIt<PageManager>().loadPlaylist(widget.list, index);
-                                getIt<PageManager>().play();
-                                showPanel(true);
-                              }
-                            },
-                            favoriteTap: () {
-                              if (isTrackFavorited(widget.list[index].trackId)) {
-                                removeFavorite(widget.list[index].trackId);
-                              } else {
-                                addTrackToFavorites(widget.list[index].trackId);
-                              }
-                              setState(() {});
-                            },
-                            favorite: isTrackFavorited(widget.list[index].trackId),
-                            currentPlaying: (currentPlaylistIsPlaying &&
-                                    currentMediaItem.id == widget.list[index].trackId &&
-                                    playing)
-                                ? true
-                                : false,
-                          )
-                        : SeriesTrackListImageWidget(
-                            audioTrack: widget.list[index],
-                            tap: () {
-                              getIt<PageManager>().loadPlaylist(widget.list, index);
-                              showPanel(false);
-                            },
-                            favoriteTap: () async {
-                              if (isTrackFavorited(widget.list[index].trackId)) {
-                                removeFavorite(widget.list[index].trackId);
-                              } else {
-                                addTrackToFavorites(widget.list[index].trackId);
-                              }
-                              setState(() {});
-                            },
-                            favorite: isTrackFavorited(widget.list[index].trackId),
-                          ),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return Divider(
-                    height: 1.0,
-                    color: seriesDividerColor,
-                  );
-                },
-              ),
+              // TODO: UNCOMMENT
+              // ListView.separated(
+              //   physics: NeverScrollableScrollPhysics(),
+              //   shrinkWrap: true,
+              //   padding: EdgeInsets.only(left: 16, right: 16, bottom: 200),
+              //   itemCount: widget.list.length,
+              //   itemBuilder: (BuildContext context, int index) {
+              //     return Padding(
+              //       padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+              //       child: SeriesTrackListImageWidget(
+              //         // TODO: THIS SHOULD BE TOGGALBLE IMAGE
+              //         audioTrack: widget.list[index],
+              //         tap: () {
+              //           getIt<PageManager>().loadPlaylist(widget.list, index);
+              //           showPanel(false);
+              //         },
+              //         favoriteTap: () async {
+              //           if (isTrackFavorited(widget.list[index].trackId)) {
+              //             removeFavorite(widget.list[index].trackId);
+              //           } else {
+              //             addTrackToFavorites(widget.list[index].trackId);
+              //           }
+              //           setState(() {});
+              //         },
+              //         favorite: isTrackFavorited(widget.list[index].trackId),
+              //       ),
+              //     );
+              //   },
+              //   separatorBuilder: (BuildContext context, int index) {
+              //     return Divider(
+              //       height: 1.0,
+              //       color: seriesDividerColor,
+              //     );
+              //   },
+              // ),
               Padding(
                 padding: EdgeInsets.only(top: 16, left: 16, right: 16),
                 child: Divider(

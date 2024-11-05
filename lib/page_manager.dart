@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
-import '/domain/services/audio_panel_manager.dart';
 
+import '/domain/services/audio_panel_manager.dart';
 import '/utils/firestore_helper.dart';
-import 'domain/models/audiofile_model.dart';
+import 'domain/models/block_item/audio_track.dart';
 import 'domain/services/playlist_repository.dart';
 import 'domain/services/service_locator.dart';
 import 'notifiers/progress_notifier.dart';
@@ -44,20 +44,19 @@ class PageManager {
   }
 
   Future<void> loadPlaylist(List<AudioTrack> list, int index) async {
-    if (currentMediaItemNotifier.value.id != list[index].trackId) {
+    if (currentMediaItemNotifier.value.id != list[index].id) {
       playlistNotifier.value = [];
       playlistIdNotifier.value = [];
       final mediaItems = list
           .map((song) => MediaItem(
-                id: song.trackId,
+                id: song.id,
                 album: song.speaker,
                 title: song.title,
                 displayDescription: song.description,
                 artUri: Uri.parse(song.imageBackground),
                 extras: {
+                  'id': song.id,
                   'url': song.trackUrl,
-                  'id': song.trackId,
-                  'categories': song.categories[0].categoryName
                 },
               ))
           .toList();
@@ -136,7 +135,7 @@ class PageManager {
         currentSongTitleNotifier.value = mediaItem?.title ?? '';
         currentMediaItemNotifier.value = mediaItem ?? MediaItem(id: '', title: '');
         if (mediaItem != null) {
-          if (mediaItem.id != '') {
+          if (mediaItem.id.isNotEmpty) {
             addToRecentlyPlayed(mediaItem.id);
             incrementPlayCount(mediaItem.id);
           }

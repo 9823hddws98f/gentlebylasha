@@ -6,11 +6,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '/domain/models/block_item/audio_track.dart';
 
 import '/domain/blocs/user/app_user.dart';
 import '/domain/blocs/user/user_bloc.dart';
-import '/domain/models/audiofile_model.dart';
-import '/domain/models/category_model.dart';
 import '/domain/services/service_locator.dart';
 import '/page_manager.dart';
 import '/screens/auth/login_screen.dart';
@@ -25,12 +24,6 @@ void showToast(String value) {
 }
 
 ValueNotifier<String> valueNotifierName = ValueNotifier("");
-
-List<Categories> categroiesArray = [];
-
-fetchCategoriesArrayAndSave() async {
-  categroiesArray = await getCategories();
-}
 
 Future<AppUser> getUser() async {
   // TODO: Implement correctly
@@ -206,48 +199,18 @@ showLoaderDialog(BuildContext context, String message) {
 void playTrack(AudioTrack audioTrack) {
   getIt<PageManager>().playSinglePlaylist(
     MediaItem(
-      id: audioTrack.trackId,
+      id: audioTrack.id,
       album: audioTrack.speaker,
       title: audioTrack.title,
       displayDescription: audioTrack.description,
       artUri: Uri.parse(audioTrack.imageBackground),
       extras: {
+        'id': audioTrack.id,
         'url': audioTrack.trackUrl,
-        'id': audioTrack.trackId,
-        'categories': audioTrack.categories[0].categoryName
       },
     ),
-    audioTrack.trackId,
+    audioTrack.id,
   );
-}
-
-// Save the list of model objects to shared preferences
-Future<void> saveCategories(List<Categories> categories) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  List<String> categoryStrings =
-      categories.map((category) => jsonEncode(category.toMap())).toList();
-
-  await prefs.setStringList('categories', categoryStrings);
-}
-
-// Retrieve the list of model objects from shared preferences
-Future<List<Categories>> getCategories() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  List<String>? categoryStrings = prefs.getStringList('categories');
-
-  if (categoryStrings != null) {
-    List<Map<String, dynamic>> categoryMaps = categoryStrings
-        .map<Map<String, dynamic>>((category) => jsonDecode(category))
-        .toList();
-    List<Categories> categories =
-        categoryMaps.map((category) => Categories.fromMap(category)).toList();
-
-    return categories;
-  }
-
-  return [];
 }
 
 class SlideFromBottomPageRoute extends PageRouteBuilder {

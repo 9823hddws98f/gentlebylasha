@@ -2,6 +2,16 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
+enum UserRole {
+  admin,
+  client;
+
+  String get name => switch (this) {
+        admin => 'Admin',
+        client => 'Client',
+      };
+}
+
 class AppUser {
   final String id;
   final String? name;
@@ -11,6 +21,7 @@ class AppUser {
   final String? heardFrom;
   final List<String>? goals;
   final String? photoURL;
+  final UserRole role;
 
   const AppUser({
     required this.id,
@@ -21,6 +32,7 @@ class AppUser {
     this.heardFrom,
     this.goals,
     this.photoURL,
+    this.role = UserRole.client,
   });
 
   AppUser copyWith({
@@ -32,6 +44,7 @@ class AppUser {
     String? heardFrom,
     List<String>? goals,
     String? photoURL,
+    UserRole? role,
   }) {
     return AppUser(
       id: id ?? this.id,
@@ -42,6 +55,7 @@ class AppUser {
       heardFrom: heardFrom ?? this.heardFrom,
       goals: goals ?? this.goals,
       photoURL: photoURL ?? this.photoURL,
+      role: role ?? this.role,
     );
   }
 
@@ -55,6 +69,7 @@ class AppUser {
       'heardFrom': heardFrom,
       'goals': goals,
       'photoURL': photoURL,
+      'role': role.name,
     };
   }
 
@@ -72,6 +87,7 @@ class AppUser {
       goals:
           map['goals'] != null ? List<String>.from(map['goals'] as List<dynamic>) : null,
       photoURL: map['photoURL'] != null ? map['photoURL'] as String : null,
+      role: UserRole.values.byName(map['role'] as String),
     );
   }
 
@@ -82,7 +98,7 @@ class AppUser {
 
   @override
   String toString() {
-    return 'AppUser(id: $id, name: $name, email: $email, language: $language, heardFrom: $heardFrom, goals: $goals, photoURL: $photoURL)';
+    return 'AppUser(id: $id, name: $name, email: $email, language: $language, heardFrom: $heardFrom, goals: $goals, photoURL: $photoURL, role: $role)';
   }
 
   @override
@@ -96,7 +112,8 @@ class AppUser {
         other.language == language &&
         other.heardFrom == heardFrom &&
         listEquals(other.goals, goals) &&
-        other.photoURL == photoURL;
+        other.photoURL == photoURL &&
+        other.role == role;
   }
 
   @override
@@ -108,5 +125,6 @@ class AppUser {
       language.hashCode ^
       heardFrom.hashCode ^
       goals.hashCode ^
-      photoURL.hashCode;
+      photoURL.hashCode ^
+      role.hashCode;
 }

@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 
-import '/domain/models/block.dart';
-import '/domain/models/category_block.dart';
-import '/utils/firestore_helper.dart';
+import '/domain/models/app_page.dart';
+import '/domain/models/block/block.dart';
 import '/utils/tx_loader.dart';
 import 'home/track_block_loader.dart';
 
-class TabsSubCategoryScreen extends StatefulWidget {
-  const TabsSubCategoryScreen(this.category, {super.key});
+class TabsCategoryScreen extends StatefulWidget {
+  const TabsCategoryScreen(this.category, {super.key});
 
-  final CategoryBlock category;
+  final AppPage category;
 
   @override
-  State<TabsSubCategoryScreen> createState() => _TabsSubCategoryScreen();
+  State<TabsCategoryScreen> createState() => _TabsCategoryScreen();
 }
 
-class _TabsSubCategoryScreen extends State<TabsSubCategoryScreen> {
+class _TabsCategoryScreen extends State<TabsCategoryScreen> {
   final _txLoader = TxLoader();
 
   List<Block> _blockList = [];
@@ -31,7 +30,7 @@ class _TabsSubCategoryScreen extends State<TabsSubCategoryScreen> {
       ? ListView.builder(
           key: ValueKey('shimmer'),
           itemCount: 3,
-          itemBuilder: (context, index) => TrackBlockLoader.shimmer(),
+          itemBuilder: (context, index) => TrackBlockLoader.shimmer(BlockType.normal),
         )
       : ListView.builder(
           itemCount: _blockList.length,
@@ -40,10 +39,10 @@ class _TabsSubCategoryScreen extends State<TabsSubCategoryScreen> {
         );
 
   Future<void> _getPageBlocks() async {
-    _txLoader.load(
-      () => getBlockOfCategory(widget.category.id),
-      ensure: () => mounted,
-      onSuccess: (blocks) => setState(() => _blockList = blocks),
-    );
+    // _txLoader.load(
+    //   () => getBlocksOfCategory(widget.category.id),
+    //   ensure: () => mounted,
+    //   onSuccess: (blocks) => setState(() => _blockList = blocks),
+    // );
   }
 }

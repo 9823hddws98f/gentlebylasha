@@ -4,22 +4,17 @@ import 'package:flutter/material.dart';
 
 import '/constants/assets.dart';
 import '/domain/blocs/user/app_user.dart';
-import '/domain/models/audiofile_model.dart';
-import '/domain/models/block.dart';
+import '/domain/models/block_item/audio_playlist.dart';
+import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/service_locator.dart';
 import '/page_manager.dart';
 import '/utils/colors.dart';
-import '/utils/firestore_helper.dart';
 import '/utils/global_functions.dart';
 import '/widgets/app_image.dart';
 import '/widgets/custom_btn.dart';
-import '/widgets/series_track_image_widget.dart';
-import '/widgets/series_track_widget.dart';
-import '/widgets/shimmerwidgets/shimmer_series_track_image_widget.dart';
-import '/widgets/shimmerwidgets/shimmer_series_track_widget.dart';
 
 class PlayListTracksScreen extends StatefulWidget {
-  final Block block;
+  final AudioPlaylist block;
 
   const PlayListTracksScreen({
     super.key,
@@ -86,8 +81,8 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
       if (mounted) {
         currentPlayingList = getIt<PageManager>().playlistIdNotifier.value;
       }
-      currentPlaylistIsPlaying = currentPlayingList
-          .every((id) => tracksList.any((track) => track.trackId == id));
+      // currentPlaylistIsPlaying = currentPlayingList
+      //     .every((id) => tracksList.any((track) => track.trackId == id));
     });
   }
 
@@ -198,10 +193,10 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
   // Function to fetch tracks for a block and update the state
   Future<void> fetchAndSetTracks(String blockId) async {
     trackListLoading = true;
-    final tracks = await fetchTracksForBlock(blockId);
+    // final tracks = await fetchTracksForBlock(blockId);
     //debugPrint("tracks length ${tracks.length}");
     setState(() {
-      tracksList = tracks;
+      // tracksList = tracks;
       trackListLoading = false;
     });
     // debugPrint(tracks.length);
@@ -406,77 +401,78 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                     color: Colors.grey,
                   ),
                 ),
-              tracksList.isNotEmpty
-                  ? ListView.separated(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      padding: EdgeInsets.only(left: 16, right: 16, bottom: 200),
-                      itemCount: tracksList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Padding(
-                          padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-                          child: widget.block.showSeriesImg != "1"
-                              ? SeriesTrackListWidget(
-                                  audioTrack: tracksList[index],
-                                  tap: () {
-                                    getIt<PageManager>().loadPlaylist(tracksList, index);
-                                    // TODO:    widget.panelFunction(false);
-                                  },
-                                  onTapPlayPause: () {
-                                    if (currentPlaylistIsPlaying &&
-                                        currentMediaItem.id ==
-                                            tracksList[index].trackId &&
-                                        playing) {
-                                      getIt<PageManager>().pause();
-                                    } else {
-                                      getIt<PageManager>()
-                                          .loadPlaylist(tracksList, index);
-                                      getIt<PageManager>().play();
-                                      // TODO:    widget.panelFunction(true);
-                                    }
-                                  },
-                                  favoriteTap: () {
-                                    if (isTrackFavorited(tracksList[index].trackId)) {
-                                      removeFavorite(tracksList[index].trackId);
-                                    } else {
-                                      addTrackToFavorites(tracksList[index].trackId);
-                                    }
-                                    setState(() {});
-                                  },
-                                  favorite: isTrackFavorited(tracksList[index].trackId),
-                                  currentPlaying: (currentPlaylistIsPlaying &&
-                                          currentMediaItem.id ==
-                                              tracksList[index].trackId &&
-                                          playing)
-                                      ? true
-                                      : false,
-                                )
-                              : SeriesTrackListImageWidget(
-                                  audioTrack: tracksList[index],
-                                  tap: () {
-                                    getIt<PageManager>().loadPlaylist(tracksList, index);
-                                    // TODO:      widget.panelFunction(false);
-                                  },
-                                  favoriteTap: () async {
-                                    if (isTrackFavorited(tracksList[index].trackId)) {
-                                      removeFavorite(tracksList[index].trackId);
-                                    } else {
-                                      addTrackToFavorites(tracksList[index].trackId);
-                                    }
-                                    setState(() {});
-                                  },
-                                  favorite: isTrackFavorited(tracksList[index].trackId),
-                                ),
-                        );
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return Divider(
-                          height: 1.0,
-                          color: seriesDividerColor,
-                        );
-                      },
-                    )
-                  : _buildShimmerListViewImage("0"),
+              // TODO: UNCOMMENT
+              // tracksList.isNotEmpty
+              //     ? ListView.separated(
+              //         physics: NeverScrollableScrollPhysics(),
+              //         shrinkWrap: true,
+              //         padding: EdgeInsets.only(left: 16, right: 16, bottom: 200),
+              //         itemCount: tracksList.length,
+              //         itemBuilder: (BuildContext context, int index) {
+              //           return Padding(
+              //             padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+              //             child: widget.block.showSeriesImg != "1"
+              //                 ? SeriesTrackListWidget(
+              //                     audioTrack: tracksList[index],
+              //                     tap: () {
+              //                       getIt<PageManager>().loadPlaylist(tracksList, index);
+              //                       // TODO:    widget.panelFunction(false);
+              //                     },
+              //                     onTapPlayPause: () {
+              //                       if (currentPlaylistIsPlaying &&
+              //                           currentMediaItem.id ==
+              //                               tracksList[index].trackId &&
+              //                           playing) {
+              //                         getIt<PageManager>().pause();
+              //                       } else {
+              //                         getIt<PageManager>()
+              //                             .loadPlaylist(tracksList, index);
+              //                         getIt<PageManager>().play();
+              //                         // TODO:    widget.panelFunction(true);
+              //                       }
+              //                     },
+              //                     favoriteTap: () {
+              //                       if (isTrackFavorited(tracksList[index].trackId)) {
+              //                         removeFavorite(tracksList[index].trackId);
+              //                       } else {
+              //                         addTrackToFavorites(tracksList[index].trackId);
+              //                       }
+              //                       setState(() {});
+              //                     },
+              //                     favorite: isTrackFavorited(tracksList[index].trackId),
+              //                     currentPlaying: (currentPlaylistIsPlaying &&
+              //                             currentMediaItem.id ==
+              //                                 tracksList[index].trackId &&
+              //                             playing)
+              //                         ? true
+              //                         : false,
+              //                   )
+              //                 : SeriesTrackListImageWidget(
+              //                     audioTrack: tracksList[index],
+              //                     tap: () {
+              //                       getIt<PageManager>().loadPlaylist(tracksList, index);
+              //                       // TODO:      widget.panelFunction(false);
+              //                     },
+              //                     favoriteTap: () async {
+              //                       if (isTrackFavorited(tracksList[index].trackId)) {
+              //                         removeFavorite(tracksList[index].trackId);
+              //                       } else {
+              //                         addTrackToFavorites(tracksList[index].trackId);
+              //                       }
+              //                       setState(() {});
+              //                     },
+              //                     favorite: isTrackFavorited(tracksList[index].trackId),
+              //                   ),
+              //           );
+              //         },
+              //         separatorBuilder: (BuildContext context, int index) {
+              //           return Divider(
+              //             height: 1.0,
+              //             color: seriesDividerColor,
+              //           );
+              //         },
+              //       )
+              //     : _buildShimmerListViewImage("0"),
               if (trackListLoading || tracksList.isNotEmpty)
                 Padding(
                   padding: EdgeInsets.only(top: 16, left: 16, right: 16),
@@ -507,24 +503,24 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
   }
 }
 
-Widget _buildShimmerListViewImage(String type) {
-  return ListView.separated(
-    physics: NeverScrollableScrollPhysics(),
-    shrinkWrap: true,
-    padding: EdgeInsets.only(left: 16, right: 16, bottom: 300),
-    itemCount: 3,
-    itemBuilder: (BuildContext context, int index) {
-      return Padding(
-          padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-          child: type == "1"
-              ? ShimmerSeriesTrackListImageWidget()
-              : ShimmerSeriesTrackListWidget());
-    },
-    separatorBuilder: (BuildContext context, int index) {
-      return Divider(
-        height: 1.0,
-        color: Colors.grey,
-      );
-    },
-  );
-}
+// Widget _buildShimmerListViewImage(String type) {
+//   return ListView.separated(
+//     physics: NeverScrollableScrollPhysics(),
+//     shrinkWrap: true,
+//     padding: EdgeInsets.only(left: 16, right: 16, bottom: 300),
+//     itemCount: 3,
+//     itemBuilder: (BuildContext context, int index) {
+//       return Padding(
+//           padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+//           child: type == "1"
+//               ? ShimmerSeriesTrackListImageWidget()
+//               : ShimmerSeriesTrackListWidget());
+//     },
+//     separatorBuilder: (BuildContext context, int index) {
+//       return Divider(
+//         height: 1.0,
+//         color: Colors.grey,
+//       );
+    // },
+    // );
+  // }

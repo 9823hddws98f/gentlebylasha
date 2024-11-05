@@ -3,7 +3,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sleeptales/widgets/app_image.dart';
+import '/widgets/app_image.dart';
 
 import '/constants/assets.dart';
 import '/domain/services/audio_panel_manager.dart';

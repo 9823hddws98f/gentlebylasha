@@ -1,63 +1,38 @@
 import 'package:flutter/material.dart';
 
-import '/domain/models/category_block.dart';
+import '/domain/cubits/pages/pages_cubit.dart';
+import '/domain/models/app_page.dart';
 import '/utils/app_theme.dart';
-import '/utils/firestore_helper.dart';
-import '/utils/tx_loader.dart';
-import '/widgets/shimmerwidgets/shimmerize.dart';
+import '/utils/get.dart';
 
 class CategoryList extends StatefulWidget {
-  const CategoryList({
-    super.key,
-    this.showSelection = true,
-    this.onTap,
-    this.onLoad,
-  });
+  const CategoryList({super.key, this.onTap});
 
-  final bool showSelection;
   final void Function(int index)? onTap;
-  final void Function(List<CategoryBlock> categoryBlocks)? onLoad;
+
   @override
   State<CategoryList> createState() => CategoryListState();
 }
 
 class CategoryListState extends State<CategoryList> {
-  final _txLoader = TxLoader();
+  final _pagesCubit = Get.the<PagesCubit>();
 
   final Map<int, GlobalKey> _itemKeys = {};
 
-  List<CategoryBlock> _categoryBlocks = [];
+  List<AppPage> _appPages = [];
   int _selectedIndex = 0;
-
-  void handleTap(int index) async {
-    widget.onTap?.call(index);
-    if (mounted) {
-      setState(() => _selectedIndex = index);
-    }
-
-    final key = _itemKeys[index];
-    if (key?.currentContext != null) {
-      await Scrollable.ensureVisible(
-        key!.currentContext!,
-        duration: Durations.medium1,
-        curve: Easing.standard,
-        alignment: 0.5,
-      );
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    _txLoader.load(
-      () => getCategoryBlocks(),
-      onSuccess: (items) {
-        widget.onLoad?.call(items);
-        if (mounted) {
-          setState(() => _categoryBlocks = items);
-        }
-      },
-    );
+    _appPages = _pagesCubit.state.explorePages.keys.toList();
+  }
+
+  @override
+  void dispose() {
+    _itemKeys.forEach((_, key) => key.currentState?.dispose());
+    _itemKeys.clear();
+    super.dispose();
   }
 
   @override
@@ -65,27 +40,25 @@ class CategoryListState extends State<CategoryList> {
     final colors = Theme.of(context).colorScheme;
     return SizedBox(
       height: 47,
-      child: _txLoader.loading
-          ? _buildShimmer()
-          : ListView.separated(
-              scrollDirection: Axis.horizontal,
-              cacheExtent: 600,
-              padding: EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
-              itemCount: _categoryBlocks.length,
-              separatorBuilder: (context, index) => SizedBox(width: 8),
-              itemBuilder: (context, index) {
-                _itemKeys[index] ??= GlobalKey();
-                return KeyedSubtree(
-                  key: _itemKeys[index],
-                  child: _buildTabButton(
-                    index,
-                    colors,
-                    label: _categoryBlocks[index].name,
-                    onTap: widget.onTap == null ? null : () => widget.onTap!(index),
-                  ),
-                );
-              },
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        cacheExtent: 600,
+        padding: EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
+        itemCount: _appPages.length,
+        separatorBuilder: (context, index) => SizedBox(width: 8),
+        itemBuilder: (context, index) {
+          _itemKeys[index] ??= GlobalKey();
+          return KeyedSubtree(
+            key: _itemKeys[index],
+            child: _buildTabButton(
+              index,
+              colors,
+              label: _appPages[index].name,
+              onTap: widget.onTap == null ? null : () => widget.onTap!(index),
             ),
+          );
+        },
+      ),
     );
   }
 
@@ -97,33 +70,28 @@ class CategoryListState extends State<CategoryList> {
   }) =>
       FilledButton(
         style: FilledButton.styleFrom(
-          backgroundColor: (widget.showSelection && _selectedIndex == index)
-              ? colors.primary
-              : colors.surface,
+          backgroundColor: _selectedIndex == index ? colors.primary : colors.surface,
           foregroundColor: colors.onSurface,
           shape: RoundedRectangleBorder(borderRadius: AppTheme.smallBorderRadius),
           side: BorderSide(color: colors.outline),
         ),
-        onPressed: () => handleTap(index),
+        onPressed: () => _handleTap(index),
         child: Text(label),
       );
 
-  Widget _buildShimmer() => ListView.separated(
-        padding: EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
-        separatorBuilder: (context, index) => SizedBox(width: 8),
-        scrollDirection: Axis.horizontal,
-        itemCount: 5,
-        itemBuilder: (context, index) => Shimmerize(
-          child: FilledButton(
-            onPressed: null,
-            child: const SizedBox(width: 60),
-          ),
-        ),
-      );
+  void _handleTap(int index) async {
+    widget.onTap?.call(index);
+    if (!mounted) return;
 
-  @override
-  void dispose() {
-    _itemKeys.clear();
-    super.dispose();
+    setState(() => _selectedIndex = index);
+    final key = _itemKeys[index];
+    if (key?.currentContext != null) {
+      await Scrollable.ensureVisible(
+        key!.currentContext!,
+        duration: Durations.medium1,
+        curve: Easing.standard,
+        alignment: 0.5,
+      );
+    }
   }
 }

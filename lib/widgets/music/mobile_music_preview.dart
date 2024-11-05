@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sleeptales/widgets/app_image.dart';
+import '/widgets/app_image.dart';
 
 import '/constants/assets.dart';
 import '/domain/services/audio_panel_manager.dart';

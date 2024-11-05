@@ -5,6 +5,7 @@ import '/domain/blocs/authentication/app_bloc.dart';
 import '/domain/blocs/authentication/auth_repository.dart';
 import '/domain/blocs/user/user_bloc.dart';
 import '/domain/cubits/favorites.dart';
+import '/domain/cubits/pages/pages_cubit.dart';
 import '/domain/services/user_service.dart';
 import '/page_manager.dart';
 import '/utils/get.dart';
@@ -12,26 +13,30 @@ import 'audio_handler.dart';
 import 'audio_panel_manager.dart';
 import 'language_constants.dart';
 import 'playlist_repository.dart';
+import 'playlists_service.dart';
 import 'tracks_service.dart';
 
 GetIt getIt = GetIt.instance;
 
 Future<void> setupServiceLocator() async {
-  // services
+  /// services
   getIt.registerSingleton<AudioHandler>(await initAudioService());
   getIt.registerLazySingleton<PlaylistRepository>(() => DemoPlaylist());
   getIt.registerLazySingleton<AuthRepository>(() => AuthRepository());
   getIt.registerLazySingleton<UsersService>(() => UsersService());
-  getIt.registerLazySingleton<AppBloc>(() => AppBloc(Get.the<AuthRepository>()));
-  getIt.registerLazySingleton<UserBloc>(() => UserBloc(Get.the<UsersService>()));
   getIt.registerLazySingleton<AudioPanelManager>(() => AudioPanelManager.instance);
   getIt.registerLazySingleton<TranslationService>(() => TranslationService.instance);
   getIt.registerLazySingleton<TracksService>(() => TracksService.instance);
+  getIt.registerLazySingleton<PlaylistsService>(() => PlaylistsService.instance);
+
+  /// Blocs
+  getIt.registerLazySingleton<AppBloc>(() => AppBloc(Get.the<AuthRepository>()));
+  getIt.registerLazySingleton<UserBloc>(() => UserBloc(Get.the<UsersService>()));
   getIt.registerLazySingleton<FavoritesCubit>(() => FavoritesCubit.instance);
-  // page state
+  getIt.registerLazySingleton<PagesCubit>(() => PagesCubit.instance);
   getIt.registerLazySingleton<PageManager>(() => PageManager());
 }
 
-Future<void> initServices() async {
+Future<void> initUserBasedServices() async {
   await Get.the<FavoritesCubit>().init();
 }

@@ -4,13 +4,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import '/main.dart';
-import '/screens/auth/login_screen.dart';
-import '/utils/modals.dart';
 
 import '/domain/blocs/authentication/appuser_model.dart';
 import '/domain/blocs/user/app_user.dart';
+import '/main.dart';
+import '/screens/auth/login_screen.dart';
 import '/utils/global_functions.dart';
+import '/utils/modals.dart';
 
 class AuthRepository {
   final FirebaseAuth? _firebaseAuth;
@@ -140,6 +140,7 @@ class AuthRepository {
           photoURL: user.photoURL ?? '',
           language: 'en',
           createdAt: DateTime.now(),
+          role: UserRole.client,
         ).toMap());
   }
 

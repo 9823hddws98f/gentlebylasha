@@ -1,16 +1,15 @@
 import 'package:animations/animations.dart';
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sleeptales/widgets/blocks/page_block_builder.dart';
 
-import '/domain/models/audiofile_model.dart';
-import '/domain/models/category_block.dart';
-import '/domain/services/audio_panel_manager.dart';
+import '/domain/cubits/pages/pages_cubit.dart';
+import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/tracks_service.dart';
 import '/screens/home/category_list.dart';
-import '/screens/tabs_subcategory_screen.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
-import '/utils/global_functions.dart';
 import '/utils/tx_loader.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
@@ -21,8 +20,6 @@ import 'widgets/search_list_item.dart';
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
 
-  static final categoriesListKey = GlobalKey<CategoryListState>();
-
   @override
   State<ExploreScreen> createState() => _ExploreScreenState();
 }
@@ -30,26 +27,32 @@ class ExploreScreen extends StatefulWidget {
 class _ExploreScreenState extends State<ExploreScreen>
     with SingleTickerProviderStateMixin {
   final _trackService = Get.the<TracksService>();
-  final _audioPanelManager = Get.the<AudioPanelManager>();
+  final _pagesCubit = Get.the<PagesCubit>();
 
-  final _txLoader = TxLoader();
+  late final TabController _tabController;
   final _scrollController = ScrollController();
-  TabController? _tabController;
 
-  List<AudioTrack> _tracks = [];
-  List<CategoryBlock> _categories = [];
-  String? _error;
-
+  /// Search
+  final _txLoader = TxLoader();
   String _query = '';
+  List<AudioTrack> _tracks = [];
+  String? _error;
   bool get _isSearching => _query.isNotEmpty;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(
+      length: _pagesCubit.state.explorePages.length,
+      vsync: this,
+    );
+  }
 
   @override
   Widget build(BuildContext context) => AppScaffold(
         resizeToAvoidBottomInset: false,
         bodyPadding: EdgeInsets.zero,
-        appBar: (context, isMobile) => AdaptiveAppBar(
-          title: 'Explore',
-        ),
+        appBar: (context, isMobile) => AdaptiveAppBar(title: 'Explore'),
         body: (context, isMobile) {
           final colors = Theme.of(context).colorScheme;
           return NestedScrollView(
@@ -62,25 +65,39 @@ class _ExploreScreenState extends State<ExploreScreen>
               disableFillColor: true,
               transitionType: SharedAxisTransitionType.scaled,
               child: _isSearching
-                  ? _buildSearchView(colors)
-                  : _categories.isEmpty
-                      ? Center(child: Text('No categories found'))
-                      : TabBarView(
-                          physics: NeverScrollableScrollPhysics(),
-                          controller: _tabController,
-                          children: _categories
-                              .map((category) => TabsSubCategoryScreen(
-                                    category,
-                                    key: ValueKey(category.id),
-                                  ))
-                              .toList(),
-                        ),
+                  ? _buildSearchView(colors.onSurfaceVariant)
+                  : BlocProvider.value(
+                      value: _pagesCubit,
+                      child: BlocBuilder<PagesCubit, PagesState>(
+                        builder: (context, state) => state.explorePages.isEmpty
+                            ? Center(child: Text('No categories found'))
+                            : TabBarView(
+                                physics: NeverScrollableScrollPhysics(),
+                                controller: _tabController,
+                                children: state.explorePages.keys
+                                    .map(
+                                      (page) => CustomScrollView(
+                                        slivers: [
+                                          PageBlockBuilder(
+                                            key: ValueKey(page.id),
+                                            page: page,
+                                          ),
+                                          SliverToBoxAdapter(
+                                            child: SizedBox(height: 150),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                      ),
+                    ),
             ),
           );
         },
       );
 
-  Widget _buildSearchView(ColorScheme colors) {
+  Widget _buildSearchView(Color color) {
     if (_error != null) return Text('Error: $_error');
     if (_txLoader.loading) {
       return Padding(
@@ -92,11 +109,11 @@ class _ExploreScreenState extends State<ExploreScreen>
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(CarbonIcons.search, size: 62, color: colors.onSurfaceVariant),
+          Icon(CarbonIcons.search, size: 62, color: color),
           const SizedBox(height: 16),
           Text.rich(
             TextSpan(
-              style: TextStyle(color: colors.onSurfaceVariant),
+              style: TextStyle(color: color),
               children: [
                 TextSpan(text: 'Couldn\'t find "'),
                 TextSpan(
@@ -117,17 +134,7 @@ class _ExploreScreenState extends State<ExploreScreen>
       separatorBuilder: (context, index) => const SizedBox(height: 2),
       itemBuilder: (context, index) {
         final track = _tracks[index];
-        return SearchListItem(
-          imageUrl: track.thumbnail,
-          name: track.title,
-          category: track.categories.firstOrNull?.categoryName ?? '',
-          duration: track.length,
-          speaker: track.speaker,
-          onPress: () {
-            playTrack(track);
-            _audioPanelManager.maximize(false);
-          },
-        );
+        return SearchListItem(track);
       },
     );
   }
@@ -136,12 +143,10 @@ class _ExploreScreenState extends State<ExploreScreen>
         pinned: true,
         toolbarHeight: 62,
         title: CategoryList(
-          key: ExploreScreen.categoriesListKey,
-          onLoad: (items) => setState(() {
-            _tabController = TabController(length: items.length, vsync: this);
-            _categories = items;
-          }),
-          onTap: _isSearching ? null : (index) => _tabController?.animateTo(index),
+          onTap: !_isSearching
+              ? (index) => _tabController.animateTo(index,
+                  curve: Easing.standard, duration: Durations.medium1)
+              : null,
         ),
       );
 

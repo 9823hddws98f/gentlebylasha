@@ -3,19 +3,18 @@ import 'dart:async';
 import 'package:audio_service/audio_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '/widgets/app_scaffold/adaptive_app_bar.dart';
-import '/widgets/app_scaffold/app_scaffold.dart';
 
-import '/utils/colors.dart';
-import '/utils/global_functions.dart';
-import '/widgets/custom_tab_button.dart';
-import '/widgets/track_list_item.dart';
 import '/domain/blocs/user/app_user.dart';
-import '/domain/models/audiofile_model.dart';
+import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/language_constants.dart';
 import '/domain/services/service_locator.dart';
 import '/page_manager.dart';
-import '/widgets/shimmerwidgets/shimmer_mp3_card_tracklist_item.dart';
+import '/utils/colors.dart';
+import '/utils/global_functions.dart';
+import '/widgets/app_scaffold/adaptive_app_bar.dart';
+import '/widgets/app_scaffold/app_scaffold.dart';
+import '/widgets/custom_tab_button.dart';
+import '/widgets/track_list_item.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
@@ -61,7 +60,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> with Translation {
     favoriteList.clear();
 
     if (favorites.isNotEmpty) {
-      final tracksCollection = FirebaseFirestore.instance.collection('Tracks');
+      final tracksCollection = FirebaseFirestore.instance.collection('tracks');
       final batchSize = 10;
       final totalFavorites = favorites.length;
       final batchCount = (totalFavorites / batchSize).ceil();
@@ -80,7 +79,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> with Translation {
             .get();
 
         for (var doc in tracksQuerySnapshot.docs) {
-          AudioTrack track = AudioTrack.fromFirestore(doc);
+          AudioTrack track = AudioTrack.fromMap(doc.data());
           favoriteList.add(track);
         }
       }
@@ -151,23 +150,23 @@ class _FavoritesScreenState extends State<FavoritesScreen> with Translation {
                     return TrackListItemSmall(
                       imageUrl: favoriteList[index].imageBackground,
                       mp3Name: favoriteList[index].title,
-                      mp3Category: favoriteList[index].categories[0].categoryName,
-                      mp3Duration: favoriteList[index].length,
+                      mp3Category: 'ERROR!', // TODO: FIX
+                      mp3Duration: favoriteList[index].durationString,
                       tap: () {
                         getIt<PageManager>().playSinglePlaylist(
-                            MediaItem(
-                              id: favoriteList[index].trackId,
-                              album: favoriteList[index].title,
-                              title: favoriteList[index].title,
-                              displayDescription: favoriteList[index].description,
-                              artUri: Uri.parse(favoriteList[index].imageBackground),
-                              extras: {
-                                'url': favoriteList[index].trackUrl,
-                                'id': favoriteList[index].trackId,
-                                'categories': favoriteList[index].categories
-                              },
-                            ),
-                            favoriteList[index].trackId);
+                          MediaItem(
+                            id: favoriteList[index].id,
+                            album: favoriteList[index].title,
+                            title: favoriteList[index].title,
+                            displayDescription: favoriteList[index].description,
+                            artUri: Uri.parse(favoriteList[index].imageBackground),
+                            extras: {
+                              'id': favoriteList[index].id,
+                              'url': favoriteList[index].trackUrl,
+                            },
+                          ),
+                          favoriteList[index].id,
+                        );
                         // TODO:     widget.panelFunction();
                       },
                     );
@@ -211,28 +210,28 @@ class _FavoritesScreenState extends State<FavoritesScreen> with Translation {
               ],
             ))
           ] else ...[
-            _buildShimmerListView()
+            // _buildShimmerListView()
           ],
         ],
       ),
     );
   }
 
-  Widget _buildShimmerListView() {
-    return Expanded(
-        child: SingleChildScrollView(
-      child: GridView.builder(
-          itemCount: 12,
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              childAspectRatio: 0.81),
-          itemBuilder: (BuildContext context, int index) {
-            return ShimmerTrackListItemSmall();
-          }),
-    ));
-  }
+  // Widget _buildShimmerListView() {
+  //   return Expanded(
+  //       child: SingleChildScrollView(
+  //     child: GridView.builder(
+  //         itemCount: 12,
+  //         shrinkWrap: true,
+  //         physics: NeverScrollableScrollPhysics(),
+  //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //             crossAxisCount: 2,
+  //             crossAxisSpacing: 16,
+  //             mainAxisSpacing: 16,
+  //             childAspectRatio: 0.81),
+  //         itemBuilder: (BuildContext context, int index) {
+  //           return TrackListItemSmall.shimmer();
+  //         }),
+  //   ));
+  // }
 }
