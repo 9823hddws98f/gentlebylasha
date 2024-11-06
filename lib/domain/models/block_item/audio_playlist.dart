@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 
@@ -10,6 +11,7 @@ class AudioPlaylist {
   final String description;
   final String thumbnail;
   final String authorImage;
+  final Color? dominantColor;
   final bool showAudioThumbnails;
   final List<String> trackIds;
 
@@ -22,6 +24,7 @@ class AudioPlaylist {
     required this.thumbnail,
     required this.authorImage,
     required this.showAudioThumbnails,
+    required this.dominantColor,
     required this.trackIds,
   });
 
@@ -33,6 +36,7 @@ class AudioPlaylist {
     String? description,
     String? thumbnail,
     String? authorImage,
+    Color? dominantColor,
     bool? showAudioThumbnails,
     List<String>? trackIds,
   }) {
@@ -45,6 +49,7 @@ class AudioPlaylist {
       thumbnail: thumbnail ?? this.thumbnail,
       authorImage: authorImage ?? this.authorImage,
       showAudioThumbnails: showAudioThumbnails ?? this.showAudioThumbnails,
+      dominantColor: dominantColor ?? this.dominantColor,
       trackIds: trackIds ?? this.trackIds,
     );
   }
@@ -59,6 +64,7 @@ class AudioPlaylist {
         'authorImage': authorImage,
         'showAudioThumbnails': showAudioThumbnails,
         if (trackIds.isNotEmpty) 'trackIds': trackIds,
+        if (dominantColor != null) 'dominantColor': dominantColor!.value,
       };
 
   factory AudioPlaylist.fromMap(Map<String, dynamic> map) => AudioPlaylist(
@@ -70,6 +76,8 @@ class AudioPlaylist {
         thumbnail: map['thumbnail'] as String,
         authorImage: map['authorImage'] as String,
         showAudioThumbnails: map['showAudioThumbnails'] as bool,
+        dominantColor:
+            map['dominantColor'] != null ? Color(map['dominantColor'] as int) : null,
         trackIds: map['trackIds'] != null
             ? List<String>.from(map['trackIds'] as List<dynamic>)
             : [],
@@ -82,7 +90,7 @@ class AudioPlaylist {
 
   @override
   String toString() {
-    return 'AudioPlaylist(id: $id, title: $title, author: $author, profession: $profession, description: $description, thumbnail: $thumbnail, showAudioThumbnails: $showAudioThumbnails, trackIds: $trackIds)';
+    return 'AudioPlaylist(id: $id, title: $title, author: $author, profession: $profession, description: $description, thumbnail: $thumbnail, showAudioThumbnails: $showAudioThumbnails, trackIds: $trackIds, dominantColor: $dominantColor)';
   }
 
   @override
@@ -97,7 +105,8 @@ class AudioPlaylist {
         other.thumbnail == thumbnail &&
         other.authorImage == authorImage &&
         other.showAudioThumbnails == showAudioThumbnails &&
-        listEquals(other.trackIds, trackIds);
+        listEquals(other.trackIds, trackIds) &&
+        other.dominantColor == dominantColor;
   }
 
   @override
@@ -110,6 +119,7 @@ class AudioPlaylist {
         thumbnail.hashCode ^
         authorImage.hashCode ^
         showAudioThumbnails.hashCode ^
-        trackIds.hashCode;
+        trackIds.hashCode ^
+        dominantColor.hashCode;
   }
 }

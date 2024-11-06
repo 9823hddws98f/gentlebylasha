@@ -34,21 +34,11 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
   final _tracksService = Get.the<TracksService>();
   final _audioPanelManager = Get.the<AudioPanelManager>();
 
+  final _scrollController = ScrollController();
+
   final _txLoader = TxLoader();
   String? _error;
-
   List<AudioTrack> _tracks = [];
-
-  bool get _currentPlaylistIsPlaying {
-    final playlistIds = _pageManager.playlistIdNotifier.value;
-    if (playlistIds.length <= 1) return false;
-    for (var i = 0; i < playlistIds.length - 1; i++) {
-      if (playlistIds[i] != widget.playlist.trackIds[i]) return false;
-    }
-    return true;
-  }
-
-  final _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -68,21 +58,21 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
     return AppScaffold(
       bodyPadding: EdgeInsets.zero,
       body: (context, isMobile) => DecoratedBox(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              gradientColorOne,
-              gradientColorTwo,
+              widget.playlist.dominantColor ?? colors.surfaceContainerLowest,
+              colors.surfaceContainerLowest,
             ],
-            stops: [0.0926, 1.0],
+            stops: [0, 0.8],
           ),
         ),
         child: CustomScrollView(
           controller: _scrollController,
           slivers: [
-            _buildThumbnail(),
+            _buildThumbnail(colors),
             _buildInfoCard(colors),
             _error != null
                 ? _buildErrorHint(colors)
@@ -228,7 +218,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
         ),
       );
 
-  Widget _buildThumbnail() => SliverAppBar(
+  Widget _buildThumbnail(ColorScheme colors) => SliverAppBar(
         expandedHeight: 200,
         floating: false,
         pinned: true,
@@ -251,6 +241,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
           icon: const Icon(CarbonIcons.arrow_left),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        backgroundColor: widget.playlist.dominantColor ?? colors.surfaceContainerLowest,
         flexibleSpace: FlexibleSpaceBar(
           centerTitle: false,
           stretchModes: const [StretchMode.zoomBackground],
@@ -283,7 +274,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                   borderRadius: BorderRadius.circular(12),
                   child: Ink(
                     decoration: BoxDecoration(
-                      color: colors.surfaceContainerHigh,
+                      color: colors.surfaceContainerHigh.withAlpha(100),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: colors.outline),
                     ),
@@ -334,6 +325,15 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
               }),
         ),
       );
+
+  bool get _currentPlaylistIsPlaying {
+    final playlistIds = _pageManager.playlistIdNotifier.value;
+    if (playlistIds.length <= 1) return false;
+    for (var i = 0; i < playlistIds.length - 1; i++) {
+      if (playlistIds[i] != widget.playlist.trackIds[i]) return false;
+    }
+    return true;
+  }
 
   Future<void> _fetchTracks() => _txLoader.load(
         onStart: () => _error != null ? setState(() => _error = null) : null,

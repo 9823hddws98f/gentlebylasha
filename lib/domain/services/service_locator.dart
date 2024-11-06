@@ -42,4 +42,5 @@ Future<void> setupServiceLocator() async {
 
 Future<void> initUserBasedServices() async {
   await Get.the<FavoritesTracksCubit>().init();
+  await Get.the<FavoritePlaylistsCubit>().init();
 }

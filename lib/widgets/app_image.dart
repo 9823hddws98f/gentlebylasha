@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '/utils/common_extensions.dart';
 
-class AppImage extends StatelessWidget {
+class AppImage extends StatefulWidget {
   const AppImage({
     super.key,
     required this.imageUrl,
@@ -24,44 +24,54 @@ class AppImage extends StatelessWidget {
   final double? height;
   final double? width;
   final Duration fadeInDuration;
-  final void Function(ImageProvider)? onLoad;
-  final Widget Function(BuildContext, String, Object)? errorWidget;
+  final void Function(ImageProvider imageProvider)? onLoad;
+  final Widget Function(BuildContext context, String url, Object error)? errorWidget;
 
   @override
-  Widget build(BuildContext context) => imageUrl.isEmpty
+  State<AppImage> createState() => _AppImageState();
+}
+
+class _AppImageState extends State<AppImage> {
+  String? _lastLoadedUrl;
+
+  @override
+  Widget build(BuildContext context) => widget.imageUrl.isEmpty
       ? _buildPlaceholder()
       : CachedNetworkImage(
-          imageUrl: imageUrl,
-          fit: fit,
+          imageUrl: widget.imageUrl,
+          fit: widget.fit,
           imageBuilder: (context, imageProvider) {
-            onLoad?.call(imageProvider);
+            if (_lastLoadedUrl != widget.imageUrl) {
+              _lastLoadedUrl = widget.imageUrl;
+              widget.onLoad?.call(imageProvider);
+            }
             return _buildImage(imageProvider);
           },
-          errorWidget: errorWidget ??
+          errorWidget: widget.errorWidget ??
               (context, url, error) {
                 error.logDebug();
                 return _buildPlaceholder();
               },
           placeholder: (context, __) => _buildPlaceholder(),
-          height: height,
-          width: width,
-          fadeInDuration: fadeInDuration,
+          height: widget.height,
+          width: widget.width,
+          fadeInDuration: widget.fadeInDuration,
         );
 
   Widget _buildPlaceholder() {
-    final Widget placeholder = placeholderAsset == null
+    final Widget placeholder = widget.placeholderAsset == null
         ? const Center(child: CircularProgressIndicator())
-        : Image.asset(placeholderAsset!);
+        : Image.asset(widget.placeholderAsset!);
 
-    return borderRadius == null
+    return widget.borderRadius == null
         ? placeholder
-        : ClipRRect(borderRadius: borderRadius!, child: placeholder);
+        : ClipRRect(borderRadius: widget.borderRadius!, child: placeholder);
   }
 
-  Widget _buildImage(ImageProvider imageProvider) => borderRadius == null
-      ? Image(image: imageProvider, fit: fit)
+  Widget _buildImage(ImageProvider imageProvider) => widget.borderRadius == null
+      ? Image(image: imageProvider, fit: widget.fit)
       : ClipRRect(
-          borderRadius: borderRadius!,
-          child: Image(image: imageProvider, fit: fit),
+          borderRadius: widget.borderRadius!,
+          child: Image(image: imageProvider, fit: widget.fit),
         );
 }
