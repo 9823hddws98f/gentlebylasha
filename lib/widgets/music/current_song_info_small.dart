@@ -25,15 +25,16 @@ class CurrentSongInfoSmall extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontWeight: FontWeight.w500),
           ),
-          Text(
-            (mediaItem.extras!['track'] as AudioTrack).durationString,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: colors.onSurfaceVariant,
-              fontSize: 12,
+          if (mediaItem.extras != null)
+            Text(
+              (mediaItem.extras!['track'] as AudioTrack).durationString,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: colors.onSurfaceVariant,
+                fontSize: 12,
+              ),
             ),
-          ),
         ],
       ),
     );

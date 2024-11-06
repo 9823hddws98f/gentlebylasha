@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
 import '/domain/services/audio_panel_manager.dart';
-import '/page_manager.dart';
 import '/screens/app_container/app_bottom_bar.dart';
 import '/screens/music_player/music_player_screen.dart';
 import '/utils/get.dart';
@@ -16,7 +15,6 @@ class SlidingPanel extends StatelessWidget {
   });
 
   final _panelManager = Get.the<AudioPanelManager>();
-  final _pageManager = Get.the<PageManager>();
 
   final AnimationController controller;
 
@@ -27,56 +25,60 @@ class SlidingPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.sizeOf(context).height;
     final bottom = MediaQuery.paddingOf(context).bottom;
-    return ListenableBuilder(
-      listenable: _panelVisibility,
-      builder: (context, child) => TweenAnimationBuilder<double>(
-        tween: Tween(begin: 0, end: _panelVisibility.value),
-        duration: Durations.short3,
-        curve: Easing.standard,
-        builder: (context, value, child) => Transform.translate(
-          offset: Offset(0, (1 - value) * MobileMusicPreview.height),
-          child: child!,
-        ),
-        child: Listener(
-          onPointerMove: (event) {
-            if (event.delta.dy > 3 &&
-                _panelController.isAttached &&
-                _panelController.isPanelClosed &&
-                _panelVisibility.value > 0) {
-              _panelManager.hide();
-            }
-          },
-          child: child,
-        ),
+
+    return RepaintBoundary(
+      child: ListenableBuilder(
+        listenable: _panelVisibility,
+        builder: (context, child) {
+          return TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0, end: _panelVisibility.value),
+            duration: Durations.short3,
+            curve: Easing.standard,
+            builder: (context, value, child) {
+              return Transform.translate(
+                offset: Offset(0, (1 - value) * MobileMusicPreview.height),
+                child: child!,
+              );
+            },
+            child: SlidingUpPanel(
+              controller: _panelController,
+              maxHeight: height,
+              minHeight: bottom + AppBottomBar.height + MobileMusicPreview.height,
+              color: Colors.transparent,
+              onPanelSlide: (pos) => controller.value = pos,
+              panelBuilder: () => _buildPanelContent(),
+            ),
+          );
+        },
       ),
-      child: SlidingUpPanel(
-        controller: _panelController,
-        maxHeight: height,
-        minHeight: bottom + AppBottomBar.height + MobileMusicPreview.height,
-        color: Colors.transparent,
-        onPanelSlide: (pos) => controller.value = pos,
-        panelBuilder: () => Stack(
+    );
+  }
+
+  Widget _buildPanelContent() => RepaintBoundary(
+        child: Stack(
           children: [
             MusicPlayerScreen(),
             if (_panelController.isAttached)
               AnimatedBuilder(
                 animation: controller,
-                builder: (context, child) => IgnorePointer(
-                  ignoring: controller.value > 0.5,
-                  child: Opacity(
-                    opacity: 1 -
-                        CurvedAnimation(
-                          parent: controller,
-                          curve: Curves.fastEaseInToSlowEaseOut,
-                        ).value,
-                    child: child!,
-                  ),
-                ),
+                builder: (context, child) {
+                  final opacity = 1 -
+                      CurvedAnimation(
+                        parent: controller,
+                        curve: Curves.fastEaseInToSlowEaseOut,
+                      ).value;
+
+                  return IgnorePointer(
+                    ignoring: controller.value > 0.5,
+                    child: Opacity(
+                      opacity: opacity,
+                      child: child!,
+                    ),
+                  );
+                },
                 child: MobileMusicPreview(),
               )
           ],
         ),
-      ),
-    );
-  }
+      );
 }

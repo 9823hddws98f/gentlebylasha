@@ -268,62 +268,70 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
         ),
         child: SizedBox(
           height: 68,
-          child: InkWell(
-            onTap: () {
-              _pageManager.loadPlaylist(widget.playlist, _tracks, index);
-              _audioPanelManager.maximizeAndPlay(false);
-            },
-            borderRadius: BorderRadius.circular(12),
-            child: Ink(
-              decoration: BoxDecoration(
-                color: colors.surfaceContainerHigh,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: colors.outline),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    if (widget.playlist.showAudioThumbnails)
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: AppImage(
-                          height: 48,
-                          width: 48,
-                          fit: BoxFit.cover,
-                          imageUrl: track.thumbnail,
-                          borderRadius: AppTheme.smallImageBorderRadius,
-                        ),
-                      ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          child: ValueListenableBuilder(
+              valueListenable: _pageManager.currentMediaItemNotifier,
+              builder: (context, mediaItem, child) {
+                return InkWell(
+                  onTap: () {
+                    if (mediaItem.id == widget.playlist.trackIds[index]) {
+                      _audioPanelManager.maximizeAndPlay(false);
+                    } else {
+                      _pageManager.loadPlaylist(widget.playlist, _tracks, index);
+                      _audioPanelManager.maximizeAndPlay(false);
+                    }
+                  },
+                  borderRadius: BorderRadius.circular(12),
+                  child: Ink(
+                    decoration: BoxDecoration(
+                      color: colors.surfaceContainerHigh,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: colors.outline),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
                         children: [
-                          Text(
-                            track.title,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontWeight: FontWeight.w500),
-                          ),
-                          Text(
-                            track.durationString,
-                            style: TextStyle(
-                              color: colors.onSurfaceVariant,
-                              fontSize: 12,
+                          if (widget.playlist.showAudioThumbnails)
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: AppImage(
+                                height: 48,
+                                width: 48,
+                                fit: BoxFit.cover,
+                                imageUrl: track.thumbnail,
+                                borderRadius: AppTheme.smallImageBorderRadius,
+                              ),
                             ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  track.title,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(fontWeight: FontWeight.w500),
+                                ),
+                                Text(
+                                  track.durationString,
+                                  style: TextStyle(
+                                    color: colors.onSurfaceVariant,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          FavoriteButton(
+                            trackId: track.id,
+                            size: 18,
                           ),
                         ],
                       ),
                     ),
-                    FavoriteButton(
-                      trackId: track.id,
-                      size: 18,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+                  ),
+                );
+              }),
         ),
       );
 

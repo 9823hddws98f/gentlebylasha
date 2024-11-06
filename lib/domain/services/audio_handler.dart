@@ -1,7 +1,8 @@
 import 'package:audio_service/audio_service.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:sleeptales/domain/models/block_item/audio_track.dart';
+import 'package:sleeptales/utils/common_extensions.dart';
 
 Future<AudioHandler> initAudioService() async {
   return await AudioService.init(
@@ -31,7 +32,14 @@ class MyAudioHandler extends BaseAudioHandler {
     try {
       await _player.setAudioSource(_playlist);
     } catch (e) {
-      debugPrint("Error: $e");
+      if (e is PlatformException) {
+        ('Permission denied to access audio resource').logDebug();
+        // Reset player state
+        _playlist.clear();
+        queue.add([]);
+        mediaItem.add(null);
+      }
+      ('Error loading playlist: $e').logDebug();
     }
   }
 
@@ -74,6 +82,12 @@ class MyAudioHandler extends BaseAudioHandler {
         speed: _player.speed,
         queueIndex: event.currentIndex,
       ));
+    }, onError: (Object e, StackTrace st) {
+      if (e is PlatformException) {
+        print('AudioSource index: ${e.details?["index"]}');
+      } else {
+        print('An error occurred: $e');
+      }
     });
   }
 
@@ -121,7 +135,6 @@ class MyAudioHandler extends BaseAudioHandler {
     final audioSource = mediaItems.map(_createAudioSource);
     _playlist.addAll(audioSource.toList());
 
-    // notify system
     final newQueue = queue.value..addAll(mediaItems);
     queue.add(newQueue);
   }

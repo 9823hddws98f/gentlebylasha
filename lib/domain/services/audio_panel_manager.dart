@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import '/main.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
+import '/main.dart';
 import '/page_manager.dart';
 import '/utils/get.dart';
 
@@ -19,14 +19,16 @@ class AudioPanelManager {
     _pageManager.stop();
   }
 
-  void _unhide() {
+  void _unhide(bool dontShowPanel) {
     panelVisibility.value = 1;
-    panelController.open();
+    if (!dontShowPanel) {
+      panelController.open();
+    }
   }
 
   void maximizeAndPlay(bool dontShowPanel) async {
     if (MyApp.isMobile) {
-      _unhide();
+      _unhide(dontShowPanel);
       while (!panelController.isAttached) {
         await Future.delayed(Duration(milliseconds: 100));
       }

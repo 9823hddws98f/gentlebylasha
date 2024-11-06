@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:flutter/material.dart';
 
 class AppImage extends StatelessWidget {
@@ -27,28 +26,30 @@ class AppImage extends StatelessWidget {
   final Widget Function(BuildContext, String, Object)? errorWidget;
 
   @override
-  Widget build(BuildContext context) => CachedNetworkImage(
-        imageUrl: imageUrl,
-        fit: fit,
-        imageBuilder: (context, imageProvider) {
-          onLoad?.call(imageProvider);
-          return borderRadius == null
-              ? Image(image: imageProvider, fit: fit)
-              : ClipRRect(
-                  borderRadius: borderRadius!,
-                  child: Image(
-                    image: imageProvider,
-                    fit: fit,
-                  ),
-                );
-        },
-        errorWidget: errorWidget,
-        imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-        placeholder: (context, __) => placeholderAsset == null
-            ? const Center(child: CircularProgressIndicator())
-            : Image.asset(placeholderAsset!),
-        height: height,
-        width: width,
-        fadeInDuration: fadeInDuration,
-      );
+  Widget build(BuildContext context) => imageUrl.isEmpty
+      ? _buildPlaceholder()
+      : CachedNetworkImage(
+          imageUrl: imageUrl,
+          fit: fit,
+          imageBuilder: (context, imageProvider) {
+            onLoad?.call(imageProvider);
+            return _buildImage(imageProvider);
+          },
+          errorWidget: errorWidget ?? (_, __, ___) => _buildPlaceholder(),
+          placeholder: (context, __) => _buildPlaceholder(),
+          height: height,
+          width: width,
+          fadeInDuration: fadeInDuration,
+        );
+
+  Widget _buildPlaceholder() => placeholderAsset == null
+      ? const Center(child: CircularProgressIndicator())
+      : Image.asset(placeholderAsset!);
+
+  Widget _buildImage(ImageProvider imageProvider) => borderRadius == null
+      ? Image(image: imageProvider, fit: fit)
+      : ClipRRect(
+          borderRadius: borderRadius!,
+          child: Image(image: imageProvider, fit: fit),
+        );
 }
