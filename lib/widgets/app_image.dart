@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '/utils/common_extensions.dart';
+
 class AppImage extends StatelessWidget {
   const AppImage({
     super.key,
@@ -35,16 +37,26 @@ class AppImage extends StatelessWidget {
             onLoad?.call(imageProvider);
             return _buildImage(imageProvider);
           },
-          errorWidget: errorWidget ?? (_, __, ___) => _buildPlaceholder(),
+          errorWidget: errorWidget ??
+              (context, url, error) {
+                error.logDebug();
+                return _buildPlaceholder();
+              },
           placeholder: (context, __) => _buildPlaceholder(),
           height: height,
           width: width,
           fadeInDuration: fadeInDuration,
         );
 
-  Widget _buildPlaceholder() => placeholderAsset == null
-      ? const Center(child: CircularProgressIndicator())
-      : Image.asset(placeholderAsset!);
+  Widget _buildPlaceholder() {
+    final Widget placeholder = placeholderAsset == null
+        ? const Center(child: CircularProgressIndicator())
+        : Image.asset(placeholderAsset!);
+
+    return borderRadius == null
+        ? placeholder
+        : ClipRRect(borderRadius: borderRadius!, child: placeholder);
+  }
 
   Widget _buildImage(ImageProvider imageProvider) => borderRadius == null
       ? Image(image: imageProvider, fit: fit)
