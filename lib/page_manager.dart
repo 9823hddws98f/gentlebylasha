@@ -3,20 +3,21 @@ import 'dart:async';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 
+import '/domain/models/block_item/audio_playlist.dart';
 import '/domain/services/audio_panel_manager.dart';
 import '/utils/firestore_helper.dart';
 import 'domain/models/block_item/audio_track.dart';
-import 'domain/services/playlist_repository.dart';
-import 'domain/services/service_locator.dart';
 import 'notifiers/progress_notifier.dart';
 import 'notifiers/repeat_notifier.dart';
 import 'utils/get.dart';
 
 class PageManager {
   final _audioHandler = Get.the<AudioHandler>();
+  final List<StreamSubscription> _subscriptions = [];
 
   final currentSongTitleNotifier = ValueNotifier<String>('---');
-  final currentMediaItemNotifier = ValueNotifier<MediaItem>(MediaItem(id: "", title: ""));
+  final currentMediaItemNotifier =
+      ValueNotifier<MediaItem>(const MediaItem(id: "", title: ""));
   final playlistNotifier = ValueNotifier<List<String>>([]);
   final playlistIdNotifier = ValueNotifier<List<String>>([]);
   final progressNotifier = ProgressNotifier();
@@ -25,7 +26,9 @@ class PageManager {
   final isLastSongNotifier = ValueNotifier<bool>(true);
   final isShuffleModeEnabledNotifier = ValueNotifier<bool>(false);
 
-  bool check = true;
+  final currentPlaylistBlockNotifier = ValueNotifier<AudioPlaylist?>(null);
+
+  bool _isInitialized = true;
 
   void init() async {
     _listenToChangesInPlaylist();
@@ -43,45 +46,52 @@ class PageManager {
     }
   }
 
-  Future<void> loadPlaylist(List<AudioTrack> list, int index) async {
-    if (currentMediaItemNotifier.value.id != list[index].id) {
+  Future<void> loadPlaylist(
+    AudioPlaylist playlist,
+    List<AudioTrack> list,
+    int index,
+  ) async {
+    if (currentPlaylistBlockNotifier.value?.id != playlist.id) {
+      currentPlaylistBlockNotifier.value = playlist;
       playlistNotifier.value = [];
       playlistIdNotifier.value = [];
       final mediaItems = list
-          .map((song) => MediaItem(
-                id: song.id,
-                album: song.speaker,
-                title: song.title,
-                displayDescription: song.description,
-                artUri: Uri.parse(song.imageBackground),
-                extras: {
-                  'id': song.id,
-                  'url': song.trackUrl,
-                },
+          .map((track) => MediaItem(
+                id: track.id,
+                album: track.speaker,
+                title: track.title,
+                displayDescription: track.description,
+                artUri: Uri.parse(track.imageBackground),
+                extras: {'track': track},
               ))
           .toList();
       _audioHandler.addQueueItems(mediaItems);
-      Future.delayed(Duration(milliseconds: 200), () {
-        // <-- Delay here
-        _audioHandler.skipToQueueItem(index);
-      });
     }
+    await Future.delayed(const Duration(milliseconds: 100));
+    await _audioHandler.skipToQueueItem(index);
   }
 
   void _listenToChangesInPlaylist() {
-    _audioHandler.queue.listen((playlist) {
+    final subscription = _audioHandler.queue.listen((playlist) {
       if (playlist.isEmpty) {
-        playlistNotifier.value = [];
-        playlistIdNotifier.value = [];
-        currentSongTitleNotifier.value = '';
+        _resetPlaylistState();
       } else {
-        final newList = playlist.map((item) => item.title).toList();
-        final newIdList = playlist.map((item) => item.id).toList();
-        playlistNotifier.value = newList;
-        playlistIdNotifier.value = newIdList;
+        _updatePlaylistState(playlist);
       }
       _updateSkipButtons();
     });
+    _subscriptions.add(subscription);
+  }
+
+  void _resetPlaylistState() {
+    playlistNotifier.value = [];
+    playlistIdNotifier.value = [];
+    currentSongTitleNotifier.value = '';
+  }
+
+  void _updatePlaylistState(List<MediaItem> playlist) {
+    playlistNotifier.value = playlist.map((item) => item.title).toList();
+    playlistIdNotifier.value = playlist.map((item) => item.id).toList();
   }
 
   void stopTrackAfter(Duration duration) {
@@ -130,18 +140,25 @@ class PageManager {
   }
 
   void _listenToChangesInSong() {
-    if (check) {
-      _audioHandler.mediaItem.listen((mediaItem) {
-        currentSongTitleNotifier.value = mediaItem?.title ?? '';
-        currentMediaItemNotifier.value = mediaItem ?? MediaItem(id: '', title: '');
-        if (mediaItem != null) {
-          if (mediaItem.id.isNotEmpty) {
-            addToRecentlyPlayed(mediaItem.id);
-            incrementPlayCount(mediaItem.id);
-          }
-        }
+    if (_isInitialized) {
+      final subscription = _audioHandler.mediaItem.listen((mediaItem) {
+        _updateCurrentSong(mediaItem);
+        _updatePlayCount(mediaItem);
         _updateSkipButtons();
       });
+      _subscriptions.add(subscription);
+    }
+  }
+
+  void _updateCurrentSong(MediaItem? mediaItem) {
+    currentSongTitleNotifier.value = mediaItem?.title ?? '';
+    currentMediaItemNotifier.value = mediaItem ?? const MediaItem(id: '', title: '');
+  }
+
+  void _updatePlayCount(MediaItem? mediaItem) {
+    if (mediaItem?.id.isNotEmpty ?? false) {
+      addToRecentlyPlayed(mediaItem!.id);
+      incrementPlayCount(mediaItem.id);
     }
   }
 
@@ -206,18 +223,6 @@ class PageManager {
     }
   }
 
-  Future<void> add() async {
-    final songRepository = getIt<PlaylistRepository>();
-    final song = await songRepository.fetchAnotherSong();
-    final mediaItem = MediaItem(
-      id: song['id'] ?? '',
-      album: song['album'] ?? '',
-      title: song['title'] ?? '',
-      extras: {'url': song['url']},
-    );
-    _audioHandler.addQueueItem(mediaItem);
-  }
-
   void remove() {
     final lastIndex = _audioHandler.queue.value.length - 1;
     if (lastIndex < 0) return;
@@ -236,10 +241,15 @@ class PageManager {
         current: Duration.zero, buffered: Duration.zero, total: Duration.zero);
     playlistNotifier.value = [];
     currentMediaItemNotifier.value = MediaItem(id: "", title: "");
-    check = false;
+    _isInitialized = false;
   }
 
   void dispose() {
+    for (var subscription in _subscriptions) {
+      subscription.cancel();
+    }
+    _subscriptions.clear();
+
     _audioHandler.pause();
     _audioHandler.customAction('dispose');
     resetNotifiers();

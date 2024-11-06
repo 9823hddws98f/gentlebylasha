@@ -35,7 +35,7 @@ class AudioBlockItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         playTrack(track);
-        _audioPanelManager.maximize(false);
+        _audioPanelManager.maximizeAndPlay(false);
       },
       child: SizedBox(
         height: height,

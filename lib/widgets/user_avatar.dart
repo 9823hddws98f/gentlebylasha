@@ -25,6 +25,7 @@ class UserAvatar extends StatelessWidget {
 
   Widget _buildImage(String imageUrl) => CircleAvatar(
         radius: radius,
+        backgroundColor: Colors.black38,
         backgroundImage: NetworkImage(imageUrl),
       );
 }

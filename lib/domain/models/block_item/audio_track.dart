@@ -9,6 +9,7 @@ class AudioTrack {
   final String description;
   final String imageBackground;
   final String thumbnail;
+  final bool hasTimer;
   final Duration duration;
 
   String get durationString =>
@@ -23,6 +24,7 @@ class AudioTrack {
     required this.description,
     required this.imageBackground,
     required this.thumbnail,
+    required this.hasTimer,
     required this.duration,
   });
 
@@ -35,6 +37,7 @@ class AudioTrack {
     String? description,
     String? imageBackground,
     String? thumbnail,
+    bool? hasTimer,
     Duration? duration,
   }) {
     return AudioTrack(
@@ -46,6 +49,7 @@ class AudioTrack {
       description: description ?? this.description,
       imageBackground: imageBackground ?? this.imageBackground,
       thumbnail: thumbnail ?? this.thumbnail,
+      hasTimer: hasTimer ?? this.hasTimer,
       duration: duration ?? this.duration,
     );
   }
@@ -60,6 +64,7 @@ class AudioTrack {
       'description': description,
       'imageBackground': imageBackground,
       'thumbnail': thumbnail,
+      'hasTimer': hasTimer,
       'duration': duration.inMilliseconds,
     };
   }
@@ -74,6 +79,7 @@ class AudioTrack {
       description: map['description'] as String,
       imageBackground: map['imageBackground'] as String,
       thumbnail: map['thumbnail'] as String,
+      hasTimer: map['hasTimer'] ?? false,
       duration: Duration(milliseconds: map['duration'] as int),
     );
   }
@@ -85,7 +91,7 @@ class AudioTrack {
 
   @override
   String toString() {
-    return 'AudioTrack(id: $id, title: $title, writer: $writer, speaker: $speaker, trackUrl: $trackUrl, description: $description, imageBackground: $imageBackground, thumbnail: $thumbnail, duration: $duration)';
+    return 'AudioTrack(id: $id, title: $title, writer: $writer, speaker: $speaker, trackUrl: $trackUrl, description: $description, imageBackground: $imageBackground, thumbnail: $thumbnail, duration: $duration, hasTimer: $hasTimer)';
   }
 
   @override
@@ -100,7 +106,8 @@ class AudioTrack {
         other.description == description &&
         other.imageBackground == imageBackground &&
         other.thumbnail == thumbnail &&
-        other.duration == duration;
+        other.duration == duration &&
+        other.hasTimer == hasTimer;
   }
 
   @override
@@ -113,6 +120,7 @@ class AudioTrack {
         description.hashCode ^
         imageBackground.hashCode ^
         thumbnail.hashCode ^
-        duration.hashCode;
+        duration.hashCode ^
+        hasTimer.hashCode;
   }
 }

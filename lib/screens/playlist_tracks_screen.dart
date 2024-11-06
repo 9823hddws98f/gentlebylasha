@@ -1,21 +1,21 @@
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:sleeptales/domain/services/audio_panel_manager.dart';
-import 'package:sleeptales/screens/music_player/widgets/favorite_button.dart';
-import 'package:sleeptales/utils/app_theme.dart';
-import 'package:sleeptales/widgets/app_scaffold/app_scaffold.dart';
-import 'package:sleeptales/widgets/user_avatar.dart';
 
 import '/constants/assets.dart';
 import '/domain/models/block_item/audio_playlist.dart';
 import '/domain/models/block_item/audio_track.dart';
+import '/domain/services/audio_panel_manager.dart';
 import '/domain/services/tracks_service.dart';
 import '/page_manager.dart';
+import '/screens/music_player/widgets/favorite_button.dart';
+import '/utils/app_theme.dart';
 import '/utils/colors.dart';
 import '/utils/get.dart';
 import '/utils/tx_loader.dart';
 import '/widgets/app_image.dart';
+import '/widgets/app_scaffold/app_scaffold.dart';
+import '/widgets/user_avatar.dart';
 
 class PlayListTracksScreen extends StatefulWidget {
   final AudioPlaylist playlist;
@@ -39,9 +39,14 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
 
   List<AudioTrack> _tracks = [];
 
-  bool get _currentPlaylistIsPlaying =>
-      _pageManager.playlistIdNotifier.value.firstOrNull == widget.playlist.id;
-  bool playing = false;
+  bool get _currentPlaylistIsPlaying {
+    final playlistIds = _pageManager.playlistIdNotifier.value;
+    if (playlistIds.length <= 1) return false;
+    for (var i = 0; i < playlistIds.length - 1; i++) {
+      if (playlistIds[i] != widget.playlist.trackIds[i]) return false;
+    }
+    return true;
+  }
 
   final _scrollController = ScrollController();
 
@@ -100,41 +105,39 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
     );
   }
 
-  Widget _buildErrorHint(ColorScheme colors) {
-    return SliverFillRemaining(
-      hasScrollBody: false,
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Iconsax.warning_2,
-                size: 48,
-                color: colors.error,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                _error!,
-                textAlign: TextAlign.center,
-                style: TextStyle(
+  Widget _buildErrorHint(ColorScheme colors) => SliverFillRemaining(
+        hasScrollBody: false,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Iconsax.warning_2,
+                  size: 48,
                   color: colors.error,
-                  fontSize: 16,
                 ),
-              ),
-              const SizedBox(height: 16),
-              TextButton.icon(
-                onPressed: _fetchTracks,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Try Again'),
-              ),
-            ],
+                const SizedBox(height: 16),
+                Text(
+                  _error!,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: colors.error,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextButton.icon(
+                  onPressed: _fetchTracks,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Try Again'),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildInfoCard(ColorScheme colors) => SliverToBoxAdapter(
         child: Padding(
@@ -199,26 +202,29 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
             minimumSize: Size(double.infinity, 48),
           ),
         ),
-        child: FilledButton.icon(
-          label: Text(_currentPlaylistIsPlaying && playing ? 'Pause' : 'Play'),
-          icon: Icon(_currentPlaylistIsPlaying && playing
-              ? Icons.pause_rounded
-              : Icons.play_arrow_rounded),
-          onPressed: () {
-            if (_currentPlaylistIsPlaying) {
-              if (playing) {
-                _pageManager.pause();
-              } else {
-                _pageManager.loadPlaylist(_tracks, 0);
-                _pageManager.play();
-              }
-              _audioPanelManager.maximize(true);
-            } else {
-              _pageManager.loadPlaylist(_tracks, 0);
-              _pageManager.play();
-              _audioPanelManager.maximize(false);
-            }
-          },
+        child: ValueListenableBuilder(
+          valueListenable: _pageManager.playlistIdNotifier,
+          builder: (context, playlistId, child) => StreamBuilder(
+            stream: _pageManager.listenPlaybackState(),
+            builder: (context, snapshot) {
+              final isPlaying =
+                  _currentPlaylistIsPlaying && snapshot.data?.playing == true;
+              return FilledButton.icon(
+                label: Text(isPlaying ? 'Pause' : 'Play'),
+                icon: Icon(isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded),
+                onPressed: () {
+                  if (_currentPlaylistIsPlaying) {
+                    isPlaying
+                        ? _pageManager.pause()
+                        : _audioPanelManager.maximizeAndPlay(true);
+                  } else {
+                    _pageManager.loadPlaylist(widget.playlist, _tracks, 0);
+                    _audioPanelManager.maximizeAndPlay(false);
+                  }
+                },
+              );
+            },
+          ),
         ),
       );
 
@@ -264,7 +270,8 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
           height: 68,
           child: InkWell(
             onTap: () {
-              _pageManager.loadPlaylist(_tracks, index);
+              _pageManager.loadPlaylist(widget.playlist, _tracks, index);
+              _audioPanelManager.maximizeAndPlay(false);
             },
             borderRadius: BorderRadius.circular(12),
             child: Ink(

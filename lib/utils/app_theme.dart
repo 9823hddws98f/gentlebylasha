@@ -10,7 +10,7 @@ class AppTheme {
   static const largeBorderRadius = BorderRadius.all(Radius.circular(30));
 
   static const smallImageBorderRadius = BorderRadius.all(Radius.circular(8));
-  static const largeImageBorderRadius = BorderRadius.all(Radius.circular(14));
+  static const largeImageBorderRadius = BorderRadius.all(Radius.circular(10));
 
   static const sidePadding = 16.0;
 

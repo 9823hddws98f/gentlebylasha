@@ -160,10 +160,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> with Translation {
                             title: favoriteList[index].title,
                             displayDescription: favoriteList[index].description,
                             artUri: Uri.parse(favoriteList[index].imageBackground),
-                            extras: {
-                              'id': favoriteList[index].id,
-                              'url': favoriteList[index].trackUrl,
-                            },
+                            extras: {'track': favoriteList[index]},
                           ),
                           favoriteList[index].id,
                         );

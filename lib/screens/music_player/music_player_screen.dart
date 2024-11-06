@@ -3,7 +3,6 @@ import 'package:audio_service/audio_service.dart';
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '/widgets/app_image.dart';
 
 import '/constants/assets.dart';
 import '/domain/services/audio_panel_manager.dart';
@@ -11,6 +10,7 @@ import '/main.dart';
 import '/page_manager.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
+import '/widgets/app_image.dart';
 import '/widgets/shared_axis_switcher.dart';
 import 'widgets/audio_progress_bar.dart';
 import 'widgets/control_buttons.dart';
@@ -46,38 +46,29 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
           child: GestureDetector(
             onTap: () => _toggleHide(),
             child: ValueListenableBuilder(
-              valueListenable: _pageManager.currentMediaItemNotifier,
-              builder: (context, mediaItem, child) =>
-                  // TODO: Figure out why this is empty for couple of seconds
-                  mediaItem.id.isNotEmpty
-                      ? Stack(
-                          children: [
-                            _buildArtwork(mediaItem.artUri, true),
-                            SafeArea(
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: SharedAxisSwitcher(
-                                      transitionType: SharedAxisTransitionType.scaled,
-                                      disableFillColor: true,
-                                      reverse: !_hide,
-                                      child: _hide
-                                          ? SizedBox()
-                                          : ControlButtons(mediaItem: mediaItem),
-                                    ),
-                                  ),
-                                  _buildProgressBar(mediaItem),
-                                ],
+                valueListenable: _pageManager.currentMediaItemNotifier,
+                builder: (context, mediaItem, child) => Stack(
+                      children: [
+                        _buildArtwork(mediaItem.artUri, true),
+                        SafeArea(
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: SharedAxisSwitcher(
+                                  transitionType: SharedAxisTransitionType.scaled,
+                                  disableFillColor: true,
+                                  reverse: !_hide,
+                                  child: _hide
+                                      ? SizedBox()
+                                      : ControlButtons(mediaItem: mediaItem),
+                                ),
                               ),
-                            )
-                          ],
-                        )
-                      : Center(
-                          child: CupertinoActivityIndicator(
-                            color: Colors.white,
+                              _buildProgressBar(mediaItem),
+                            ],
                           ),
-                        ),
-            ),
+                        )
+                      ],
+                    )),
           ),
         ),
       );
@@ -135,11 +126,6 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                   fit: BoxFit.cover,
                   height: double.infinity,
                   width: double.infinity,
-                  fadeInDuration: Duration(milliseconds: 100),
-                  errorWidget: (context, url, error) => Image.asset(
-                    Assets.placeholderImage,
-                    fit: BoxFit.cover,
-                  ),
                 )
               : Stack(
                   fit: StackFit.expand,
@@ -162,9 +148,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
         alignment: Alignment.bottomCenter,
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8.0),
-          child: mediaItem.extras?['categories'] != 'Soundscape'
-              ? AudioProgressBar()
-              : SizedBox(),
+          child: AudioProgressBar(),
         ),
       );
 }

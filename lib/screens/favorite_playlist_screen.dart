@@ -175,15 +175,7 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen>
               child: Column(
                 children: [
                   for (int index = 0; index < favoritePlaylist.length; index++)
-                    PlaylistBlockItem(
-                      playlist: favoritePlaylist[index],
-
-                      // TODO: Handle favorite tap
-                      // onFavoriteTap: () {
-                      //   // Handle favorite tap
-                      //   removePlayListFavorites(favoritePlaylist[index].id);
-                      // },
-                    ),
+                    PlaylistBlockItem(playlist: favoritePlaylist[index]),
                 ],
               ),
             ))

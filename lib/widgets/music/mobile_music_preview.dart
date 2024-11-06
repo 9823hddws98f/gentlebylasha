@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import '/widgets/app_image.dart';
 
 import '/constants/assets.dart';
 import '/domain/services/audio_panel_manager.dart';
 import '/page_manager.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
+import '/widgets/app_image.dart';
 import 'audio_play_button.dart';
 import 'audio_progress_bar_home.dart';
-import 'current_song_title_small.dart';
+import 'current_song_info_small.dart';
 
 class MobileMusicPreview extends StatelessWidget {
   MobileMusicPreview({super.key});
 
-  static const height = 72.0;
+  static const height = 64.0;
 
   final _pageManager = Get.the<PageManager>();
   final _audioPanelManager = Get.the<AudioPanelManager>();
@@ -21,20 +21,20 @@ class MobileMusicPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    return Container(
-      height: height,
-      decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: BorderRadius.only(
-          topLeft: AppTheme.smallBorderRadius.topLeft,
-          topRight: AppTheme.smallBorderRadius.topRight,
+    return GestureDetector(
+      onTap: () => _audioPanelManager.panelController.open(),
+      child: Container(
+        height: height,
+        decoration: BoxDecoration(
+          color: colors.surface,
+          borderRadius: BorderRadius.only(
+            topLeft: AppTheme.smallBorderRadius.topLeft,
+            topRight: AppTheme.smallBorderRadius.topRight,
+          ),
         ),
-      ),
-      child: Column(
-        children: [
-          Expanded(
-            child: GestureDetector(
-              onTap: () => _audioPanelManager.panelController.open(),
+        child: Column(
+          children: [
+            Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppTheme.sidePadding,
@@ -46,35 +46,25 @@ class MobileMusicPreview extends StatelessWidget {
                       aspectRatio: 1,
                       child: ValueListenableBuilder(
                         valueListenable: _pageManager.currentMediaItemNotifier,
-                        builder: (context, mediaItem, child) => ClipRRect(
-                          borderRadius: AppTheme.smallBorderRadius,
-                          child: AppImage(
-                            imageUrl: mediaItem.artUri.toString(),
-                            fit: BoxFit.cover,
-                            errorWidget: (context, url, error) => ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.asset(
-                                Assets.placeholderImage,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
+                        builder: (context, mediaItem, child) => AppImage(
+                          imageUrl: mediaItem.artUri.toString(),
+                          fit: BoxFit.cover,
+                          borderRadius: AppTheme.smallImageBorderRadius,
+                          placeholderAsset: Assets.placeholderImage,
                         ),
                       ),
                     ),
                     SizedBox(width: 16),
-                    Expanded(child: CurrentSongTitleSmall()),
+                    Expanded(child: CurrentSongInfoSmall()),
                     SizedBox(width: 16),
                     AudioPlayButton(),
                   ],
                 ),
               ),
             ),
-          ),
-          if (_pageManager.currentMediaItemNotifier.value.extras?["categories"] !=
-              "Soundscape")
             AudioProgressBarHome()
-        ],
+          ],
+        ),
       ),
     );
   }

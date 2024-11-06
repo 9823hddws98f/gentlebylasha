@@ -24,7 +24,7 @@ class AudioPanelManager {
     panelController.open();
   }
 
-  void maximize(bool dontShowPanel) async {
+  void maximizeAndPlay(bool dontShowPanel) async {
     if (MyApp.isMobile) {
       _unhide();
       while (!panelController.isAttached) {

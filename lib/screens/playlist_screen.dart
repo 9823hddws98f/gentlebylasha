@@ -428,7 +428,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
     ));
   }
 
-  void showPanel(bool value) => _audioPanelManager.maximize(value);
+  void showPanel(bool value) => _audioPanelManager.maximizeAndPlay(value);
 
   Future<void> getFavArray() async {
     favoritesList = await getFavoriteListFromSharedPref();

@@ -20,7 +20,7 @@ class SearchListItem extends StatelessWidget {
     return ListTile(
       onTap: () {
         playTrack(track);
-        _audioPanelManager.maximize(false);
+        _audioPanelManager.maximizeAndPlay(false);
       },
       contentPadding: const EdgeInsets.symmetric(
         horizontal: AppTheme.sidePadding,

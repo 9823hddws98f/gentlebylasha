@@ -29,7 +29,7 @@ class AudioProgressBarHome extends StatelessWidget {
             trackHeight: 1,
           ),
           child: Slider(
-            value: max(current, total),
+            value: min(current, total),
             max: total,
             onChanged: (_) {},
           ),

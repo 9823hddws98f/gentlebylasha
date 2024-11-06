@@ -2,8 +2,9 @@ import 'package:audio_service/audio_service.dart';
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
-import '/main.dart';
 
+import '/domain/models/block_item/audio_track.dart';
+import '/main.dart';
 import '/notifiers/repeat_notifier.dart';
 import '/page_manager.dart';
 import '/screens/timer_picker_screen.dart';
@@ -30,8 +31,8 @@ class _ControlButtonsState extends State<ControlButtons> {
 
   bool _timerOn = false;
 
-  String get _trackId => widget.mediaItem.extras!['id'];
-  String get _categories => widget.mediaItem.extras!['categories'];
+  AudioTrack? get _track => widget.mediaItem.extras?['track'];
+  String? get _trackId => _track?.id;
 
   @override
   Widget build(BuildContext context) {
@@ -80,11 +81,9 @@ class _ControlButtonsState extends State<ControlButtons> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          FavoriteButton(trackId: widget.mediaItem.extras!['id']),
+                          if (_trackId != null) FavoriteButton(trackId: _trackId!),
                           _buildShareButton(),
-                          // TODO: Check this if its correct or not. may need to be [0]
-                          if (_categories != 'Sleep Story' && _categories != 'Meditation')
-                            _buildTimerButton(),
+                          if (_track?.hasTimer ?? false) _buildTimerButton(),
                           if (isPlaylist) _buildShuffleButton(primary),
                         ].interleaveWith(SizedBox(width: 20)),
                       ),
@@ -173,7 +172,7 @@ class _ControlButtonsState extends State<ControlButtons> {
 
   Widget _buildShareButton() => CircleIconButton(
         icon: CarbonIcons.share,
-        onPressed: () => createDeepLink(_trackId),
+        onPressed: _trackId != null ? () => createDeepLink(_trackId!) : null,
       );
 
   void _toggleTimer() => setState(() => _timerOn = !_timerOn);

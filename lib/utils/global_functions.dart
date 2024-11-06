@@ -6,10 +6,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '/domain/models/block_item/audio_track.dart';
 
 import '/domain/blocs/user/app_user.dart';
 import '/domain/blocs/user/user_bloc.dart';
+import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/service_locator.dart';
 import '/page_manager.dart';
 import '/screens/auth/login_screen.dart';
@@ -204,10 +204,7 @@ void playTrack(AudioTrack audioTrack) {
       title: audioTrack.title,
       displayDescription: audioTrack.description,
       artUri: Uri.parse(audioTrack.imageBackground),
-      extras: {
-        'id': audioTrack.id,
-        'url': audioTrack.trackUrl,
-      },
+      extras: {'track': audioTrack},
     ),
     audioTrack.id,
   );

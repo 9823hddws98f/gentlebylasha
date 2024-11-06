@@ -50,7 +50,7 @@ class _TrackListScreenState extends State<TrackListScreen> {
               mp3Duration: track.durationString,
               tap: () {
                 playTrack(track);
-                _audioPanelManager.maximize(false);
+                _audioPanelManager.maximizeAndPlay(false);
               },
             );
           },

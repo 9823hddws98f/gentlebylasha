@@ -1,6 +1,7 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:sleeptales/domain/models/block_item/audio_track.dart';
 
 Future<AudioHandler> initAudioService() async {
   return await AudioService.init(
@@ -139,7 +140,7 @@ class MyAudioHandler extends BaseAudioHandler {
 
   UriAudioSource _createAudioSource(MediaItem mediaItem) {
     return AudioSource.uri(
-      Uri.parse(mediaItem.extras!['url'] as String),
+      Uri.parse((mediaItem.extras!['track'] as AudioTrack).trackUrl),
       tag: mediaItem,
     );
   }
