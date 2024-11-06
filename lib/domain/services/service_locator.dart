@@ -1,10 +1,10 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:get_it/get_it.dart';
-import 'package:sleeptales/domain/cubits/favorite_playlists.dart';
 
 import '/domain/blocs/authentication/app_bloc.dart';
 import '/domain/blocs/authentication/auth_repository.dart';
 import '/domain/blocs/user/user_bloc.dart';
+import '/domain/cubits/favorite_playlists.dart';
 import '/domain/cubits/pages/pages_cubit.dart';
 import '/domain/services/user_service.dart';
 import '/page_manager.dart';

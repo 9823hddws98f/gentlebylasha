@@ -1,8 +1,9 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:sleeptales/domain/models/block_item/audio_track.dart';
-import 'package:sleeptales/utils/common_extensions.dart';
+
+import '/domain/models/block_item/audio_track.dart';
+import '/utils/common_extensions.dart';
 
 Future<AudioHandler> initAudioService() async {
   return await AudioService.init(
@@ -84,9 +85,9 @@ class MyAudioHandler extends BaseAudioHandler {
       ));
     }, onError: (Object e, StackTrace st) {
       if (e is PlatformException) {
-        print('AudioSource index: ${e.details?["index"]}');
+        ('AudioSource index: ${e.details?["index"]}').logDebug();
       } else {
-        print('An error occurred: $e');
+        ('An error occurred: $e').logDebug();
       }
     });
   }

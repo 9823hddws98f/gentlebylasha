@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '/domain/cubits/favorite_playlists.dart';
@@ -28,37 +29,50 @@ class _FavoriteButtonState extends State<FavoriteButton> {
   final _favoritePlaylistsCubit = Get.the<FavoritePlaylistsCubit>();
 
   final _txLoader = TxLoader();
-  bool _favorite = false;
 
   @override
-  void initState() {
-    super.initState();
-    _favorite = widget.trackId != null
-        ? _favoriteTracksCubit.state.contains(widget.trackId!)
-        : _favoritePlaylistsCubit.state.contains(widget.playlistId!);
+  Widget build(BuildContext context) {
+    if (widget.trackId != null) {
+      return BlocProvider.value(
+        value: _favoriteTracksCubit,
+        child: BlocBuilder<FavoritesTracksCubit, List<String>>(
+          builder: (context, state) => _buildButton(state.contains(widget.trackId!)),
+        ),
+      );
+    } else {
+      return BlocProvider.value(
+        value: _favoritePlaylistsCubit,
+        child: BlocBuilder<FavoritePlaylistsCubit, List<String>>(
+          builder: (context, state) => _buildButton(state.contains(widget.playlistId!)),
+        ),
+      );
+    }
   }
 
-  @override
-  Widget build(BuildContext context) => IconButton(
+  Widget _buildButton(bool favorite) => IconButton(
         iconSize: widget.size,
-        icon: _favorite ? Icon(Iconsax.heart5) : Icon(Iconsax.heart),
+        icon: favorite ? Icon(Iconsax.heart5) : Icon(Iconsax.heart),
         onPressed: _toggleFavorite,
       );
 
   Future<void> _toggleFavorite() async {
-    final previousFavoriteStatus = _favorite;
-    setState(() => _favorite = !_favorite);
+    late final bool isFavorite;
+    if (widget.trackId != null) {
+      isFavorite = _favoriteTracksCubit.state.contains(widget.trackId!);
+    } else {
+      isFavorite = _favoritePlaylistsCubit.state.contains(widget.playlistId!);
+    }
 
     await _txLoader.load(
       () async {
         if (widget.trackId != null) {
-          if (_favorite) {
+          if (!isFavorite) {
             await _favoriteTracksCubit.addTrackToFavorites(widget.trackId!);
           } else {
             await _favoriteTracksCubit.removeFavorite(widget.trackId!);
           }
         } else {
-          if (_favorite) {
+          if (!isFavorite) {
             await _favoritePlaylistsCubit.addPlaylistToFavorites(widget.playlistId!);
           } else {
             await _favoritePlaylistsCubit.removePlaylist(widget.playlistId!);
@@ -66,7 +80,6 @@ class _FavoriteButtonState extends State<FavoriteButton> {
         }
       },
       onError: (error) {
-        setState(() => _favorite = previousFavoriteStatus);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to update favorite status.')),
         );
