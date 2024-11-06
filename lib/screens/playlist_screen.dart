@@ -231,10 +231,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
               background: AppImage(
                 imageUrl: widget.playlist.thumbnail,
                 fit: BoxFit.cover,
-                placeholder: (context) => Image.asset(
-                  Assets.placeholderImage,
-                  fit: BoxFit.cover,
-                ),
+                placeholderAsset: Assets.placeholderImage,
               ),
             ),
           ),
@@ -302,14 +299,8 @@ class _PlayListScreenState extends State<PlayListScreen> {
                       child: widget.playlist.authorImage.isNotEmpty
                           ? AppImage(
                               imageUrl: widget.playlist.authorImage,
-                              imageBuilder: (context, imageProvider) => CircleAvatar(
-                                backgroundImage: imageProvider,
-                                radius: 40,
-                              ),
-                              placeholder: (context) => Image.asset(
-                                Assets.profile,
-                                fit: BoxFit.cover,
-                              ),
+                              borderRadius: BorderRadius.circular(64),
+                              placeholderAsset: Assets.profile,
                               errorWidget: (context, url, error) => Image.asset(
                                 Assets.profile,
                                 fit: BoxFit.cover,

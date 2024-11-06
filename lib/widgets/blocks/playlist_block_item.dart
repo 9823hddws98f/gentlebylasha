@@ -25,7 +25,7 @@ class PlaylistBlockItem extends StatelessWidget {
   Widget build(context) {
     final ColorScheme(:primary, :onSurfaceVariant) = Theme.of(context).colorScheme;
     return GestureDetector(
-      onTap: () => pushName(context, PlayListTracksScreen(block: playlist)),
+      onTap: () => pushName(context, PlayListTracksScreen(playlist: playlist)),
       child: SizedBox(
         height: height,
         width: _imageSize,
@@ -44,31 +44,20 @@ class PlaylistBlockItem extends StatelessWidget {
     );
   }
 
-  Widget _buildImage(Color color) => playlist.thumbnail.isNotEmpty
-      ? Stack(
-          fit: StackFit.expand,
-          children: [
-            AppImage(
-              imageUrl: playlist.thumbnail,
-              height: _imageSize,
-              imageBuilder: (context, imageProvider) => ClipRRect(
-                borderRadius: AppTheme.mediumBorderRadius,
-                child: Image(image: imageProvider, fit: BoxFit.cover),
-              ),
-              errorWidget: (_, __, ___) => _buildPlaceholderImage(),
-              placeholder: (_) => _buildPlaceholderImage(),
-            ),
-            ItemTag(
-              icon: CarbonIcons.playlist,
-              text: '${playlist.trackIds.length} Sessions',
-            ),
-          ],
-        )
-      : _buildPlaceholderImage();
-
-  Widget _buildPlaceholderImage() => ClipRRect(
-        borderRadius: AppTheme.smallBorderRadius,
-        child: Image.asset(Assets.placeholderImage, fit: BoxFit.cover),
+  Widget _buildImage(Color color) => Stack(
+        fit: StackFit.expand,
+        children: [
+          AppImage(
+            imageUrl: playlist.thumbnail,
+            height: _imageSize,
+            borderRadius: AppTheme.largeImageBorderRadius,
+            placeholderAsset: Assets.placeholderImage,
+          ),
+          ItemTag(
+            icon: CarbonIcons.playlist,
+            text: '${playlist.trackIds.length} Sessions',
+          ),
+        ],
       );
 
   Widget _buildTextContent(Color secondaryColor) => Column(

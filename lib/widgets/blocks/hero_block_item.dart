@@ -53,23 +53,14 @@ class HeroBlockItem extends StatelessWidget {
           AppImage(
             imageUrl: track.thumbnail,
             height: _imageSize,
-            imageBuilder: (context, imageProvider) => ClipRRect(
-              borderRadius: AppTheme.mediumBorderRadius,
-              child: Image(image: imageProvider, fit: BoxFit.cover),
-            ),
-            errorWidget: (_, __, ___) => _buildPlaceholderImage(),
-            placeholder: (_) => _buildPlaceholderImage(),
+            borderRadius: AppTheme.largeImageBorderRadius,
+            placeholderAsset: Assets.placeholderImage,
           ),
           ItemTag(
             icon: CarbonIcons.play_filled_alt,
             text: '${track.durationString} min',
           ),
         ],
-      );
-
-  Widget _buildPlaceholderImage() => ClipRRect(
-        borderRadius: AppTheme.smallBorderRadius,
-        child: Image.asset(Assets.placeholderImage, fit: BoxFit.cover),
       );
 
   Widget _buildTextContent(Color secondaryColor) => Column(
@@ -108,7 +99,7 @@ class HeroBlockItem extends StatelessWidget {
               width: _imageSize,
               child: Shimmerize(
                 child: Material(
-                  borderRadius: AppTheme.mediumBorderRadius,
+                  borderRadius: AppTheme.largeImageBorderRadius,
                   color: Colors.white,
                 ),
               ),

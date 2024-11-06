@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sleeptales/constants/assets.dart';
+import 'package:sleeptales/utils/app_theme.dart';
 
 import 'app_image.dart';
 
@@ -31,14 +33,8 @@ class TrackListItemSmall extends StatelessWidget {
                   width: double.maxFinite,
                   child: AppImage(
                     imageUrl: imageUrl,
-                    imageBuilder: (context, imageProvider) => ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image(
-                        image: imageProvider,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
+                    borderRadius: AppTheme.largeImageBorderRadius,
+                    placeholderAsset: Assets.placeholderImage,
                   ),
                 ),
                 SizedBox(height: 8),

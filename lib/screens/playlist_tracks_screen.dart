@@ -1,25 +1,28 @@
-import 'package:audio_service/audio_service.dart';
+import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
+import 'package:sleeptales/domain/services/audio_panel_manager.dart';
+import 'package:sleeptales/screens/music_player/widgets/favorite_button.dart';
+import 'package:sleeptales/utils/app_theme.dart';
+import 'package:sleeptales/widgets/app_scaffold/app_scaffold.dart';
+import 'package:sleeptales/widgets/user_avatar.dart';
 
 import '/constants/assets.dart';
-import '/domain/cubits/favorite_playlists.dart';
-import '/domain/cubits/favorite_tracks.dart';
 import '/domain/models/block_item/audio_playlist.dart';
 import '/domain/models/block_item/audio_track.dart';
-import '/domain/services/service_locator.dart';
+import '/domain/services/tracks_service.dart';
 import '/page_manager.dart';
 import '/utils/colors.dart';
 import '/utils/get.dart';
-import '/utils/global_functions.dart';
+import '/utils/tx_loader.dart';
 import '/widgets/app_image.dart';
-import '/widgets/custom_btn.dart';
 
 class PlayListTracksScreen extends StatefulWidget {
-  final AudioPlaylist block;
+  final AudioPlaylist playlist;
 
   const PlayListTracksScreen({
     super.key,
-    required this.block,
+    required this.playlist,
   });
 
   @override
@@ -27,107 +30,25 @@ class PlayListTracksScreen extends StatefulWidget {
 }
 
 class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
-  final _favoritePlaylistsCubit = Get.the<FavoritePlaylistsCubit>();
-  final _favoriteTracksCubit = Get.the<FavoritesTracksCubit>();
+  final _pageManager = Get.the<PageManager>();
+  final _tracksService = Get.the<TracksService>();
+  final _audioPanelManager = Get.the<AudioPanelManager>();
 
-  bool favoritePlayListLoading = false;
-  List<String> favoritesList = [];
-  List<String> favoritesPlayList = [];
-  List<AudioTrack> tracksList = [];
-  final ScrollController _scrollController = ScrollController();
-  bool _isAppBarExpanded = true;
-  bool favoriteSeries = false;
-  bool trackListLoading = false;
-  List<String> currentPlayingList = [];
-  bool currentPlaylistIsPlaying = false;
+  final _txLoader = TxLoader();
+  String? _error;
+
+  List<AudioTrack> _tracks = [];
+
+  bool get _currentPlaylistIsPlaying =>
+      _pageManager.playlistIdNotifier.value.firstOrNull == widget.playlist.id;
   bool playing = false;
-  MediaItem currentMediaItem = MediaItem(id: "", title: "");
 
-  bool isTrackFavorited(String trackId) {
-    return favoritesList.contains(trackId);
-  }
-
-  bool isPlaylistFavorited(String trackId) {
-    return favoritesPlayList.contains(trackId);
-  }
+  final _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    getFavArray();
-    getFavPlayListArray();
-    fetchAndSetTracks(widget.block.id);
-    _scrollController.addListener(() {
-      setState(() {
-        _isAppBarExpanded = _scrollController.hasClients &&
-            _scrollController.offset < (250.0 - kToolbarHeight);
-      });
-    });
-
-    _onPlaylistChanged();
-    currentPlayingMediaItem();
-    getIt<PageManager>().playlistNotifier.addListener(_onPlaylistChanged);
-    getIt<PageManager>().currentMediaItemNotifier.addListener(currentPlayingMediaItem);
-  }
-
-  void currentPlayingMediaItem() {
-    setState(() {
-      if (mounted) {
-        currentMediaItem = getIt<PageManager>().currentMediaItemNotifier.value;
-      }
-    });
-  }
-
-  void _onPlaylistChanged() {
-    setState(() {
-      if (mounted) {
-        currentPlayingList = getIt<PageManager>().playlistIdNotifier.value;
-      }
-      // currentPlaylistIsPlaying = currentPlayingList
-      //     .every((id) => tracksList.any((track) => track.trackId == id));
-    });
-  }
-
-  Future<void> addPlaylistToFavorites(String playListId) async {
-    setState(() => favoritePlayListLoading = true);
-    try {
-      await Get.the<FavoritePlaylistsCubit>().addPlaylistToFavorites(playListId);
-      setState(() {
-        favoritesPlayList.add(playListId);
-        favoritePlayListLoading = false;
-      });
-      showToast("Playlist added to favorites");
-    } catch (e) {
-      setState(() => favoritePlayListLoading = false);
-      showToast("Error adding playlist to favorites");
-    }
-  }
-
-  Future<void> removePlayListFavorites(String blockId) async {
-    setState(() => favoritePlayListLoading = true);
-    try {
-      await Get.the<FavoritePlaylistsCubit>().removePlaylist(blockId);
-      setState(() {
-        favoritesPlayList.remove(blockId);
-        favoritePlayListLoading = false;
-      });
-      showToast('Playlist removed from favorites');
-    } catch (e) {
-      setState(() => favoritePlayListLoading = false);
-      showToast('Error removing playlist from favorites');
-    }
-  }
-
-  // Function to fetch tracks for a block and update the state
-  Future<void> fetchAndSetTracks(String blockId) async {
-    trackListLoading = true;
-    // final tracks = await fetchTracksForBlock(blockId);
-    //debugPrint("tracks length ${tracks.length}");
-    setState(() {
-      // tracksList = tracks;
-      trackListLoading = false;
-    });
-    // debugPrint(tracks.length);
+    _fetchTracks();
   }
 
   @override
@@ -138,309 +59,272 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            gradientColorOne,
-            gradientColorTwo,
+    final colors = Theme.of(context).colorScheme;
+    return AppScaffold(
+      bodyPadding: EdgeInsets.zero,
+      body: (context, isMobile) => DecoratedBox(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              gradientColorOne,
+              gradientColorTwo,
+            ],
+            stops: [0.0926, 1.0],
+          ),
+        ),
+        child: CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            _buildThumbnail(),
+            _buildInfoCard(colors),
+            _error != null
+                ? _buildErrorHint(colors)
+                : SliverPadding(
+                    padding: EdgeInsets.symmetric(horizontal: AppTheme.sidePadding) +
+                        const EdgeInsets.only(bottom: 150),
+                    sliver: SliverList.separated(
+                      itemCount: _tracks.length,
+                      separatorBuilder: (context, index) => const SizedBox(height: 12),
+                      itemBuilder: (context, index) => _buildTrackItem(
+                        _tracks[index],
+                        index,
+                        colors,
+                      ),
+                    ),
+                  ),
           ],
-          stops: [0.0926, 1.0],
         ),
       ),
-      child: CustomScrollView(
-        controller: _scrollController,
-        physics:
-            _isAppBarExpanded ? AlwaysScrollableScrollPhysics() : ClampingScrollPhysics(),
-        slivers: <Widget>[
-          SliverAppBar(
-            expandedHeight: 266.0,
-            floating: false,
-            pinned: true,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios), // Change this icon as needed
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            flexibleSpace: FlexibleSpaceBar(
-              centerTitle: false,
-              title: _isAppBarExpanded ? null : Text(widget.block.title),
-              background: AppImage(
-                imageUrl: widget.block.thumbnail,
-                fit: BoxFit.cover,
-                placeholder: (context) => Image.asset(
-                  Assets.placeholderImage,
-                  fit: BoxFit.cover,
+    );
+  }
+
+  Widget _buildErrorHint(ColorScheme colors) {
+    return SliverFillRemaining(
+      hasScrollBody: false,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Iconsax.warning_2,
+                size: 48,
+                color: colors.error,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                _error!,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: colors.error,
+                  fontSize: 16,
                 ),
               ),
+              const SizedBox(height: 16),
+              TextButton.icon(
+                onPressed: _fetchTracks,
+                icon: const Icon(Icons.refresh),
+                label: const Text('Try Again'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoCard(ColorScheme colors) => SliverToBoxAdapter(
+        child: Padding(
+          padding: EdgeInsets.all(AppTheme.sidePadding),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      widget.playlist.title,
+                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
+                    ),
+                  ),
+                  FavoriteButton(playlistId: widget.playlist.id)
+                ],
+              ),
+              SizedBox(height: 8),
+              Row(
+                children: [
+                  UserAvatar(
+                    imageUrl: widget.playlist.authorImage,
+                    radius: 20,
+                  ),
+                  SizedBox(width: 8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(widget.playlist.author),
+                      Text(
+                        widget.playlist.profession,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              _buildPlayButton(),
+              SizedBox(height: 16),
+              Text(
+                widget.playlist.description,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 9,
+              ),
+            ],
+          ),
+        ),
+      );
+
+  Widget _buildPlayButton() => FilledButtonTheme(
+        data: FilledButtonThemeData(
+          style: FilledButton.styleFrom(
+            backgroundColor: _tracks.isEmpty ? Colors.grey : Colors.white,
+            foregroundColor: _tracks.isEmpty ? Colors.black12 : textColor,
+            iconColor: _tracks.isEmpty ? Colors.black12 : textColor,
+            iconSize: 24,
+            minimumSize: Size(double.infinity, 48),
+          ),
+        ),
+        child: FilledButton.icon(
+          label: Text(_currentPlaylistIsPlaying && playing ? 'Pause' : 'Play'),
+          icon: Icon(_currentPlaylistIsPlaying && playing
+              ? Icons.pause_rounded
+              : Icons.play_arrow_rounded),
+          onPressed: () {
+            if (_currentPlaylistIsPlaying) {
+              if (playing) {
+                _pageManager.pause();
+              } else {
+                _pageManager.loadPlaylist(_tracks, 0);
+                _pageManager.play();
+              }
+              _audioPanelManager.maximize(true);
+            } else {
+              _pageManager.loadPlaylist(_tracks, 0);
+              _pageManager.play();
+              _audioPanelManager.maximize(false);
+            }
+          },
+        ),
+      );
+
+  Widget _buildThumbnail() => SliverAppBar(
+        expandedHeight: 200,
+        floating: false,
+        pinned: true,
+        stretch: true,
+        title: AnimatedBuilder(
+          animation: _scrollController,
+          builder: (context, child) => Opacity(
+            opacity: ((_scrollController.offset - 150) / 50.0).clamp(0.0, 1.0),
+            child: child,
+          ),
+          child: Text(
+            widget.playlist.title,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
             ),
           ),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              Padding(
-                padding: EdgeInsets.fromLTRB(16, 10, 8, 16),
-                child: _isAppBarExpanded
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                              child: Text(
-                            widget.block.title,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                          )),
-                          Stack(
-                            children: [
-                              favoritePlayListLoading
-                                  ? Padding(
-                                      padding: EdgeInsets.all(8),
-                                      child: SizedBox(
-                                        height: 20,
-                                        width: 20,
-                                        child: Center(
-                                            child: CircularProgressIndicator(
-                                          color: Colors.white,
-                                        )),
-                                      ),
-                                    )
-                                  : IconButton(
-                                      onPressed: () =>
-                                          togglePlaylistFavorite(widget.block.id),
-                                      icon: isPlaylistFavorited(widget.block.id)
-                                          ? Icon(
-                                              Icons.favorite,
-                                              size: 24,
-                                            )
-                                          : Icon(
-                                              Icons.favorite_border,
-                                              size: 24,
-                                            ),
-                                      constraints: BoxConstraints(),
-                                    )
-                            ],
-                          )
-                        ],
-                      )
-                    : null,
+        ),
+        leading: IconButton(
+          icon: const Icon(CarbonIcons.arrow_left),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        flexibleSpace: FlexibleSpaceBar(
+          centerTitle: false,
+          stretchModes: const [StretchMode.zoomBackground],
+          background: AppImage(
+            imageUrl: widget.playlist.thumbnail,
+            fit: BoxFit.cover,
+            placeholderAsset: Assets.placeholderImage,
+          ),
+        ),
+      );
+
+  Widget _buildTrackItem(AudioTrack track, int index, ColorScheme colors) => Material(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: SizedBox(
+          height: 68,
+          child: InkWell(
+            onTap: () {
+              _pageManager.loadPlaylist(_tracks, index);
+            },
+            borderRadius: BorderRadius.circular(12),
+            child: Ink(
+              decoration: BoxDecoration(
+                color: colors.surfaceContainerHigh,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: colors.outline),
               ),
-              Container(
-                padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      width: 40,
-                      height: 40,
-                      child: widget.block.authorImage.isNotEmpty
-                          ? AppImage(
-                              imageUrl: widget.block.authorImage,
-                              imageBuilder: (context, imageProvider) => CircleAvatar(
-                                backgroundImage: imageProvider,
-                                radius: 40,
-                              ),
-                              placeholder: (context) => Image.asset(
-                                Assets.profile,
-                                fit: BoxFit.cover,
-                              ),
-                              errorWidget: (context, url, error) => Image.asset(
-                                Assets.profile,
-                                fit: BoxFit.cover,
-                              ),
-                            )
-                          : Image.asset(
-                              Assets.profile,
-                              fit: BoxFit.cover,
+                    if (widget.playlist.showAudioThumbnails)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: AppImage(
+                          height: 48,
+                          width: 48,
+                          fit: BoxFit.cover,
+                          imageUrl: track.thumbnail,
+                          borderRadius: AppTheme.smallImageBorderRadius,
+                        ),
+                      ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            track.title,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          Text(
+                            track.durationString,
+                            style: TextStyle(
+                              color: colors.onSurfaceVariant,
+                              fontSize: 12,
                             ),
+                          ),
+                        ],
+                      ),
                     ),
-                    SizedBox(width: 8),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 0),
-                          child: Text(
-                            widget.block.author,
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 0),
-                          child: Text(
-                            widget.block.profession,
-                            style: TextStyle(
-                              fontSize: 14.0,
-                            ),
-                          ),
-                        ),
-                      ],
+                    FavoriteButton(
+                      trackId: track.id,
+                      size: 18,
                     ),
                   ],
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: CustomButton(
-                    title: (currentPlaylistIsPlaying && playing) ? "Pause" : "Play",
-                    onPress: () {
-                      if (currentPlaylistIsPlaying && playing) {
-                        getIt<PageManager>().pause();
-                        // TODO:    widget.panelFunction(true);
-                      } else if (currentPlaylistIsPlaying && !playing) {
-                        getIt<PageManager>().loadPlaylist(tracksList, 0);
-                        getIt<PageManager>().play();
-                        // TODO:     widget.panelFunction(true);
-                      } else {
-                        getIt<PageManager>().loadPlaylist(tracksList, 0);
-                        getIt<PageManager>().play();
-                        // TODO:     widget.panelFunction(false);
-                      }
-                    },
-                    color: tracksList.isEmpty ? Colors.grey : Colors.white,
-                    textColor: tracksList.isEmpty ? Colors.black12 : textColor),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  widget.block.description,
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
-              if (trackListLoading || tracksList.isNotEmpty)
-                Padding(
-                  padding: EdgeInsets.only(top: 32, left: 16, right: 16),
-                  child: Divider(
-                    height: 1.0,
-                    color: Colors.grey,
-                  ),
-                ),
-              // TODO: UNCOMMENT
-              // tracksList.isNotEmpty
-              //     ? ListView.separated(
-              //         physics: NeverScrollableScrollPhysics(),
-              //         shrinkWrap: true,
-              //         padding: EdgeInsets.only(left: 16, right: 16, bottom: 200),
-              //         itemCount: tracksList.length,
-              //         itemBuilder: (BuildContext context, int index) {
-              //           return Padding(
-              //             padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-              //             child: widget.block.showSeriesImg != "1"
-              //                 ? SeriesTrackListWidget(
-              //                     audioTrack: tracksList[index],
-              //                     tap: () {
-              //                       getIt<PageManager>().loadPlaylist(tracksList, index);
-              //                       // TODO:    widget.panelFunction(false);
-              //                     },
-              //                     onTapPlayPause: () {
-              //                       if (currentPlaylistIsPlaying &&
-              //                           currentMediaItem.id ==
-              //                               tracksList[index].trackId &&
-              //                           playing) {
-              //                         getIt<PageManager>().pause();
-              //                       } else {
-              //                         getIt<PageManager>()
-              //                             .loadPlaylist(tracksList, index);
-              //                         getIt<PageManager>().play();
-              //                         // TODO:    widget.panelFunction(true);
-              //                       }
-              //                     },
-              //                     favoriteTap: () => toggleTrackFavorite(tracksList[index].trackId),
-              //                     favorite: isTrackFavorited(tracksList[index].trackId),
-              //                     currentPlaying: (currentPlaylistIsPlaying &&
-              //                             currentMediaItem.id ==
-              //                                 tracksList[index].trackId &&
-              //                             playing)
-              //                         ? true
-              //                         : false,
-              //                   )
-              //                 : SeriesTrackListImageWidget(
-              //                     audioTrack: tracksList[index],
-              //                     tap: () {
-              //                       getIt<PageManager>().loadPlaylist(tracksList, index);
-              //                       // TODO:      widget.panelFunction(false);
-              //                     },
-              //                     favoriteTap: () => toggleTrackFavorite(tracksList[index].trackId),
-              //                     favorite: isTrackFavorited(tracksList[index].trackId),
-              //                   ),
-              //           );
-              //         },
-              //         separatorBuilder: (BuildContext context, int index) {
-              //           return Divider(
-              //             height: 1.0,
-              //             color: seriesDividerColor,
-              //           );
-              //         },
-              //       )
-              //     : _buildShimmerListViewImage("0"),
-              if (trackListLoading || tracksList.isNotEmpty)
-                Padding(
-                  padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-                  child: Divider(
-                    height: 1.0,
-                    color: Colors.grey,
-                  ),
-                ),
-            ]),
+            ),
           ),
-        ],
-      ),
-    ));
-  }
+        ),
+      );
 
-  Future<void> getFavArray() async {
-    favoritesList = await getFavoriteListFromSharedPref();
-    setState(() {});
-  }
-
-  Future<void> getFavPlayListArray() async {
-    favoritesPlayList = await getFavoritePlayListFromSharedPref();
-    setState(() {});
-  }
-
-  Future<void> toggleTrackFavorite(String trackId) async {
-    try {
-      if (isTrackFavorited(trackId)) {
-        await _favoriteTracksCubit.removeFavorite(trackId);
-        favoritesList.remove(trackId);
-        removeFromFavoritesList(trackId);
-      } else {
-        await _favoriteTracksCubit.addTrackToFavorites(trackId);
-        favoritesList.add(trackId);
-        addFavoriteListToSharedPref(favoritesList);
-      }
-      setState(() {});
-    } catch (e) {
-      showToast('Error updating track favorite status');
-    }
-  }
-
-  Future<void> togglePlaylistFavorite(String playlistId) async {
-    setState(() => favoritePlayListLoading = true);
-    try {
-      if (isPlaylistFavorited(playlistId)) {
-        await _favoritePlaylistsCubit.removePlaylist(playlistId);
-        favoritesPlayList.remove(playlistId);
-      } else {
-        await _favoritePlaylistsCubit.addPlaylistToFavorites(playlistId);
-        favoritesPlayList.add(playlistId);
-      }
-      setState(() => favoritePlayListLoading = false);
-      showToast(isPlaylistFavorited(playlistId)
-          ? 'Playlist removed from favorites'
-          : 'Playlist added to favorites');
-    } catch (e) {
-      setState(() => favoritePlayListLoading = false);
-      showToast('Error updating playlist favorite status');
-    }
-  }
+  Future<void> _fetchTracks() => _txLoader.load(
+        onStart: () => _error != null ? setState(() => _error = null) : null,
+        () => _tracksService.getByIds(widget.playlist.trackIds),
+        ensure: () => mounted,
+        onSuccess: (tracks) => setState(() => _tracks = tracks),
+        onError: (error) => setState(() => _error = error.toString()),
+      );
 }

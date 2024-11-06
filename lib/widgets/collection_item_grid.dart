@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sleeptales/utils/app_theme.dart';
 
 import '/constants/assets.dart';
 import 'app_image.dart';
@@ -31,20 +32,8 @@ class CollectionItemGrid extends StatelessWidget {
                 width: 200,
                 child: AppImage(
                   imageUrl: imageUrl,
-                  imageBuilder: (context, imageProvider) => ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image(
-                      image: imageProvider,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  errorWidget: (context, url, error) => ClipRRect(
-                      borderRadius:
-                          BorderRadius.circular(20), // Adjust the radius as needed
-                      child: Image.asset(
-                        Assets.placeholderImage,
-                        fit: BoxFit.cover,
-                      )),
+                  borderRadius: AppTheme.largeImageBorderRadius,
+                  placeholderAsset: Assets.placeholderImage,
                 ),
               ),
             ],

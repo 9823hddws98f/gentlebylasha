@@ -1,22 +1,31 @@
-import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 
+import '/domain/cubits/favorite_playlists.dart';
+import '/domain/cubits/favorite_tracks.dart';
 import '/utils/get.dart';
 import '/utils/tx_loader.dart';
-import '/widgets/circle_icon_button.dart';
-import '../../../domain/cubits/favorite_tracks.dart';
 
 class FavoriteButton extends StatefulWidget {
-  const FavoriteButton({super.key, required this.trackId});
+  const FavoriteButton({
+    super.key,
+    this.trackId,
+    this.playlistId,
+    this.size,
+  }) : assert(trackId != null || playlistId != null,
+            'Either trackId or playlistId must be provided');
 
-  final String trackId;
+  final String? trackId;
+  final String? playlistId;
+  final double? size;
 
   @override
   State<FavoriteButton> createState() => _FavoriteButtonState();
 }
 
 class _FavoriteButtonState extends State<FavoriteButton> {
-  final _favoritesCubit = Get.the<FavoritesTracksCubit>();
+  final _favoriteTracksCubit = Get.the<FavoritesTracksCubit>();
+  final _favoritePlaylistsCubit = Get.the<FavoritePlaylistsCubit>();
 
   final _txLoader = TxLoader();
   bool _favorite = false;
@@ -24,18 +33,17 @@ class _FavoriteButtonState extends State<FavoriteButton> {
   @override
   void initState() {
     super.initState();
-    _favorite = _favoritesCubit.state.contains(widget.trackId);
+    _favorite = widget.trackId != null
+        ? _favoriteTracksCubit.state.contains(widget.trackId!)
+        : _favoritePlaylistsCubit.state.contains(widget.playlistId!);
   }
 
   @override
-  Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
-    return CircleIconButton(
-      icon: _favorite ? CarbonIcons.favorite_filled : CarbonIcons.favorite,
-      onPressed: _toggleFavorite,
-      iconColor: _favorite ? primary : null,
-    );
-  }
+  Widget build(BuildContext context) => IconButton(
+        iconSize: widget.size,
+        icon: _favorite ? Icon(Iconsax.heart5) : Icon(Iconsax.heart),
+        onPressed: _toggleFavorite,
+      );
 
   Future<void> _toggleFavorite() async {
     final previousFavoriteStatus = _favorite;
@@ -43,16 +51,22 @@ class _FavoriteButtonState extends State<FavoriteButton> {
 
     await _txLoader.load(
       () async {
-        if (_favorite) {
-          await _favoritesCubit.addTrackToFavorites(widget.trackId);
+        if (widget.trackId != null) {
+          if (_favorite) {
+            await _favoriteTracksCubit.addTrackToFavorites(widget.trackId!);
+          } else {
+            await _favoriteTracksCubit.removeFavorite(widget.trackId!);
+          }
         } else {
-          await _favoritesCubit.removeFavorite(widget.trackId);
+          if (_favorite) {
+            await _favoritePlaylistsCubit.addPlaylistToFavorites(widget.playlistId!);
+          } else {
+            await _favoritePlaylistsCubit.removePlaylist(widget.playlistId!);
+          }
         }
       },
       onError: (error) {
-        // Revert the favorite status on error
         setState(() => _favorite = previousFavoriteStatus);
-        // Optionally, display an error message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to update favorite status.')),
         );

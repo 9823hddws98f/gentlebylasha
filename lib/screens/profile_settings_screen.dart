@@ -1,7 +1,6 @@
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '/widgets/app_image.dart';
 
 import '/constants/assets.dart';
 import '/domain/blocs/user/user_bloc.dart';
@@ -18,6 +17,7 @@ import '/utils/app_theme.dart';
 import '/utils/common_extensions.dart';
 import '/utils/get.dart';
 import '/utils/global_functions.dart';
+import '/widgets/app_image.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
 import 'about/about_screen.dart';
@@ -151,14 +151,8 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Tran
                     child: state.user.photoURL?.isNotEmpty ?? false
                         ? AppImage(
                             imageUrl: state.user.photoURL!,
-                            imageBuilder: (context, imageProvider) => CircleAvatar(
-                              backgroundImage: imageProvider,
-                              radius: 64,
-                            ),
-                            placeholder: (context) => Image.asset(
-                              Assets.profile,
-                              fit: BoxFit.cover,
-                            ),
+                            borderRadius: BorderRadius.circular(64),
+                            placeholderAsset: Assets.profile,
                             errorWidget: (context, url, error) => Image.asset(
                               Assets.profile,
                               fit: BoxFit.cover,
