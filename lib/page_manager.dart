@@ -15,9 +15,9 @@ class PageManager {
   final _audioHandler = Get.the<AudioHandler>();
   final List<StreamSubscription> _subscriptions = [];
 
-  final currentSongTitleNotifier = ValueNotifier<String>('---');
-  final currentMediaItemNotifier =
-      ValueNotifier<MediaItem>(const MediaItem(id: "", title: ""));
+  final currentMediaItemNotifier = ValueNotifier<MediaItem>(
+    const MediaItem(id: '', title: ''),
+  );
   final playlistNotifier = ValueNotifier<List<String>>([]);
   final playlistIdNotifier = ValueNotifier<List<String>>([]);
   final progressNotifier = ProgressNotifier();
@@ -86,7 +86,6 @@ class PageManager {
   void _resetPlaylistState() {
     playlistNotifier.value = [];
     playlistIdNotifier.value = [];
-    currentSongTitleNotifier.value = '';
   }
 
   void _updatePlaylistState(List<MediaItem> playlist) {
@@ -151,7 +150,6 @@ class PageManager {
   }
 
   void _updateCurrentSong(MediaItem? mediaItem) {
-    currentSongTitleNotifier.value = mediaItem?.title ?? '';
     currentMediaItemNotifier.value = mediaItem ?? const MediaItem(id: '', title: '');
   }
 
@@ -236,11 +234,13 @@ class PageManager {
   }
 
   void resetNotifiers() {
-    currentSongTitleNotifier.value = '---';
     progressNotifier.value = ProgressBarState(
-        current: Duration.zero, buffered: Duration.zero, total: Duration.zero);
+      current: Duration.zero,
+      buffered: Duration.zero,
+      total: Duration.zero,
+    );
     playlistNotifier.value = [];
-    currentMediaItemNotifier.value = MediaItem(id: "", title: "");
+    currentMediaItemNotifier.value = const MediaItem(id: '', title: '');
     _isInitialized = false;
   }
 

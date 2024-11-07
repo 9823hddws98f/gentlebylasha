@@ -1,3 +1,4 @@
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 
 import '/domain/services/service_locator.dart';
@@ -9,11 +10,11 @@ class CurrentSongTitle extends StatelessWidget {
   final _pageManager = getIt<PageManager>();
 
   @override
-  Widget build(BuildContext context) => ValueListenableBuilder<String>(
-        valueListenable: _pageManager.currentSongTitleNotifier,
-        builder: (_, title, __) => Center(
+  Widget build(BuildContext context) => ValueListenableBuilder<MediaItem>(
+        valueListenable: _pageManager.currentMediaItemNotifier,
+        builder: (_, mediaItem, __) => Center(
           child: Text(
-            title,
+            mediaItem.title,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontWeight: FontWeight.w600,

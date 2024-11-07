@@ -10,8 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import '/app_init.dart';
 
+import '/app_init.dart';
 import '/screens/auth/login_screen.dart';
 import '/utils/get.dart';
 import 'domain/blocs/authentication/app_bloc.dart';

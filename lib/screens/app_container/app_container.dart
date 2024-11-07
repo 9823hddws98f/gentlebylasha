@@ -44,12 +44,6 @@ class AppContainerState extends State<AppContainer> with SingleTickerProviderSta
     _fetchFavoriteTracksList();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _audioPlayerAnimCtrl.dispose();
-  }
-
   Future<void> _fetchFavoriteTracksList() async {
     AppUser user = await getUser();
     final favoritesCollection = FirebaseFirestore.instance.collection('favorites');
