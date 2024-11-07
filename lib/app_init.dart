@@ -1,5 +1,6 @@
 import 'package:audio_session/audio_session.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -14,7 +15,7 @@ class AppInit {
     tz.initializeTimeZones();
 
     await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-    _initSystemChrome();
+    _setSystemChrome();
 
     await FlutterTimezone.getAvailableTimezones();
 
@@ -31,12 +32,17 @@ class AppInit {
     //TODO: await initializeNotifications();
   }
 
-  static void _initSystemChrome() {
+  static void _setSystemChrome() {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    // go to immersive mode
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarDividerColor: Colors.transparent,
+      systemStatusBarContrastEnforced: false,
+    ));
+
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: []);
   }
 }

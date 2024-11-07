@@ -1,5 +1,4 @@
 import 'package:app_links/app_links.dart';
-import 'package:audio_service/audio_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,7 +36,6 @@ class AppContainerState extends State<AppContainer> with SingleTickerProviderSta
   void initState() {
     super.initState();
     Get.the<PageManager>().init();
-    Get.the<PageManager>().currentMediaItemNotifier.value = MediaItem(id: '', title: '');
   }
 
   @override
@@ -46,27 +44,11 @@ class AppContainerState extends State<AppContainer> with SingleTickerProviderSta
     _fetchFavoriteTracksList();
   }
 
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  // TODO:  _audioPlayerAnimCtrl.dispose();
-  // }
-
-  // TODO: Favorite playlist
-  // Future<void> _fetchFavoritePlayList() async {
-  //   AppUser user = await getUser();
-  //   final favoritesCollection =
-  //       FirebaseFirestore.instance.collection('favorites_playlist');
-  //   final userFavoritesDocRef = favoritesCollection.doc(user.id);
-
-  //   final favoritesDocSnapshot = await userFavoritesDocRef.get();
-
-  //   if (favoritesDocSnapshot.exists) {
-  //     final favoritesData = favoritesDocSnapshot.data();
-  //     List<String> favorites = List.from(favoritesData!['playlist']);
-  //     await addFavoritePlayListToSharedPref(favorites);
-  //   }
-  // }
+  @override
+  void dispose() {
+    super.dispose();
+    _audioPlayerAnimCtrl.dispose();
+  }
 
   Future<void> _fetchFavoriteTracksList() async {
     AppUser user = await getUser();
@@ -130,10 +112,19 @@ class AppContainerState extends State<AppContainer> with SingleTickerProviderSta
           _handleBadRoute(isMobile, state, context);
           return Offstage(
             offstage: state.index != item.index,
-            child: Navigator(
-              key: item.navigatorKey,
-              onGenerateRoute: (routeSettings) => MaterialPageRoute(
-                builder: (context) => item.screen!,
+            child: PopScope(
+              canPop: false,
+              onPopInvokedWithResult: (didPop, result) async {
+                final navigator = item.navigatorKey.currentState;
+                if (navigator?.canPop() ?? false) {
+                  navigator?.pop();
+                }
+              },
+              child: Navigator(
+                key: item.navigatorKey,
+                onGenerateRoute: (routeSettings) => MaterialPageRoute(
+                  builder: (context) => item.screen!,
+                ),
               ),
             ),
           );

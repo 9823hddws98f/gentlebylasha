@@ -5,17 +5,15 @@ import 'package:just_audio/just_audio.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/utils/common_extensions.dart';
 
-Future<AudioHandler> initAudioService() async {
-  return await AudioService.init(
-    builder: () => MyAudioHandler(),
-    config: const AudioServiceConfig(
-      androidNotificationChannelId: 'io.sleeptales.sleeptales.audio',
-      androidNotificationChannelName: 'Audio Service Sleeptales',
-      androidNotificationOngoing: true,
-      androidStopForegroundOnPause: true,
-    ),
-  );
-}
+Future<AudioHandler> initAudioService() => AudioService.init(
+      builder: () => MyAudioHandler(),
+      config: const AudioServiceConfig(
+        androidNotificationChannelId: 'io.sleeptales.sleeptales.audio',
+        androidNotificationChannelName: 'Audio Service Sleeptales',
+        androidNotificationOngoing: true,
+        androidStopForegroundOnPause: true,
+      ),
+    );
 
 class MyAudioHandler extends BaseAudioHandler {
   final _player = AudioPlayer();
@@ -194,20 +192,12 @@ class MyAudioHandler extends BaseAudioHandler {
   Future<void> skipToPrevious() => _player.seekToPrevious();
 
   @override
-  Future<void> setRepeatMode(AudioServiceRepeatMode repeatMode) async {
-    switch (repeatMode) {
-      case AudioServiceRepeatMode.none:
-        _player.setLoopMode(LoopMode.off);
-        break;
-      case AudioServiceRepeatMode.one:
-        _player.setLoopMode(LoopMode.one);
-        break;
-      case AudioServiceRepeatMode.group:
-      case AudioServiceRepeatMode.all:
-        _player.setLoopMode(LoopMode.all);
-        break;
-    }
-  }
+  Future<void> setRepeatMode(AudioServiceRepeatMode repeatMode) =>
+      _player.setLoopMode(switch (repeatMode) {
+        AudioServiceRepeatMode.none => LoopMode.off,
+        AudioServiceRepeatMode.one => LoopMode.one,
+        AudioServiceRepeatMode.group || AudioServiceRepeatMode.all => LoopMode.all
+      });
 
   @override
   Future<void> setShuffleMode(AudioServiceShuffleMode shuffleMode) async {

@@ -1,6 +1,5 @@
 import 'package:animations/animations.dart';
 import 'package:audio_service/audio_service.dart';
-import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -32,6 +31,9 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
   );
 
   bool _hide = false;
+
+  // Used to avoid showing placeholder asset multiple times
+  Uri? _lastArtworkUri;
 
   void _toggleHide() => setState(() => _hide = !_hide);
 
@@ -104,45 +106,39 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                 : Center(child: CupertinoActivityIndicator(color: Colors.white)),
       );
 
-  Widget _buildArtwork(Uri? artUri, bool isMobile) => ClipRRect(
-        borderRadius: isMobile ? _borderRadius : BorderRadius.all(Radius.circular(18)),
-        child: DecoratedBox(
-          position: DecorationPosition.foreground,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.black.withValues(alpha: 0.3),
-                Colors.transparent,
-                Colors.black.withValues(alpha: 0.3),
-              ],
-              stops: [0.0, 0.5, 1.0],
-            ),
+  Widget _buildArtwork(Uri? artUri, bool isMobile) {
+    if (_lastArtworkUri != artUri) {
+      _lastArtworkUri = artUri;
+    }
+    return ClipRRect(
+      borderRadius: isMobile ? _borderRadius : BorderRadius.all(Radius.circular(18)),
+      child: DecoratedBox(
+        position: DecorationPosition.foreground,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.black.withValues(alpha: 0.3),
+              Colors.transparent,
+              Colors.black.withValues(alpha: 0.3),
+            ],
+            stops: [0.0, 0.5, 1.0],
           ),
-          child: (artUri != null && artUri.toString().isNotEmpty)
-              ? AppImage(
-                  imageUrl: artUri.toString(),
-                  fit: BoxFit.cover,
-                  height: double.infinity,
-                  width: double.infinity,
-                )
-              : Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Positioned.fill(
-                      child: Image.asset(
-                        Assets.launchScreenBackground,
-                        fit: BoxFit.cover,
-                        color: Colors.black.withValues(alpha: 0.3),
-                        colorBlendMode: BlendMode.darken,
-                      ),
-                    ),
-                    Icon(CarbonIcons.music, size: 100),
-                  ],
-                ),
         ),
-      );
+        child: AppImage(
+          imageUrl: artUri.toString(),
+          fit: BoxFit.cover,
+          height: double.infinity,
+          width: double.infinity,
+          fadeInDuration: Durations.short2,
+          placeholderAsset:
+              _lastArtworkUri == null ? Assets.launchScreenBackground : null,
+          placeholderUri: _lastArtworkUri,
+        ),
+      ),
+    );
+  }
 
   Widget _buildProgressBar(MediaItem mediaItem) => Align(
         alignment: Alignment.bottomCenter,

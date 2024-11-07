@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '/utils/common_extensions.dart';
@@ -10,16 +11,18 @@ class AppImage extends StatefulWidget {
     this.fit = BoxFit.cover,
     this.errorWidget,
     this.placeholderAsset,
+    this.placeholderUri,
     this.borderRadius,
     this.height,
     this.width,
     this.fadeInDuration = Durations.medium4,
     this.onLoad,
-  });
+  }) : assert(placeholderAsset == null || placeholderUri == null);
 
   final String imageUrl;
   final BoxFit fit;
   final String? placeholderAsset;
+  final Uri? placeholderUri;
   final BorderRadius? borderRadius;
   final double? height;
   final double? width;
@@ -59,9 +62,12 @@ class _AppImageState extends State<AppImage> {
         );
 
   Widget _buildPlaceholder() {
+    if (widget.placeholderUri != null) {
+      return _buildImage(CachedNetworkImageProvider(widget.placeholderUri!.toString()));
+    }
     final Widget placeholder = widget.placeholderAsset == null
-        ? const Center(child: CircularProgressIndicator())
-        : Image.asset(widget.placeholderAsset!);
+        ? const Center(child: CupertinoActivityIndicator())
+        : _buildImage(AssetImage(widget.placeholderAsset!));
 
     return widget.borderRadius == null
         ? placeholder
