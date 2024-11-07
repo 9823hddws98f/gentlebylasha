@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '/constants/assets.dart';
+import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_panel_manager.dart';
 import '/page_manager.dart';
 import '/utils/app_theme.dart';
@@ -47,7 +48,7 @@ class MobileMusicPreview extends StatelessWidget {
                       child: ValueListenableBuilder(
                         valueListenable: _pageManager.currentMediaItemNotifier,
                         builder: (context, mediaItem, child) => AppImage(
-                          imageUrl: mediaItem.artUri.toString(),
+                          imageUrl: (mediaItem.extras?['track'] as AudioTrack).thumbnail,
                           fit: BoxFit.cover,
                           borderRadius: AppTheme.smallImageBorderRadius,
                           placeholderAsset: Assets.placeholderImage,

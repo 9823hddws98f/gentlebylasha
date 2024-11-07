@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sleeptales/domain/services/audio_panel_manager.dart';
 
 import '/domain/blocs/user/app_user.dart';
 import '/domain/cubits/navigation.dart';
@@ -24,6 +25,7 @@ class AppContainer extends StatefulWidget {
 }
 
 class AppContainerState extends State<AppContainer> with SingleTickerProviderStateMixin {
+  final _audioPanelManager = Get.the<AudioPanelManager>();
   final _navigationCubit = NavigationCubit();
   final _allNavItems = AppNavigation.allNavItems;
 
@@ -109,6 +111,10 @@ class AppContainerState extends State<AppContainer> with SingleTickerProviderSta
             child: PopScope(
               canPop: false,
               onPopInvokedWithResult: (didPop, result) async {
+                if (_audioPanelManager.panelController.panelPosition > 0.5) {
+                  _audioPanelManager.minimize();
+                  return;
+                }
                 final navigator = item.navigatorKey.currentState;
                 if (navigator?.canPop() ?? false) {
                   navigator?.pop();

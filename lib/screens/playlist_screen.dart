@@ -62,7 +62,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
     });
     _onPlaylistChanged();
     currentPlayingMediaItem();
-    getIt<PageManager>().playlistNotifier.addListener(_onPlaylistChanged);
+    getIt<PageManager>().playlistIdNotifier.addListener(_onPlaylistChanged);
     getIt<PageManager>().currentMediaItemNotifier.addListener(currentPlayingMediaItem);
   }
 

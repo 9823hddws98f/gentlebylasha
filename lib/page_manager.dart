@@ -18,7 +18,7 @@ class PageManager {
   final currentMediaItemNotifier = ValueNotifier<MediaItem>(
     const MediaItem(id: '', title: ''),
   );
-  final playlistNotifier = ValueNotifier<List<String>>([]);
+
   final playlistIdNotifier = ValueNotifier<List<String>>([]);
   final progressNotifier = ProgressNotifier();
   final repeatButtonNotifier = RepeatButtonNotifier();
@@ -26,7 +26,9 @@ class PageManager {
   final isLastSongNotifier = ValueNotifier<bool>(true);
   final isShuffleModeEnabledNotifier = ValueNotifier<bool>(false);
 
+  // Current playlist block, (null if not playing a playlist)
   final currentPlaylistBlockNotifier = ValueNotifier<AudioPlaylist?>(null);
+  bool get _isPlaylistPlaying => currentPlaylistBlockNotifier.value != null;
 
   bool _isInitialized = true;
 
@@ -39,8 +41,8 @@ class PageManager {
   }
 
   void playSinglePlaylist(MediaItem mediaItem, String trackId) {
-    if (currentMediaItemNotifier.value.id != trackId) {
-      playlistNotifier.value = [];
+    if (_isPlaylistPlaying || currentMediaItemNotifier.value.id != trackId) {
+      currentPlaylistBlockNotifier.value = null;
       playlistIdNotifier.value = [];
       _audioHandler.addQueueItem(mediaItem);
     }
@@ -53,7 +55,6 @@ class PageManager {
   ) async {
     if (currentPlaylistBlockNotifier.value?.id != playlist.id) {
       currentPlaylistBlockNotifier.value = playlist;
-      playlistNotifier.value = [];
       playlistIdNotifier.value = [];
       final mediaItems = list
           .map((track) => MediaItem(
@@ -84,12 +85,10 @@ class PageManager {
   }
 
   void _resetPlaylistState() {
-    playlistNotifier.value = [];
     playlistIdNotifier.value = [];
   }
 
   void _updatePlaylistState(List<MediaItem> playlist) {
-    playlistNotifier.value = playlist.map((item) => item.title).toList();
     playlistIdNotifier.value = playlist.map((item) => item.id).toList();
   }
 
@@ -239,7 +238,6 @@ class PageManager {
       buffered: Duration.zero,
       total: Duration.zero,
     );
-    playlistNotifier.value = [];
     currentMediaItemNotifier.value = const MediaItem(id: '', title: '');
     _isInitialized = false;
   }

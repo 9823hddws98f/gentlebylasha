@@ -40,38 +40,34 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
   @override
   Widget build(BuildContext context) => MyApp.isMobile ? _buildMobile() : _buildDesktop();
 
-  Widget _buildMobile() => PopScope(
-        canPop: false,
-        onPopInvokedWithResult: (didPop, result) => _audioPanelManager.minimize(),
-        child: DecoratedBox(
-          decoration: BoxDecoration(borderRadius: _borderRadius),
-          child: GestureDetector(
-            onTap: () => _toggleHide(),
-            child: ValueListenableBuilder(
-                valueListenable: _pageManager.currentMediaItemNotifier,
-                builder: (context, mediaItem, child) => Stack(
-                      children: [
-                        _buildArtwork(mediaItem.artUri, true),
-                        SafeArea(
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: SharedAxisSwitcher(
-                                  transitionType: SharedAxisTransitionType.scaled,
-                                  disableFillColor: true,
-                                  reverse: !_hide,
-                                  child: _hide
-                                      ? SizedBox()
-                                      : ControlButtons(mediaItem: mediaItem),
-                                ),
+  Widget _buildMobile() => DecoratedBox(
+        decoration: BoxDecoration(borderRadius: _borderRadius),
+        child: GestureDetector(
+          onTap: () => _toggleHide(),
+          child: ValueListenableBuilder(
+              valueListenable: _pageManager.currentMediaItemNotifier,
+              builder: (context, mediaItem, child) => Stack(
+                    children: [
+                      _buildArtwork(mediaItem.artUri, true),
+                      SafeArea(
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: SharedAxisSwitcher(
+                                transitionType: SharedAxisTransitionType.scaled,
+                                disableFillColor: true,
+                                reverse: !_hide,
+                                child: _hide
+                                    ? SizedBox()
+                                    : ControlButtons(mediaItem: mediaItem),
                               ),
-                              _buildProgressBar(mediaItem),
-                            ],
-                          ),
-                        )
-                      ],
-                    )),
-          ),
+                            ),
+                            _buildProgressBar(mediaItem),
+                          ],
+                        ),
+                      )
+                    ],
+                  )),
         ),
       );
 

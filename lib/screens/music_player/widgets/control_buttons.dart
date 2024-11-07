@@ -62,9 +62,9 @@ class _ControlButtonsState extends State<ControlButtons> {
           SizedBox(height: 16),
           Expanded(
             child: ValueListenableBuilder(
-              valueListenable: _pageManager.playlistNotifier,
-              builder: (context, playlist, child) {
-                final isPlaylist = playlist.length > 1;
+              valueListenable: _pageManager.playlistIdNotifier,
+              builder: (context, playlistIds, child) {
+                final isPlaylist = playlistIds.isNotEmpty;
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
                   child: Column(

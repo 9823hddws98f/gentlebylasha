@@ -40,15 +40,25 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
   String? _error;
   List<AudioTrack> _tracks = [];
 
+  /// Whether this playlist is currently playing
+  bool _isPlaying = false;
+
   @override
   void initState() {
     super.initState();
     _fetchTracks();
+    _pageManager.currentPlaylistBlockNotifier.addListener(_onPlaylistBlockChange);
+  }
+
+  void _onPlaylistBlockChange() {
+    if (!mounted) return;
+    setState(() => _isPlaying = _pageManager.currentPlaylistBlockNotifier.value != null);
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
+    _pageManager.currentPlaylistBlockNotifier.removeListener(_onPlaylistBlockChange);
     super.dispose();
   }
 
@@ -194,16 +204,15 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
         ),
         child: ValueListenableBuilder(
           valueListenable: _pageManager.playlistIdNotifier,
-          builder: (context, playlistId, child) => StreamBuilder(
+          builder: (context, playlistIds, child) => StreamBuilder(
             stream: _pageManager.listenPlaybackState(),
             builder: (context, snapshot) {
-              final isPlaying =
-                  _currentPlaylistIsPlaying && snapshot.data?.playing == true;
+              final isPlaying = _isPlaying && snapshot.data?.playing == true;
               return FilledButton.icon(
                 label: Text(isPlaying ? 'Pause' : 'Play'),
                 icon: Icon(isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded),
                 onPressed: () {
-                  if (_currentPlaylistIsPlaying) {
+                  if (_isPlaying) {
                     isPlaying
                         ? _pageManager.pause()
                         : _audioPanelManager.maximizeAndPlay(true);
@@ -264,7 +273,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
               builder: (context, mediaItem, child) {
                 return InkWell(
                   onTap: () {
-                    if (mediaItem.id == widget.playlist.trackIds[index]) {
+                    if (mediaItem.id == widget.playlist.trackIds[index] && _isPlaying) {
                       _audioPanelManager.maximizeAndPlay(false);
                     } else {
                       _pageManager.loadPlaylist(widget.playlist, _tracks, index);
@@ -325,15 +334,6 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
               }),
         ),
       );
-
-  bool get _currentPlaylistIsPlaying {
-    final playlistIds = _pageManager.playlistIdNotifier.value;
-    if (playlistIds.length <= 1) return false;
-    for (var i = 0; i < playlistIds.length - 1; i++) {
-      if (playlistIds[i] != widget.playlist.trackIds[i]) return false;
-    }
-    return true;
-  }
 
   Future<void> _fetchTracks() => _txLoader.load(
         onStart: () => _error != null ? setState(() => _error = null) : null,
