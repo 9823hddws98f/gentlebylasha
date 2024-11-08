@@ -91,8 +91,8 @@ class AudioBlockItem extends StatelessWidget {
         ],
       );
 
-  static Widget shimmer([bool isWide = false]) => SizedBox(
-        width: isWide ? _wideWidth : _narrowWidth,
+  static Widget shimmer({bool wide = false}) => SizedBox(
+        width: wide ? _wideWidth : _narrowWidth,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

@@ -47,12 +47,18 @@ class MobileMusicPreview extends StatelessWidget {
                       aspectRatio: 1,
                       child: ValueListenableBuilder(
                         valueListenable: _pageManager.currentMediaItemNotifier,
-                        builder: (context, mediaItem, child) => AppImage(
-                          imageUrl: (mediaItem.extras?['track'] as AudioTrack).thumbnail,
-                          fit: BoxFit.cover,
-                          borderRadius: AppTheme.smallImageBorderRadius,
-                          placeholderAsset: Assets.placeholderImage,
-                        ),
+                        builder: (context, mediaItem, child) {
+                          if (mediaItem.extras == null) {
+                            return const SizedBox.shrink();
+                          }
+                          return AppImage(
+                            imageUrl:
+                                (mediaItem.extras?['track'] as AudioTrack).thumbnail,
+                            fit: BoxFit.cover,
+                            borderRadius: AppTheme.smallImageBorderRadius,
+                            placeholderAsset: Assets.placeholderImage,
+                          );
+                        },
                       ),
                     ),
                     SizedBox(width: 16),

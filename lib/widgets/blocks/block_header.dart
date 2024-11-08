@@ -5,11 +5,7 @@ import '/utils/global_functions.dart';
 import '../shimmerize.dart';
 
 class BlockHeader extends StatelessWidget {
-  const BlockHeader({
-    super.key,
-    required this.title,
-    this.seeAll,
-  });
+  const BlockHeader({super.key, required this.title, this.seeAll});
 
   final String title;
   final Widget? seeAll;
