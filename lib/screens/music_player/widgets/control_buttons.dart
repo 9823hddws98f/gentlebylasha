@@ -69,13 +69,31 @@ class _ControlButtonsState extends State<ControlButtons> {
                   padding: const EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
                   child: Column(
                     children: [
-                      CurrentSongTitle(),
-                      SizedBox(height: 16),
                       Expanded(
-                        child: Text(
-                          widget.mediaItem.displayDescription ?? '',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16),
+                        child: DefaultTextStyle.merge(
+                          style: TextStyle(
+                            shadows: [
+                              Shadow(
+                                color: Colors.black38,
+                                blurRadius: 10,
+                                offset: Offset(0, 1),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CurrentSongTitle(),
+                              SizedBox(height: 16),
+                              Expanded(
+                                child: Text(
+                                  widget.mediaItem.displayDescription ?? '',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       Row(
