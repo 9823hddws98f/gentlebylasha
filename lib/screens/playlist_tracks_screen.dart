@@ -47,6 +47,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
   void initState() {
     super.initState();
     _fetchTracks();
+    _onPlaylistBlockChange();
     _pageManager.currentPlaylistBlockNotifier.addListener(_onPlaylistBlockChange);
   }
 

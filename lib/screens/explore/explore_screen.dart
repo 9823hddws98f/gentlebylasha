@@ -2,7 +2,6 @@ import 'package:animations/animations.dart';
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sleeptales/widgets/blocks/page_block_builder.dart';
 
 import '/domain/cubits/pages/pages_cubit.dart';
 import '/domain/models/block_item/audio_track.dart';
@@ -13,6 +12,7 @@ import '/utils/get.dart';
 import '/utils/tx_loader.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
+import '/widgets/blocks/page_block_builder.dart';
 import '/widgets/input/tx_search_bar.dart';
 import '/widgets/shared_axis_switcher.dart';
 import 'widgets/search_list_item.dart';
