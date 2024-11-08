@@ -1,28 +1,15 @@
 import 'dart:async';
 
+import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-@immutable
-class TxSearchBarSettings {
-  const TxSearchBarSettings({
-    this.filled,
-    this.border,
-  });
-
-  final bool? filled;
-  final InputBorder? border;
-}
 
 class TxSearchBar extends StatefulWidget {
   const TxSearchBar({
     super.key,
-    TxSearchBarSettings? settings,
     required this.onSearch,
-  }) : overrides = settings;
+  });
 
-  static TxSearchBarSettings? settings;
-  final TxSearchBarSettings? overrides;
   final Future<void> Function(String) onSearch;
 
   @override
@@ -47,24 +34,28 @@ class _TxSearchBarState extends State<TxSearchBar> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final settings = widget.overrides ?? TxSearchBar.settings;
+    final border = OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(12)),
+      borderSide: BorderSide(color: colors.outline),
+    );
     return TextField(
-      autofocus: true,
+      autofocus: false,
       controller: _controller,
       onChanged: _handleChange,
       style: TextStyle(color: colors.onSurface),
       decoration: InputDecoration(
         hintText: 'Search',
         hintStyle: TextStyle(color: colors.onSurfaceVariant),
-        border: settings?.border,
-        filled: settings?.filled,
+        border: border,
+        enabledBorder: border,
+        filled: true,
         fillColor: colors.onSurfaceVariant.withValues(alpha: 0.1),
         suffixIcon: _loading
             ? const CupertinoActivityIndicator()
             : _controller.text.isEmpty
-                ? const Icon(Icons.search)
+                ? const Icon(CarbonIcons.search)
                 : IconButton(
-                    icon: const Icon(Icons.clear),
+                    icon: const Icon(CarbonIcons.close),
                     tooltip: 'Clear search',
                     onPressed: () {
                       _timer?.cancel();

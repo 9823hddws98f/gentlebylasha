@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sleeptales/utils/common_extensions.dart';
 
 import '/domain/cubits/pages/pages_cubit.dart';
 import '/domain/models/app_page.dart';
@@ -82,6 +83,8 @@ class CategoryListState extends State<CategoryList> {
   void _handleTap(int index) async {
     widget.onTap?.call(index);
     if (!mounted) return;
+
+    context.size?.height.logDebug();
 
     setState(() => _selectedIndex = index);
     final key = _itemKeys[index];

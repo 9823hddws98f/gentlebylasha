@@ -25,7 +25,7 @@ class ItemTag extends StatelessWidget {
               Text(
                 text,
                 style: const TextStyle(
-                  fontSize: 7,
+                  fontSize: 10,
                   fontWeight: FontWeight.w600,
                 ),
               ),

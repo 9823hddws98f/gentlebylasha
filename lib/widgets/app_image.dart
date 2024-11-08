@@ -71,13 +71,18 @@ class _AppImageState extends State<AppImage> {
 
     return widget.borderRadius == null
         ? placeholder
-        : ClipRRect(borderRadius: widget.borderRadius!, child: placeholder);
+        : Container(
+            decoration: BoxDecoration(borderRadius: widget.borderRadius!),
+            clipBehavior: Clip.antiAlias,
+            child: placeholder,
+          );
   }
 
   Widget _buildImage(ImageProvider imageProvider) => widget.borderRadius == null
       ? Image(image: imageProvider, fit: widget.fit)
-      : ClipRRect(
-          borderRadius: widget.borderRadius!,
+      : Container(
+          decoration: BoxDecoration(borderRadius: widget.borderRadius!),
+          clipBehavior: Clip.antiAlias,
           child: Image(image: imageProvider, fit: widget.fit),
         );
 }

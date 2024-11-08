@@ -59,7 +59,10 @@ class _ExploreScreenState extends State<ExploreScreen>
             controller: _scrollController,
             headerSliverBuilder: (context, value) => [
               _buildSearchbar(isMobile, colors.outline),
+              SliverToBoxAdapter(child: SizedBox(height: 12)),
               _buildCategoriesList(),
+              /* Rigorously eyeballed padding values */
+              SliverToBoxAdapter(child: SizedBox(height: 8)),
             ],
             body: SharedAxisSwitcher(
               disableFillColor: true,
@@ -141,12 +144,15 @@ class _ExploreScreenState extends State<ExploreScreen>
 
   Widget _buildCategoriesList() => SliverAppBar(
         pinned: true,
-        toolbarHeight: 62,
-        title: CategoryList(
-          onTap: !_isSearching
-              ? (index) => _tabController.animateTo(index,
-                  curve: Easing.standard, duration: Durations.medium1)
-              : null,
+        toolbarHeight: 55,
+        title: Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: CategoryList(
+            onTap: !_isSearching
+                ? (index) => _tabController.animateTo(index,
+                    curve: Easing.standard, duration: Durations.medium1)
+                : null,
+          ),
         ),
       );
 

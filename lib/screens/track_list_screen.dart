@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sleeptales/utils/app_theme.dart';
+import 'package:sleeptales/widgets/input/tx_search_bar.dart';
 
 import '/domain/models/block_item/audio_playlist.dart';
 import '/domain/models/block_item/audio_track.dart';
@@ -7,7 +9,7 @@ import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/blocks/audio_block_item.dart';
 import '/widgets/blocks/playlist_block_item.dart';
 
-class TrackListScreen extends StatelessWidget {
+class TrackListScreen extends StatefulWidget {
   final String heading;
   final List<AudioTrack>? tracks;
   final List<AudioPlaylist>? playlists;
@@ -21,22 +23,79 @@ class TrackListScreen extends StatelessWidget {
             'Exactly one of tracks or playlists must be provided');
 
   @override
+  State<TrackListScreen> createState() => _TrackListScreenState();
+}
+
+class _TrackListScreenState extends State<TrackListScreen> {
+  List<AudioTrack>? _filteredTracks;
+  List<AudioPlaylist>? _filteredPlaylists;
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredTracks = widget.tracks;
+    _filteredPlaylists = widget.playlists;
+  }
+
+  @override
   Widget build(BuildContext context) => AppScaffold(
         appBar: (context, isMobile) => AdaptiveAppBar(
-          title: heading,
-        ),
-        body: (context, isMobile) => GridView.builder(
-          itemCount: tracks?.length ?? playlists!.length,
-          padding: const EdgeInsets.only(bottom: 165),
-          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 200,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: 0.75,
+          title: widget.heading,
+          bottom: PreferredSize(
+            preferredSize: const Size(double.infinity, 80), // 56 + 16 + 8
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppTheme.sidePadding) +
+                  const EdgeInsets.only(bottom: 16, top: 8),
+              child: TxSearchBar(onSearch: _handleSearch),
+            ),
           ),
-          itemBuilder: (context, index) => tracks != null
-              ? AudioBlockItem(track: tracks![index], isWide: false)
-              : PlaylistBlockItem(playlist: playlists![index]),
+        ),
+        body: (context, isMobile) => Column(
+          children: [
+            Expanded(
+              child: GridView.builder(
+                itemCount: _filteredTracks?.length ?? _filteredPlaylists!.length,
+                padding: const EdgeInsets.only(bottom: 165),
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 200,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: 0.75,
+                ),
+                itemBuilder: (context, index) => widget.tracks != null
+                    ? AudioBlockItem(track: _filteredTracks![index], isWide: false)
+                    : PlaylistBlockItem(playlist: _filteredPlaylists![index]),
+              ),
+            ),
+          ],
         ),
       );
+
+  Future<void> _handleSearch(String query) async {
+    setState(() {
+      if (query.isEmpty) {
+        _filteredTracks = widget.tracks;
+        _filteredPlaylists = widget.playlists;
+        return;
+      }
+
+      final searchQuery = query.toLowerCase();
+
+      if (widget.tracks != null) {
+        _filteredTracks = widget.tracks!.where((track) {
+          return track.title.toLowerCase().contains(searchQuery) ||
+              track.writer.toLowerCase().contains(searchQuery) ||
+              track.speaker.toLowerCase().contains(searchQuery) ||
+              track.description.toLowerCase().contains(searchQuery);
+        }).toList();
+      } else {
+        _filteredPlaylists = widget.playlists!.where((playlist) {
+          return playlist.title.toLowerCase().contains(searchQuery) ||
+              playlist.author.toLowerCase().contains(searchQuery) ||
+              playlist.profession.toLowerCase().contains(searchQuery) ||
+              playlist.description.toLowerCase().contains(searchQuery);
+        }).toList();
+      }
+    });
+  }
 }
