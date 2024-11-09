@@ -4,17 +4,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
-import '/domain/models/block_item/audio_track.dart';
-import '/utils/common_extensions.dart';
+import 'package:sleeptales/domain/blocs/user/user_bloc.dart';
+import 'package:sleeptales/utils/get.dart';
 
 import '/domain/blocs/user/app_user.dart';
+import '/domain/models/block_item/audio_track.dart';
+import '/utils/common_extensions.dart';
 import 'global_functions.dart';
 
 final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 Future<void> addToRecentlyPlayed(String trackId) async {
   if (trackId.isNotEmpty) {
-    AppUser user = await getUser();
+    AppUser user = Get.the<UserBloc>().state.user;
     ("recently played $trackId").logDebug();
 
     try {

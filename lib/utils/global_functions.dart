@@ -4,14 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '/domain/blocs/user/app_user.dart';
-import '/domain/blocs/user/user_bloc.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/service_locator.dart';
 import '/page_manager.dart';
 import '/screens/auth/login_screen.dart';
 import '/utils/common_extensions.dart';
-import '/utils/get.dart';
 
 void showToast(String value) {
   'showToast $value'.logDebug();
@@ -23,11 +20,6 @@ void showToast(String value) {
 }
 
 ValueNotifier<String> valueNotifierName = ValueNotifier("");
-
-Future<AppUser> getUser() async {
-  // TODO: Implement correctly
-  return Get.the<UserBloc>().state.user;
-}
 
 Future<void> saveTimeOfDay(String id, TimeOfDay time) async {
   final prefs = await SharedPreferences.getInstance();

@@ -65,39 +65,30 @@ class _ExploreScreenState extends State<ExploreScreen>
               /* Rigorously eyeballed padding values */
               SliverToBoxAdapter(child: SizedBox(height: 8)),
             ],
-            body: BottomPanelSpacer.padding(
-              child: SharedAxisSwitcher(
-                disableFillColor: true,
-                transitionType: SharedAxisTransitionType.scaled,
-                child: _isSearching
-                    ? _buildSearchView(colors.onSurfaceVariant)
-                    : BlocProvider.value(
-                        value: _pagesCubit,
-                        child: BlocBuilder<PagesCubit, PagesState>(
-                          builder: (context, state) => state.explorePages.isEmpty
-                              ? Center(child: Text('No categories found'))
-                              : TabBarView(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  controller: _tabController,
-                                  children: state.explorePages.keys
-                                      .map(
-                                        (page) => CustomScrollView(
-                                          slivers: [
-                                            PageBlockBuilder(
-                                              key: ValueKey(page.id),
-                                              page: page,
-                                            ),
-                                            SliverToBoxAdapter(
-                                              child: SizedBox(height: 16),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                      .toList(),
-                                ),
-                        ),
+            body: SharedAxisSwitcher(
+              disableFillColor: true,
+              transitionType: SharedAxisTransitionType.scaled,
+              child: _isSearching
+                  ? _buildSearchView(colors.onSurfaceVariant)
+                  : BlocProvider.value(
+                      value: _pagesCubit,
+                      child: BlocBuilder<PagesCubit, PagesState>(
+                        builder: (context, state) => state.explorePages.isEmpty
+                            ? Center(child: Text('No categories found'))
+                            : TabBarView(
+                                physics: NeverScrollableScrollPhysics(),
+                                controller: _tabController,
+                                children: state.explorePages.keys
+                                    .map(
+                                      (page) => PageBlockBuilder(
+                                        key: ValueKey(page.id),
+                                        page: page,
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
                       ),
-              ),
+                    ),
             ),
           );
         },
@@ -133,15 +124,16 @@ class _ExploreScreenState extends State<ExploreScreen>
         ],
       );
     }
-    return ListView.separated(
-      itemCount: _tracks.length,
-      padding: EdgeInsets.only(bottom: 150),
-      cacheExtent: 1000,
-      separatorBuilder: (context, index) => const SizedBox(height: 2),
-      itemBuilder: (context, index) {
-        final track = _tracks[index];
-        return SearchListItem(track);
-      },
+    return BottomPanelSpacer.padding(
+      child: ListView.separated(
+        itemCount: _tracks.length,
+        cacheExtent: 1000,
+        separatorBuilder: (context, index) => const SizedBox(height: 2),
+        itemBuilder: (context, index) {
+          final track = _tracks[index];
+          return SearchListItem(track);
+        },
+      ),
     );
   }
 

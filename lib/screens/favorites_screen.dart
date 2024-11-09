@@ -1,234 +1,74 @@
-import 'dart:async';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:audio_service/audio_service.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-
-import '/domain/blocs/user/app_user.dart';
+import '/domain/cubits/favorite_playlists.dart';
+import '/domain/cubits/favorite_tracks.dart';
+import '/domain/models/block_item/audio_playlist.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/language_constants.dart';
-import '/domain/services/service_locator.dart';
-import '/page_manager.dart';
-import '/utils/colors.dart';
-import '/utils/global_functions.dart';
+import '/domain/services/playlists_service.dart';
+import '/domain/services/tracks_service.dart';
+import '/utils/get.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
-import '/widgets/custom_tab_button.dart';
-import '/widgets/track_list_item.dart';
+import 'track_list_screen.dart';
 
 class FavoritesScreen extends StatefulWidget {
-  const FavoritesScreen({super.key});
+  final bool isPlaylist;
+
+  const FavoritesScreen({super.key}) : isPlaylist = false;
+
+  const FavoritesScreen.playlist({super.key}) : isPlaylist = true;
 
   @override
   State<FavoritesScreen> createState() => _FavoritesScreenState();
 }
 
 class _FavoritesScreenState extends State<FavoritesScreen> with Translation {
-  bool exception = false;
-  bool isLoading = true;
-  List<AudioTrack> favoriteList = [];
-  StreamSubscription<DocumentSnapshot>? favoritesSubscription;
+  late final _favoriteTracksCubit = Get.the<FavoritesTracksCubit>();
+  late final _favoritePlaylistsCubit = Get.the<FavoritePlaylistsCubit>();
 
-  @override
-  void initState() {
-    super.initState();
-    fetchFavoriteTracks();
-  }
+  late final _tracksService = Get.the<TracksService>();
+  late final _playlistsService = Get.the<PlaylistsService>();
 
-  // Call this function to start listening for changes to the favorites array
-  Future<void> startListeningToFavorites() async {
-    AppUser user = await getUser();
-    final favoritesCollection = FirebaseFirestore.instance.collection('favorites');
-    final userFavoritesDocRef = favoritesCollection.doc(user.id);
-
-    favoritesSubscription = userFavoritesDocRef.snapshots().listen((snapshot) {
-      if (snapshot.exists) {
-        final favoritesData = snapshot.data();
-        List<String> favorites = List.from(favoritesData!['favorites']);
-        updateFavoritesList(favorites);
-      }
-    });
-  }
-
-  // Call this function to stop listening for changes to the favorites array
-  void stopListeningToFavorites() {
-    favoritesSubscription?.cancel();
-  }
-
-// Update the favoriteList based on the updated favorites array
-  void updateFavoritesList(List<String> favorites) async {
-    favoriteList.clear();
-
-    if (favorites.isNotEmpty) {
-      final tracksCollection = FirebaseFirestore.instance.collection('tracks');
-      final batchSize = 10;
-      final totalFavorites = favorites.length;
-      final batchCount = (totalFavorites / batchSize).ceil();
-
-      for (var i = 0; i < batchCount; i++) {
-        final start = i * batchSize;
-        final end = (i + 1) * batchSize;
-        final batchFavorites =
-            favorites.sublist(start, end < totalFavorites ? end : totalFavorites);
-
-        final tracksQuerySnapshot = await tracksCollection
-            .where(
-              FieldPath.documentId,
-              whereIn: batchFavorites,
-            )
-            .get();
-
-        for (var doc in tracksQuerySnapshot.docs) {
-          AudioTrack track = AudioTrack.fromMap(doc.data());
-          favoriteList.add(track);
-        }
-      }
-    }
-
-    setState(() {
-      exception = false;
-      isLoading = false;
-    });
-  }
-
-// Modify the fetchFavoriteTracks function to start and stop the favorites listener
-  Future<void> fetchFavoriteTracks() async {
-    setState(() {
-      exception = false;
-      isLoading = true;
-    });
-
-    try {
-      await startListeningToFavorites();
-    } on FirebaseException {
-      isLoading = false;
-      exception = true;
-      // Handle Firebase exception
-    } catch (e) {
-      isLoading = false;
-      exception = true;
-      // Handle other exceptions
-    }
-
-    setState(() {});
-  }
-
-// Call the stopListeningToFavorites function to stop the listener when it's no longer needed
-  @override
-  void dispose() {
-    stopListeningToFavorites();
-    super.dispose();
-  }
+  bool get _isPlaylist => widget.isPlaylist;
 
   @override
   Widget build(BuildContext context) {
-    // TODO: CLEANUP
-    return AppScaffold(
-      appBar: (text, isMobile) => AdaptiveAppBar(
-        title: tr.favoriteList,
-      ),
-      body: (context, isMobile) => Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 20,
-          ),
-          if (favoriteList.isNotEmpty && !isLoading) ...[
-            Expanded(
-                child: SingleChildScrollView(
-              padding: EdgeInsets.only(bottom: 165),
-              child: GridView.builder(
-                  itemCount: favoriteList.length,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                      childAspectRatio: 0.81),
-                  itemBuilder: (BuildContext context, int index) {
-                    return TrackListItemSmall(
-                      imageUrl: favoriteList[index].imageBackground,
-                      mp3Name: favoriteList[index].title,
-                      mp3Category: 'ERROR!', // TODO: FIX
-                      mp3Duration: favoriteList[index].durationString,
-                      tap: () {
-                        getIt<PageManager>().playSinglePlaylist(
-                          MediaItem(
-                            id: favoriteList[index].id,
-                            album: favoriteList[index].title,
-                            title: favoriteList[index].title,
-                            displayDescription: favoriteList[index].description,
-                            artUri: Uri.parse(favoriteList[index].imageBackground),
-                            extras: {'track': favoriteList[index]},
-                          ),
-                          favoriteList[index].id,
-                        );
-                        // TODO:     widget.panelFunction();
-                      },
-                    );
-                  }),
-            ))
-          ] else if (favoriteList.isEmpty && exception) ...[
-            Expanded(
-                child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text(
-                "Something went wrong",
-                style: TextStyle(fontSize: 16),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              CustomTabButton(
-                  title: "Retry",
-                  onPress: () {
-                    fetchFavoriteTracks();
-                  },
-                  color: Colors.white,
-                  textColor: textColor)
-            ]))
-          ] else if (favoriteList.isEmpty && !exception && !isLoading) ...[
-            Expanded(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                    child: Icon(
-                  Icons.favorite_border,
-                  size: 40,
-                )),
-                SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  "You have not added any favorites yet",
-                  style: TextStyle(fontSize: 16),
-                )
-              ],
-            ))
-          ] else ...[
-            // _buildShimmerListView()
-          ],
-        ],
-      ),
-    );
+    return _isPlaylist
+        ? BlocProvider<FavoritePlaylistsCubit>.value(
+            value: _favoritePlaylistsCubit,
+            child: _buildBlocContent<FavoritePlaylistsCubit>(),
+          )
+        : BlocProvider<FavoritesTracksCubit>.value(
+            value: _favoriteTracksCubit,
+            child: _buildBlocContent<FavoritesTracksCubit>(),
+          );
   }
 
-  // Widget _buildShimmerListView() {
-  //   return Expanded(
-  //       child: SingleChildScrollView(
-  //     child: GridView.builder(
-  //         itemCount: 12,
-  //         shrinkWrap: true,
-  //         physics: NeverScrollableScrollPhysics(),
-  //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-  //             crossAxisCount: 2,
-  //             crossAxisSpacing: 16,
-  //             mainAxisSpacing: 16,
-  //             childAspectRatio: 0.81),
-  //         itemBuilder: (BuildContext context, int index) {
-  //           return TrackListItemSmall.shimmer();
-  //         }),
-  //   ));
-  // }
+  Widget _buildBlocContent<T extends StateStreamable<List<String>>>() =>
+      BlocBuilder<T, List<String>>(
+        builder: (context, state) => FutureBuilder(
+          future: _isPlaylist
+              ? _playlistsService.getByIds(state)
+              : _tracksService.getByIds(state),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return AppScaffold(
+                appBar: (context, isMobile) => AdaptiveAppBar(
+                  title: _isPlaylist ? tr.favoritePlaylist : tr.favorites,
+                ),
+                body: (context, isMobile) => const Center(
+                  child: CupertinoActivityIndicator(),
+                ),
+              );
+            }
+            return TrackListScreen(
+              heading: _isPlaylist ? tr.favoritePlaylist : tr.favorites,
+              tracks: _isPlaylist ? null : snapshot.data as List<AudioTrack>,
+              playlists: _isPlaylist ? snapshot.data as List<AudioPlaylist> : null,
+            );
+          },
+        ),
+      );
 }

@@ -32,10 +32,7 @@ class PlaylistBlockItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
-              height: _imageSize,
-              child: _buildImage(primary),
-            ),
+            Expanded(child: _buildImage(primary)),
             const SizedBox(height: 16),
             _buildTextContent(onSurfaceVariant),
           ],

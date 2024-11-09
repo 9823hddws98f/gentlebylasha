@@ -76,4 +76,11 @@ class BlocksService implements CrudService<Block> {
       await _collectionReference.doc(blocks[i].id).update({'sequence': i});
     }
   }
+
+  Future<List<Block>> getByIds(List<String> ids) => _collectionReference
+          .where(FieldPath.documentId, whereIn: ids)
+          .get()
+          .then((snapshot) {
+        return snapshot.docs.map((doc) => Block.fromMap(doc.data())).toList();
+      });
 }

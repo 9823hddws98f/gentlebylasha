@@ -5,7 +5,6 @@ import '/domain/services/language_constants.dart';
 import '/utils/get.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
-import '/widgets/app_scaffold/bottom_panel_spacer.dart';
 import '/widgets/blocks/page_block_builder.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,15 +21,7 @@ class _HomeScreenState extends State<HomeScreen> with Translation {
   Widget build(BuildContext context) => AppScaffold(
         appBar: (context, isMobile) => AdaptiveAppBar(title: tr.home),
         bodyPadding: EdgeInsets.zero,
-        body: (context, isMobile) => BottomPanelSpacer.padding(
-          child: CustomScrollView(
-            cacheExtent: 600,
-            slivers: [
-              const SliverToBoxAdapter(child: SizedBox(height: 8)),
-              PageBlockBuilder(page: _pagesCubit.state.pages.keys.first),
-              const SliverToBoxAdapter(child: SizedBox(height: 16)),
-            ],
-          ),
-        ),
+        body: (context, isMobile) =>
+            PageBlockBuilder(page: _pagesCubit.state.pages.keys.first),
       );
 }
