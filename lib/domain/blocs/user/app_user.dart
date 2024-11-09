@@ -6,7 +6,7 @@ enum UserRole {
   admin,
   client;
 
-  String get name => switch (this) {
+  String get displayName => switch (this) {
         admin => 'Admin',
         client => 'Client',
       };

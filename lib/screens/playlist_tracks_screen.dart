@@ -1,6 +1,7 @@
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:sleeptales/widgets/app_scaffold/bottom_panel_spacer.dart';
 
 import '/constants/assets.dart';
 import '/domain/models/block_item/audio_playlist.dart';
@@ -80,27 +81,29 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
             stops: [0, 0.8],
           ),
         ),
-        child: CustomScrollView(
-          controller: _scrollController,
-          slivers: [
-            _buildThumbnail(colors),
-            _buildInfoCard(colors),
-            _error != null
-                ? _buildErrorHint(colors)
-                : SliverPadding(
-                    padding: EdgeInsets.symmetric(horizontal: AppTheme.sidePadding) +
-                        const EdgeInsets.only(bottom: 150),
-                    sliver: SliverList.separated(
-                      itemCount: _tracks.length,
-                      separatorBuilder: (context, index) => const SizedBox(height: 12),
-                      itemBuilder: (context, index) => _buildTrackItem(
-                        _tracks[index],
-                        index,
-                        colors,
+        child: BottomPanelSpacer.padding(
+          child: CustomScrollView(
+            controller: _scrollController,
+            slivers: [
+              _buildThumbnail(colors),
+              _buildInfoCard(colors),
+              _error != null
+                  ? _buildErrorHint(colors)
+                  : SliverPadding(
+                      padding: EdgeInsets.symmetric(horizontal: AppTheme.sidePadding) +
+                          const EdgeInsets.only(bottom: 16),
+                      sliver: SliverList.separated(
+                        itemCount: _tracks.length,
+                        separatorBuilder: (context, index) => const SizedBox(height: 12),
+                        itemBuilder: (context, index) => _buildTrackItem(
+                          _tracks[index],
+                          index,
+                          colors,
+                        ),
                       ),
                     ),
-                  ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '/utils/global_functions.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
-import '/widgets/input/password_edit_text.dart';
-import '/utils/global_functions.dart';
 import '/widgets/custom_btn.dart';
+import '/widgets/input/password_edit_text.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   final String? email;
@@ -60,7 +60,6 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
               child: CustomButton(
                 onPress: () {
                   if (_formKey.currentState!.validate()) {
-                    showLoaderDialog(context, "Updating password...");
                     changePassword(_newPass!, _currentPass!);
                   } else {
                     showToast("Invalid input");

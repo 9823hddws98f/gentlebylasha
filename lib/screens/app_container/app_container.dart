@@ -1,16 +1,14 @@
 import 'package:app_links/app_links.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sleeptales/domain/services/audio_panel_manager.dart';
 
-import '/domain/blocs/user/app_user.dart';
 import '/domain/cubits/navigation.dart';
+import '/domain/services/audio_panel_manager.dart';
+import '/main.dart';
 import '/page_manager.dart';
 import '/utils/get.dart';
 import '/utils/global_functions.dart';
-import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/music/sliding_panel.dart';
 import 'app_bottom_bar.dart';
 import 'app_side_bar.dart';
@@ -41,33 +39,12 @@ class AppContainerState extends State<AppContainer> with SingleTickerProviderSta
   }
 
   @override
-  void didUpdateWidget(covariant AppContainer oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _fetchFavoriteTracksList();
-  }
-
-  Future<void> _fetchFavoriteTracksList() async {
-    AppUser user = await getUser();
-    final favoritesCollection = FirebaseFirestore.instance.collection('favorites');
-    final userFavoritesDocRef = favoritesCollection.doc(user.id);
-
-    final favoritesDocSnapshot = await userFavoritesDocRef.get();
-
-    if (favoritesDocSnapshot.exists) {
-      final favoritesData = favoritesDocSnapshot.data();
-      List<String> favorites = List.from(favoritesData!['favorites']);
-      await addFavoriteListToSharedPref(favorites);
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     final bottom = MediaQuery.paddingOf(context).bottom;
     return BlocProvider.value(
       value: _navigationCubit,
-      child: AppScaffold(
-        bodyPadding: EdgeInsets.zero,
-        body: (context, isMobile) => isMobile ? _buildMobile(bottom) : _buildDesktop(),
+      child: Scaffold(
+        body: MyApp.isMobile ? _buildMobile(bottom) : _buildDesktop(),
       ),
     );
   }

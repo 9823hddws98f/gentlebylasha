@@ -37,7 +37,7 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen>
   }
 
   Future<void> getFavPlayListArray() async {
-    favoritesPlayList = await getFavoritePlayListFromSharedPref();
+    // favoritesPlayList = await getFavoritePlayListFromSharedPref();
     setState(() {});
   }
 
@@ -77,7 +77,7 @@ class _FavoritePlaylistScreenState extends State<FavoritePlaylistScreen>
 
       setState(() {
         favoritesPlayList.remove(blockId);
-        removeFromFavoritesPlayList(blockId);
+        // removeFromFavoritesPlayList(blockId);
         favoritePlayListLoading = false;
       });
       showToast('Playlist removed from favorites');

@@ -113,7 +113,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
     }
     setState(() {
       favoritesPlayList.add(playListId);
-      addFavoritePlayListToSharedPref(favoritesPlayList);
+      // addFavoritePlayListToSharedPref(favoritesPlayList);
       favoritePlayListLoading = false;
       showToast("Playlist added to favorites");
     });
@@ -133,7 +133,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
 
       setState(() {
         favoritesPlayList.remove(blockId);
-        removeFromFavoritesPlayList(blockId);
+        // removeFromFavoritesPlayList(blockId);
         favoritePlayListLoading = false;
       });
       showToast('Playlist removed from favorites');
@@ -164,7 +164,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
     }
     setState(() {
       favoritesList.add(trackId);
-      addFavoriteListToSharedPref(favoritesList);
+      // addFavoriteListToSharedPref(favoritesList);
       showToast("Track added to favorites");
     });
   }
@@ -180,7 +180,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
 
       setState(() {
         favoritesList.remove(trackId);
-        removeFromFavoritesList(trackId);
+        // removeFromFavoritesList(trackId);
       });
       showToast('Track removed from favorites');
     } catch (e) {
@@ -431,12 +431,12 @@ class _PlayListScreenState extends State<PlayListScreen> {
   void showPanel(bool value) => _audioPanelManager.maximizeAndPlay(value);
 
   Future<void> getFavArray() async {
-    favoritesList = await getFavoriteListFromSharedPref();
+    // favoritesList = await getFavoriteListFromSharedPref();
     setState(() {});
   }
 
   Future<void> getFavPlayListArray() async {
-    favoritesPlayList = await getFavoritePlayListFromSharedPref();
+    // favoritesPlayList = await getFavoritePlayListFromSharedPref();
     setState(() {});
   }
 

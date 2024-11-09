@@ -20,8 +20,9 @@ import '/utils/global_functions.dart';
 import '/widgets/app_image.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
+import '/widgets/app_scaffold/bottom_panel_spacer.dart';
 import 'about/about_screen.dart';
-import 'edit_profile_screen.dart';
+import 'edit_profile/edit_profile_screen.dart';
 
 class ProfileSettingsScreen extends StatefulWidget {
   const ProfileSettingsScreen({super.key});
@@ -38,89 +39,91 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Tran
     final colors = Theme.of(context).colorScheme;
     return AppScaffold(
       appBar: (context, isMobile) => _buildAppBar(colors),
-      body: (context, isMobile) => SingleChildScrollView(
-        padding: EdgeInsets.symmetric(vertical: 16) + EdgeInsets.only(bottom: 170),
-        child: Column(
-          children: [
-            _buildListTile(
-              icon: Icons.favorite,
-              title: tr.favoriteList,
-              colors: colors,
-              onTap: () => pushName(
-                context,
-                FavoritesScreen(),
+      body: (context, isMobile) => BottomPanelSpacer.padding(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(vertical: 16),
+          child: Column(
+            children: [
+              _buildListTile(
+                icon: Icons.favorite,
+                title: tr.favoriteList,
+                colors: colors,
+                onTap: () => pushName(
+                  context,
+                  FavoritesScreen(),
+                ),
               ),
-            ),
-            _buildListTile(
-              icon: Icons.playlist_add_check,
-              title: tr.favoritePlaylist,
-              colors: colors,
-              onTap: () => pushName(
-                context,
-                FavoritePlaylistScreen(),
+              _buildListTile(
+                icon: Icons.playlist_add_check,
+                title: tr.favoritePlaylist,
+                colors: colors,
+                onTap: () => pushName(
+                  context,
+                  FavoritePlaylistScreen(),
+                ),
               ),
-            ),
-            _buildListTile(
-              icon: Icons.download,
-              title: tr.downloads,
-              colors: colors,
-              onTap: () => pushName(context, DownloadsScreen()),
-            ),
-            Divider(height: 24),
-            _buildListTile(
-              icon: Icons.lock,
-              title: tr.changePassword,
-              colors: colors,
-              onTap: () => pushName(context, ChangePasswordScreen()),
-            ),
-            _buildListTile(
-              icon: Icons.punch_clock_rounded,
-              title: tr.reminders,
-              colors: colors,
-              onTap: () => pushName(context, RemindersScreen()),
-            ),
-            _buildListTile(
-              icon: Icons.subscriptions,
-              title: tr.manageSubscription,
-              colors: colors,
-              onTap: () => pushName(context, ManageSubscriptionScreen()),
-            ),
-            Divider(height: 24),
-            _buildListTile(
-              icon: Icons.language,
-              title: tr.changeLanguage,
-              colors: colors,
-              onTap: () => pushName(context, ChangeLanguageScreen()),
-            ),
-            _buildListTile(
-              icon: Icons.help_center,
-              title: tr.helpSupport,
-              colors: colors,
-              onTap: () {
-                // TODO: Implement
-                showToast('Coming soon');
-              },
-            ),
-            _buildListTile(
-              icon: Icons.info,
-              title: tr.about,
-              colors: colors,
-              onTap: () => pushName(context, AboutScreen()),
-            ),
-            _buildListTile(
-              icon: Icons.account_circle,
-              title: tr.deleteAccount,
-              colors: colors,
-              onTap: () => pushName(context, const DeleteAccountScreen()),
-            ),
-            _buildListTile(
-              icon: Icons.logout,
-              title: tr.logout,
-              colors: colors,
-              isLogout: true,
-              onTap: () => logout(context),
-            ),
-          ].interleaveWith(SizedBox(height: 10)),
+              _buildListTile(
+                icon: Icons.download,
+                title: tr.downloads,
+                colors: colors,
+                onTap: () => pushName(context, DownloadsScreen()),
+              ),
+              Divider(height: 24),
+              _buildListTile(
+                icon: Icons.lock,
+                title: tr.changePassword,
+                colors: colors,
+                onTap: () => pushName(context, ChangePasswordScreen()),
+              ),
+              _buildListTile(
+                icon: Icons.punch_clock_rounded,
+                title: tr.reminders,
+                colors: colors,
+                onTap: () => pushName(context, RemindersScreen()),
+              ),
+              _buildListTile(
+                icon: Icons.subscriptions,
+                title: tr.manageSubscription,
+                colors: colors,
+                onTap: () => pushName(context, ManageSubscriptionScreen()),
+              ),
+              Divider(height: 24),
+              _buildListTile(
+                icon: Icons.language,
+                title: tr.changeLanguage,
+                colors: colors,
+                onTap: () => pushName(context, ChangeLanguageScreen()),
+              ),
+              _buildListTile(
+                icon: Icons.help_center,
+                title: tr.helpSupport,
+                colors: colors,
+                onTap: () {
+                  // TODO: Implement
+                  showToast('Coming soon');
+                },
+              ),
+              _buildListTile(
+                icon: Icons.info,
+                title: tr.about,
+                colors: colors,
+                onTap: () => pushName(context, AboutScreen()),
+              ),
+              _buildListTile(
+                icon: Icons.account_circle,
+                title: tr.deleteAccount,
+                colors: colors,
+                onTap: () => pushName(context, const DeleteAccountScreen()),
+              ),
+              _buildListTile(
+                icon: Icons.logout,
+                title: tr.logout,
+                colors: colors,
+                isLogout: true,
+                onTap: () => logout(context),
+              ),
+            ].interleaveWith(SizedBox(height: 10)),
+          ),
         ),
       ),
     );
@@ -168,12 +171,11 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Tran
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // TODO: Move to firstname lastname
                         Text(
                           state.user.name ?? '',
                           style: TextStyle(
                             fontSize: 20,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                         InkWell(
@@ -181,7 +183,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Tran
                           child: Text(
                             tr.editProfile,
                             style: TextStyle(
-                              color: Colors.white,
+                              color: colors.onSurfaceVariant,
                             ),
                           ),
                         ),

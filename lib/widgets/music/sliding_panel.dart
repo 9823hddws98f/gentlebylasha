@@ -29,16 +29,22 @@ class SlidingPanel extends StatelessWidget {
     return RepaintBoundary(
       child: ListenableBuilder(
         listenable: _panelVisibility,
-        builder: (context, child) {
-          return TweenAnimationBuilder<double>(
-            tween: Tween(begin: 0, end: _panelVisibility.value),
-            duration: Durations.short3,
-            curve: Easing.standard,
-            builder: (context, value, child) {
-              return Transform.translate(
-                offset: Offset(0, (1 - value) * MobileMusicPreview.height),
-                child: child!,
-              );
+        builder: (context, child) => TweenAnimationBuilder(
+          tween: Tween(begin: 0, end: _panelVisibility.value),
+          duration: Durations.short3,
+          curve: Easing.standard,
+          builder: (context, value, child) => Transform.translate(
+            offset: Offset(0, (1 - value) * MobileMusicPreview.height),
+            child: child!,
+          ),
+          child: Listener(
+            onPointerMove: (event) {
+              if (event.delta.dy > 3 &&
+                  _panelController.isAttached &&
+                  _panelController.isPanelClosed &&
+                  _panelVisibility.value > 0) {
+                _panelManager.hide();
+              }
             },
             child: SlidingUpPanel(
               controller: _panelController,
@@ -48,8 +54,8 @@ class SlidingPanel extends StatelessWidget {
               onPanelSlide: (pos) => controller.value = pos,
               panelBuilder: () => _buildPanelContent(),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }
@@ -61,21 +67,17 @@ class SlidingPanel extends StatelessWidget {
             if (_panelController.isAttached)
               AnimatedBuilder(
                 animation: controller,
-                builder: (context, child) {
-                  final opacity = 1 -
-                      CurvedAnimation(
-                        parent: controller,
-                        curve: Curves.fastEaseInToSlowEaseOut,
-                      ).value;
-
-                  return IgnorePointer(
-                    ignoring: controller.value > 0.5,
-                    child: Opacity(
-                      opacity: opacity,
-                      child: child!,
-                    ),
-                  );
-                },
+                builder: (context, child) => IgnorePointer(
+                  ignoring: controller.value > 0.5,
+                  child: Opacity(
+                    opacity: 1 -
+                        CurvedAnimation(
+                          parent: controller,
+                          curve: Curves.fastEaseInToSlowEaseOut,
+                        ).value,
+                    child: child!,
+                  ),
+                ),
                 child: MobileMusicPreview(),
               )
           ],
