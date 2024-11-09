@@ -57,6 +57,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> with Translation {
               return AppScaffold(
                 appBar: (context, isMobile) => AdaptiveAppBar(
                   title: _isPlaylist ? tr.favoritePlaylist : tr.favorites,
+                  hasBottomLine: false,
                 ),
                 body: (context, isMobile) => const Center(
                   child: CupertinoActivityIndicator(),

@@ -10,6 +10,7 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool? centerTitle;
   final List<Widget> actions;
   final PreferredSizeWidget? bottom;
+  final bool hasBottomLine;
 
   const AdaptiveAppBar({
     super.key,
@@ -17,6 +18,7 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.centerTitle,
     this.actions = const [],
     this.bottom,
+    this.hasBottomLine = true,
   });
 
   static const _desktopHeight = 104.0;
@@ -91,7 +93,23 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
         SizedBox(width: AppTheme.sidePadding),
       ],
       primary: true,
-      bottom: bottom,
+      bottom: _buildBottom(context),
     );
   }
+
+  PreferredSizeWidget _buildBottom(BuildContext context) => PreferredSize(
+        preferredSize: Size.fromHeight(1 + (bottom?.preferredSize.height ?? 0)),
+        child: hasBottomLine
+            ? Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+                  ),
+                ),
+                child: bottom,
+              )
+            : bottom ?? SizedBox.shrink(),
+      );
 }

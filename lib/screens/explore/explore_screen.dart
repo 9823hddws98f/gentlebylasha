@@ -53,7 +53,10 @@ class _ExploreScreenState extends State<ExploreScreen>
   Widget build(BuildContext context) => AppScaffold(
         resizeToAvoidBottomInset: false,
         bodyPadding: EdgeInsets.zero,
-        appBar: (context, isMobile) => AdaptiveAppBar(title: 'Explore'),
+        appBar: (context, isMobile) => AdaptiveAppBar(
+          title: 'Explore',
+          hasBottomLine: false,
+        ),
         body: (context, isMobile) {
           final colors = Theme.of(context).colorScheme;
           return NestedScrollView(

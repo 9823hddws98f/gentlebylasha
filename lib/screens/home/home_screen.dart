@@ -19,7 +19,10 @@ class _HomeScreenState extends State<HomeScreen> with Translation {
 
   @override
   Widget build(BuildContext context) => AppScaffold(
-        appBar: (context, isMobile) => AdaptiveAppBar(title: tr.home),
+        appBar: (context, isMobile) => AdaptiveAppBar(
+          title: tr.home,
+          hasBottomLine: false,
+        ),
         bodyPadding: EdgeInsets.zero,
         body: (context, isMobile) =>
             PageBlockBuilder(page: _pagesCubit.state.pages.keys.first),

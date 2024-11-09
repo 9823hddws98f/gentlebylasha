@@ -42,6 +42,7 @@ class _TrackListScreenState extends State<TrackListScreen> {
   Widget build(BuildContext context) => AppScaffold(
         appBar: (context, isMobile) => AdaptiveAppBar(
           title: widget.heading,
+          hasBottomLine: false,
           bottom: PreferredSize(
             preferredSize: const Size(double.infinity, 80), // 56 + 16 + 8
             child: Padding(

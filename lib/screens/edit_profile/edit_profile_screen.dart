@@ -1,15 +1,20 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sleeptales/constants/assets.dart';
 import 'package:sleeptales/domain/blocs/authentication/auth_repository.dart';
+import 'package:sleeptales/domain/blocs/user/app_user.dart';
 import 'package:sleeptales/domain/blocs/user/user_bloc.dart';
+import 'package:sleeptales/utils/app_theme.dart';
 import 'package:sleeptales/utils/command_trigger.dart';
 import 'package:sleeptales/utils/firestore_helper.dart';
 import 'package:sleeptales/utils/get.dart';
 import 'package:sleeptales/utils/tx_button.dart';
+import 'package:sleeptales/widgets/app_image.dart';
 import 'package:sleeptales/widgets/app_scaffold/bottom_panel_spacer.dart';
+import 'package:sleeptales/widgets/input/file_dropzone_selector.dart';
 
 import '/helper/validators.dart';
-import '/utils/colors.dart';
 import '/utils/global_functions.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
@@ -29,8 +34,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final _trigger = ActionTrigger();
 
-  String? _email;
-  String? _name;
+  String? _email, _name, _photoPath;
 
   @override
   Widget build(BuildContext context) => AppScaffold(
@@ -46,6 +50,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        SizedBox(height: 16),
+                        _buildPhotoField(),
                         _buildNameField(),
                         _buildEmailField(),
                       ],
@@ -68,6 +74,50 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ),
               ],
+            ),
+          ),
+        ),
+      );
+
+  Widget _buildPhotoField() => BlocBuilder<UserBloc, UserState>(
+        buildWhen: (previous, current) => previous.user.photoURL != current.user.photoURL,
+        builder: (context, state) => FileDropzoneFormField(
+          onSelected: (path) => setState(() => _photoPath = path),
+          title: 'Profile photo',
+          initialValue: state.user.photoURL,
+          type: FileType.image,
+          fieldBuilder: (context, imageUrl, action) => InkWell(
+            onTap: action,
+            borderRadius: AppTheme.smallBorderRadius,
+            child: Ink(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: AppTheme.smallBorderRadius,
+                color: Theme.of(context).colorScheme.surface,
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  imageUrl != null
+                      ? AppImage(
+                          imageUrl: imageUrl,
+                          placeholderAsset: Assets.avatarIcon,
+                          width: 72,
+                          height: 72,
+                          borderRadius: BorderRadius.circular(50),
+                          errorWidget: (context, url, error) => Icon(Icons.person),
+                        )
+                      : Icon(Icons.person),
+                  TxButton.text(
+                    label: Text('Change profile photo'),
+                    showSuccess: false,
+                    onPressVoid: action,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -121,7 +171,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _formKey.currentState!.save();
 
     // Check if anything changed
-    if (_email == _userBloc.state.user.email && _name == _userBloc.state.user.name) {
+    if (_email == _userBloc.state.user.email &&
+        _name == _userBloc.state.user.name &&
+        _photoPath == _userBloc.state.user.photoURL) {
       showToast('No changes made');
       return false;
     }
@@ -136,6 +188,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future<bool> _showPasswordConfirmation() async {
+    final trigger = ActionTrigger();
     String? password;
     final passwordFormKey = GlobalKey<FormState>();
 
@@ -143,7 +196,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        backgroundColor: colorBackground,
         title: Text('Confirm Password'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -163,8 +215,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             onPressed: () => Navigator.pop(context, false),
             child: Text('Cancel'),
           ),
-          TextButton(
-            onPressed: () {
+          TxButton.text(
+            trigger: trigger,
+            onPressVoid: () {
               if (!passwordFormKey.currentState!.validate()) return;
 
               passwordFormKey.currentState!.save();
@@ -174,7 +227,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 showToast('Please enter your password');
               }
             },
-            child: Text('Confirm'),
+            label: Text('Confirm'),
           ),
         ],
       ),
@@ -185,14 +238,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     try {
       await _auth.reauthenticate(password!);
 
-      if (_email != _userBloc.state.user.email) {
-        await _auth.changeEmail(_email!);
+      AppUser user = _userBloc.state.user;
+
+      if (_email != user.email) {
+        await _auth.changeEmail(_email!); // TODO: Implement
       }
 
-      if (_name != _userBloc.state.user.name) {
-        _userBloc.add(UserModified(_userBloc.state.user.copyWith(name: _name)));
+      if (_name != user.name) {
+        user = user.copyWith(name: _name);
       }
 
+      if (_photoPath != user.photoURL) {
+        user = user.copyWith(photoURL: _photoPath);
+      }
+
+      _userBloc.add(UserModified(user));
       return true;
     } catch (e) {
       showToast(e.toString());

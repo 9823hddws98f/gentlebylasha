@@ -6,6 +6,7 @@ import '/domain/blocs/authentication/auth_repository.dart';
 import '/domain/blocs/user/user_bloc.dart';
 import '/domain/cubits/favorite_playlists.dart';
 import '/domain/cubits/pages/pages_cubit.dart';
+import '/domain/services/storage_service.dart';
 import '/domain/services/user_service.dart';
 import '/page_manager.dart';
 import '/utils/get.dart';
@@ -29,6 +30,7 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<TranslationService>(() => TranslationService.instance);
   getIt.registerLazySingleton<TracksService>(() => TracksService.instance);
   getIt.registerLazySingleton<PlaylistsService>(() => PlaylistsService.instance);
+  getIt.registerLazySingleton<StorageService>(() => StorageService.instance);
 
   /// Blocs
   getIt.registerLazySingleton<AppBloc>(() => AppBloc(Get.the<AuthRepository>()));

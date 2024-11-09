@@ -135,13 +135,6 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Tran
         preferredSize: Size.fromHeight(76),
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 16) + EdgeInsets.only(bottom: 16),
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: colors.outline,
-              ),
-            ),
-          ),
           child: BlocProvider.value(
             value: userBloc,
             child: BlocBuilder<UserBloc, UserState>(
