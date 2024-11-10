@@ -238,7 +238,7 @@ class LoginScreenState extends State<LoginScreen> with Translation {
     }
 
     if (userCredential.additionalUserInfo!.isNewUser) {
-      _showNewUserSheet(userCredential);
+      await _showNewUserSheet(userCredential);
     }
 
     // If this was successful, [MyApp] will navigate to AppContainer
