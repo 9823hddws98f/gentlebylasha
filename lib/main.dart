@@ -121,9 +121,17 @@ class _MyAppState extends State<MyApp> {
                 _appBloc,
               ),
             );
-          } else if (state.status == AppStatus.authenticated && widget.isWaitingForAuth) {
+          } else if (state.status == AppStatus.authenticated) {
             await initUserBasedServices();
-            FlutterNativeSplash.remove();
+            if (widget.isWaitingForAuth) {
+              FlutterNativeSplash.remove();
+            } else {
+              if (!context.mounted) return;
+              MyApp.navigatorKey.currentState?.pushNamedAndRemoveUntil(
+                AppContainer.routeName,
+                (route) => false,
+              );
+            }
           }
         },
         builder: (context, state) => state.status == AppStatus.loading

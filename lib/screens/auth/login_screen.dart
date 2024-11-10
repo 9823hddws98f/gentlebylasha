@@ -1,13 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import '/main.dart';
 
 import '/constants/assets.dart';
 import '/domain/blocs/authentication/auth_repository.dart';
 import '/domain/services/language_cubit.dart';
 import '/helper/validators.dart';
-import '/screens/app_container/app_container.dart';
+import '/main.dart';
 import '/screens/auth/signup_sheet.dart';
 import '/utils/app_theme.dart';
 import '/utils/command_trigger.dart';
@@ -47,6 +46,7 @@ class LoginScreenState extends State<LoginScreen> with Translation {
             ? AdaptiveAppBar(
                 title: tr.login,
                 centerTitle: true,
+                hasBottomLine: false,
               )
             : null,
         bodyPadding: EdgeInsets.zero,
@@ -239,9 +239,9 @@ class LoginScreenState extends State<LoginScreen> with Translation {
 
     if (userCredential.additionalUserInfo!.isNewUser) {
       _showNewUserSheet(userCredential);
-    } else {
-      pushRemoveAll(context, AppContainer());
     }
+
+    // If this was successful, [MyApp] will navigate to AppContainer
     return success;
   }
 }
