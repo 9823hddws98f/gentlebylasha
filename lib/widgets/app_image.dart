@@ -79,10 +79,19 @@ class _AppImageState extends State<AppImage> {
   }
 
   Widget _buildImage(ImageProvider imageProvider) => widget.borderRadius == null
-      ? Image(image: imageProvider, fit: widget.fit)
+      ? Image(
+          image: imageProvider,
+          fit: widget.fit,
+          height: widget.height,
+          width: widget.width)
       : Container(
           decoration: BoxDecoration(borderRadius: widget.borderRadius!),
           clipBehavior: Clip.antiAlias,
-          child: Image(image: imageProvider, fit: widget.fit),
+          child: Image(
+            image: imageProvider,
+            fit: widget.fit,
+            height: widget.height,
+            width: widget.width,
+          ),
         );
 }

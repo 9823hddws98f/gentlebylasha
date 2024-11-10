@@ -90,7 +90,8 @@ class AuthRepository {
   Future<UserCredential?> signInWithGoogle() async {
     try {
       final googleSignInAccount = await GoogleSignIn().signIn();
-      final googleAuth = await googleSignInAccount!.authentication;
+      final googleAuth = await googleSignInAccount?.authentication;
+      if (googleAuth == null) return null;
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,

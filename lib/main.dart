@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -135,7 +136,7 @@ class _MyAppState extends State<MyApp> {
           }
         },
         builder: (context, state) => state.status == AppStatus.loading
-            ? const SizedBox(child: CircularProgressIndicator())
+            ? const Center(child: CupertinoActivityIndicator())
             : BlocBuilder<LanguageCubit, LanguageState>(
                 bloc: _languageCubit,
                 builder: (context, languageState) => MaterialApp(

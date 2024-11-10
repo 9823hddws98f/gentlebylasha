@@ -192,7 +192,7 @@ class LoginScreenState extends State<LoginScreen> with Translation {
   Widget _buildGoogleLoginButton() => TxButton.filled(
         color: RoleColor.mono,
         label: Text(tr.continueWithGoogle),
-        onPressVoid: () => _login(
+        onPress: () => _login(
           signIn: _auth.signInWithGoogle,
           authProvider: 'Google',
         ),
