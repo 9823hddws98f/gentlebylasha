@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '/constants/assets.dart';
-import '/domain/services/audio_panel_manager.dart';
 import '/main.dart';
 import '/page_manager.dart';
 import '/utils/app_theme.dart';
@@ -22,7 +21,6 @@ class MusicPlayerScreen extends StatefulWidget {
 }
 
 class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
-  final _audioPanelManager = Get.the<AudioPanelManager>();
   final _pageManager = Get.the<PageManager>();
 
   static final _borderRadius = BorderRadius.only(
@@ -47,6 +45,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
           child: ValueListenableBuilder(
               valueListenable: _pageManager.currentMediaItemNotifier,
               builder: (context, mediaItem, child) => Stack(
+                    fit: StackFit.expand,
                     children: [
                       _buildArtwork(mediaItem.artUri, true),
                       SafeArea(
@@ -73,65 +72,59 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
 
   Widget _buildDesktop() => ValueListenableBuilder(
         valueListenable: _pageManager.currentMediaItemNotifier,
-        builder: (context, mediaItem, child) =>
-            // TODO: Figure out why this is empty for couple of seconds
-            mediaItem.id.isNotEmpty
-                ? Row(
-                    children: [
-                      Expanded(child: _buildArtwork(mediaItem.artUri, false)),
-                      SizedBox(width: 32),
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: SharedAxisSwitcher(
-                                transitionType: SharedAxisTransitionType.scaled,
-                                disableFillColor: true,
-                                reverse: !_hide,
-                                child: _hide
-                                    ? SizedBox()
-                                    : ControlButtons(mediaItem: mediaItem),
-                              ),
-                            ),
-                            _buildProgressBar(mediaItem),
-                          ],
+        builder: (context, mediaItem, child) => mediaItem.id.isNotEmpty
+            ? Row(
+                children: [
+                  Expanded(child: _buildArtwork(mediaItem.artUri, false)),
+                  SizedBox(width: 32),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: SharedAxisSwitcher(
+                            transitionType: SharedAxisTransitionType.scaled,
+                            disableFillColor: true,
+                            reverse: !_hide,
+                            child:
+                                _hide ? SizedBox() : ControlButtons(mediaItem: mediaItem),
+                          ),
                         ),
-                      )
-                    ],
+                        _buildProgressBar(mediaItem),
+                      ],
+                    ),
                   )
-                : Center(child: CupertinoActivityIndicator(color: Colors.white)),
+                ],
+              )
+            : Center(child: CupertinoActivityIndicator(color: Colors.white)),
       );
 
   Widget _buildArtwork(Uri? artUri, bool isMobile) {
     if (_lastArtworkUri != artUri) {
       _lastArtworkUri = artUri;
     }
-    return ClipRRect(
-      borderRadius: isMobile ? _borderRadius : BorderRadius.all(Radius.circular(18)),
-      child: DecoratedBox(
-        position: DecorationPosition.foreground,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.black.withValues(alpha: 0.3),
-              Colors.transparent,
-              Colors.black.withValues(alpha: 0.3),
-            ],
-            stops: [0.0, 0.5, 1.0],
-          ),
+    return DecoratedBox(
+      position: DecorationPosition.foreground,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.black.withValues(alpha: 0.3),
+            Colors.transparent,
+            Colors.black.withValues(alpha: 0.3),
+          ],
+          stops: [0.0, 0.5, 1.0],
         ),
-        child: AppImage(
-          imageUrl: artUri.toString(),
-          fit: BoxFit.cover,
-          height: double.infinity,
-          width: double.infinity,
-          fadeInDuration: Durations.short2,
-          placeholderAsset:
-              _lastArtworkUri == null ? Assets.launchScreenBackground : null,
-          placeholderUri: _lastArtworkUri,
-        ),
+      ),
+      child: AppImage(
+        imageUrl: artUri?.toString() ?? '',
+        fit: BoxFit.cover,
+        height: double.infinity,
+        width: double.infinity,
+        fadeInDuration: Durations.short2,
+        borderRadius: isMobile ? _borderRadius : BorderRadius.all(Radius.circular(18)),
+        placeholderAsset: _lastArtworkUri == null ? Assets.launchScreenBackground : null,
+        placeholderUri: _lastArtworkUri,
       ),
     );
   }
