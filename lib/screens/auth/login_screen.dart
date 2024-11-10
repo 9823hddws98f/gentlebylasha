@@ -5,7 +5,7 @@ import '/main.dart';
 
 import '/constants/assets.dart';
 import '/domain/blocs/authentication/auth_repository.dart';
-import '/domain/services/language_constants.dart';
+import '/domain/services/language_cubit.dart';
 import '/helper/validators.dart';
 import '/screens/app_container/app_container.dart';
 import '/screens/auth/signup_sheet.dart';

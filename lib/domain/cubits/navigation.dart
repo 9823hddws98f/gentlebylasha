@@ -11,11 +11,7 @@ class NavigationCubit extends Cubit<NavItem> {
 
   void select(NavItem item) {
     if (state.index == item.index) {
-      final currentNavigator =
-          AppNavigation.allNavItems[state.index].navigatorKey.currentState!;
-      currentNavigator.popUntil((route) => route.isFirst);
-      // TODO: SEE IF NEEDED
-      // _scrollControllerHelper.scrollToTop();
+      state.navigatorKey.currentState?.popUntil((route) => route.isFirst);
     }
     emit(item);
   }
@@ -86,5 +82,7 @@ class NavItem {
     GlobalKey<NavigatorState>? navigatorKey,
   })  : navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>(),
         assert(
-            screen != null || onTap != null, 'Either screen or onTap must be provided');
+          screen != null || onTap != null,
+          'Either screen or onTap must be provided',
+        );
 }

@@ -27,14 +27,9 @@ class PageBlockBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) => _useBlocks
       ? _buildBlocksList(blocks!)
-      : BlocProvider.value(
-          value: _pagesCubit,
-          child: BlocBuilder<PagesCubit, PagesState>(
-            builder: (context, state) {
-              final pageBlocks = state.pages[page] ?? [];
-              return _buildBlocksList(pageBlocks);
-            },
-          ),
+      : BlocBuilder<PagesCubit, PagesState>(
+          bloc: _pagesCubit,
+          builder: (context, state) => _buildBlocksList(state.pages[page] ?? []),
         );
 
   Widget _buildBlocksList(List<Block> blocks) => BottomPanelSpacer.padding(

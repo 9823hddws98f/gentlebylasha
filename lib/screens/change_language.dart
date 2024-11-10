@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sleeptales/utils/app_theme.dart';
+import 'package:sleeptales/utils/common_extensions.dart';
 
-import '/domain/services/language_constants.dart';
-import '/languages.dart';
-import '/main.dart';
+import '/domain/services/language_cubit.dart';
 import '/utils/get.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
@@ -16,55 +17,35 @@ class ChangeLanguageScreen extends StatefulWidget {
 }
 
 class _ChangeLanguageScreen extends State<ChangeLanguageScreen> with Translation {
-  final _translationService = Get.the<TranslationService>();
-  // default selection
-  int languageIndex = 0;
-
-  Future<void> _handleLanguageChange(int index) async {
-    final locale = await _translationService
-        .setLocale(Language.languageList().elementAt(index).languageCode);
-
-    if (!mounted) return;
-    MyApp.setLocale(context, locale);
-
-    setState(() => languageIndex = index);
-  }
-
-  Future<void> getCurrentLanguageIndex() async {
-    String languageCode = await _translationService.getLanguageCode();
-    if (languageCode == "de") {
-      languageIndex = 1;
-    } else {
-      languageIndex = 0;
-    }
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getCurrentLanguageIndex();
-  }
+  final _languageCubit = Get.the<LanguageCubit>();
 
   @override
   Widget build(BuildContext context) => AppScaffold(
         appBar: (context, isMobile) => AdaptiveAppBar(
           title: tr.changeLanguage,
         ),
-        bodyPadding: EdgeInsets.zero,
-        body: (context, isMobile) => ListView(
-          children: [
-            ListTile(
-              title: const Text('English'),
-              trailing: languageIndex == 0 ? const Icon(Icons.check) : null,
-              onTap: () => _handleLanguageChange(0),
-            ),
-            ListTile(
-              title: const Text('Dutch'),
-              trailing: languageIndex == 1 ? const Icon(Icons.check) : null,
-              onTap: () => _handleLanguageChange(1),
-            ),
-          ],
+        body: (context, isMobile) => BlocBuilder<LanguageCubit, LanguageState>(
+          bloc: _languageCubit,
+          builder: (context, state) => ListView(
+            padding: EdgeInsets.symmetric(vertical: AppTheme.sidePadding),
+            children: AppLanguage.values
+                .map<Widget>(
+                  (language) => ListTile(
+                    title: Text(language.displayName),
+                    titleTextStyle: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    trailing: state.locale.languageCode == language.languageCode
+                        ? const Icon(Icons.check)
+                        : null,
+                    iconColor: Theme.of(context).colorScheme.primary,
+                    onTap: () => _languageCubit.setLanguage(language),
+                  ),
+                )
+                .toList()
+                .interleaveWith(Divider()),
+          ),
         ),
       );
 }

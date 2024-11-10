@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '/constants/assets.dart';
 import '/domain/blocs/user/user_bloc.dart';
-import '/domain/services/language_constants.dart';
+import '/domain/services/language_cubit.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
 import '/utils/global_functions.dart';

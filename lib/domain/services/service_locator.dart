@@ -1,5 +1,6 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:get_it/get_it.dart';
+import 'package:sleeptales/domain/services/language_cubit.dart';
 
 import '/domain/blocs/authentication/app_bloc.dart';
 import '/domain/blocs/authentication/auth_repository.dart';
@@ -13,7 +14,6 @@ import '/utils/get.dart';
 import '../cubits/favorite_tracks.dart';
 import 'audio_handler.dart';
 import 'audio_panel_manager.dart';
-import 'language_constants.dart';
 import 'playlist_repository.dart';
 import 'playlists_service.dart';
 import 'tracks_service.dart';
@@ -27,7 +27,7 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<AuthRepository>(() => AuthRepository());
   getIt.registerLazySingleton<UsersService>(() => UsersService());
   getIt.registerLazySingleton<AudioPanelManager>(() => AudioPanelManager.instance);
-  getIt.registerLazySingleton<TranslationService>(() => TranslationService.instance);
+  getIt.registerLazySingleton<LanguageCubit>(() => LanguageCubit.instance);
   getIt.registerLazySingleton<TracksService>(() => TracksService.instance);
   getIt.registerLazySingleton<PlaylistsService>(() => PlaylistsService.instance);
   getIt.registerLazySingleton<StorageService>(() => StorageService.instance);

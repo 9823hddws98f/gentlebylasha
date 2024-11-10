@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '/domain/services/language_constants.dart';
+import '/domain/services/language_cubit.dart';
 import '/helper/validators.dart';
 
 class PasswordEditText extends StatefulWidget {

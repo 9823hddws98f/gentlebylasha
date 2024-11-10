@@ -64,6 +64,7 @@ class AudioPlaylist {
         'authorImage': authorImage,
         'showAudioThumbnails': showAudioThumbnails,
         if (trackIds.isNotEmpty) 'trackIds': trackIds,
+        // ignore: deprecated_member_use
         if (dominantColor != null) 'dominantColor': dominantColor!.value,
       };
 

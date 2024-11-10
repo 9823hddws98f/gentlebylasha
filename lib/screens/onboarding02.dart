@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '/domain/blocs/user/user_bloc.dart';
-import '/domain/services/language_constants.dart';
+import '/domain/services/language_cubit.dart';
 import '/utils/get.dart';
 import '/utils/global_functions.dart';
 import '/utils/tx_button.dart';

@@ -6,7 +6,7 @@ import '/widgets/app_scaffold/app_scaffold.dart';
 
 import '/screens/reminder_setup.dart';
 import '/utils/global_functions.dart';
-import '/domain/services/language_constants.dart';
+import '/domain/services/language_cubit.dart';
 
 class RemindersScreen extends StatelessWidget with Translation {
   final String? email;

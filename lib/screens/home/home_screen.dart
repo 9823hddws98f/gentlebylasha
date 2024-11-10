@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '/domain/cubits/pages/pages_cubit.dart';
-import '/domain/services/language_constants.dart';
+import '/domain/services/language_cubit.dart';
 import '/utils/get.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';

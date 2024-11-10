@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/constants/assets.dart';
 import '/domain/blocs/user/user_bloc.dart';
-import '/domain/services/language_constants.dart';
+import '/domain/services/language_cubit.dart';
 import '/screens/change_language.dart';
 import '/screens/change_password_screen.dart';
 import '/screens/delete_account.dart';
@@ -31,7 +31,7 @@ class ProfileSettingsScreen extends StatefulWidget {
 }
 
 class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Translation {
-  final userBloc = Get.the<UserBloc>();
+  final _userBloc = Get.the<UserBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -135,55 +135,53 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Tran
         preferredSize: Size.fromHeight(76),
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 16) + EdgeInsets.only(bottom: 16),
-          child: BlocProvider.value(
-            value: userBloc,
-            child: BlocBuilder<UserBloc, UserState>(
-              builder: (context, state) => Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox.square(
-                    dimension: 60,
-                    child: state.user.photoURL?.isNotEmpty ?? false
-                        ? AppImage(
-                            imageUrl: state.user.photoURL!,
-                            borderRadius: BorderRadius.circular(64),
-                            placeholderAsset: Assets.profile,
-                            errorWidget: (context, url, error) => Image.asset(
-                              Assets.profile,
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                        : Icon(
-                            CarbonIcons.user_avatar_filled_alt,
-                            size: 56,
+          child: BlocBuilder<UserBloc, UserState>(
+            bloc: _userBloc,
+            builder: (context, state) => Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox.square(
+                  dimension: 60,
+                  child: state.user.photoURL?.isNotEmpty ?? false
+                      ? AppImage(
+                          imageUrl: state.user.photoURL!,
+                          borderRadius: BorderRadius.circular(64),
+                          placeholderAsset: Assets.profile,
+                          errorWidget: (context, url, error) => Image.asset(
+                            Assets.profile,
+                            fit: BoxFit.cover,
                           ),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          state.user.name ?? '',
+                        )
+                      : Icon(
+                          CarbonIcons.user_avatar_filled_alt,
+                          size: 56,
+                        ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        state.user.name ?? '',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () => pushName(context, EditProfileScreen()),
+                        child: Text(
+                          tr.editProfile,
                           style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
+                            color: colors.onSurfaceVariant,
                           ),
                         ),
-                        InkWell(
-                          onTap: () => pushName(context, EditProfileScreen()),
-                          child: Text(
-                            tr.editProfile,
-                            style: TextStyle(
-                              color: colors.onSurfaceVariant,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

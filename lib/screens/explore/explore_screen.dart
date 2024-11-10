@@ -73,24 +73,22 @@ class _ExploreScreenState extends State<ExploreScreen>
               transitionType: SharedAxisTransitionType.scaled,
               child: _isSearching
                   ? _buildSearchView(colors.onSurfaceVariant)
-                  : BlocProvider.value(
-                      value: _pagesCubit,
-                      child: BlocBuilder<PagesCubit, PagesState>(
-                        builder: (context, state) => state.explorePages.isEmpty
-                            ? Center(child: Text('No categories found'))
-                            : TabBarView(
-                                physics: NeverScrollableScrollPhysics(),
-                                controller: _tabController,
-                                children: state.explorePages.keys
-                                    .map(
-                                      (page) => PageBlockBuilder(
-                                        key: ValueKey(page.id),
-                                        page: page,
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
-                      ),
+                  : BlocBuilder<PagesCubit, PagesState>(
+                      bloc: _pagesCubit,
+                      builder: (context, state) => state.explorePages.isEmpty
+                          ? Center(child: Text('No categories found'))
+                          : TabBarView(
+                              physics: NeverScrollableScrollPhysics(),
+                              controller: _tabController,
+                              children: state.explorePages.keys
+                                  .map(
+                                    (page) => PageBlockBuilder(
+                                      key: ValueKey(page.id),
+                                      page: page,
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
                     ),
             ),
           );

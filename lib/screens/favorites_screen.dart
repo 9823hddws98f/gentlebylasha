@@ -5,7 +5,7 @@ import '/domain/cubits/favorite_playlists.dart';
 import '/domain/cubits/favorite_tracks.dart';
 import '/domain/models/block_item/audio_playlist.dart';
 import '/domain/models/block_item/audio_track.dart';
-import '/domain/services/language_constants.dart';
+import '/domain/services/language_cubit.dart';
 import '/domain/services/playlists_service.dart';
 import '/domain/services/tracks_service.dart';
 import '/utils/get.dart';

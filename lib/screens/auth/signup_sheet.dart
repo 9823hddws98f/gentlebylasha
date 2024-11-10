@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '/domain/blocs/authentication/auth_repository.dart';
-import '/domain/services/language_constants.dart';
+import '/domain/services/language_cubit.dart';
 import '/helper/validators.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';

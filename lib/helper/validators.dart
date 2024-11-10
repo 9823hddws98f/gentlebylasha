@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '/utils/get.dart';
 
-import '/domain/services/language_constants.dart';
+import '/domain/services/language_cubit.dart';
+import '/utils/get.dart';
 
 class AppValidators {
   static const _emailRegex = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
-  static final tr = Get.the<TranslationService>().translation();
+  static final tr = Get.the<LanguageCubit>().translation;
 
   static String? Function(String?) emailValidator(BuildContext context) => (value) {
         if (value?.isEmpty ?? true) {

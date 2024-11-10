@@ -12,11 +12,11 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import '/app_init.dart';
+import '/domain/services/language_cubit.dart';
 import '/screens/auth/login_screen.dart';
 import '/utils/get.dart';
 import 'domain/blocs/authentication/app_bloc.dart';
 import 'domain/blocs/user/user_bloc.dart';
-import 'domain/services/language_constants.dart';
 import 'domain/services/service_locator.dart';
 import 'screens/app_container/app_container.dart';
 import 'utils/app_theme.dart';
@@ -101,12 +101,6 @@ class MyApp extends StatefulWidget {
 
   static final navigatorKey = GlobalKey<NavigatorState>();
 
-  // TODO: THIS DOESNT REFRESH CORRECTLY
-  static void setLocale(BuildContext context, Locale newLocale) {
-    _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
-    state?.setLocale(newLocale);
-  }
-
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -114,62 +108,53 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final _userBloc = Get.the<UserBloc>();
   final _appBloc = Get.the<AppBloc>();
-  final _translation = Get.the<TranslationService>();
-
-  Locale? _locale;
-
-  void setLocale(Locale locale) => setState(() => _locale = locale);
+  final _languageCubit = Get.the<LanguageCubit>();
 
   @override
-  void didChangeDependencies() {
-    _translation.getLocale().then(setLocale);
-    super.didChangeDependencies();
-  }
-
-  @override
-  Widget build(BuildContext context) => BlocProvider.value(
-        value: _appBloc,
-        child: BlocConsumer<AppBloc, AppState>(
-            listener: (context, state) async {
-              if (state.status == AppStatus.loading) {
-                _userBloc.add(
-                  UserLoaded(
-                    state.user.toAppUser(),
-                    _appBloc,
-                  ),
-                );
-              } else if (state.status == AppStatus.authenticated &&
-                  widget.isWaitingForAuth) {
-                await initUserBasedServices();
-                FlutterNativeSplash.remove();
-              }
-            },
-            builder: (context, state) => state.status == AppStatus.loading
-                ? const SizedBox(child: CircularProgressIndicator())
-                : MaterialApp(
-                    title: 'Gentle',
-                    debugShowCheckedModeBanner: false,
-                    locale: _locale,
-                    theme: AppTheme.buildTheme(dark: false),
-                    darkTheme: AppTheme.buildTheme(dark: true),
-                    scrollBehavior: const MaterialScrollBehavior().copyWith(
-                      dragDevices: {
-                        PointerDeviceKind.mouse,
-                        PointerDeviceKind.touch,
-                        PointerDeviceKind.trackpad,
-                      },
-                    ),
-                    navigatorKey: MyApp.navigatorKey,
-                    localizationsDelegates: AppLocalizations.localizationsDelegates,
-                    supportedLocales: AppLocalizations.supportedLocales,
-                    initialRoute: widget.isWaitingForAuth
-                        ? AppContainer.routeName
-                        : LoginScreen.routeName,
-                    routes: {
-                      LoginScreen.routeName: (_) => const LoginScreen(),
-                      AppContainer.routeName: (_) => const AppContainer(),
+  Widget build(BuildContext context) => BlocConsumer<AppBloc, AppState>(
+        bloc: _appBloc,
+        listener: (context, state) async {
+          if (state.status == AppStatus.loading) {
+            _userBloc.add(
+              UserLoaded(
+                state.user.toAppUser(),
+                _appBloc,
+              ),
+            );
+          } else if (state.status == AppStatus.authenticated && widget.isWaitingForAuth) {
+            await initUserBasedServices();
+            FlutterNativeSplash.remove();
+          }
+        },
+        builder: (context, state) => state.status == AppStatus.loading
+            ? const SizedBox(child: CircularProgressIndicator())
+            : BlocBuilder<LanguageCubit, LanguageState>(
+                bloc: _languageCubit,
+                builder: (context, languageState) => MaterialApp(
+                  title: 'Gentle',
+                  debugShowCheckedModeBanner: false,
+                  locale: languageState.locale,
+                  theme: AppTheme.buildTheme(dark: false),
+                  darkTheme: AppTheme.buildTheme(dark: true),
+                  scrollBehavior: const MaterialScrollBehavior().copyWith(
+                    dragDevices: {
+                      PointerDeviceKind.mouse,
+                      PointerDeviceKind.touch,
+                      PointerDeviceKind.trackpad,
                     },
-                  )),
+                  ),
+                  navigatorKey: MyApp.navigatorKey,
+                  localizationsDelegates: AppLocalizations.localizationsDelegates,
+                  supportedLocales: AppLocalizations.supportedLocales,
+                  initialRoute: widget.isWaitingForAuth
+                      ? AppContainer.routeName
+                      : LoginScreen.routeName,
+                  routes: {
+                    LoginScreen.routeName: (_) => const LoginScreen(),
+                    AppContainer.routeName: (_) => const AppContainer(),
+                  },
+                ),
+              ),
       );
 }
 

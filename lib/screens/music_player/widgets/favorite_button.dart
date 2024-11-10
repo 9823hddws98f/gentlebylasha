@@ -33,18 +33,14 @@ class _FavoriteButtonState extends State<FavoriteButton> {
   @override
   Widget build(BuildContext context) {
     if (widget.trackId != null) {
-      return BlocProvider.value(
-        value: _favoriteTracksCubit,
-        child: BlocBuilder<FavoritesTracksCubit, List<String>>(
-          builder: (context, state) => _buildButton(state.contains(widget.trackId!)),
-        ),
+      return BlocBuilder<FavoritesTracksCubit, List<String>>(
+        bloc: _favoriteTracksCubit,
+        builder: (context, state) => _buildButton(state.contains(widget.trackId!)),
       );
     } else {
-      return BlocProvider.value(
-        value: _favoritePlaylistsCubit,
-        child: BlocBuilder<FavoritePlaylistsCubit, List<String>>(
-          builder: (context, state) => _buildButton(state.contains(widget.playlistId!)),
-        ),
+      return BlocBuilder<FavoritePlaylistsCubit, List<String>>(
+        bloc: _favoritePlaylistsCubit,
+        builder: (context, state) => _buildButton(state.contains(widget.playlistId!)),
       );
     }
   }
