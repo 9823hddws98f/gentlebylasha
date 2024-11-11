@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -59,6 +60,7 @@ class _AppImageState extends State<AppImage> {
           height: widget.height,
           width: widget.width,
           fadeInDuration: widget.fadeInDuration,
+          imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
         );
 
   Widget _buildPlaceholder() {
