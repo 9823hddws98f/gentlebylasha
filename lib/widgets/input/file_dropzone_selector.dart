@@ -156,10 +156,6 @@ class _FileDropzoneSelectorState extends State<FileDropzoneSelector> {
             file,
             onProgress: (progress) => setState(() => _uploadProgress = progress),
           ),
-        FileType.audio => await _storageService.uploadAudio(
-            file,
-            onProgress: (progress) => setState(() => _uploadProgress = progress),
-          ),
         _ => throw Exception('Unsupported file type'),
       };
       widget.onSelected(downloadUrl);

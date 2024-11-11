@@ -14,19 +14,12 @@ class StorageService {
   final _uuid = const Uuid();
 
   static const _thumbnailsPath = 'track/thumbnails';
-  static const _audioPath = 'track/audio_files';
 
   Future<String> uploadThumbnail(
     FileInfo file, {
     void Function(double)? onProgress,
   }) =>
       _uploadFile(_thumbnailsPath, file, onProgress: onProgress);
-
-  Future<String> uploadAudio(
-    FileInfo file, {
-    void Function(double)? onProgress,
-  }) =>
-      _uploadFile(_audioPath, file, onProgress: onProgress);
 
   String _generateUniqueFileName(String originalPath) {
     final uuid = _uuid.v4();

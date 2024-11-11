@@ -151,10 +151,12 @@ class MyAudioHandler extends BaseAudioHandler {
   }
 
   UriAudioSource _createAudioSource(MediaItem mediaItem) {
-    return AudioSource.uri(
-      Uri.parse((mediaItem.extras!['track'] as AudioTrack).trackUrl),
-      tag: mediaItem,
-    );
+    final track = mediaItem.extras!['track'] as AudioTrack;
+    final uri = Uri.parse(track.trackUrl);
+    if (uri.isScheme('http') || uri.isScheme('https')) {
+      return AudioSource.uri(uri, tag: mediaItem);
+    }
+    return AudioSource.file(track.trackUrl, tag: mediaItem);
   }
 
   @override

@@ -8,7 +8,7 @@ import '/domain/services/language_cubit.dart';
 import '/screens/change_language.dart';
 import '/screens/change_password_screen.dart';
 import '/screens/delete_account.dart';
-import '/screens/downloads_screen.dart';
+import 'downloads/downloads_screen.dart';
 import '/screens/favorites_screen.dart';
 import '/screens/manage_subscription.dart';
 import '/screens/reminders_screen.dart';
