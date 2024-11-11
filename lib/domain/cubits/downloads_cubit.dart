@@ -7,7 +7,9 @@ import '/utils/get.dart';
 
 class DownloadsCubit extends Cubit<List<AudioTrack>> {
   static DownloadsCubit instance = DownloadsCubit._();
-  DownloadsCubit._() : super([]);
+  DownloadsCubit._() : super([]) {
+    init();
+  }
 
   final _service = Get.the<DownloadsService>();
 
