@@ -3,13 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sleeptales/utils/get.dart';
 
 import '/domain/models/block_item/audio_track.dart';
-import '/domain/services/service_locator.dart';
 import '/page_manager.dart';
 import '/screens/auth/login_screen.dart';
 import '/utils/common_extensions.dart';
+import '/utils/get.dart';
 
 void showToast(String value) {
   'showToast $value'.logDebug();
@@ -89,7 +88,7 @@ void pushRemoveAll(BuildContext context, Widget widget) {
 }
 
 void playTrack(AudioTrack audioTrack) {
-  getIt<PageManager>().playSinglePlaylist(
+  Get.the<PageManager>().playSinglePlaylist(
     MediaItem(
       id: audioTrack.id,
       album: audioTrack.speaker,

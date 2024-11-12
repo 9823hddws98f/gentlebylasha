@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '/widgets/app_scaffold/adaptive_app_bar.dart';
 
 import '/page_manager.dart';
 import '/utils/colors.dart';
+import '/utils/get.dart';
+import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/custom_btn.dart';
-import '/domain/services/service_locator.dart';
 
 class SleepTimerScreen extends StatefulWidget {
   const SleepTimerScreen({super.key});
@@ -20,7 +20,7 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
   bool timerSet = false;
   // Method to handle setting the sleep timer
   void _setSleepTimer() {
-    getIt<PageManager>().stopTrackAfter(_duration);
+    Get.the<PageManager>().stopTrackAfter(_duration);
     setState(() {
       timerSet = true;
     });

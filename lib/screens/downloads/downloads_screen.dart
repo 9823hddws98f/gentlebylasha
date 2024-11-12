@@ -1,13 +1,14 @@
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sleeptales/domain/cubits/downloads_cubit.dart';
-import 'package:sleeptales/domain/models/block_item/audio_track.dart';
-import 'package:sleeptales/utils/get.dart';
-import 'package:sleeptales/utils/modals.dart';
-import 'package:sleeptales/widgets/app_scaffold/adaptive_app_bar.dart';
-import 'package:sleeptales/widgets/app_scaffold/app_scaffold.dart';
-import 'package:sleeptales/widgets/blocks/track_grid.dart';
+
+import '/domain/cubits/downloads_cubit.dart';
+import '/domain/models/block_item/audio_track.dart';
+import '/utils/get.dart';
+import '/utils/modals.dart';
+import '/widgets/app_scaffold/adaptive_app_bar.dart';
+import '/widgets/app_scaffold/app_scaffold.dart';
+import '/widgets/blocks/track_grid.dart';
 
 class DownloadsScreen extends StatefulWidget {
   const DownloadsScreen({super.key});
