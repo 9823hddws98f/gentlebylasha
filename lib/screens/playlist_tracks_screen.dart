@@ -67,6 +67,11 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final dominantColor = Color.lerp(
+      widget.playlist.dominantColor ?? colors.surfaceContainerLowest,
+      colors.surfaceContainerLowest,
+      colors.brightness == Brightness.light ? 0.4 : 0.0,
+    );
     return AppScaffold(
       bodyPadding: EdgeInsets.zero,
       body: (context, isMobile) => DecoratedBox(
@@ -74,10 +79,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              widget.playlist.dominantColor ?? colors.surfaceContainerLowest,
-              colors.surfaceContainerLowest,
-            ],
+            colors: [dominantColor!, colors.surfaceContainerLowest],
             stops: [0, 0.8],
           ),
         ),
@@ -85,7 +87,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
           child: CustomScrollView(
             controller: _scrollController,
             slivers: [
-              _buildThumbnail(colors),
+              _buildThumbnail(dominantColor),
               _buildInfoCard(colors),
               _error != null
                   ? _buildErrorHint(colors)
@@ -231,7 +233,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
         ),
       );
 
-  Widget _buildThumbnail(ColorScheme colors) => SliverAppBar(
+  Widget _buildThumbnail(Color color) => SliverAppBar(
         expandedHeight: 200,
         floating: false,
         pinned: true,
@@ -254,7 +256,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
           icon: const Icon(CarbonIcons.arrow_left),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        backgroundColor: widget.playlist.dominantColor ?? colors.surfaceContainerLowest,
+        backgroundColor: color,
         flexibleSpace: FlexibleSpaceBar(
           centerTitle: false,
           stretchModes: const [StretchMode.zoomBackground],

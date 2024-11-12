@@ -8,7 +8,6 @@ import '/domain/services/language_cubit.dart';
 import '/screens/change_language.dart';
 import '/screens/change_password_screen.dart';
 import '/screens/delete_account.dart';
-import 'downloads/downloads_screen.dart';
 import '/screens/favorites_screen.dart';
 import '/screens/manage_subscription.dart';
 import '/screens/reminders_screen.dart';
@@ -21,6 +20,7 @@ import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/app_scaffold/bottom_panel_spacer.dart';
 import 'about/about_screen.dart';
+import 'downloads/downloads_screen.dart';
 import 'edit_profile/edit_profile_screen.dart';
 
 class ProfileSettingsScreen extends StatefulWidget {
@@ -114,6 +114,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Tran
                 colors: colors,
                 onTap: () => pushName(context, const DeleteAccountScreen()),
               ),
+              Divider(height: 24),
               _buildListTile(
                 icon: Icons.logout,
                 title: tr.logout,

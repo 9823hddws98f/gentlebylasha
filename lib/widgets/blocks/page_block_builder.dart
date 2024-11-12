@@ -4,33 +4,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '/domain/cubits/pages/pages_cubit.dart';
 import '/domain/models/app_page.dart';
 import '/domain/models/block/block.dart';
-import '/screens/home/track_block_loader.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
 import '/widgets/app_scaffold/bottom_panel_spacer.dart';
+import 'track_block_loader.dart';
 
 class PageBlockBuilder extends StatelessWidget {
-  PageBlockBuilder({super.key, required this.page})
-      : blocks = null,
-        _useBlocks = false;
-
-  PageBlockBuilder.custom({super.key, required List<Block> this.blocks})
-      : page = null,
-        _useBlocks = true;
+  PageBlockBuilder({super.key, required this.page});
 
   final AppPage? page;
-  final List<Block>? blocks;
-  final bool _useBlocks;
 
   final _pagesCubit = Get.the<PagesCubit>();
 
   @override
-  Widget build(BuildContext context) => _useBlocks
-      ? _buildBlocksList(blocks!)
-      : BlocBuilder<PagesCubit, PagesState>(
-          bloc: _pagesCubit,
-          builder: (context, state) => _buildBlocksList(state.pages[page] ?? []),
-        );
+  Widget build(BuildContext context) => BlocBuilder<PagesCubit, PagesState>(
+        bloc: _pagesCubit,
+        builder: (context, state) => _buildBlocksList(state.pages[page] ?? []),
+      );
 
   Widget _buildBlocksList(List<Block> blocks) => BottomPanelSpacer.padding(
         child: ListView.separated(

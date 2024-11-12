@@ -158,7 +158,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               enabled: false, // TODO: Implement
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(hintText: 'Enter your email'),
-              validator: AppValidators.emailValidator(context),
+              validator: AppValidators.emailValidator,
               onSaved: (value) => _email = value?.trim(),
             ),
           ),

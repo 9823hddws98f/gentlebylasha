@@ -35,38 +35,32 @@ class _OnBoarding02ScreenState extends State<OnBoarding02Screen> with Translatio
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
-          children: <Widget>[
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
             Padding(
-              padding: EdgeInsets.only(top: 10),
+              padding: const EdgeInsets.symmetric(vertical: 24),
               child: Text(
                 'How did you hear about Sleepytales?',
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(0, 30, 0, 20),
-              child: Column(
-                children: _options
-                    .map(
-                      (entry) => RadioListTile(
-                        dense: true,
-                        contentPadding: EdgeInsets.zero,
-                        activeColor: Colors.white,
-                        title: Text(
-                          entry,
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        value: entry,
-                        groupValue: _selectedOption,
-                        onChanged: (value) => setState(() {
-                          _selectedOption = value;
-                        }),
-                      ),
-                    )
-                    .toList(),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _options.length,
+                itemBuilder: (context, index) => RadioListTile(
+                  dense: true,
+                  contentPadding: EdgeInsets.zero,
+                  value: _options[index],
+                  groupValue: _selectedOption,
+                  title: Text(
+                    _options[index],
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  onChanged: (value) => setState(() => _selectedOption = value),
+                ),
               ),
             ),
-            SizedBox(height: 24),
+            SizedBox(height: 12),
             TxButton.filled(
               label: Text(tr.continueText),
               onPressVoid: () {
@@ -82,7 +76,8 @@ class _OnBoarding02ScreenState extends State<OnBoarding02Screen> with Translatio
                   widget.onSubmit();
                 }
               },
-            )
+            ),
+            const SizedBox(height: 24),
           ],
         ),
       );

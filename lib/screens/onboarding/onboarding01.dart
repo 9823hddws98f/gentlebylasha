@@ -28,7 +28,6 @@ class _OnBoarding01ScreenState extends State<OnBoarding01Screen> with Translatio
     'Develop Gratitude',
   ];
 
-  // TODO: Move these to assets
   static const _icons = [
     Assets.iconWater,
     Assets.iconRunning,
@@ -47,57 +46,58 @@ class _OnBoarding01ScreenState extends State<OnBoarding01Screen> with Translatio
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            tr.whatBringsYouToSleepytales,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24),
+            child: Text(
+              tr.whatBringsYouToSleepytales,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            ),
           ),
-          const SizedBox(height: 24),
           Expanded(
             child: ListView.separated(
               itemCount: _options.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 8),
-              itemBuilder: (context, index) => InkWell(
-                borderRadius: AppTheme.smallBorderRadius,
-                onTap: () => setState(() {
-                  if (options.contains(_options[index])) {
-                    options.remove(_options[index]);
-                  } else {
-                    options.add(_options[index]);
-                  }
-                }),
-                child: Ink(
-                  decoration: BoxDecoration(
-                    borderRadius: AppTheme.smallBorderRadius,
-                    color: options.contains(_options[index])
-                        ? colors.surfaceContainerHighest
-                        : colors.surfaceContainerLowest,
-                  ),
-                  height: 56,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: [
-                        Image.asset(
-                          _icons[index],
-                          color: colors.onSurface,
-                          height: 24,
-                          width: 24,
-                        ),
-                        SizedBox(width: 16),
-                        Text(
-                          _options[index],
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ],
+              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              itemBuilder: (context, index) => Material(
+                child: InkWell(
+                  borderRadius: AppTheme.smallBorderRadius,
+                  onTap: () => setState(() {
+                    if (options.contains(_options[index])) {
+                      options.remove(_options[index]);
+                    } else {
+                      options.add(_options[index]);
+                    }
+                  }),
+                  child: Ink(
+                    decoration: BoxDecoration(
+                      borderRadius: AppTheme.smallBorderRadius,
+                      color: options.contains(_options[index])
+                          ? colors.surfaceContainerHighest
+                          : colors.surfaceContainerLowest,
+                    ),
+                    height: 48,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            _icons[index],
+                            color: colors.onSurface,
+                            height: 24,
+                            width: 24,
+                          ),
+                          SizedBox(width: 16),
+                          Text(_options[index]),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 12),
           TxButton.filled(
             label: Text(tr.continueText),
             showSuccess: false,

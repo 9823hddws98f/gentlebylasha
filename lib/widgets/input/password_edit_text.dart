@@ -24,7 +24,7 @@ class _PasswordEditTextState extends State<PasswordEditText> with Translation {
 
   @override
   Widget build(BuildContext context) => TextFormField(
-        validator: AppValidators.passwordValidator(context),
+        validator: AppValidators.passwordValidator,
         obscureText: _obscureText,
         enableSuggestions: false,
         autocorrect: false,

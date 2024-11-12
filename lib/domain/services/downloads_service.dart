@@ -70,4 +70,9 @@ class DownloadsService {
     final savedTracks = await getSavedTracks();
     return savedTracks.any((track) => track.id == trackId);
   }
+
+  Future<void> removeAll() async {
+    final prefs = await _prefs;
+    await prefs.remove(_savedTracksKey);
+  }
 }

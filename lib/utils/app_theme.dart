@@ -16,18 +16,19 @@ class AppTheme {
 
   static const lightColors = ColorScheme(
     brightness: Brightness.light,
-    primary: Color(0xFF1B84FF),
+    primary: Color(0xFF365DCB),
     onPrimary: Colors.white,
-    secondary: Color(0xFFF1F1F4),
-    onSecondary: Color(0xFF071437),
+    secondary: Color(0xFFA483DB),
+    onSecondary: Color(0xFFFFFFFF),
     tertiary: Color(0xFFF6C000),
     error: Color(0xFFF8285A),
     onError: Colors.white,
     onErrorContainer: Color(0xFFFF0000),
     surface: Colors.white,
-    onSurface: Color(0xFF071437),
-    surfaceContainerHighest: Color(0xff1A2034),
-    onSurfaceVariant: Color(0xFF99A1B7),
+    onSurface: Color(0xFF000000),
+    surfaceContainerHighest: Color(0xffF8F8F8),
+    surfaceContainerLowest: Color(0xffF8F8F8),
+    onSurfaceVariant: Color(0xFF6C7A8B),
     outline: Color(0xFFDBDFE9),
   );
 
@@ -35,7 +36,7 @@ class AppTheme {
     brightness: Brightness.dark,
     primary: Color(0xff52B788),
     onPrimary: Colors.white,
-    secondary: Color(0xFF1B1C22),
+    secondary: Color(0xff52B788),
     onSecondary: Colors.white,
     tertiary: Color(0xFFC59A00),
     error: Color(0xFFFF3767),
@@ -52,8 +53,7 @@ class AppTheme {
   static ThemeData buildTheme({required bool dark}) {
     final colors = dark ? darkColors : lightColors;
     const borderShape = RoundedRectangleBorder(borderRadius: smallBorderRadius);
-    final appBarBackground =
-        dark ? colors.surfaceContainerLowest : const Color(0xFF0B0C10);
+    final appBarBackground = colors.surfaceContainerLowest;
     final buttonStyle = ButtonStyle(
       shape: WidgetStateProperty.all(borderShape),
       minimumSize: WidgetStateProperty.all(Size(0, 48)),

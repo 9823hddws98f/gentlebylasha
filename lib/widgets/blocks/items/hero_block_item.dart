@@ -8,8 +8,8 @@ import '/utils/app_theme.dart';
 import '/utils/get.dart';
 import '/utils/global_functions.dart';
 import '/widgets/shimmerize.dart';
-import '../app_image.dart';
-import 'widgets/item_tag.dart';
+import '../../app_image.dart';
+import '../widgets/item_tag.dart';
 
 class HeroBlockItem extends StatelessWidget {
   final AudioTrack track;

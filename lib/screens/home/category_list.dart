@@ -71,7 +71,7 @@ class CategoryListState extends State<CategoryList> {
       FilledButton(
         style: FilledButton.styleFrom(
           backgroundColor: _selectedIndex == index ? colors.primary : colors.surface,
-          foregroundColor: colors.onSurface,
+          foregroundColor: _selectedIndex == index ? colors.onPrimary : colors.onSurface,
           shape: RoundedRectangleBorder(borderRadius: AppTheme.smallBorderRadius),
           side: BorderSide(color: colors.outline),
         ),

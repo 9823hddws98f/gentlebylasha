@@ -4,12 +4,12 @@ import '/domain/models/block/block.dart';
 import '/domain/models/block_item/audio_playlist.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/utils/app_theme.dart';
-import '/widgets/blocks/audio_block_item.dart';
-import '/widgets/blocks/block_header.dart';
-import '/widgets/blocks/hero_block_item.dart';
-import '/widgets/blocks/playlist_block_item.dart';
+import '/widgets/blocks/items/audio_block_item.dart';
+import '/widgets/blocks/items/hero_block_item.dart';
+import '/widgets/blocks/items/playlist_block_item.dart';
 import '/widgets/blocks/track_block_items_loader.dart';
-import '../track_list_screen.dart';
+import '/widgets/blocks/widgets/block_header.dart';
+import '../../screens/searchable_tracks_screen.dart';
 
 class TrackBlockLoader extends StatelessWidget {
   const TrackBlockLoader(this.block, {super.key});
@@ -42,7 +42,7 @@ class TrackBlockLoader extends StatelessWidget {
         children: [
           BlockHeader(
             title: block.title,
-            seeAll: TrackListScreen(heading: block.title, playlists: playlists),
+            seeAll: SearchableTracksScreen(heading: block.title, playlists: playlists),
           ),
           SizedBox(
             height: PlaylistBlockItem.height,
@@ -61,7 +61,7 @@ class TrackBlockLoader extends StatelessWidget {
         children: [
           BlockHeader(
             title: block.title,
-            seeAll: TrackListScreen(heading: block.title, tracks: tracks),
+            seeAll: SearchableTracksScreen(heading: block.title, tracks: tracks),
           ),
           SizedBox(
             height: AudioBlockItem.height,

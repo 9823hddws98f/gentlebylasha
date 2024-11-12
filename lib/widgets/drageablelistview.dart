@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '/domain/models/block_item/audio_track.dart';
-import 'blocks/audio_block_item.dart';
+import 'blocks/items/audio_block_item.dart';
 
 class WidthTrackListHorizontalNew extends StatelessWidget {
   final List<AudioTrack> audiList;

@@ -105,6 +105,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
     return DecoratedBox(
       position: DecorationPosition.foreground,
       decoration: BoxDecoration(
+        borderRadius: isMobile ? _borderRadius : BorderRadius.all(Radius.circular(18)),
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,

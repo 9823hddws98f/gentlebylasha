@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '/domain/blocs/user/user_bloc.dart';
 import '/domain/cubits/navigation.dart';
 import '/domain/services/audio_panel_manager.dart';
 import '/main.dart';
@@ -10,6 +11,7 @@ import '/page_manager.dart';
 import '/utils/get.dart';
 import '/utils/global_functions.dart';
 import '/widgets/music/sliding_panel.dart';
+import '../onboarding/onboarding_bottom_sheet.dart';
 import 'app_bottom_bar.dart';
 import 'app_side_bar.dart';
 
@@ -24,6 +26,9 @@ class AppContainer extends StatefulWidget {
 
 class AppContainerState extends State<AppContainer> with SingleTickerProviderStateMixin {
   final _audioPanelManager = Get.the<AudioPanelManager>();
+  final _userBloc = Get.the<UserBloc>();
+  final _pageManager = Get.the<PageManager>();
+
   final _navigationCubit = NavigationCubit();
   final _allNavItems = AppNavigation.allNavItems;
 
@@ -35,7 +40,12 @@ class AppContainerState extends State<AppContainer> with SingleTickerProviderSta
   @override
   void initState() {
     super.initState();
-    Get.the<PageManager>().init();
+    _pageManager.init();
+    _initDeepLinking();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _initializeUser();
+    });
   }
 
   @override
@@ -108,7 +118,7 @@ class AppContainerState extends State<AppContainer> with SingleTickerProviderSta
         },
       );
 
-  // HACK
+  // hack
   void _handleBadRoute(bool isMobile, NavItem state, BuildContext context) {
     if (isMobile && AppNavigation.mobileNavItems.contains(_allNavItems[state.index]) ||
         !isMobile && AppNavigation.desktopNavItems.contains(_allNavItems[state.index])) {
@@ -119,14 +129,14 @@ class AppContainerState extends State<AppContainer> with SingleTickerProviderSta
     });
   }
 
-  void initDeepLinking() async {
+  void _initDeepLinking() async {
     // Platform messages are asynchronous, so we initialize in an async method.
     try {
       // Request permission to handle incoming links
       final appLinks = AppLinks();
       appLinks.uriLinkStream.listen((Uri? uri) {
         if (uri != null) {
-          handleDeepLink(uri);
+          _handleDeepLink(uri);
         }
       });
     } on PlatformException {
@@ -134,8 +144,17 @@ class AppContainerState extends State<AppContainer> with SingleTickerProviderSta
     }
   }
 
-  void handleDeepLink(Uri uri) {
+  void _handleDeepLink(Uri uri) {
     String trackId = uri.queryParameters['trackId'] ?? '';
     showToast(trackId);
+  }
+
+  Future<void> _initializeUser() async {
+    final user = _userBloc.state.user;
+
+    // Initialize onboarding screen if needed
+    if (user.goals == null || user.heardFrom == null) {
+      OnboardingBottomSheet.show(context);
+    }
   }
 }

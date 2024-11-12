@@ -33,6 +33,9 @@ class _BottomPanelSpacerState extends State<BottomPanelSpacer> {
   static const _minHeight = AppBottomBar.height;
   static const _panelHeight = MobileMusicPreview.height;
 
+  static const _duration = Durations.medium1;
+  static const _curve = Easing.standard;
+
   @override
   Widget build(BuildContext context) {
     if (!MyApp.isMobile) {
@@ -43,8 +46,12 @@ class _BottomPanelSpacerState extends State<BottomPanelSpacer> {
 
     final spacer = ValueListenableBuilder(
       valueListenable: _panel.panelVisibility,
-      builder: (_, value, child) => SizedBox(
-        height: bottomPadding + _minHeight + value * _panelHeight,
+      builder: (_, value, child) => AnimatedSize(
+        duration: _duration,
+        curve: _curve,
+        child: SizedBox(
+          height: bottomPadding + _minHeight + value * _panelHeight,
+        ),
       ),
     );
 

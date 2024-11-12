@@ -53,6 +53,11 @@ class DownloadsCubit extends Cubit<List<AudioTrack>> {
     }
   }
 
+  Future<void> removeAll() async {
+    await _service.removeAll();
+    emit([]);
+  }
+
   bool isTrackDownloaded(String trackId) {
     return state.any((track) => track.id == trackId);
   }

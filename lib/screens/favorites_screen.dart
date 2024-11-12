@@ -11,7 +11,7 @@ import '/domain/services/tracks_service.dart';
 import '/utils/get.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
-import 'track_list_screen.dart';
+import 'searchable_tracks_screen.dart';
 
 class FavoritesScreen extends StatefulWidget {
   final bool isPlaylist;
@@ -64,7 +64,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> with Translation {
                 ),
               );
             }
-            return TrackListScreen(
+            return SearchableTracksScreen(
               heading: _isPlaylist ? tr.favoritePlaylist : tr.favorites,
               tracks: _isPlaylist ? null : snapshot.data as List<AudioTrack>,
               playlists: _isPlaylist ? snapshot.data as List<AudioPlaylist> : null,

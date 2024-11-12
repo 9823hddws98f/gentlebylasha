@@ -10,15 +10,14 @@ import '/utils/tx_button.dart';
 import '/widgets/input/password_edit_text.dart';
 
 class SignupSheet extends StatefulWidget {
-  final void Function(UserCredential userCredential) onSignup;
-
-  const SignupSheet({super.key, required this.onSignup});
+  const SignupSheet({super.key});
 
   @override
   State<SignupSheet> createState() => _SignupSheetState();
 }
 
 class _SignupSheetState extends State<SignupSheet> with Translation {
+  final _auth = Get.the<AuthRepository>();
   final _formKey = GlobalKey<FormState>();
 
   String? _name;
@@ -60,13 +59,13 @@ class _SignupSheetState extends State<SignupSheet> with Translation {
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 decoration: InputDecoration(hintText: tr.email),
-                validator: AppValidators.emailValidator(context),
+                validator: AppValidators.emailValidator,
                 onSaved: (value) => setState(() => _email = value),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16, bottom: 8),
                 child: Text(
-                  "${tr.password}:",
+                  '${tr.password}:',
                   style: TextStyle(fontSize: 16),
                 ),
               ),
@@ -78,10 +77,6 @@ class _SignupSheetState extends State<SignupSheet> with Translation {
               TxButton.filled(
                 label: Text(tr.signUp),
                 onPress: _signUp,
-                onSuccess: () => setState(() {
-                  Navigator.pop(context);
-                  widget.onSignup(_credentials!);
-                }),
               ),
               SizedBox(height: 16),
             ],
@@ -93,8 +88,8 @@ class _SignupSheetState extends State<SignupSheet> with Translation {
     setState(() => _dirty = true);
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      final credentials =
-          await Get.the<AuthRepository>().signUpWithEmail(_name!, _email!, _password!);
+      final credentials = await _auth.signUpWithEmail(_name!, _email!, _password!);
+      // This will trigger userbloc to navigate to [AppContainer]
       if (!mounted) return false;
       _credentials = credentials;
       return credentials != null;

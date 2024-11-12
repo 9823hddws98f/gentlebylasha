@@ -6,9 +6,9 @@ import '/domain/models/block_item/audio_playlist.dart';
 import '/screens/playlist_tracks_screen.dart';
 import '/utils/app_theme.dart';
 import '/utils/global_functions.dart';
-import '../app_image.dart';
-import '../shimmerize.dart';
-import 'widgets/item_tag.dart';
+import '../../app_image.dart';
+import '../../shimmerize.dart';
+import '../widgets/item_tag.dart';
 
 class PlaylistBlockItem extends StatelessWidget {
   final AudioPlaylist playlist;

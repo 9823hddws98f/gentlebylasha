@@ -19,7 +19,6 @@ import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/input/password_edit_text.dart';
 import 'forgot_password_sheet.dart';
-import 'onboarding_bottom_sheet.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
@@ -52,6 +51,7 @@ class LoginScreenState extends State<LoginScreen> with Translation {
         bodyPadding: EdgeInsets.zero,
         body: (context, isMobile) {
           final theme = Theme.of(context);
+          final onSurfaceVariant = theme.colorScheme.onSurfaceVariant;
           return Form(
             key: _formKey,
             autovalidateMode:
@@ -59,7 +59,7 @@ class LoginScreenState extends State<LoginScreen> with Translation {
             child: isMobile
                 ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
-                    child: _buildContent(),
+                    child: _buildContent(onSurfaceVariant),
                   )
                 : Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -99,7 +99,9 @@ class LoginScreenState extends State<LoginScreen> with Translation {
                                   style: theme.textTheme.headlineLarge,
                                 ),
                                 SizedBox(height: 32),
-                                Expanded(child: _buildContent()),
+                                Expanded(
+                                  child: _buildContent(onSurfaceVariant),
+                                ),
                               ],
                             ),
                           ),
@@ -111,7 +113,7 @@ class LoginScreenState extends State<LoginScreen> with Translation {
         },
       );
 
-  Widget _buildContent() => CustomScrollView(
+  Widget _buildContent(Color outlineColor) => CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
             child: Column(
@@ -119,7 +121,7 @@ class LoginScreenState extends State<LoginScreen> with Translation {
               children: [
                 SizedBox(height: 24),
                 TextFormField(
-                  validator: AppValidators.emailValidator(context),
+                  validator: AppValidators.emailValidator,
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
@@ -146,15 +148,18 @@ class LoginScreenState extends State<LoginScreen> with Translation {
                   children: [
                     Expanded(child: Divider()),
                     SizedBox(width: 8),
-                    Text('Or'),
+                    Text(
+                      'or',
+                      style: TextStyle(color: outlineColor),
+                    ),
                     SizedBox(width: 8),
                     Expanded(child: Divider()),
                   ],
                 ),
                 SizedBox(height: 24),
-                _buildGoogleLoginButton(),
-                SizedBox(height: 16),
                 _buildAppleLoginButton(),
+                SizedBox(height: 16),
+                _buildGoogleLoginButton(),
                 SizedBox(height: 16),
               ],
             ),
@@ -173,9 +178,7 @@ class LoginScreenState extends State<LoginScreen> with Translation {
                   useSafeArea: true,
                   scrollable: true,
                   initialSize: 0.9,
-                  builder: (context, controller) => SignupSheet(
-                    onSignup: _showNewUserSheet,
-                  ),
+                  builder: (context, controller) => SignupSheet(),
                 ),
               ),
             ),
@@ -183,15 +186,23 @@ class LoginScreenState extends State<LoginScreen> with Translation {
         ],
       );
 
-  // TODO: add forgot password
-  Widget _buildForgotPasswordButton() => TextButton(
-        child: Text(tr.forgotYourPassword),
-        onPressed: () => ForgotPasswordSheet.show(context),
+  Widget _buildForgotPasswordButton() => TxButton.text(
+        label: Text(tr.forgotYourPassword),
+        color: RoleColor.mono,
+        showSuccess: false,
+        onPressVoid: () => ForgotPasswordSheet.show(context),
       );
 
   Widget _buildGoogleLoginButton() => TxButton.filled(
         color: RoleColor.mono,
-        label: Text(tr.continueWithGoogle),
+        label: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SvgPicture.asset(Assets.googleIcon, height: 20),
+            SizedBox(width: 12),
+            Text(tr.continueWithGoogle),
+          ],
+        ),
         onPress: () => _login(
           signIn: _auth.signInWithGoogle,
           authProvider: 'Google',
@@ -200,18 +211,18 @@ class LoginScreenState extends State<LoginScreen> with Translation {
 
   Widget _buildAppleLoginButton() => TxButton.filled(
         color: RoleColor.mono,
-        label: Text(tr.continueWithApple),
+        label: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SvgPicture.asset(Assets.appleIcon, height: 20),
+            SizedBox(width: 12),
+            Text(tr.continueWithApple),
+          ],
+        ),
         onPress: () => _login(
           signIn: _auth.signInWithApple,
           authProvider: 'Apple',
         ),
-      );
-
-  Future<void> _showNewUserSheet(UserCredential userCredential) => showModalBottomSheet(
-        context: context,
-        enableDrag: false,
-        isScrollControlled: true,
-        builder: (context) => OnboardingBottomSheet(userCredential),
       );
 
   Future<bool> _loginWithEmail() async {
@@ -235,10 +246,6 @@ class LoginScreenState extends State<LoginScreen> with Translation {
     if (userCredential == null) {
       showToast('${tr.unableToAuth} $authProvider');
       return success;
-    }
-
-    if (userCredential.additionalUserInfo!.isNewUser) {
-      await _showNewUserSheet(userCredential);
     }
 
     // If this was successful, [MyApp] will navigate to AppContainer

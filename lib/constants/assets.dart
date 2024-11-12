@@ -13,8 +13,8 @@ class Assets {
   static const String verifiedUserIcon = 'assets/verified_user_icon.svg';
 
   // Social media icons
-  static const String facebookIcon = 'assets/facebook_icon.svg';
-  static const String googleIcon = 'assets/google_icon.svg';
+  static const String appleIcon = 'assets/apple.svg';
+  static const String googleIcon = 'assets/google.svg';
 
   // Business-related icons
   static const String localFloristBlack = 'assets/local_florist_black.svg';
