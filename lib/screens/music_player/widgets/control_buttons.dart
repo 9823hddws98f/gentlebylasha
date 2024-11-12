@@ -8,7 +8,7 @@ import '/domain/models/block_item/audio_track.dart';
 import '/main.dart';
 import '/notifiers/repeat_notifier.dart';
 import '/page_manager.dart';
-import '/screens/timer_picker_screen.dart';
+import '/screens/reminder/widgets/timer_picker_screen.dart';
 import '/utils/app_theme.dart';
 import '/utils/common_extensions.dart';
 import '/utils/get.dart';

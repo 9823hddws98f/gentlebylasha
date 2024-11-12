@@ -38,6 +38,7 @@ dependencies:
   cached_network_image_platform_interface: ^4.1.1
   carbon_icons: ^0.0.1+2
   cloud_firestore: ^5.4.4
+  cloud_functions: ^5.1.4
   collection: ^1.19.0
   connectivity_plus: ^6.1.0
   device_preview: ^1.2.0

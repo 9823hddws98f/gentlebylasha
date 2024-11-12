@@ -5,12 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '/constants/assets.dart';
 import '/domain/blocs/user/user_bloc.dart';
 import '/domain/services/language_cubit.dart';
-import '/screens/change_language.dart';
-import '/screens/change_password_screen.dart';
-import '/screens/delete_account.dart';
-import '/screens/favorites_screen.dart';
-import '/screens/manage_subscription.dart';
-import '/screens/reminders_screen.dart';
+import '/screens/about/about_screen.dart';
+import '/screens/downloads/downloads_screen.dart';
+import '/screens/favorites/favorites_screen.dart';
+import '/screens/reminder/reminders_screen.dart';
 import '/utils/app_theme.dart';
 import '/utils/common_extensions.dart';
 import '/utils/get.dart';
@@ -19,9 +17,11 @@ import '/widgets/app_image.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/app_scaffold/bottom_panel_spacer.dart';
-import 'about/about_screen.dart';
-import 'downloads/downloads_screen.dart';
+import 'change_language/change_language.dart';
+import 'change_password/change_password_screen.dart';
+import 'delete_account/delete_account_screen.dart';
 import 'edit_profile/edit_profile_screen.dart';
+import 'subscription/manage_subscription.dart';
 
 class ProfileSettingsScreen extends StatefulWidget {
   const ProfileSettingsScreen({super.key});
@@ -49,7 +49,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Tran
                 colors: colors,
                 onTap: () => pushName(
                   context,
-                  FavoritesScreen(),
+                  const FavoritesScreen(),
                 ),
               ),
               _buildListTile(

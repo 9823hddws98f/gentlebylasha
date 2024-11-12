@@ -4,10 +4,10 @@ import 'package:sleeptales/utils/app_theme.dart';
 
 import '/constants/assets.dart';
 import '/domain/services/language_cubit.dart';
-import '/screens/reminder_setup.dart';
 import '/utils/global_functions.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
+import 'widgets/reminder_setup.dart';
 
 class RemindersScreen extends StatelessWidget with Translation {
   final String? email;

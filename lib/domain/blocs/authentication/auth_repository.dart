@@ -145,6 +145,9 @@ class AuthRepository {
         ).toMap());
   }
 
+  Future<bool> isPasswordAccount() async => _firebaseAuth!.currentUser!.providerData
+      .any((provider) => provider.providerId == 'password');
+
   Future<void> resetPassword(String email) async {
     await _firebaseAuth!.sendPasswordResetEmail(email: email);
   }

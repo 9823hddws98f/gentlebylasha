@@ -1,7 +1,6 @@
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:sleeptales/widgets/app_scaffold/bottom_panel_spacer.dart';
 
 import '/constants/assets.dart';
 import '/domain/models/block_item/audio_playlist.dart';
@@ -16,6 +15,7 @@ import '/utils/get.dart';
 import '/utils/tx_loader.dart';
 import '/widgets/app_image.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
+import '/widgets/app_scaffold/bottom_panel_spacer.dart';
 import '/widgets/user_avatar.dart';
 
 class PlayListTracksScreen extends StatefulWidget {

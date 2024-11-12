@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import '/domain/models/block/block.dart';
 import '/domain/models/block_item/audio_playlist.dart';
 import '/domain/models/block_item/audio_track.dart';
+import '/screens/home/searchable_tracks_screen.dart';
 import '/utils/app_theme.dart';
 import '/widgets/blocks/items/audio_block_item.dart';
 import '/widgets/blocks/items/hero_block_item.dart';
 import '/widgets/blocks/items/playlist_block_item.dart';
 import '/widgets/blocks/track_block_items_loader.dart';
 import '/widgets/blocks/widgets/block_header.dart';
-import '../../screens/searchable_tracks_screen.dart';
 
 class TrackBlockLoader extends StatelessWidget {
   const TrackBlockLoader(this.block, {super.key});

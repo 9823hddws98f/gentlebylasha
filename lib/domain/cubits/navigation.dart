@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/screens/explore/explore_screen.dart';
 import '/screens/home/home_screen.dart';
-import '/screens/profile_settings_screen.dart';
+import '/screens/settings/profile_settings_screen.dart';
 
 class NavigationCubit extends Cubit<NavItem> {
   NavigationCubit() : super(AppNavigation.allNavItems[0]);

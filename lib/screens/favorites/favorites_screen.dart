@@ -8,10 +8,10 @@ import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/language_cubit.dart';
 import '/domain/services/playlists_service.dart';
 import '/domain/services/tracks_service.dart';
+import '/screens/home/searchable_tracks_screen.dart';
 import '/utils/get.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
-import 'searchable_tracks_screen.dart';
 
 class FavoritesScreen extends StatefulWidget {
   final bool isPlaylist;

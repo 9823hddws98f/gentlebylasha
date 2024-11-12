@@ -157,31 +157,3 @@ Future<void> downloadTrack(String trackId, String trackName, String trackUrl) as
   httpClient.close();
   showToast("track downloaded");
 }
-
-Future<bool> deleteUserAccount() async {
-  try {
-    final user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      showToast(user.displayName.toString());
-      final uid = user.uid;
-
-      // Delete user from Firebase Authentication
-      await user.delete();
-
-      // Delete user document from the Users collection
-      await FirebaseFirestore.instance.collection('users').doc(uid).delete();
-
-      await FirebaseFirestore.instance.collection('favorites').doc(uid).delete();
-
-      await FirebaseFirestore.instance.collection('recently_played').doc(uid).delete();
-      return true;
-    } else {
-      showToast("Something went wrong");
-      return false;
-    }
-  } catch (e) {
-    showToast("Something went wrong");
-    return false;
-  }
-}

@@ -1,7 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 
-import '/screens/subscription/subscription.dart';
+import '/screens/settings/subscription/subscription.dart';
 import '/utils/app_theme.dart';
 import '/utils/modals.dart';
 import '/widgets/shared_axis_switcher.dart';
