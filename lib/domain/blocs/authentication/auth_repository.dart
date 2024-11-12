@@ -18,7 +18,7 @@ class AuthRepository {
   AuthRepository({FirebaseAuth? firebaseAuth})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 
-  AuthUser currentUser = AuthUser.empty;
+  AuthUser? currentUser;
 
   Stream<AuthUser?> get user => _firebaseAuth!.authStateChanges().map((firebaseUser) {
         final user = firebaseUser == null ? AuthUser.empty : firebaseUser.appUser;
@@ -170,8 +170,9 @@ class AuthRepository {
   }
 
   Future<void> reauthenticate(String password) async {
+    if (currentUser == null) return;
     var credential =
-        EmailAuthProvider.credential(email: currentUser.email, password: password);
+        EmailAuthProvider.credential(email: currentUser!.email, password: password);
     await _firebaseAuth!.currentUser!.reauthenticateWithCredential(credential);
   }
 

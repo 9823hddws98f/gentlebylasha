@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sleeptales/screens/app_container/app_container.dart';
 
 import '/constants/assets.dart';
 import '/domain/blocs/authentication/auth_repository.dart';
@@ -248,7 +249,11 @@ class LoginScreenState extends State<LoginScreen> with Translation {
       return success;
     }
 
-    // If this was successful, [MyApp] will navigate to AppContainer
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      AppContainer.routeName,
+      (route) => false,
+    );
+
     return success;
   }
 }

@@ -179,7 +179,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
 
     final isEmailUser = await isEmailAndPasswordUserLoggedIn();
-    if (!isEmailUser && _email != _auth.currentUser.email) {
+    if (!isEmailUser && _email != _auth.currentUser!.email) {
       showToast('Only email users can change their email address');
       return false;
     }

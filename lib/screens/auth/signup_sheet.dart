@@ -1,10 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '/domain/blocs/authentication/auth_repository.dart';
 import '/domain/services/language_cubit.dart';
 import '/helper/validators.dart';
+import '/screens/app_container/app_container.dart';
 import '/utils/app_theme.dart';
+import '/utils/command_trigger.dart';
 import '/utils/get.dart';
 import '/utils/tx_button.dart';
 import '/widgets/input/password_edit_text.dart';
@@ -19,13 +20,13 @@ class SignupSheet extends StatefulWidget {
 class _SignupSheetState extends State<SignupSheet> with Translation {
   final _auth = Get.the<AuthRepository>();
   final _formKey = GlobalKey<FormState>();
+  final _trigger = ActionTrigger();
 
   String? _name;
   String? _email;
   String? _password;
 
   bool _dirty = false;
-  UserCredential? _credentials;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -70,13 +71,19 @@ class _SignupSheetState extends State<SignupSheet> with Translation {
                 ),
               ),
               PasswordEditText(
-                onFieldSubmitted: (_) => _signUp(),
+                onFieldSubmitted: (_) => _trigger.trigger(),
+                textInputAction: TextInputAction.done,
                 onSaved: (value) => setState(() => _password = value),
               ),
               SizedBox(height: 48),
               TxButton.filled(
                 label: Text(tr.signUp),
                 onPress: _signUp,
+                trigger: _trigger,
+                onSuccess: () => Navigator.of(context).pushNamedAndRemoveUntil(
+                  AppContainer.routeName,
+                  (route) => false,
+                ),
               ),
               SizedBox(height: 16),
             ],
@@ -89,9 +96,6 @@ class _SignupSheetState extends State<SignupSheet> with Translation {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       final credentials = await _auth.signUpWithEmail(_name!, _email!, _password!);
-      // This will trigger userbloc to navigate to [AppContainer]
-      if (!mounted) return false;
-      _credentials = credentials;
       return credentials != null;
     } else {
       return false;

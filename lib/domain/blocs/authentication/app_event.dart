@@ -11,7 +11,3 @@ class AppUserChanged extends AppEvent {
 
   const AppUserChanged(this.user);
 }
-
-class AppUserLoaded extends AppEvent {
-  const AppUserLoaded();
-}

@@ -4,12 +4,6 @@ abstract class UserEvent {
   const UserEvent();
 }
 
-class UserChanged extends UserEvent {
-  final AppUser user;
-
-  const UserChanged(this.user);
-}
-
 class UserModified extends UserEvent {
   final AppUser user;
 
@@ -22,12 +16,6 @@ class UserUpdated extends UserEvent {
   const UserUpdated(this.user);
 }
 
-class UserDeleted extends UserEvent {
-  final AppUser user;
-
-  const UserDeleted(this.user);
-}
-
 class UserCreated extends UserEvent {
   final AppUser user;
 
@@ -36,7 +24,6 @@ class UserCreated extends UserEvent {
 
 class UserLoaded extends UserEvent {
   final AppUser user;
-  final AppBloc appbloc;
 
-  const UserLoaded(this.user, this.appbloc);
+  const UserLoaded(this.user);
 }

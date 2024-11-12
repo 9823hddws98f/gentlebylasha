@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sleeptales/utils/get.dart';
 
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/service_locator.dart';
@@ -64,16 +65,12 @@ Future<bool> getReminderValue(String id) async {
 }
 
 void logout(BuildContext context) async {
-  getIt<PageManager>().dispose();
+  Get.the<PageManager>().dispose();
   final FirebaseAuth auth = FirebaseAuth.instance;
   auth.signOut();
 
   Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-    MaterialPageRoute(
-      builder: (BuildContext context) {
-        return LoginScreen();
-      },
-    ),
+    MaterialPageRoute(builder: (context) => LoginScreen()),
     (_) => false,
   );
 }

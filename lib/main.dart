@@ -2,23 +2,18 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:device_preview/device_preview.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:sleeptales/screens/init/init_screen.dart';
 
 import '/app_init.dart';
 import '/domain/services/language_cubit.dart';
 import '/screens/auth/login_screen.dart';
 import '/utils/get.dart';
-import 'domain/blocs/authentication/app_bloc.dart';
-import 'domain/blocs/user/user_bloc.dart';
-import 'domain/services/service_locator.dart';
 import 'screens/app_container/app_container.dart';
 import 'utils/app_theme.dart';
 
@@ -26,22 +21,15 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
-  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  WidgetsFlutterBinding.ensureInitialized();
 
   await AppInit.initialize();
-
-  bool isWaitingForAuth = true;
-  if (FirebaseAuth.instance.currentUser == null) {
-    isWaitingForAuth = false;
-    FlutterNativeSplash.remove();
-  }
 
   runApp(
     DevicePreview(
       enabled: !kReleaseMode && defaultTargetPlatform == TargetPlatform.macOS,
       data: DevicePreviewData(isDarkMode: true),
-      builder: (context) => MyApp(isWaitingForAuth: isWaitingForAuth),
+      builder: (context) => MyApp(),
     ),
   );
 }
@@ -87,9 +75,7 @@ void subscribeToTopic(String topic) async {
 }
 
 class MyApp extends StatefulWidget {
-  final bool isWaitingForAuth;
-
-  const MyApp({super.key, required this.isWaitingForAuth});
+  const MyApp({super.key});
 
   static const mobileWidth = 700.0;
   static const desktopContentWidth = 500.0;
@@ -107,63 +93,34 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _userBloc = Get.the<UserBloc>();
-  final _appBloc = Get.the<AppBloc>();
   final _languageCubit = Get.the<LanguageCubit>();
 
   @override
-  Widget build(BuildContext context) => BlocConsumer<AppBloc, AppState>(
-        bloc: _appBloc,
-        listener: (context, state) async {
-          if (state.status == AppStatus.loading) {
-            _userBloc.add(
-              UserLoaded(
-                state.user.toAppUser(),
-                _appBloc,
-              ),
-            );
-          } else if (state.status == AppStatus.authenticated) {
-            await initUserBasedServices();
-            if (widget.isWaitingForAuth) {
-              FlutterNativeSplash.remove();
-            } else {
-              if (!context.mounted) return;
-              MyApp.navigatorKey.currentState?.pushNamedAndRemoveUntil(
-                AppContainer.routeName,
-                (route) => false,
-              );
-            }
-          }
-        },
-        builder: (context, state) => state.status == AppStatus.loading
-            ? const Center(child: CupertinoActivityIndicator())
-            : BlocBuilder<LanguageCubit, LanguageState>(
-                bloc: _languageCubit,
-                builder: (context, languageState) => MaterialApp(
-                  title: 'Gentle',
-                  debugShowCheckedModeBanner: false,
-                  locale: languageState.locale,
-                  theme: AppTheme.buildTheme(dark: false),
-                  darkTheme: AppTheme.buildTheme(dark: true),
-                  scrollBehavior: const MaterialScrollBehavior().copyWith(
-                    dragDevices: {
-                      PointerDeviceKind.mouse,
-                      PointerDeviceKind.touch,
-                      PointerDeviceKind.trackpad,
-                    },
-                  ),
-                  navigatorKey: MyApp.navigatorKey,
-                  localizationsDelegates: AppLocalizations.localizationsDelegates,
-                  supportedLocales: AppLocalizations.supportedLocales,
-                  initialRoute: widget.isWaitingForAuth
-                      ? AppContainer.routeName
-                      : LoginScreen.routeName,
-                  routes: {
-                    LoginScreen.routeName: (_) => const LoginScreen(),
-                    AppContainer.routeName: (_) => const AppContainer(),
-                  },
-                ),
-              ),
+  Widget build(BuildContext context) => BlocBuilder<LanguageCubit, LanguageState>(
+        bloc: _languageCubit,
+        builder: (context, languageState) => MaterialApp(
+          title: 'Gentle',
+          debugShowCheckedModeBanner: false,
+          locale: languageState.locale,
+          theme: AppTheme.buildTheme(dark: false),
+          darkTheme: AppTheme.buildTheme(dark: true),
+          scrollBehavior: const MaterialScrollBehavior().copyWith(
+            dragDevices: {
+              PointerDeviceKind.mouse,
+              PointerDeviceKind.touch,
+              PointerDeviceKind.trackpad,
+            },
+          ),
+          navigatorKey: MyApp.navigatorKey,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          initialRoute: InitScreen.routeName,
+          routes: {
+            InitScreen.routeName: (_) => InitScreen(),
+            LoginScreen.routeName: (_) => const LoginScreen(),
+            AppContainer.routeName: (_) => const AppContainer(),
+          },
+        ),
       );
 }
 

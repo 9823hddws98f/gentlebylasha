@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:sleeptales/app_init.dart';
 
-import '/domain/blocs/authentication/app_bloc.dart';
 import '/domain/services/user_service.dart';
 import 'app_user.dart';
 
@@ -16,11 +16,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   UserBloc(this._usersService) : super(UserInitial()) {
     on<UserEvent>((event, emit) async {
       if (event is UserLoaded) {
+        if (event.user.id.isEmpty) {
+          emit(UserInitial());
+          _userSubscription?.cancel();
+          return;
+        }
+
         final user = await _usersService.getById(event.user.id);
         emit(UserInitial().copyWith(user: user));
-        event.appbloc.add(const AppUserLoaded());
+        await AppInit.initUserBasedServices();
         _userSubscription = _usersService.watchById(event.user.id).listen((user) {
-          add(UserUpdated(user));
+          if (user != state.user) {
+            add(UserUpdated(user));
+          }
         });
       }
 

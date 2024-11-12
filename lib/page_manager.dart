@@ -30,9 +30,11 @@ class PageManager {
   final currentPlaylistBlockNotifier = ValueNotifier<AudioPlaylist?>(null);
   bool get _isPlaylistPlaying => currentPlaylistBlockNotifier.value != null;
 
-  bool _isInitialized = true;
+  bool _isInitialized = false;
 
   void init() async {
+    if (_isInitialized) return;
+    _isInitialized = true;
     _listenToChangesInPlaylist();
     _listenToCurrentPosition();
     _listenToBufferedPosition();
@@ -243,6 +245,7 @@ class PageManager {
   }
 
   void dispose() {
+    if (!_isInitialized) return;
     for (var subscription in _subscriptions) {
       subscription.cancel();
     }
@@ -251,6 +254,7 @@ class PageManager {
     _audioHandler.pause();
     _audioHandler.customAction('dispose');
     resetNotifiers();
+    _isInitialized = false;
   }
 
   void stop() {

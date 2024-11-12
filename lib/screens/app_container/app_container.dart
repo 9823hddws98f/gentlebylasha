@@ -8,10 +8,10 @@ import '/domain/cubits/navigation.dart';
 import '/domain/services/audio_panel_manager.dart';
 import '/main.dart';
 import '/page_manager.dart';
+import '/screens/onboarding/onboarding_bottom_sheet.dart';
 import '/utils/get.dart';
 import '/utils/global_functions.dart';
 import '/widgets/music/sliding_panel.dart';
-import '../onboarding/onboarding_bottom_sheet.dart';
 import 'app_bottom_bar.dart';
 import 'app_side_bar.dart';
 
@@ -21,10 +21,12 @@ class AppContainer extends StatefulWidget {
   const AppContainer({super.key});
 
   @override
-  AppContainerState createState() => AppContainerState();
+  State<AppContainer> createState() => _AppContainerState();
 }
 
-class AppContainerState extends State<AppContainer> with SingleTickerProviderStateMixin {
+class _AppContainerState extends State<AppContainer> with SingleTickerProviderStateMixin {
+  static bool _hasInitialized = false;
+
   final _audioPanelManager = Get.the<AudioPanelManager>();
   final _userBloc = Get.the<UserBloc>();
   final _pageManager = Get.the<PageManager>();
@@ -40,12 +42,29 @@ class AppContainerState extends State<AppContainer> with SingleTickerProviderSta
   @override
   void initState() {
     super.initState();
-    _pageManager.init();
-    _initDeepLinking();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
+    _audioPlayerAnimCtrl.duration = Durations.short4;
+
+    if (!_hasInitialized) {
+      _pageManager.init();
+      _hasInitialized = true;
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (!_hasInitialized) {
+      _initDeepLinking();
       _initializeUser();
-    });
+    }
+  }
+
+  @override
+  void dispose() {
+    _audioPlayerAnimCtrl.dispose();
+    _hasInitialized = false;
+    super.dispose();
   }
 
   @override
@@ -130,17 +149,17 @@ class AppContainerState extends State<AppContainer> with SingleTickerProviderSta
   }
 
   void _initDeepLinking() async {
-    // Platform messages are asynchronous, so we initialize in an async method.
     try {
-      // Request permission to handle incoming links
       final appLinks = AppLinks();
       appLinks.uriLinkStream.listen((Uri? uri) {
-        if (uri != null) {
+        if (uri != null && mounted) {
           _handleDeepLink(uri);
         }
       });
     } on PlatformException {
-      showToast("Deeplink exception");
+      if (mounted) {
+        showToast("Deeplink exception");
+      }
     }
   }
 
@@ -151,10 +170,12 @@ class AppContainerState extends State<AppContainer> with SingleTickerProviderSta
 
   Future<void> _initializeUser() async {
     final user = _userBloc.state.user;
-
-    // Initialize onboarding screen if needed
-    if (user.goals == null || user.heardFrom == null) {
-      OnboardingBottomSheet.show(context);
+    if (user.id.isNotEmpty) {
+      if (!mounted) return;
+      // Initialize onboarding screen if needed
+      if (user.goals == null || user.heardFrom == null) {
+        OnboardingBottomSheet.show(context);
+      }
     }
   }
 }
