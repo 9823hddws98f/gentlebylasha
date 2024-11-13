@@ -152,7 +152,7 @@ class Modals {
     return Theme(
       data: theme.copyWith(
         inputDecorationTheme: InputDecorationTheme(
-          fillColor: theme.colorScheme.surfaceContainerHighest,
+          fillColor: theme.colorScheme.surfaceContainerLowest,
           filled: true,
           border: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.transparent),

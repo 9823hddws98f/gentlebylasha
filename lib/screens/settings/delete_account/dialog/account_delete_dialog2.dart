@@ -47,10 +47,7 @@ class _AccountDeleteDialog2State extends State<AccountDeleteDialog2> {
             ),
             TextField(
               controller: _codeController,
-              decoration: InputDecoration(
-                hintText: 'Enter code',
-                fillColor: Theme.of(context).colorScheme.surfaceContainerLowest,
-              ),
+              decoration: InputDecoration(hintText: 'Enter code'),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
