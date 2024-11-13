@@ -1,13 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import '/screens/app_container/app_container.dart';
 
 import '/constants/assets.dart';
 import '/domain/blocs/authentication/auth_repository.dart';
 import '/domain/services/language_cubit.dart';
 import '/helper/validators.dart';
 import '/main.dart';
+import '/screens/app_container/app_container.dart';
 import '/screens/auth/signup_sheet.dart';
 import '/utils/app_theme.dart';
 import '/utils/command_trigger.dart';
@@ -240,20 +240,18 @@ class LoginScreenState extends State<LoginScreen> with Translation {
     required Future<UserCredential?> Function() signIn,
     String? authProvider,
   }) async {
-    bool success = false;
     final userCredential = await signIn();
-    if (!mounted) return success;
+    if (!mounted) return false;
 
     if (userCredential == null) {
       showToast('${tr.unableToAuth} $authProvider');
-      return success;
+      return false;
     }
 
     Navigator.of(context).pushNamedAndRemoveUntil(
       AppContainer.routeName,
       (route) => false,
     );
-
-    return success;
+    return true;
   }
 }
