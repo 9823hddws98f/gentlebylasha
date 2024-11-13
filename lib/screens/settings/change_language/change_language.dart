@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '/utils/app_theme.dart';
-import '/utils/common_extensions.dart';
 
 import '/domain/services/language_cubit.dart';
+import '/utils/common_extensions.dart';
 import '/utils/get.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
@@ -23,19 +22,16 @@ class _ChangeLanguageScreen extends State<ChangeLanguageScreen> with Translation
   Widget build(BuildContext context) => AppScaffold(
         appBar: (context, isMobile) => AdaptiveAppBar(
           title: tr.changeLanguage,
+          hasBottomLine: false,
         ),
+        bodyPadding: EdgeInsets.zero,
         body: (context, isMobile) => BlocBuilder<LanguageCubit, LanguageState>(
           bloc: _languageCubit,
           builder: (context, state) => ListView(
-            padding: EdgeInsets.symmetric(vertical: AppTheme.sidePadding),
             children: AppLanguage.values
                 .map<Widget>(
                   (language) => ListTile(
                     title: Text(language.displayName),
-                    titleTextStyle: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                    ),
                     trailing: state.locale.languageCode == language.languageCode
                         ? const Icon(Icons.check)
                         : null,
@@ -44,7 +40,7 @@ class _ChangeLanguageScreen extends State<ChangeLanguageScreen> with Translation
                   ),
                 )
                 .toList()
-                .interleaveWith(Divider()),
+                .interleaveWith(Divider(height: 1)),
           ),
         ),
       );

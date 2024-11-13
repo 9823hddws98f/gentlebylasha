@@ -6,13 +6,13 @@ class Shimmerize extends StatelessWidget {
 
   final Widget child;
 
-  static const baseColor = Color(0xff372953);
-  static const highlightColor = Color(0xff261c39);
-
   @override
-  Widget build(BuildContext context) => Shimmer.fromColors(
-        baseColor: baseColor,
-        highlightColor: highlightColor,
-        child: child,
-      );
+  Widget build(BuildContext context) {
+    final secondary = Theme.of(context).colorScheme.secondary;
+    return Shimmer.fromColors(
+      baseColor: secondary.withValues(alpha: 0.2),
+      highlightColor: secondary.withValues(alpha: 0.4),
+      child: child,
+    );
+  }
 }
