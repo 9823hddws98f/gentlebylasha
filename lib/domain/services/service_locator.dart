@@ -2,9 +2,6 @@ import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:get_it/get_it.dart';
-import '/domain/services/account_deletion_service.dart';
-import '/domain/services/mailing_service.dart';
-import '/domain/services/sendgrid_mailing_service.dart';
 
 import '/domain/blocs/authentication/app_bloc.dart';
 import '/domain/blocs/authentication/auth_repository.dart';
@@ -13,14 +10,19 @@ import '/domain/cubits/downloads_cubit.dart';
 import '/domain/cubits/favorite_playlists.dart';
 import '/domain/cubits/favorite_tracks.dart';
 import '/domain/cubits/pages/pages_cubit.dart';
+import '/domain/services/account_deletion_service.dart';
+import '/domain/services/app_settings.dart';
 import '/domain/services/downloads_service.dart';
 import '/domain/services/language_cubit.dart';
+import '/domain/services/mailing_service.dart';
+import '/domain/services/sendgrid_mailing_service.dart';
 import '/domain/services/storage_service.dart';
 import '/domain/services/user_service.dart';
 import '/page_manager.dart';
 import '/utils/get.dart';
 import 'audio_handler.dart';
 import 'audio_panel_manager.dart';
+import 'interfaces/app_settings_view.dart';
 import 'playlist_repository.dart';
 import 'playlists_service.dart';
 import 'tracks_service.dart';
@@ -39,6 +41,8 @@ Future<void> setupServiceLocator() async {
   _regLazy<DownloadsService>(() => DownloadsService.instance);
   _regLazy<MailingService>(() => SendGridMailingService.instance);
   _regLazy<AccountDeletionService>(() => AccountDeletionService.instance);
+  _regLazy<AppSettings>(() => AppSettings.instance);
+  _regLazy<AppSettingsView>(() => AppSettings.instance);
 
   /// Blocs/Cubits
   _regLazy<AppBloc>(() => AppBloc(Get.the<AuthRepository>()));

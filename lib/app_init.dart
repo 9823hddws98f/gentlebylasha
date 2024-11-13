@@ -3,13 +3,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
-import '/domain/cubits/favorite_playlists.dart';
-import '/domain/cubits/favorite_tracks.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
+import '/domain/cubits/favorite_playlists.dart';
+import '/domain/cubits/favorite_tracks.dart';
 import '/domain/cubits/pages/pages_cubit.dart';
 import '/firebase_options.dart';
 import '/utils/get.dart';
+import 'domain/services/app_settings.dart';
 import 'domain/services/service_locator.dart';
 
 class AppInit {
@@ -30,6 +31,8 @@ class AppInit {
 
     /// Initialize App Pages
     await Get.the<PagesCubit>().init();
+
+    await Get.the<AppSettings>().initialize();
 
     //TODO: await initializeNotifications();
   }

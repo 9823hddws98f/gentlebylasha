@@ -9,6 +9,7 @@ import '/screens/about/about_screen.dart';
 import '/screens/downloads/downloads_screen.dart';
 import '/screens/favorites/favorites_screen.dart';
 import '/screens/reminder/reminders_screen.dart';
+import '/screens/settings/display_mode/display_mode_screen.dart';
 import '/utils/app_theme.dart';
 import '/utils/common_extensions.dart';
 import '/utils/get.dart';
@@ -92,6 +93,12 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Tran
                 title: tr.changeLanguage,
                 colors: colors,
                 onTap: () => pushName(context, ChangeLanguageScreen()),
+              ),
+              _buildListTile(
+                icon: Icons.display_settings,
+                title: 'Display mode',
+                colors: colors,
+                onTap: () => pushName(context, DisplayModeScreen()),
               ),
               _buildListTile(
                 icon: Icons.help_center,

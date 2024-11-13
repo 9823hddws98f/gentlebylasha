@@ -8,12 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import '/screens/init/init_screen.dart';
 
 import '/app_init.dart';
 import '/domain/services/language_cubit.dart';
 import '/screens/auth/login_screen.dart';
+import '/screens/init/init_screen.dart';
 import '/utils/get.dart';
+import 'domain/services/interfaces/app_settings_view.dart';
 import 'screens/app_container/app_container.dart';
 import 'utils/app_theme.dart';
 
@@ -94,33 +95,37 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _languageCubit = Get.the<LanguageCubit>();
+  final _settings = Get.the<AppSettingsView>();
 
   @override
   Widget build(BuildContext context) => BlocBuilder<LanguageCubit, LanguageState>(
         bloc: _languageCubit,
-        builder: (context, languageState) => MaterialApp(
-          title: 'Gentle',
-          debugShowCheckedModeBanner: false,
-          locale: languageState.locale,
-          theme: AppTheme.buildTheme(dark: false),
-          darkTheme: AppTheme.buildTheme(dark: true),
-          scrollBehavior: const MaterialScrollBehavior().copyWith(
-            dragDevices: {
-              PointerDeviceKind.mouse,
-              PointerDeviceKind.touch,
-              PointerDeviceKind.trackpad,
-            },
-          ),
-          navigatorKey: MyApp.navigatorKey,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          initialRoute: InitScreen.routeName,
-          routes: {
-            InitScreen.routeName: (_) => InitScreen(),
-            LoginScreen.routeName: (_) => const LoginScreen(),
-            AppContainer.routeName: (_) => const AppContainer(),
-          },
-        ),
+        builder: (context, languageState) => ListenableBuilder(
+            listenable: _settings,
+            builder: (context, appSettings) => MaterialApp(
+                  title: 'Gentle',
+                  debugShowCheckedModeBanner: false,
+                  locale: languageState.locale,
+                  theme: AppTheme.buildTheme(dark: false),
+                  darkTheme: AppTheme.buildTheme(dark: true),
+                  scrollBehavior: const MaterialScrollBehavior().copyWith(
+                    dragDevices: {
+                      PointerDeviceKind.mouse,
+                      PointerDeviceKind.touch,
+                      PointerDeviceKind.trackpad,
+                    },
+                  ),
+                  themeMode: _settings.themeMode,
+                  navigatorKey: MyApp.navigatorKey,
+                  localizationsDelegates: AppLocalizations.localizationsDelegates,
+                  supportedLocales: AppLocalizations.supportedLocales,
+                  initialRoute: InitScreen.routeName,
+                  routes: {
+                    InitScreen.routeName: (_) => InitScreen(),
+                    LoginScreen.routeName: (_) => const LoginScreen(),
+                    AppContainer.routeName: (_) => const AppContainer(),
+                  },
+                )),
       );
 }
 
