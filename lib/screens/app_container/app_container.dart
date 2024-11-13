@@ -2,13 +2,13 @@ import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '/screens/app_container/user_init.dart';
 
 import '/domain/blocs/user/user_bloc.dart';
 import '/domain/cubits/navigation.dart';
 import '/domain/services/audio_panel_manager.dart';
 import '/main.dart';
 import '/page_manager.dart';
-import '/screens/onboarding/onboarding_bottom_sheet.dart';
 import '/utils/get.dart';
 import '/utils/global_functions.dart';
 import '/widgets/music/sliding_panel.dart';
@@ -25,8 +25,6 @@ class AppContainer extends StatefulWidget {
 }
 
 class _AppContainerState extends State<AppContainer> with SingleTickerProviderStateMixin {
-  static bool _hasInitialized = false;
-
   final _audioPanelManager = Get.the<AudioPanelManager>();
   final _userBloc = Get.the<UserBloc>();
   final _pageManager = Get.the<PageManager>();
@@ -43,27 +41,19 @@ class _AppContainerState extends State<AppContainer> with SingleTickerProviderSt
   void initState() {
     super.initState();
     _audioPlayerAnimCtrl.duration = Durations.short4;
-
-    if (!_hasInitialized) {
-      _pageManager.init();
-      _hasInitialized = true;
-    }
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    if (!_hasInitialized) {
+    _pageManager.init();
+    // Initialize after the frame is rendered to ensure the user is set
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
       _initDeepLinking();
-      _initializeUser();
-    }
+      UserInit(user: _userBloc.state.user).initialize(context);
+    });
   }
 
   @override
   void dispose() {
     _audioPlayerAnimCtrl.dispose();
-    _hasInitialized = false;
+    _pageManager.dispose();
     super.dispose();
   }
 
@@ -166,16 +156,5 @@ class _AppContainerState extends State<AppContainer> with SingleTickerProviderSt
   void _handleDeepLink(Uri uri) {
     String trackId = uri.queryParameters['trackId'] ?? '';
     showToast(trackId);
-  }
-
-  Future<void> _initializeUser() async {
-    final user = _userBloc.state.user;
-    if (user.id.isNotEmpty) {
-      if (!mounted) return;
-      // Initialize onboarding screen if needed
-      if (user.goals == null || user.heardFrom == null) {
-        OnboardingBottomSheet.show(context);
-      }
-    }
   }
 }

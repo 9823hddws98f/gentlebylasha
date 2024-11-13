@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sleeptales/utils/app_theme.dart';
-import 'package:sleeptales/utils/common_extensions.dart';
+import '/utils/app_theme.dart';
+import '/utils/common_extensions.dart';
 
 import '/domain/services/language_cubit.dart';
 import '/utils/get.dart';

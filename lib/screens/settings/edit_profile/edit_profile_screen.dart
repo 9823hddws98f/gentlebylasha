@@ -1,23 +1,24 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sleeptales/constants/assets.dart';
-import 'package:sleeptales/domain/blocs/authentication/auth_repository.dart';
-import 'package:sleeptales/domain/blocs/user/app_user.dart';
-import 'package:sleeptales/domain/blocs/user/user_bloc.dart';
-import 'package:sleeptales/utils/app_theme.dart';
-import 'package:sleeptales/utils/command_trigger.dart';
-import 'package:sleeptales/utils/firestore_helper.dart';
-import 'package:sleeptales/utils/get.dart';
-import 'package:sleeptales/utils/tx_button.dart';
-import 'package:sleeptales/widgets/app_image.dart';
-import 'package:sleeptales/widgets/app_scaffold/bottom_panel_spacer.dart';
-import 'package:sleeptales/widgets/input/file_dropzone_selector.dart';
 
+import '/constants/assets.dart';
+import '/domain/blocs/authentication/auth_repository.dart';
+import '/domain/blocs/user/app_user.dart';
+import '/domain/blocs/user/user_bloc.dart';
 import '/helper/validators.dart';
+import '/utils/app_theme.dart';
+import '/utils/command_trigger.dart';
+import '/utils/firestore_helper.dart';
+import '/utils/get.dart';
 import '/utils/global_functions.dart';
+import '/utils/modals.dart';
+import '/utils/tx_button.dart';
+import '/widgets/app_image.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
+import '/widgets/app_scaffold/bottom_panel_spacer.dart';
+import '/widgets/input/file_dropzone_selector.dart';
 import '/widgets/input/password_edit_text.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -192,9 +193,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     String? password;
     final passwordFormKey = GlobalKey<FormState>();
 
-    final confirmed = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
+    final confirmed = await Modals.show<bool>(
+      context,
+      dismissible: false,
       builder: (context) => AlertDialog(
         title: Text('Confirm Password'),
         content: Column(

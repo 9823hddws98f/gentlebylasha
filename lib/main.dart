@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:sleeptales/screens/init/init_screen.dart';
+import '/screens/init/init_screen.dart';
 
 import '/app_init.dart';
 import '/domain/services/language_cubit.dart';

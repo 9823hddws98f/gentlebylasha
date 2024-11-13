@@ -2,7 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sleeptales/widgets/app_scaffold/bottom_panel_spacer.dart';
+import '/widgets/app_scaffold/bottom_panel_spacer.dart';
 
 import '/domain/cubits/pages/pages_cubit.dart';
 import '/domain/models/block_item/audio_track.dart';

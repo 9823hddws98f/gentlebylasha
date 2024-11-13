@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:sleeptales/app_init.dart';
+import '/app_init.dart';
 
 import '/domain/services/user_service.dart';
 import 'app_user.dart';

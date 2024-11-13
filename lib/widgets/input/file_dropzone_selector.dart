@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:sleeptales/utils/get.dart';
+import '/utils/get.dart';
 
 import '/domain/services/storage_service.dart';
 import '/utils/app_theme.dart';

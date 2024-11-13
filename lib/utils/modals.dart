@@ -12,8 +12,8 @@ class Modals {
     String? text,
   }) async =>
       true ==
-      await showDialog(
-        context: context,
+      await show(
+        context,
         builder: (context) => AlertDialog(
           title: const Text('Confirm'),
           content: content ?? Text(text ?? 'Are you sure you want to confirm?'),
@@ -91,6 +91,19 @@ class Modals {
 
   static Future<T?> show<T>(
     BuildContext context, {
+    required Widget Function(BuildContext) builder,
+    bool useSafeArea = true,
+    bool dismissible = true,
+  }) =>
+      showDialog<T>(
+        context: context,
+        barrierDismissible: dismissible,
+        useSafeArea: useSafeArea,
+        builder: (context) => _wrapInTheme(context, builder: builder),
+      );
+
+  static Future<T?> showModal<T>(
+    BuildContext context, {
     required Widget Function(BuildContext, ScrollController) builder,
     bool enableDrag = true,
     bool isDismissible = true,
@@ -109,42 +122,47 @@ class Modals {
         isDismissible: isDismissible,
         showDragHandle: showDragHandle,
         useSafeArea: useSafeArea,
-        builder: (context) {
-          final theme = Theme.of(context);
-          return Theme(
-            data: theme.copyWith(
-              inputDecorationTheme: InputDecorationTheme(
-                fillColor: theme.colorScheme.surfaceContainerHighest,
-                filled: true,
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.transparent),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.transparent),
-                ),
-              ),
+        builder: (context) => _wrapInTheme(
+          context,
+          builder: (context) => Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.viewInsetsOf(context).bottom,
             ),
-            child: Padding(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.viewInsetsOf(context).bottom,
-              ),
-              child: DraggableScrollableSheet(
-                expand: expand,
-                initialChildSize: initialSize,
-                minChildSize: minSize,
-                maxChildSize: maxSize,
-                builder: (context, controller) {
-                  if (scrollable) {
-                    return SingleChildScrollView(
-                      controller: controller,
-                      child: builder(context, controller),
-                    );
-                  }
-                  return builder(context, controller);
-                },
-              ),
+            child: DraggableScrollableSheet(
+              expand: expand,
+              initialChildSize: initialSize,
+              minChildSize: minSize,
+              maxChildSize: maxSize,
+              builder: (context, controller) {
+                if (scrollable) {
+                  return SingleChildScrollView(
+                    controller: controller,
+                    child: builder(context, controller),
+                  );
+                }
+                return builder(context, controller);
+              },
             ),
-          );
-        },
+          ),
+        ),
       );
+
+  static Widget _wrapInTheme(BuildContext context, {required WidgetBuilder builder}) {
+    final theme = Theme.of(context);
+    return Theme(
+      data: theme.copyWith(
+        inputDecorationTheme: InputDecorationTheme(
+          fillColor: theme.colorScheme.surfaceContainerHighest,
+          filled: true,
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.transparent),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.transparent),
+          ),
+        ),
+      ),
+      child: builder(context),
+    );
+  }
 }

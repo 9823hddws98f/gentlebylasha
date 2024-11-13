@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:sleeptales/utils/app_theme.dart';
+import '/utils/app_theme.dart';
 
 import '/constants/assets.dart';
 import '/domain/services/language_cubit.dart';

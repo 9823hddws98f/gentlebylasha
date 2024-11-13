@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sleeptales/domain/cubits/downloads_cubit.dart';
-import 'package:sleeptales/domain/models/block_item/audio_track.dart';
+import '/domain/cubits/downloads_cubit.dart';
+import '/domain/models/block_item/audio_track.dart';
 
 import '/utils/get.dart';
 

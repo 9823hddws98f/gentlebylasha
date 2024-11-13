@@ -1,6 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:sleeptales/utils/common_extensions.dart';
+import '/utils/common_extensions.dart';
 import 'package:uuid/uuid.dart';
 
 import '/widgets/input/file_dropzone_selector.dart';

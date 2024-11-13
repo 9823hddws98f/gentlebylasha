@@ -5,6 +5,7 @@ import '/domain/services/account_deletion_service.dart';
 import '/domain/services/mailing_service.dart';
 import '/utils/common_extensions.dart';
 import '/utils/get.dart';
+import '/utils/modals.dart';
 import '/utils/tx_button.dart';
 
 // TODO: TEST
@@ -89,8 +90,8 @@ class _AccountDeleteDialog2State extends State<AccountDeleteDialog2> {
         await FirebaseAuth.instance.currentUser!.delete();
       } catch (e) {
         if (!mounted) return;
-        await showDialog(
-          context: context,
+        await Modals.show(
+          context,
           builder: (context) => AlertDialog(
             title: Text('Error'),
             content: Text(e.toString()),
@@ -109,8 +110,8 @@ class _AccountDeleteDialog2State extends State<AccountDeleteDialog2> {
     } else {
       if (!mounted) return;
       // Show error message
-      showDialog(
-        context: context,
+      Modals.show(
+        context,
         builder: (context) {
           return AlertDialog(
             title: Text('Error'),

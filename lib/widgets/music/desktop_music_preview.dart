@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '/page_manager.dart';
 import '/screens/music_player/music_player_screen.dart';
 import '/utils/get.dart';
+import '/utils/modals.dart';
 
 class DesktopMusicPreview extends StatelessWidget {
   DesktopMusicPreview({super.key});
@@ -12,8 +13,8 @@ class DesktopMusicPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => IconButton(
-        onPressed: () => showDialog(
-          context: context,
+        onPressed: () => Modals.show(
+          context,
           builder: (context) => AlertDialog(
             contentPadding: EdgeInsets.all(32),
             content: SizedBox(

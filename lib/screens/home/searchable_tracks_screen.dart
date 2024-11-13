@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sleeptales/widgets/blocks/track_grid.dart';
+import '/widgets/blocks/track_grid.dart';
 
 import '/domain/models/block_item/audio_playlist.dart';
 import '/domain/models/block_item/audio_track.dart';

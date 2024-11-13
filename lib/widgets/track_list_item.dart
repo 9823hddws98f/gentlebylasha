@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sleeptales/constants/assets.dart';
-import 'package:sleeptales/utils/app_theme.dart';
+import '/constants/assets.dart';
+import '/utils/app_theme.dart';
 
 import 'app_image.dart';
 

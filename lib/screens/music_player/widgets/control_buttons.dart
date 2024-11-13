@@ -2,7 +2,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:sleeptales/widgets/download_button.dart';
+import '/widgets/download_button.dart';
 
 import '/domain/models/block_item/audio_track.dart';
 import '/main.dart';

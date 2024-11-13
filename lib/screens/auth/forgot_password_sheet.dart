@@ -15,7 +15,7 @@ class ForgotPasswordSheet extends StatefulWidget {
 
   const ForgotPasswordSheet(this.controller, {super.key});
 
-  static Future<void> show(BuildContext context) => Modals.show(
+  static Future<void> show(BuildContext context) => Modals.showModal(
         context,
         initialSize: 0.7,
         minSize: 0.5,

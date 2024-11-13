@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:sleeptales/screens/settings/delete_account/dialog/account_delete_dialog1.dart';
-import 'package:sleeptales/utils/enums.dart';
-import 'package:sleeptales/utils/tx_button.dart';
-import 'package:sleeptales/widgets/app_scaffold/bottom_panel_spacer.dart';
 
 import '/domain/services/language_cubit.dart';
+import '/screens/settings/delete_account/dialog/account_delete_dialog1.dart';
 import '/utils/app_theme.dart';
+import '/utils/enums.dart';
+import '/utils/modals.dart';
+import '/utils/tx_button.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
+import '/widgets/app_scaffold/bottom_panel_spacer.dart';
 
 class DeleteAccountScreen extends StatelessWidget with Translation {
   const DeleteAccountScreen({super.key});
@@ -43,8 +44,8 @@ class DeleteAccountScreen extends StatelessWidget with Translation {
               ),
               TxButton.filled(
                 label: Text(tr.deleteAccount),
-                onPressVoid: () => showDialog(
-                  context: context,
+                onPressVoid: () => Modals.show(
+                  context,
                   builder: (context) => AccountDeleteDialog1(),
                 ),
                 color: RoleColor.danger,

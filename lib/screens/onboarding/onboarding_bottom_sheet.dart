@@ -11,7 +11,7 @@ import 'onboarding02.dart';
 class OnboardingBottomSheet extends StatefulWidget {
   const OnboardingBottomSheet({super.key});
 
-  static Future<void> show(BuildContext context) => Modals.show(
+  static Future<void> show(BuildContext context) => Modals.showModal(
         context,
         enableDrag: false,
         scrollable: false,

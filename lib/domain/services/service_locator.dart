@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:get_it/get_it.dart';
-import 'package:sleeptales/domain/services/account_deletion_service.dart';
-import 'package:sleeptales/domain/services/mailing_service.dart';
-import 'package:sleeptales/domain/services/sendgrid_mailing_service.dart';
+import '/domain/services/account_deletion_service.dart';
+import '/domain/services/mailing_service.dart';
+import '/domain/services/sendgrid_mailing_service.dart';
 
 import '/domain/blocs/authentication/app_bloc.dart';
 import '/domain/blocs/authentication/auth_repository.dart';

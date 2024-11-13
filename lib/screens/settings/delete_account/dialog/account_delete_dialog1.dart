@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '/domain/services/mailing_service.dart';
 import '/utils/get.dart';
+import '/utils/modals.dart';
 import 'account_delete_dialog2.dart';
 
 class AccountDeleteDialog1 extends StatefulWidget {
@@ -37,8 +38,8 @@ class _AccountDeleteDialog1State extends State<AccountDeleteDialog1> {
 
               if (!context.mounted) return;
               Navigator.of(context).pop();
-              showDialog(
-                context: context,
+              Modals.show(
+                context,
                 builder: (_) => AccountDeleteDialog2(
                   email: user.email!,
                   userId: user.uid,

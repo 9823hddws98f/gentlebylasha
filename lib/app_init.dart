@@ -3,8 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
-import 'package:sleeptales/domain/cubits/favorite_playlists.dart';
-import 'package:sleeptales/domain/cubits/favorite_tracks.dart';
+import '/domain/cubits/favorite_playlists.dart';
+import '/domain/cubits/favorite_tracks.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 import '/domain/cubits/pages/pages_cubit.dart';
