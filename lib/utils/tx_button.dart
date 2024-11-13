@@ -42,6 +42,7 @@ class TxButton extends StatefulWidget {
   final FutureOr<bool> Function()? onPress;
   final FutureOr<void> Function()? onPressVoid;
   final void Function()? onSuccess;
+  final bool dense;
 
   const TxButton({
     required this.type,
@@ -54,6 +55,7 @@ class TxButton extends StatefulWidget {
     this.onPress,
     this.onPressVoid,
     this.onSuccess,
+    this.dense = false,
     super.key,
   }) : assert(onPress == null || onPressVoid == null);
 
@@ -67,6 +69,7 @@ class TxButton extends StatefulWidget {
     this.onPress,
     this.onPressVoid,
     this.onSuccess,
+    this.dense = false,
     super.key,
   })  : type = TxButtonType.filled,
         assert(onPress == null || onPressVoid == null);
@@ -81,6 +84,7 @@ class TxButton extends StatefulWidget {
     this.onPress,
     this.onPressVoid,
     this.onSuccess,
+    this.dense = false,
     super.key,
   })  : type = TxButtonType.text,
         assert(onPress == null || onPressVoid == null);
@@ -95,6 +99,7 @@ class TxButton extends StatefulWidget {
     this.onPress,
     this.onPressVoid,
     this.onSuccess,
+    this.dense = false,
     super.key,
   })  : type = TxButtonType.outlined,
         assert(onPress == null || onPressVoid == null);
@@ -109,6 +114,7 @@ class TxButton extends StatefulWidget {
     this.onPress,
     this.onPressVoid,
     this.onSuccess,
+    this.dense = false,
     super.key,
   })  : type = TxButtonType.elevated,
         assert(onPress == null || onPressVoid == null);
@@ -205,27 +211,41 @@ class _TxButtonState extends State<TxButton> {
     final iconColor =
         widget.type.isFilled || widget.type.isElevated ? fgColor : roleColor;
 
+    final padding =
+        widget.dense ? const EdgeInsets.symmetric(horizontal: 12, vertical: 0) : null;
+    final minimumSize = widget.dense ? const Size(0, 38) : null;
+
     final style = switch (widget.type) {
       TxButtonType.filled => FilledButton.styleFrom(
           backgroundColor: roleColor,
           foregroundColor: fgColor,
+          padding: padding,
+          minimumSize: minimumSize,
         ),
       TxButtonType.elevated => ElevatedButton.styleFrom(
           backgroundColor: roleColor,
           foregroundColor: fgColor,
+          padding: padding,
+          minimumSize: minimumSize,
         ),
-      TxButtonType.text => TextButton.styleFrom(foregroundColor: roleColor),
+      TxButtonType.text => TextButton.styleFrom(
+          foregroundColor: roleColor,
+          padding: padding,
+          minimumSize: minimumSize,
+        ),
       TxButtonType.outlined => OutlinedButton.styleFrom(
           foregroundColor: roleColor,
           side: BorderSide(color: roleColor),
+          padding: padding,
+          minimumSize: minimumSize,
         ),
     };
 
-    final size = widget.iconSize;
+    final size = widget.iconSize ?? (widget.dense ? 18 : 24);
 
     final icon = switch (_stage) {
       TxButtonStage.loading =>
-        CupertinoActivityIndicator(color: iconColor, radius: (size ?? 24) / 2),
+        CupertinoActivityIndicator(color: iconColor, radius: size / 2),
       TxButtonStage.success => Icon(Icons.check, color: iconColor, size: size),
       TxButtonStage.error => Icon(Icons.close, color: iconColor, size: size),
       _ => widget.icon != null ? Icon(widget.icon, color: iconColor, size: size) : null,

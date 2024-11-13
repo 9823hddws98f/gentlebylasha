@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sleeptales/utils/app_theme.dart';
 
 import 'enums.dart';
 import 'tx_button.dart';
@@ -163,6 +165,54 @@ class Modals {
         ),
       ),
       child: builder(context),
+    );
+  }
+
+  static Future<TimeOfDay?> showTimeOfDayPicker(
+    BuildContext context, {
+    TimeOfDay? initialTime,
+  }) async {
+    DateTime? selectedDateTime = DateTime.now();
+    selectedDateTime = await showModalBottomSheet<DateTime>(
+      context: context,
+      useRootNavigator: true,
+      showDragHandle: true,
+      builder: (context) => Container(
+        height: 320,
+        padding: const EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: CupertinoDatePicker(
+                  mode: CupertinoDatePickerMode.time,
+                  initialDateTime: DateTime.now().copyWith(
+                    hour: initialTime?.hour ?? TimeOfDay.now().hour,
+                    minute: initialTime?.minute ?? TimeOfDay.now().minute,
+                  ),
+                  onDateTimeChanged: (dateTime) => selectedDateTime = dateTime,
+                ),
+              ),
+              TxButton.filled(
+                label: const Text('Set Time'),
+                color: RoleColor.secondary,
+                showSuccess: false,
+                onPressVoid: () => Navigator.pop(
+                  context,
+                  selectedDateTime,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    if (selectedDateTime == null) return null;
+    return TimeOfDay(
+      hour: selectedDateTime!.hour,
+      minute: selectedDateTime!.minute,
     );
   }
 }

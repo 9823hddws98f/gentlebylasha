@@ -23,14 +23,13 @@ import '/utils/get.dart';
 import 'audio_handler.dart';
 import 'audio_panel_manager.dart';
 import 'interfaces/app_settings_view.dart';
-import 'playlist_repository.dart';
 import 'playlists_service.dart';
+import 'reminder_service.dart';
 import 'tracks_service.dart';
 
 Future<void> setupServiceLocator() async {
-  /// services
+  /// Services
   GetIt.instance.registerSingleton<AudioHandler>(await initAudioService());
-  _regLazy<PlaylistRepository>(() => DemoPlaylist());
   _regLazy<AuthRepository>(() => AuthRepository());
   _regLazy<UsersService>(() => UsersService());
   _regLazy<AudioPanelManager>(() => AudioPanelManager.instance);
@@ -43,6 +42,7 @@ Future<void> setupServiceLocator() async {
   _regLazy<AccountDeletionService>(() => AccountDeletionService.instance);
   _regLazy<AppSettings>(() => AppSettings.instance);
   _regLazy<AppSettingsView>(() => AppSettings.instance);
+  _regLazy<ReminderService>(() => ReminderService.instance);
 
   /// Blocs/Cubits
   _regLazy<AppBloc>(() => AppBloc(Get.the<AuthRepository>()));

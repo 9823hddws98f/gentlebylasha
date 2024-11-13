@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:sleeptales/domain/services/reminder_service.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 import '/domain/cubits/favorite_playlists.dart';
@@ -33,6 +34,8 @@ class AppInit {
     await Get.the<PagesCubit>().init();
 
     await Get.the<AppSettings>().initialize();
+
+    await Get.the<ReminderService>().initialize();
 
     //TODO: await initializeNotifications();
   }

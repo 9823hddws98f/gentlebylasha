@@ -18,8 +18,7 @@ import 'domain/services/interfaces/app_settings_view.dart';
 import 'screens/app_container/app_container.dart';
 import 'utils/app_theme.dart';
 
-FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -126,44 +125,5 @@ class _MyAppState extends State<MyApp> {
                     AppContainer.routeName: (_) => const AppContainer(),
                   },
                 )),
-      );
-}
-
-// Define a method to initialize the plugin and request permission to send notifications
-Future<void> initializeNotifications() async {
-  await requestNotificationPermission();
-  const androidInitSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
-  final initializationSettingsDarwin = DarwinInitializationSettings(
-    requestSoundPermission: true,
-    requestBadgePermission: true,
-    requestAlertPermission: true,
-    //TODO:  onDidReceiveLocalNotification:
-  );
-  final initializationSettings = InitializationSettings(
-    android: androidInitSettings,
-    iOS: initializationSettingsDarwin,
-  );
-
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-}
-
-Future<void> requestNotificationPermission() async {
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
-      ?.requestPermissions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
-
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(
-        AndroidNotificationChannel(
-          'daily_reminder',
-          'Daily Reminder',
-          importance: Importance.max,
-          vibrationPattern: Int64List.fromList([0, 500, 500, 1000]),
-        ),
       );
 }

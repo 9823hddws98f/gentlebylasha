@@ -46,11 +46,13 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
                     onPressed: () => Navigator.pop(context),
                   ),
                 const SizedBox(width: AppTheme.sidePadding / 2),
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: isMobile ? null : 32,
-                    fontWeight: isMobile ? null : FontWeight.w600,
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: isMobile ? null : 32,
+                      fontWeight: isMobile ? null : FontWeight.w600,
+                    ),
                   ),
                 ),
               ]

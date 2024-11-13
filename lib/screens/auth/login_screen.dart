@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -158,8 +159,10 @@ class LoginScreenState extends State<LoginScreen> with Translation {
                   ],
                 ),
                 SizedBox(height: 24),
-                _buildAppleLoginButton(),
-                SizedBox(height: 16),
+                if (TargetPlatform.iOS == defaultTargetPlatform) ...[
+                  _buildAppleLoginButton(),
+                  SizedBox(height: 16),
+                ],
                 _buildGoogleLoginButton(),
                 SizedBox(height: 16),
               ],

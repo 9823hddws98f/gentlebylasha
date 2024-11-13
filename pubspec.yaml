@@ -51,7 +51,6 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.6
-  flutter_facebook_auth: ^7.1.1
   flutter_image_compress: ^2.3.0
   flutter_inapp_purchase: ^5.4.1
   flutter_local_notifications: ^17.2.4

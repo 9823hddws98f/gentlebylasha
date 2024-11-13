@@ -24,7 +24,6 @@ class InitScreen extends StatelessWidget {
         bloc: _appBloc,
         builder: (context, appBlocState) => BlocListener<UserBloc, UserState>(
           bloc: _userBloc,
-          listenWhen: (previous, current) => previous.user.id != current.user.id,
           listener: (context, state) async {
             if (FirebaseAuth.instance.currentUser == null) {
               Navigator.of(context).pushNamedAndRemoveUntil(
