@@ -1,6 +1,7 @@
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sleeptales/screens/favorites/favorites_screen.dart';
 
 import '/screens/explore/explore_screen.dart';
 import '/screens/home/home_screen.dart';
@@ -40,8 +41,8 @@ class AppNavigation {
     NavItem(
       index: 3,
       title: 'My Library',
-      icon: CarbonIcons.user_avatar,
-      screen: ColoredBox(color: Colors.red, child: Center(child: Text('My Library'))),
+      icon: CarbonIcons.favorite,
+      screen: FavoritesScreen(),
     ),
     NavItem(
       index: 4,

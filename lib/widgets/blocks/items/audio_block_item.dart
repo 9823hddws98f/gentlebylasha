@@ -32,21 +32,24 @@ class AudioBlockItem extends StatelessWidget {
   @override
   Widget build(context) {
     final ColorScheme(:primary, :onSurfaceVariant) = Theme.of(context).colorScheme;
-    return GestureDetector(
-      onTap: () {
-        playTrack(track);
-        _audioPanelManager.maximizeAndPlay(false);
-      },
-      child: SizedBox(
-        height: height,
-        width: isWide ? _wideWidth : _narrowWidth,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(child: _buildImage(primary)),
-            const SizedBox(height: 16),
-            _buildTextContent(onSurfaceVariant),
-          ],
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () {
+          playTrack(track);
+          _audioPanelManager.maximizeAndPlay(false);
+        },
+        child: SizedBox(
+          height: height,
+          width: isWide ? _wideWidth : _narrowWidth,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(child: _buildImage(primary)),
+              const SizedBox(height: 16),
+              _buildTextContent(onSurfaceVariant),
+            ],
+          ),
         ),
       ),
     );

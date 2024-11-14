@@ -24,18 +24,21 @@ class PlaylistBlockItem extends StatelessWidget {
   @override
   Widget build(context) {
     final ColorScheme(:primary, :onSurfaceVariant) = Theme.of(context).colorScheme;
-    return GestureDetector(
-      onTap: () => pushName(context, PlayListTracksScreen(playlist: playlist)),
-      child: SizedBox(
-        height: height,
-        width: _imageSize,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(child: _buildImage(primary)),
-            const SizedBox(height: 16),
-            _buildTextContent(onSurfaceVariant),
-          ],
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () => pushName(context, PlayListTracksScreen(playlist: playlist)),
+        child: SizedBox(
+          height: height,
+          width: _imageSize,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(child: _buildImage(primary)),
+              const SizedBox(height: 16),
+              _buildTextContent(onSurfaceVariant),
+            ],
+          ),
         ),
       ),
     );

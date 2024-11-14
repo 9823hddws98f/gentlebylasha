@@ -7,8 +7,8 @@ import '/domain/services/audio_panel_manager.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
 import '/utils/global_functions.dart';
+import '/widgets/app_image.dart';
 import '/widgets/shimmerize.dart';
-import '../../app_image.dart';
 import '../widgets/item_tag.dart';
 
 class HeroBlockItem extends StatelessWidget {
@@ -24,24 +24,27 @@ class HeroBlockItem extends StatelessWidget {
   @override
   Widget build(context) {
     final ColorScheme(:primary, :onSurfaceVariant) = Theme.of(context).colorScheme;
-    return GestureDetector(
-      onTap: () {
-        playTrack(track);
-        _audioPanelManager.maximizeAndPlay(false);
-      },
-      child: SizedBox(
-        height: height,
-        width: _imageSize,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: _imageSize,
-              child: _buildImage(primary),
-            ),
-            const SizedBox(height: 16),
-            _buildTextContent(onSurfaceVariant),
-          ],
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () {
+          playTrack(track);
+          _audioPanelManager.maximizeAndPlay(false);
+        },
+        child: SizedBox(
+          height: height,
+          width: _imageSize,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: _imageSize,
+                child: _buildImage(primary),
+              ),
+              const SizedBox(height: 16),
+              _buildTextContent(onSurfaceVariant),
+            ],
+          ),
         ),
       ),
     );
