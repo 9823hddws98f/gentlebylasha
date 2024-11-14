@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sleeptales/utils/common_extensions.dart';
-import 'package:sleeptales/utils/global_functions.dart';
 import 'package:timezone/timezone.dart' as tz;
+
+import '/helper/global_functions.dart';
+import '/utils/common_extensions.dart';
 
 class ReminderService {
   static const String _channelId = 'daily_reminder';

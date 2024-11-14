@@ -1,18 +1,16 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:path_provider/path_provider.dart';
-import '/domain/blocs/user/user_bloc.dart';
-import '/utils/get.dart';
 
 import '/domain/blocs/user/app_user.dart';
+import '/domain/blocs/user/user_bloc.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/utils/common_extensions.dart';
+import '/utils/get.dart';
 import 'global_functions.dart';
 
-final FirebaseFirestore firestore = FirebaseFirestore.instance;
+final _auth = FirebaseAuth.instance;
+final _firestore = FirebaseFirestore.instance;
 
 Future<void> addToRecentlyPlayed(String trackId) async {
   if (trackId.isNotEmpty) {
@@ -20,7 +18,7 @@ Future<void> addToRecentlyPlayed(String trackId) async {
     ("recently played $trackId").logDebug();
 
     try {
-      final recentlyPlayedRef = firestore
+      final recentlyPlayedRef = _firestore
           .collection("recently_played")
           .doc(user.id)
           .collection("tracks")
@@ -55,9 +53,7 @@ Future<void> incrementPlayCount(String trackId) async {
   }
 }
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
-final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+// TODO: might be useful
 Future<List<AudioTrack>> getRecentlyPlayedTracks() async {
   // Get the currently logged-in user
   final User? user = _auth.currentUser;
@@ -97,6 +93,7 @@ Future<bool> isEmailAndPasswordUserLoggedIn() async {
   return false;
 }
 
+// TODO: might be useful
 Future<bool> updateUserEmailAndData(
     String newEmail, String newName, String password) async {
   User? user = FirebaseAuth.instance.currentUser;
@@ -136,24 +133,4 @@ Future<bool> updateUserEmailAndData(
     showToast('User is not logged in.');
     return false;
   }
-}
-
-Future<void> downloadTrack(String trackId, String trackName, String trackUrl) async {
-  final directory = await getApplicationDocumentsDirectory();
-  final path = '${directory.path}/$trackName.mp3';
-
-  // Download the track file
-  final HttpClient httpClient = HttpClient();
-  final Uri uri = Uri.parse(trackUrl);
-  final HttpClientRequest request = await httpClient.getUrl(uri);
-  final HttpClientResponse response = await request.close();
-  final File file = File(path);
-  await file.writeAsBytes(await consolidateHttpClientResponseBytes(response));
-
-  // Save the downloaded track in your app's storage or database
-  // Here, you can store the track metadata (e.g., trackName, trackId, path) for later retrieval
-
-  // Close the HttpClient
-  httpClient.close();
-  showToast("track downloaded");
 }

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sleeptales/utils/app_theme.dart';
+import 'package:sleeptales/utils/enums.dart';
+import 'package:sleeptales/utils/tx_button.dart';
 
 import '/utils/common_extensions.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/app_scaffold/bottom_panel_spacer.dart';
-import '/widgets/custom_btn.dart';
 
 class ManageSubscriptionScreen extends StatelessWidget {
   final String? email;
@@ -55,11 +56,10 @@ If you would like to stop recurring payments, you can do so here.Unfortunately, 
                 ),
               ),
               const SizedBox(height: 16),
-              CustomButton(
-                title: 'Visit help center',
-                onPress: () {},
-                color: Colors.white,
-                textColor: Colors.black,
+              TxButton.filled(
+                label: Text('Visit help center'),
+                color: RoleColor.mono,
+                onPressVoid: () {},
               ),
               const SizedBox(height: AppTheme.sidePadding),
             ],

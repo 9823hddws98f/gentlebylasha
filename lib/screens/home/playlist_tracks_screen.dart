@@ -10,7 +10,6 @@ import '/domain/services/tracks_service.dart';
 import '/page_manager.dart';
 import '/screens/music_player/widgets/favorite_button.dart';
 import '/utils/app_theme.dart';
-import '/utils/colors.dart';
 import '/utils/get.dart';
 import '/utils/tx_loader.dart';
 import '/widgets/app_image.dart';
@@ -186,7 +185,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                 ],
               ),
               SizedBox(height: 16),
-              _buildPlayButton(),
+              _buildPlayButton(colors),
               SizedBox(height: 16),
               Text(
                 widget.playlist.description,
@@ -198,12 +197,13 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
         ),
       );
 
-  Widget _buildPlayButton() => FilledButtonTheme(
+  Widget _buildPlayButton(ColorScheme colors) => FilledButtonTheme(
         data: FilledButtonThemeData(
           style: FilledButton.styleFrom(
-            backgroundColor: _tracks.isEmpty ? Colors.grey : Colors.white,
-            foregroundColor: _tracks.isEmpty ? Colors.black12 : textColor,
-            iconColor: _tracks.isEmpty ? Colors.black12 : textColor,
+            backgroundColor:
+                _tracks.isEmpty ? colors.outline : colors.surfaceContainerHigh,
+            foregroundColor: colors.onSurface,
+            iconColor: colors.onSurface,
             iconSize: 24,
             minimumSize: Size(double.infinity, 48),
           ),

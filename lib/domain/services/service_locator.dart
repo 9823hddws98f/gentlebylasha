@@ -10,22 +10,23 @@ import '/domain/cubits/downloads_cubit.dart';
 import '/domain/cubits/favorite_playlists.dart';
 import '/domain/cubits/favorite_tracks.dart';
 import '/domain/cubits/pages/pages_cubit.dart';
-import '/domain/services/account_deletion_service.dart';
-import '/domain/services/app_settings.dart';
-import '/domain/services/downloads_service.dart';
-import '/domain/services/language_cubit.dart';
-import '/domain/services/mailing_service.dart';
-import '/domain/services/sendgrid_mailing_service.dart';
-import '/domain/services/storage_service.dart';
-import '/domain/services/user_service.dart';
 import '/page_manager.dart';
 import '/utils/get.dart';
+import 'account_deletion_service.dart';
+import 'app_settings.dart';
 import 'audio_handler.dart';
 import 'audio_panel_manager.dart';
+import 'audio_timer_service.dart';
+import 'downloads_service.dart';
 import 'interfaces/app_settings_view.dart';
+import 'language_cubit.dart';
+import 'mailing_service.dart';
 import 'playlists_service.dart';
 import 'reminder_service.dart';
+import 'sendgrid_mailing_service.dart';
+import 'storage_service.dart';
 import 'tracks_service.dart';
+import 'user_service.dart';
 
 Future<void> setupServiceLocator() async {
   /// Services
@@ -43,6 +44,7 @@ Future<void> setupServiceLocator() async {
   _regLazy<AppSettings>(() => AppSettings.instance);
   _regLazy<AppSettingsView>(() => AppSettings.instance);
   _regLazy<ReminderService>(() => ReminderService.instance);
+  _regLazy<AudioTimerService>(() => AudioTimerService.instance);
 
   /// Blocs/Cubits
   _regLazy<AppBloc>(() => AppBloc(Get.the<AuthRepository>()));

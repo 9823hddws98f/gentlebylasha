@@ -2,10 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '/domain/blocs/authentication/auth_repository.dart';
+import '/helper/global_functions.dart';
 import '/utils/app_theme.dart';
 import '/utils/command_trigger.dart';
 import '/utils/get.dart';
-import '/utils/global_functions.dart';
 import '/utils/tx_button.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';

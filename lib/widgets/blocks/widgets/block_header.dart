@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '/helper/global_functions.dart';
 import '/utils/app_theme.dart';
-import '/utils/global_functions.dart';
 import '../../shimmerize.dart';
 
 class BlockHeader extends StatelessWidget {

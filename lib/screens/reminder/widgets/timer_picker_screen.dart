@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:sleeptales/utils/app_theme.dart';
+import 'package:sleeptales/utils/get.dart';
+import 'package:sleeptales/utils/tx_button.dart';
+import 'package:sleeptales/widgets/app_scaffold/app_scaffold.dart';
 
-import '/page_manager.dart';
-import '/utils/colors.dart';
-import '/utils/get.dart';
+import '/domain/services/audio_timer_service.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
-import '/widgets/custom_btn.dart';
 
 class SleepTimerScreen extends StatefulWidget {
   const SleepTimerScreen({super.key});
@@ -15,114 +15,81 @@ class SleepTimerScreen extends StatefulWidget {
 }
 
 class _SleepTimerScreenState extends State<SleepTimerScreen> {
-  Duration _duration = Duration(hours: 1); // Default duration of 1 hour
+  final _timerService = Get.the<AudioTimerService>();
 
-  bool timerSet = false;
-  // Method to handle setting the sleep timer
-  void _setSleepTimer() {
-    Get.the<PageManager>().stopTrackAfter(_duration);
-    setState(() {
-      timerSet = true;
-    });
-
-    // Code to handle setting the sleep timer
-    // You can use the '_duration' variable to get the selected duration
-  }
-
-  // Method to handle cancelling the sleep timer
-  void _cancelSleepTimer() {
-    setState(() {
-      timerSet = false;
-    });
-
-    // Code to handle cancelling the sleep timer
-  }
+  Duration _duration = Duration(hours: 1);
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AdaptiveAppBar(
-        title: 'Sleep Timer',
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            'Sleep Timer',
-            style: TextStyle(fontSize: 24),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          if (timerSet)
-            if (_duration != Duration(hours: 0)) ...[
-              // Only show the scheduled timer if the duration is not 0
-              Text(
-                'Scheduled Timer',
-                style: TextStyle(fontSize: 18),
-              ),
+  Widget build(BuildContext context) => AppScaffold(
+        appBar: (context, isMobile) => AdaptiveAppBar(
+          title: 'Sleep Timer',
+        ),
+        body: (context, isMobile) => ValueListenableBuilder<AudioTimerState>(
+            valueListenable: _timerService.timerState,
+            builder: (context, state, _) => SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: AppTheme.sidePadding),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if (state.isActive && state.remainingTime != Duration.zero)
+                          Column(
+                            children: [
+                              Text(
+                                'Time Remaining',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              SizedBox(height: 12),
+                              Text(
+                                _formatTime(state),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 48,
+                                ),
+                              ),
+                            ],
+                          ),
+                        SizedBox(height: 12),
+                        Text(
+                          'Playback will stop after this time',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        Expanded(
+                          child: CupertinoTimerPicker(
+                            mode: CupertinoTimerPickerMode.hm,
+                            initialTimerDuration: _duration,
+                            onTimerDurationChanged: (d) => setState(() => _duration = d),
+                          ),
+                        ),
+                        SizedBox(height: 12),
+                        TxButton.filled(
+                          label: Text(state.isActive ? 'Update Timer' : 'Set Timer'),
+                          showSuccess: false,
+                          onPressVoid: _setSleepTimer,
+                        ),
+                        if (state.isActive) ...[
+                          SizedBox(height: 12),
+                          TxButton.outlined(
+                            label: Text('Cancel Timer'),
+                            showSuccess: false,
+                            onPressVoid: _cancelSleepTimer,
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                )),
+      );
 
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                formatDuration(_duration.inMinutes),
-                style: TextStyle(fontSize: 18),
-              ),
-            ],
-          SizedBox(height: 92),
-          Text(
-            'How long do you want this playlist to play for?',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 20),
-          ),
-          SizedBox(height: 10),
-          CupertinoTheme(
-            data: CupertinoThemeData(
-              brightness: Brightness.dark,
-            ),
-            child: CupertinoTimerPicker(
-              mode: CupertinoTimerPickerMode.hm,
-              onTimerDurationChanged: (Duration duration) {
-                setState(() {
-                  _duration = duration;
-                });
-              },
-              initialTimerDuration: _duration,
-            ),
-          ),
-          SizedBox(height: 30),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: CustomButton(
-                title: "Set Time",
-                onPress: () {
-                  _setSleepTimer();
-                },
-                color: Colors.white,
-                textColor: textColor),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          TextButton(
-            onPressed: _cancelSleepTimer,
-            child: Text(
-              'Cancel Timer',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-          SizedBox(height: 20),
-        ],
-      ),
-    );
-  }
+  String _formatTime(AudioTimerState state) =>
+      '${state.remainingTime.inHours > 0 ? '${state.remainingTime.inHours}:' : ''}${state.remainingTime.inMinutes > 0 ? '${state.remainingTime.inMinutes.remainder(60).toString().padLeft(2, '0')}:' : ''}${state.remainingTime.inSeconds.remainder(60).toString().padLeft(2, '0')}';
 
-  String formatDuration(int minutes) {
-    final Duration duration = Duration(minutes: minutes);
-    String twoDigits(int n) => n.toString().padLeft(2, "0");
-    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
-    String hours = (duration.inMinutes / 60).floor().toString();
-    return "$hours hour $twoDigitMinutes minutes";
-  }
+  void _setSleepTimer() => _timerService.startTimer(_duration);
+
+  void _cancelSleepTimer() => _timerService.cancelTimer();
 }

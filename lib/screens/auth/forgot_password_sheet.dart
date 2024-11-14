@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import '/domain/blocs/authentication/auth_repository.dart';
 import '/domain/services/language_cubit.dart';
+import '/helper/global_functions.dart';
 import '/helper/validators.dart';
 import '/utils/app_theme.dart';
 import '/utils/command_trigger.dart';
 import '/utils/get.dart';
-import '/utils/global_functions.dart';
 import '/utils/modals.dart';
 import '/utils/tx_button.dart';
 

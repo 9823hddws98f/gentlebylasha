@@ -5,8 +5,8 @@ import 'package:flutter/foundation.dart';
 
 import '/domain/models/block_item/audio_playlist.dart';
 import '/domain/services/audio_panel_manager.dart';
-import '/utils/firestore_helper.dart';
 import 'domain/models/block_item/audio_track.dart';
+import 'helper/firestore_helper.dart';
 import 'notifiers/progress_notifier.dart';
 import 'notifiers/repeat_notifier.dart';
 import 'utils/get.dart';
@@ -92,12 +92,6 @@ class PageManager {
 
   void _updatePlaylistState(List<MediaItem> playlist) {
     playlistIdNotifier.value = playlist.map((item) => item.id).toList();
-  }
-
-  void stopTrackAfter(Duration duration) {
-    Timer(duration, () {
-      pause();
-    });
   }
 
   Stream<PlaybackState> listenPlaybackState() async* {

@@ -7,9 +7,9 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '/domain/blocs/authentication/appuser_model.dart';
 import '/domain/blocs/user/app_user.dart';
+import '/helper/global_functions.dart';
 import '/main.dart';
 import '/screens/auth/login_screen.dart';
-import '/utils/global_functions.dart';
 import '/utils/modals.dart';
 
 class AuthRepository {

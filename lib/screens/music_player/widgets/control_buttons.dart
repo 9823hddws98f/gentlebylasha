@@ -7,16 +7,14 @@ import '/domain/models/block_item/audio_track.dart';
 import '/main.dart';
 import '/notifiers/repeat_notifier.dart';
 import '/page_manager.dart';
-import '/screens/reminder/widgets/timer_picker_screen.dart';
 import '/utils/app_theme.dart';
 import '/utils/common_extensions.dart';
 import '/utils/get.dart';
-import '/utils/global_functions.dart';
-import '/widgets/circle_icon_button.dart';
 import '/widgets/download_button.dart';
 import '/widgets/music/audio_play_button.dart';
 import 'current_song_title.dart';
 import 'favorite_button.dart';
+import 'timer_button.dart';
 
 class ControlButtons extends StatefulWidget {
   const ControlButtons({super.key, required this.mediaItem});
@@ -29,8 +27,6 @@ class ControlButtons extends StatefulWidget {
 
 class _ControlButtonsState extends State<ControlButtons> {
   final _pageManager = Get.the<PageManager>();
-
-  bool _timerOn = false;
 
   AudioTrack? get _track => widget.mediaItem.extras?['track'];
   String? get _trackId => _track?.id;
@@ -102,7 +98,7 @@ class _ControlButtonsState extends State<ControlButtons> {
                         children: [
                           if (_trackId != null) FavoriteButton(trackId: _trackId!),
                           _buildShareButton(),
-                          if (_track?.hasTimer ?? false) _buildTimerButton(),
+                          if (_track?.hasTimer ?? false) TimerButton(),
                           if (isPlaylist) _buildShuffleButton(primary),
                           TrackDownloadButton(track: _track)
                         ].interleaveWith(SizedBox(width: 20)),
@@ -182,20 +178,10 @@ class _ControlButtonsState extends State<ControlButtons> {
         onPressed: () => _pageManager.stop(),
       );
 
-  Widget _buildTimerButton() => CircleIconButton(
-        icon: CarbonIcons.timer,
-        onPressed: () {
-          _toggleTimer();
-          pushName(context, SleepTimerScreen());
-        },
-      );
-
-  Widget _buildShareButton() => CircleIconButton(
-        icon: CarbonIcons.share,
+  Widget _buildShareButton() => IconButton(
+        icon: Icon(CarbonIcons.share),
         onPressed: _trackId != null ? () => createDeepLink(_trackId!) : null,
       );
-
-  void _toggleTimer() => setState(() => _timerOn = !_timerOn);
 
   void createDeepLink(String trackId) {
     String customScheme = 'com.sleeptales.sleeptales';
