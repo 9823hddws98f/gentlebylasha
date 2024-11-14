@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '/main.dart';
 
+import '/main.dart';
 import '/utils/app_theme.dart';
 
 class AppScaffold extends StatelessWidget {

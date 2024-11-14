@@ -42,7 +42,7 @@ class CategoryListState extends State<CategoryList> {
       height: 47,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        cacheExtent: 600,
+        cacheExtent: 600, // Needed for keys
         padding: EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
         itemCount: _appPages.length,
         separatorBuilder: (context, index) => SizedBox(width: 8),
@@ -73,10 +73,14 @@ class CategoryListState extends State<CategoryList> {
           backgroundColor: _selectedIndex == index ? colors.primary : colors.surface,
           foregroundColor: _selectedIndex == index ? colors.onPrimary : colors.onSurface,
           shape: RoundedRectangleBorder(borderRadius: AppTheme.smallBorderRadius),
+          padding: const EdgeInsets.symmetric(horizontal: 18),
           side: BorderSide(color: colors.outline),
         ),
         onPressed: () => _handleTap(index),
-        child: Text(label),
+        child: Text(
+          label,
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+        ),
       );
 
   void _handleTap(int index) async {
