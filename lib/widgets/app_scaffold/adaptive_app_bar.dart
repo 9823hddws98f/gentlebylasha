@@ -22,7 +22,7 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
   });
 
   static const _desktopHeight = 104.0;
-  static const _mobileHeight = 56.0;
+  static const _mobileHeight = 68.0;
 
   @override
   Size get preferredSize => Size.fromHeight(

@@ -32,7 +32,7 @@ class BlockHeader extends StatelessWidget {
               ),
             ),
             if (seeAll != null)
-              GestureDetector(
+              InkWell(
                 onTap: () => pushName(context, seeAll!),
                 child: Text(
                   'See all',

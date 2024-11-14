@@ -96,10 +96,6 @@ class RemindersScreen extends StatelessWidget with Translation {
       ListTile(
         leading: item.buildIcon(colors),
         title: Text(item.heading),
-        tileColor: colors.surface,
-        shape: RoundedRectangleBorder(
-          borderRadius: AppTheme.smallBorderRadius,
-        ),
         trailing: const Icon(Icons.arrow_forward),
         onTap: () => pushName(
           context,

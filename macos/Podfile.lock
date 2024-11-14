@@ -1168,10 +1168,13 @@ PODS:
     - Firebase/Firestore (~> 11.4.0)
     - firebase_core
     - FlutterMacOS
+  - cloud_functions (5.1.4):
+    - Firebase/CoreOnly (~> 11.4.0)
+    - Firebase/Functions (~> 11.4.0)
+    - firebase_core
+    - FlutterMacOS
   - connectivity_plus (0.0.1):
     - Flutter
-    - FlutterMacOS
-  - facebook_auth_desktop (0.0.3):
     - FlutterMacOS
   - file_saver (0.0.1):
     - FlutterMacOS
@@ -1183,6 +1186,9 @@ PODS:
   - Firebase/Firestore (11.4.2):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 11.4.0)
+  - Firebase/Functions (11.4.2):
+    - Firebase/CoreOnly
+    - FirebaseFunctions (~> 11.4.0)
   - Firebase/Messaging (11.4.2):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 11.4.0)
@@ -1246,6 +1252,14 @@ PODS:
     - gRPC-Core (~> 1.65.0)
     - leveldb-library (~> 1.22)
     - nanopb (~> 3.30910.0)
+  - FirebaseFunctions (11.4.0):
+    - FirebaseAppCheckInterop (~> 11.0)
+    - FirebaseAuthInterop (~> 11.0)
+    - FirebaseCore (~> 11.4)
+    - FirebaseCoreExtension (~> 11.4)
+    - FirebaseMessagingInterop (~> 11.0)
+    - FirebaseSharedSwift (~> 11.0)
+    - GTMSessionFetcher/Core (< 5.0, >= 3.4)
   - FirebaseInstallations (11.4.0):
     - FirebaseCore (~> 11.0)
     - GoogleUtilities/Environment (~> 8.0)
@@ -1260,6 +1274,7 @@ PODS:
     - GoogleUtilities/Reachability (~> 8.0)
     - GoogleUtilities/UserDefaults (~> 8.0)
     - nanopb (~> 3.30910.0)
+  - FirebaseMessagingInterop (11.4.0)
   - FirebaseSharedSwift (11.4.0)
   - FirebaseStorage (11.4.0):
     - FirebaseAppCheckInterop (~> 11.0)
@@ -1271,8 +1286,6 @@ PODS:
   - flutter_image_compress_macos (1.0.0):
     - FlutterMacOS
   - flutter_local_notifications (0.0.1):
-    - FlutterMacOS
-  - flutter_secure_storage_macos (6.1.1):
     - FlutterMacOS
   - flutter_timezone (0.1.0):
     - FlutterMacOS
@@ -1440,8 +1453,8 @@ DEPENDENCIES:
   - audio_service (from `Flutter/ephemeral/.symlinks/plugins/audio_service/macos`)
   - audio_session (from `Flutter/ephemeral/.symlinks/plugins/audio_session/macos`)
   - cloud_firestore (from `Flutter/ephemeral/.symlinks/plugins/cloud_firestore/macos`)
+  - cloud_functions (from `Flutter/ephemeral/.symlinks/plugins/cloud_functions/macos`)
   - connectivity_plus (from `Flutter/ephemeral/.symlinks/plugins/connectivity_plus/darwin`)
-  - facebook_auth_desktop (from `Flutter/ephemeral/.symlinks/plugins/facebook_auth_desktop/macos`)
   - file_saver (from `Flutter/ephemeral/.symlinks/plugins/file_saver/macos`)
   - firebase_auth (from `Flutter/ephemeral/.symlinks/plugins/firebase_auth/macos`)
   - firebase_core (from `Flutter/ephemeral/.symlinks/plugins/firebase_core/macos`)
@@ -1449,7 +1462,6 @@ DEPENDENCIES:
   - firebase_storage (from `Flutter/ephemeral/.symlinks/plugins/firebase_storage/macos`)
   - flutter_image_compress_macos (from `Flutter/ephemeral/.symlinks/plugins/flutter_image_compress_macos/macos`)
   - flutter_local_notifications (from `Flutter/ephemeral/.symlinks/plugins/flutter_local_notifications/macos`)
-  - flutter_secure_storage_macos (from `Flutter/ephemeral/.symlinks/plugins/flutter_secure_storage_macos/macos`)
   - flutter_timezone (from `Flutter/ephemeral/.symlinks/plugins/flutter_timezone/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - google_sign_in_ios (from `Flutter/ephemeral/.symlinks/plugins/google_sign_in_ios/darwin`)
@@ -1474,8 +1486,10 @@ SPEC REPOS:
     - FirebaseCoreInternal
     - FirebaseFirestore
     - FirebaseFirestoreInternal
+    - FirebaseFunctions
     - FirebaseInstallations
     - FirebaseMessaging
+    - FirebaseMessagingInterop
     - FirebaseSharedSwift
     - FirebaseStorage
     - GoogleDataTransport
@@ -1498,10 +1512,10 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/audio_session/macos
   cloud_firestore:
     :path: Flutter/ephemeral/.symlinks/plugins/cloud_firestore/macos
+  cloud_functions:
+    :path: Flutter/ephemeral/.symlinks/plugins/cloud_functions/macos
   connectivity_plus:
     :path: Flutter/ephemeral/.symlinks/plugins/connectivity_plus/darwin
-  facebook_auth_desktop:
-    :path: Flutter/ephemeral/.symlinks/plugins/facebook_auth_desktop/macos
   file_saver:
     :path: Flutter/ephemeral/.symlinks/plugins/file_saver/macos
   firebase_auth:
@@ -1516,8 +1530,6 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/flutter_image_compress_macos/macos
   flutter_local_notifications:
     :path: Flutter/ephemeral/.symlinks/plugins/flutter_local_notifications/macos
-  flutter_secure_storage_macos:
-    :path: Flutter/ephemeral/.symlinks/plugins/flutter_secure_storage_macos/macos
   flutter_timezone:
     :path: Flutter/ephemeral/.symlinks/plugins/flutter_timezone/macos
   FlutterMacOS:
@@ -1545,8 +1557,8 @@ SPEC CHECKSUMS:
   audio_session: dea1f41890dbf1718f04a56f1d6150fd50039b72
   BoringSSL-GRPC: ca6a8e5d04812fce8ffd6437810c2d46f925eaeb
   cloud_firestore: 1185830368aa59f2903913b48961bfccc2110f58
+  cloud_functions: 527b8b9d600040e1cc572b09cd8f519e806c7169
   connectivity_plus: 4c41c08fc6d7c91f63bc7aec70ffe3730b04f563
-  facebook_auth_desktop: 0ec755e3b01669ec14776af18b6945671a788916
   file_saver: 44e6fbf666677faf097302460e214e977fdd977b
   Firebase: 7fd5466678d964be78fbf536d8a3385da19c4828
   firebase_auth: abdbc764776cc236e27f715cf2dc5c9e459abb5e
@@ -1561,13 +1573,14 @@ SPEC CHECKSUMS:
   FirebaseCoreInternal: 35731192cab10797b88411be84940d2beb33a238
   FirebaseFirestore: 2ccdf893fd7e175aa8ec58faa06338b346d27db8
   FirebaseFirestoreInternal: 004452c4669d5df8869c9f8f7a24ee0009852d5b
+  FirebaseFunctions: 75a996cdf66565468fa73072b08905a2d6d3262d
   FirebaseInstallations: 6ef4a1c7eb2a61ee1f74727d7f6ce2e72acf1414
   FirebaseMessaging: f8a160d99c2c2e5babbbcc90c4a3e15db036aee2
+  FirebaseMessagingInterop: 249006abd2ef8fbf9dae3572eb2def468a647b37
   FirebaseSharedSwift: 505dae2d05969dbf6d43749a642bb1bf230f0252
   FirebaseStorage: 1bf8f80ac3bb02c72844b7350e95e10be7113ef0
   flutter_image_compress_macos: c26c3c13ea0f28ae6dea4e139b3292e7729f99f1
   flutter_local_notifications: 4b427ffabf278fc6ea9484c97505e231166927a5
-  flutter_secure_storage_macos: 59459653abe1adb92abbc8ea747d79f8d19866c9
   flutter_timezone: 6b906d1740654acb16e50b639835628fea851037
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
   google_sign_in_ios: 07375bfbf2620bc93a602c0e27160d6afc6ead38

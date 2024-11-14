@@ -66,8 +66,7 @@ class AppTheme {
     return ThemeData(
       brightness: dark ? Brightness.dark : Brightness.light,
       colorScheme: colors,
-      scaffoldBackgroundColor:
-          dark ? colors.surfaceContainerLowest : const Color(0xFFFDFDFC),
+      scaffoldBackgroundColor: appBarBackground,
       fontFamily: fontFamily,
       extensions: dark ? {TxColorExtensions.dark()} : {TxColorExtensions.light()},
       filledButtonTheme: FilledButtonThemeData(style: buttonStyle),
@@ -140,6 +139,18 @@ class AppTheme {
         unselectedLabelStyle: TextStyle(
           fontSize: 20,
           fontFamily: titleFont,
+        ),
+      ),
+      listTileTheme: ListTileThemeData(
+        iconColor: colors.onSurface,
+        tileColor: colors.surface,
+        shape: RoundedRectangleBorder(borderRadius: smallBorderRadius),
+        contentPadding: EdgeInsets.symmetric(horizontal: 12),
+        minTileHeight: 48,
+        titleTextStyle: TextStyle(
+          color: colors.onSurface,
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
         ),
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(

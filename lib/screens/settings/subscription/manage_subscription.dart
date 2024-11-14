@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sleeptales/utils/app_theme.dart';
 
-import '/utils/app_theme.dart';
 import '/utils/common_extensions.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
@@ -26,45 +26,43 @@ If you would like to stop recurring payments, you can do so here.Unfortunately, 
           title: 'Manage Subscription',
         ),
         body: (context, isMobile) => BottomPanelSpacer.padding(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppTheme.sidePadding),
-            child: Column(
-              children: [
-                Expanded(
-                  child: ListView(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    children: [
-                      Center(
-                        child: Text(
-                          'You subscribed on IOS',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.all(AppTheme.sidePadding),
+                  children: [
+                    Center(
+                      child: Text(
+                        'You subscribed on IOS',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                      Text(
-                        _data,
-                        textAlign: TextAlign.center,
-                      ),
-                    ].interleaveWith(const SizedBox(height: 16)),
-                  ),
+                    ),
+                    Text(
+                      _data,
+                      textAlign: TextAlign.center,
+                    ),
+                  ].interleaveWith(const SizedBox(height: 16)),
                 ),
-                Center(
-                  child: Text(
-                    'Questions?',
-                    style: TextStyle(fontSize: 16),
-                  ),
+              ),
+              Center(
+                child: Text(
+                  'Questions?',
+                  style: TextStyle(fontSize: 16),
                 ),
-                const SizedBox(height: 16),
-                CustomButton(
-                  title: 'Visit help center',
-                  onPress: () {},
-                  color: Colors.white,
-                  textColor: Colors.black,
-                )
-              ],
-            ),
+              ),
+              const SizedBox(height: 16),
+              CustomButton(
+                title: 'Visit help center',
+                onPress: () {},
+                color: Colors.white,
+                textColor: Colors.black,
+              ),
+              const SizedBox(height: AppTheme.sidePadding),
+            ],
           ),
         ),
       );

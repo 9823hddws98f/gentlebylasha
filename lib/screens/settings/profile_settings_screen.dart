@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:carbon_icons/carbon_icons.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -75,12 +78,13 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Tran
                 colors: colors,
                 onTap: () => pushName(context, ChangePasswordScreen()),
               ),
-              _buildListTile(
-                icon: Icons.punch_clock_rounded,
-                title: tr.reminders,
-                colors: colors,
-                onTap: () => pushName(context, RemindersScreen()),
-              ),
+              if (!kIsWeb && !Platform.isMacOS)
+                _buildListTile(
+                  icon: Icons.punch_clock_rounded,
+                  title: tr.reminders,
+                  colors: colors,
+                  onTap: () => pushName(context, RemindersScreen()),
+                ),
               _buildListTile(
                 icon: Icons.subscriptions,
                 title: tr.manageSubscription,
@@ -204,29 +208,19 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Tran
     required ColorScheme colors,
     bool isLogout = false,
   }) =>
-      InkWell(
-        onTap: onTap,
-        borderRadius: AppTheme.smallBorderRadius,
-        child: Ink(
-          decoration: BoxDecoration(
-            color: colors.surface,
-            border: Border.all(color: colors.outline),
-            borderRadius: AppTheme.smallBorderRadius,
-          ),
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Row(
-            children: [
-              Icon(icon, color: isLogout ? colors.error : colors.onSurface, size: 20),
-              SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  title,
-                  style: TextStyle(color: isLogout ? colors.error : colors.onSurface),
-                ),
-              ),
-              if (!isLogout) Icon(Icons.arrow_forward, color: colors.onSurface, size: 20),
-            ],
-          ),
+      ListTile(
+        leading: Icon(icon, color: isLogout ? colors.error : null, size: 20),
+        title: Text(
+          title,
+          style: TextStyle(color: isLogout ? colors.error : null),
         ),
+        trailing: !isLogout
+            ? Icon(Icons.arrow_forward, color: colors.onSurface, size: 20)
+            : null,
+        shape: RoundedRectangleBorder(
+          borderRadius: AppTheme.smallBorderRadius,
+          side: BorderSide(color: colors.outline),
+        ),
+        onTap: onTap,
       );
 }

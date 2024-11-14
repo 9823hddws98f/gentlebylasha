@@ -2,7 +2,6 @@ import 'package:animations/animations.dart';
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '/widgets/app_scaffold/bottom_panel_spacer.dart';
 
 import '/domain/cubits/pages/pages_cubit.dart';
 import '/domain/models/block_item/audio_track.dart';
@@ -13,6 +12,7 @@ import '/utils/get.dart';
 import '/utils/tx_loader.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
+import '/widgets/app_scaffold/bottom_panel_spacer.dart';
 import '/widgets/blocks/page_block_builder.dart';
 import '/widgets/input/tx_search_bar.dart';
 import '/widgets/shared_axis_switcher.dart';
@@ -129,6 +129,7 @@ class _ExploreScreenState extends State<ExploreScreen>
       child: ListView.separated(
         itemCount: _tracks.length,
         cacheExtent: 1000,
+        padding: EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
         separatorBuilder: (context, index) => const SizedBox(height: 2),
         itemBuilder: (context, index) {
           final track = _tracks[index];

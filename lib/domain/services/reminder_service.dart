@@ -1,10 +1,12 @@
-import 'dart:typed_data';
+import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sleeptales/utils/common_extensions.dart';
+import 'package:sleeptales/utils/global_functions.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class ReminderService {
@@ -19,6 +21,7 @@ class ReminderService {
   late final SharedPreferences _prefs;
 
   Future<void> initialize() async {
+    if (kIsWeb || Platform.isMacOS) return;
     _notificationsPlugin = FlutterLocalNotificationsPlugin();
     _prefs = await SharedPreferences.getInstance();
     await _initializeTimeZone();
@@ -41,9 +44,29 @@ class ReminderService {
     await _setupNotificationChannels();
   }
 
-  Future<void> _requestPermissions() async => await _notificationsPlugin
-      .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
-      ?.requestPermissions(alert: true, badge: true, sound: true);
+  Future<bool> _requestPermissions() async {
+    try {
+      if (Platform.isIOS) {
+        final iosPlugin = _notificationsPlugin
+            .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
+        return await iosPlugin?.requestPermissions(
+              alert: true,
+              badge: true,
+              sound: true,
+            ) ??
+            false;
+      } else if (Platform.isAndroid) {
+        final androidPlugin = _notificationsPlugin.resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+        return await androidPlugin?.requestNotificationsPermission() ?? false;
+      }
+      return false;
+    } catch (e) {
+      'Error requesting permissions: $e'.logDebug();
+      showToast('Failed to request notification permissions');
+      return false;
+    }
+  }
 
   Future<void> _setupNotificationChannels() async => await _notificationsPlugin
       .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
@@ -55,6 +78,32 @@ class ReminderService {
           vibrationPattern: Int64List.fromList([0, 500, 500, 1000]),
         ),
       );
+
+  /// Checks if notifications are permitted on the device
+  Future<bool> _areNotificationsEnabled() async {
+    final androidEnabled = await _notificationsPlugin
+            .resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin>()
+            ?.areNotificationsEnabled() ??
+        false;
+
+    final iosEnabled = await _notificationsPlugin
+            .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+            ?.requestPermissions(alert: true, badge: true, sound: true) ??
+        false;
+
+    // Request permissions if not enabled
+    if (!androidEnabled && !iosEnabled) {
+      if (await _requestPermissions()) {
+        return true;
+      } else {
+        showToast('Please enable notifications in phone settings');
+        return false;
+      }
+    } else {
+      return true;
+    }
+  }
 
   /// Sets a daily reminder notification that repeats at the specified time each day.
   ///
@@ -69,6 +118,10 @@ class ReminderService {
     required String description,
     required TimeOfDay time,
   }) async {
+    if (!await _areNotificationsEnabled()) {
+      throw Exception('Notifications are not enabled');
+    }
+
     try {
       final now = tz.TZDateTime.now(tz.local);
       final scheduledDate = tz.TZDateTime(
@@ -97,6 +150,14 @@ class ReminderService {
     }
   }
 
+  /// Sets a weekly reminder notification that repeats at the specified time each week on the selected days.
+  ///
+  /// Parameters:
+  /// - [id]: Unique identifier for the notification
+  /// - [title]: Title text shown in the notification
+  /// - [description]: Body text shown in the notification
+  /// - [time]: Time of day when the notification should be shown
+  /// - [days]: List of booleans indicating which days of the week the reminder should be shown
   Future<void> setWeeklyReminder({
     required int id,
     required String title,
@@ -104,11 +165,14 @@ class ReminderService {
     required TimeOfDay time,
     required List<bool> days,
   }) async {
-    await _initializeTimeZone();
+    if (!await _areNotificationsEnabled()) {
+      throw Exception('Notifications are not enabled');
+    }
+
+    final now = tz.TZDateTime.now(tz.local);
 
     for (int i = 0; i < days.length; i++) {
       if (days[i]) {
-        final now = tz.TZDateTime.now(tz.local);
         final adjustedDay = (i + 1) % 7;
         final scheduledDate = tz.TZDateTime(
           tz.local,

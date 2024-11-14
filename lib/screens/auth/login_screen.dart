@@ -159,7 +159,7 @@ class LoginScreenState extends State<LoginScreen> with Translation {
                   ],
                 ),
                 SizedBox(height: 24),
-                if (TargetPlatform.iOS == defaultTargetPlatform) ...[
+                if (!kIsWeb && TargetPlatform.iOS == defaultTargetPlatform) ...[
                   _buildAppleLoginButton(),
                   SizedBox(height: 16),
                 ],

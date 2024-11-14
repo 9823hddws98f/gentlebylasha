@@ -42,7 +42,7 @@ class SearchListItem extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
       trailing: Text(
-        '${track.duration} min',
+        '${track.duration.inMinutes}:${(track.duration.inSeconds % 60).toString().padLeft(2, '0')}',
         style: TextStyle(fontSize: 12, color: colors.onSurfaceVariant),
       ),
     );

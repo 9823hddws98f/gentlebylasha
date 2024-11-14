@@ -23,7 +23,7 @@ class ReminderModel {
   Widget buildIcon(ColorScheme colors) => icon is String
       ? SvgPicture.asset(
           icon as String,
-          colorFilter: ColorFilter.mode(colors.onSurfaceVariant, BlendMode.srcIn),
+          colorFilter: ColorFilter.mode(colors.onSurface, BlendMode.srcIn),
         )
-      : Icon(icon as IconData);
+      : Icon(icon as IconData, color: colors.onSurface);
 }

@@ -28,7 +28,7 @@ class _DisplayModeScreenState extends State<DisplayModeScreen> {
           title: 'Display Mode',
           hasBottomLine: false,
         ),
-        bodyPadding: EdgeInsets.zero,
+        // bodyPadding: EdgeInsets.zero,
         body: (context, isDark) => ListView(
           children: <Widget>[
             _buildThemeModeRadioTile(
@@ -43,7 +43,7 @@ class _DisplayModeScreenState extends State<DisplayModeScreen> {
               title: 'Dark Mode',
               value: ThemeMode.dark,
             ),
-          ].interleaveWith(Divider(height: 1)),
+          ].interleaveWith(const SizedBox(height: 8)),
         ),
       );
 

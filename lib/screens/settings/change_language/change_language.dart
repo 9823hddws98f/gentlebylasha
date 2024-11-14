@@ -24,7 +24,6 @@ class _ChangeLanguageScreen extends State<ChangeLanguageScreen> with Translation
           title: tr.changeLanguage,
           hasBottomLine: false,
         ),
-        bodyPadding: EdgeInsets.zero,
         body: (context, isMobile) => BlocBuilder<LanguageCubit, LanguageState>(
           bloc: _languageCubit,
           builder: (context, state) => ListView(
@@ -40,7 +39,7 @@ class _ChangeLanguageScreen extends State<ChangeLanguageScreen> with Translation
                   ),
                 )
                 .toList()
-                .interleaveWith(Divider(height: 1)),
+                .interleaveWith(const SizedBox(height: 8)),
           ),
         ),
       );
