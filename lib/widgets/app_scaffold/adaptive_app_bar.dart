@@ -34,7 +34,20 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final isMobile = MyApp.isMobile;
     return AppBar(
-      title: Row(
+      title: _buildTitle(isMobile, context),
+      toolbarHeight: isMobile ? _mobileHeight : _desktopHeight,
+      automaticallyImplyLeading: false,
+      centerTitle: centerTitle ?? !isMobile,
+      actions: [
+        ...actions,
+        SizedBox(width: AppTheme.sidePadding),
+      ],
+      primary: true,
+      bottom: _buildBottom(context),
+    );
+  }
+
+  Widget _buildTitle(bool isMobile, BuildContext context) => Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: isMobile
@@ -86,18 +99,7 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ),
               ],
-      ),
-      toolbarHeight: isMobile ? _mobileHeight : _desktopHeight,
-      automaticallyImplyLeading: false,
-      centerTitle: centerTitle ?? !isMobile,
-      actions: [
-        ...actions,
-        SizedBox(width: AppTheme.sidePadding),
-      ],
-      primary: true,
-      bottom: _buildBottom(context),
-    );
-  }
+      );
 
   PreferredSizeWidget _buildBottom(BuildContext context) => PreferredSize(
         preferredSize: Size.fromHeight(1 + (bottom?.preferredSize.height ?? 0)),

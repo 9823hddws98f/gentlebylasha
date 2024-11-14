@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '/widgets/blocks/track_grid.dart';
 
 import '/domain/models/block_item/audio_playlist.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/utils/app_theme.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
+import '/widgets/blocks/track_grid.dart';
 import '/widgets/input/tx_search_bar.dart';
 
 class SearchableTracksScreen extends StatefulWidget {
@@ -42,7 +42,7 @@ class _SearchableTracksScreenState extends State<SearchableTracksScreen> {
           title: widget.heading,
           hasBottomLine: false,
           bottom: PreferredSize(
-            preferredSize: const Size(double.infinity, 80), // 56 + 16 + 8
+            preferredSize: const Size(double.infinity, 72),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppTheme.sidePadding) +
                   const EdgeInsets.only(bottom: 16, top: 8),

@@ -156,7 +156,7 @@ class _ExploreScreenState extends State<ExploreScreen>
   Widget _buildSearchbar(bool isMobile, Color outlineColor) => SliverAppBar(
         floating: true,
         pinned: !isMobile,
-        toolbarHeight: 72,
+        toolbarHeight: 64,
         titleSpacing: AppTheme.sidePadding,
         title: TxSearchBar(
           onSearch: _handleSearch,
