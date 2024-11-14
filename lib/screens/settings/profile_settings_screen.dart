@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 import '/constants/assets.dart';
 import '/domain/blocs/user/user_bloc.dart';

@@ -1,13 +1,13 @@
-import 'package:carbon_icons/carbon_icons.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import '/utils/get.dart';
+import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 import '/domain/services/storage_service.dart';
 import '/utils/app_theme.dart';
+import '/utils/get.dart';
 
 class FileInfo {
   final String path;

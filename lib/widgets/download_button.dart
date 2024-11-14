@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supa_carbon_icons/supa_carbon_icons.dart';
+
 import '/domain/cubits/downloads_cubit.dart';
 import '/domain/models/block_item/audio_track.dart';
-
 import '/utils/get.dart';
 
 class TrackDownloadButton extends StatefulWidget {

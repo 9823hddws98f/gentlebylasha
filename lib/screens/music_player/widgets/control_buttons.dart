@@ -1,8 +1,7 @@
 import 'package:audio_service/audio_service.dart';
-import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
-import '/widgets/download_button.dart';
+import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 import '/domain/models/block_item/audio_track.dart';
 import '/main.dart';
@@ -14,6 +13,7 @@ import '/utils/common_extensions.dart';
 import '/utils/get.dart';
 import '/utils/global_functions.dart';
 import '/widgets/circle_icon_button.dart';
+import '/widgets/download_button.dart';
 import '/widgets/music/audio_play_button.dart';
 import 'current_song_title.dart';
 import 'favorite_button.dart';

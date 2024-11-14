@@ -1,5 +1,5 @@
-import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 import '/constants/assets.dart';
 import '/domain/models/block_item/audio_track.dart';
