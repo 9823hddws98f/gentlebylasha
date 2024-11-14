@@ -27,7 +27,7 @@ class MobileMusicPreview extends StatelessWidget {
       child: Container(
         height: height,
         decoration: BoxDecoration(
-          color: colors.surface,
+          color: colors.secondaryContainer,
           borderRadius: BorderRadius.only(
             topLeft: AppTheme.smallBorderRadius.topLeft,
             topRight: AppTheme.smallBorderRadius.topRight,

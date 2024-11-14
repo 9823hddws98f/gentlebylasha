@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 class AudioTrack {
   final String id;
@@ -11,6 +12,7 @@ class AudioTrack {
   final String thumbnail;
   final bool hasTimer;
   final Duration duration;
+  final Color? dominantColor;
 
   String get durationString =>
       '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
@@ -26,6 +28,7 @@ class AudioTrack {
     required this.thumbnail,
     required this.hasTimer,
     required this.duration,
+    this.dominantColor,
   });
 
   AudioTrack copyWith({
@@ -39,6 +42,7 @@ class AudioTrack {
     String? thumbnail,
     bool? hasTimer,
     Duration? duration,
+    Color? dominantColor,
   }) {
     return AudioTrack(
       id: id ?? this.id,
@@ -51,6 +55,7 @@ class AudioTrack {
       thumbnail: thumbnail ?? this.thumbnail,
       hasTimer: hasTimer ?? this.hasTimer,
       duration: duration ?? this.duration,
+      dominantColor: dominantColor ?? this.dominantColor,
     );
   }
 
@@ -66,6 +71,8 @@ class AudioTrack {
       'thumbnail': thumbnail,
       'hasTimer': hasTimer,
       'duration': duration.inMilliseconds,
+      // ignore: deprecated_member_use
+      if (dominantColor != null) 'dominantColor': dominantColor!.value,
     };
   }
 
@@ -81,6 +88,8 @@ class AudioTrack {
       thumbnail: map['thumbnail'] as String,
       hasTimer: map['hasTimer'] ?? false,
       duration: Duration(milliseconds: map['duration'] as int),
+      dominantColor:
+          map['dominantColor'] != null ? Color(map['dominantColor'] as int) : null,
     );
   }
 
@@ -91,7 +100,7 @@ class AudioTrack {
 
   @override
   String toString() {
-    return 'AudioTrack(id: $id, title: $title, writer: $writer, speaker: $speaker, trackUrl: $trackUrl, description: $description, imageBackground: $imageBackground, thumbnail: $thumbnail, duration: $duration, hasTimer: $hasTimer)';
+    return 'AudioTrack(id: $id, title: $title, writer: $writer, speaker: $speaker, trackUrl: $trackUrl, description: $description, imageBackground: $imageBackground, thumbnail: $thumbnail, duration: $duration, hasTimer: $hasTimer, dominantColor: $dominantColor)';
   }
 
   @override
@@ -107,7 +116,8 @@ class AudioTrack {
         other.imageBackground == imageBackground &&
         other.thumbnail == thumbnail &&
         other.duration == duration &&
-        other.hasTimer == hasTimer;
+        other.hasTimer == hasTimer &&
+        other.dominantColor == dominantColor;
   }
 
   @override
@@ -121,6 +131,7 @@ class AudioTrack {
         imageBackground.hashCode ^
         thumbnail.hashCode ^
         duration.hashCode ^
-        hasTimer.hashCode;
+        hasTimer.hashCode ^
+        dominantColor.hashCode;
   }
 }

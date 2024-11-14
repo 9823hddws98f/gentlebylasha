@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '/page_manager.dart';
-import '/utils/colors.dart';
 import '/utils/get.dart';
 
 class AudioProgressBarHome extends StatelessWidget {
@@ -24,8 +23,8 @@ class AudioProgressBarHome extends StatelessWidget {
             thumbColor: colors.onSurface,
             thumbShape: RoundSliderThumbShape(enabledThumbRadius: 0),
             overlayShape: RoundSliderOverlayShape(overlayRadius: 0),
-            activeTrackColor: colors.onSurface,
-            inactiveTrackColor: transparentWhite,
+            activeTrackColor: colors.onSecondaryContainer,
+            inactiveTrackColor: colors.outline,
             trackHeight: 1,
           ),
           child: Slider(

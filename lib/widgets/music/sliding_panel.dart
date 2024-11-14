@@ -51,6 +51,7 @@ class SlidingPanel extends StatelessWidget {
               maxHeight: height,
               minHeight: bottom + AppBottomBar.height + MobileMusicPreview.height,
               color: Colors.transparent,
+              boxShadow: [],
               onPanelSlide: (pos) => controller.value = pos,
               panelBuilder: () => _buildPanelContent(),
             ),

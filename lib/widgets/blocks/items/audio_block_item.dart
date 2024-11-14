@@ -64,6 +64,7 @@ class AudioBlockItem extends StatelessWidget {
           ItemTag(
             icon: CarbonIcons.play_filled_alt,
             text: '${track.durationString} min',
+            color: track.dominantColor,
           ),
         ],
       );

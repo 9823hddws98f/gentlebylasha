@@ -53,6 +53,7 @@ class PlaylistBlockItem extends StatelessWidget {
           ItemTag(
             icon: CarbonIcons.playlist,
             text: '${playlist.trackIds.length} Sessions',
+            color: playlist.dominantColor,
           ),
         ],
       );
