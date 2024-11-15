@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '/domain/models/block_item/audio_track.dart';
-import '/page_manager.dart';
+import '../domain/services/audio_manager.dart';
 import '/screens/auth/login_screen.dart';
 import '/utils/common_extensions.dart';
 import '/utils/get.dart';
@@ -19,7 +19,7 @@ void showToast(String value) {
 }
 
 void logout(BuildContext context) async {
-  Get.the<PageManager>().dispose();
+  Get.the<AudioManager>().dispose();
   final FirebaseAuth auth = FirebaseAuth.instance;
   auth.signOut();
 
@@ -43,7 +43,7 @@ void pushRemoveAll(BuildContext context, Widget widget) {
 }
 
 void playTrack(AudioTrack audioTrack) {
-  Get.the<PageManager>().playSinglePlaylist(
+  Get.the<AudioManager>().playSinglePlaylist(
     MediaItem(
       id: audioTrack.id,
       album: audioTrack.speaker,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gentle/domain/services/deep_linking_service.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
@@ -7,7 +8,6 @@ import '/domain/models/block_item/audio_playlist.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_panel_manager.dart';
 import '/domain/services/tracks_service.dart';
-import '/page_manager.dart';
 import '/screens/music_player/widgets/favorite_button.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
@@ -16,6 +16,7 @@ import '/widgets/app_image.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/app_scaffold/bottom_panel_spacer.dart';
 import '/widgets/user_avatar.dart';
+import '../../domain/services/audio_manager.dart';
 
 class PlayListTracksScreen extends StatefulWidget {
   final AudioPlaylist playlist;
@@ -30,9 +31,10 @@ class PlayListTracksScreen extends StatefulWidget {
 }
 
 class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
-  final _pageManager = Get.the<PageManager>();
+  final _pageManager = Get.the<AudioManager>();
   final _tracksService = Get.the<TracksService>();
-  final _audioPanelManager = Get.the<AudioPanelManager>();
+  late final _audioPanelManager = Get.the<AudioPanelManager>();
+  late final _deepLinkingService = Get.the<DeepLinkingService>();
 
   final _scrollController = ScrollController();
 
@@ -157,6 +159,11 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                       widget.playlist.title,
                       style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
                     ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.share),
+                    onPressed: () =>
+                        _deepLinkingService.sharePlaylist(widget.playlist.id),
                   ),
                   FavoriteButton(playlistId: widget.playlist.id)
                 ],

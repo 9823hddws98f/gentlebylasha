@@ -2,14 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
 import '/main.dart';
-import '/page_manager.dart';
+import 'audio_manager.dart';
 import '/utils/get.dart';
 
 class AudioPanelManager {
   final panelController = PanelController();
   final panelVisibility = ValueNotifier(0.0);
 
-  late final _pageManager = Get.the<PageManager>();
+  late final _pageManager = Get.the<AudioManager>();
 
   AudioPanelManager._();
   static AudioPanelManager instance = AudioPanelManager._();

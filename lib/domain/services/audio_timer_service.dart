@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
-import '../../page_manager.dart';
+import 'audio_manager.dart';
 import '../../utils/get.dart';
 
 class AudioTimerState {
@@ -37,7 +37,7 @@ class AudioTimerService {
 
   static final instance = AudioTimerService._();
 
-  final _pageManager = Get.the<PageManager>();
+  final _pageManager = Get.the<AudioManager>();
   final timerState = ValueNotifier<AudioTimerState>(AudioTimerState());
 
   Timer? _stopTimer;

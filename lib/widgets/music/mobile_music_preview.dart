@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '/constants/assets.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_panel_manager.dart';
-import '/page_manager.dart';
+import '../../domain/services/audio_manager.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
 import '/widgets/app_image.dart';
@@ -16,7 +16,7 @@ class MobileMusicPreview extends StatelessWidget {
 
   static const height = 64.0;
 
-  final _pageManager = Get.the<PageManager>();
+  final _pageManager = Get.the<AudioManager>();
   final _audioPanelManager = Get.the<AudioPanelManager>();
 
   @override

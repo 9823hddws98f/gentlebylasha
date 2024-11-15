@@ -1,17 +1,15 @@
-import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gentle/domain/services/deep_linking_service.dart';
 
 import '/domain/blocs/user/user_bloc.dart';
 import '/domain/cubits/navigation.dart';
 import '/domain/services/audio_panel_manager.dart';
-import '/helper/global_functions.dart';
 import '/main.dart';
-import '/page_manager.dart';
 import '/screens/app_container/user_init.dart';
 import '/utils/get.dart';
 import '/widgets/music/sliding_panel.dart';
+import '../../domain/services/audio_manager.dart';
 import 'app_bottom_bar.dart';
 import 'app_side_bar.dart';
 
@@ -27,7 +25,8 @@ class AppContainer extends StatefulWidget {
 class _AppContainerState extends State<AppContainer> with SingleTickerProviderStateMixin {
   final _audioPanelManager = Get.the<AudioPanelManager>();
   final _userBloc = Get.the<UserBloc>();
-  final _pageManager = Get.the<PageManager>();
+  final _pageManager = Get.the<AudioManager>();
+  final _deepLinkingService = Get.the<DeepLinkingService>();
 
   final _navigationCubit = NavigationCubit();
   final _allNavItems = AppNavigation.allNavItems;
@@ -45,7 +44,7 @@ class _AppContainerState extends State<AppContainer> with SingleTickerProviderSt
     // Initialize after the frame is rendered to ensure the user is set
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      _initDeepLinking();
+      _deepLinkingService.initialize();
       UserInit(user: _userBloc.state.user).initialize(context);
     });
   }
@@ -136,25 +135,5 @@ class _AppContainerState extends State<AppContainer> with SingleTickerProviderSt
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       context.read<NavigationCubit>().select(_allNavItems[0]);
     });
-  }
-
-  void _initDeepLinking() async {
-    try {
-      final appLinks = AppLinks();
-      appLinks.uriLinkStream.listen((Uri? uri) {
-        if (uri != null && mounted) {
-          _handleDeepLink(uri);
-        }
-      });
-    } on PlatformException {
-      if (mounted) {
-        showToast("Deeplink exception");
-      }
-    }
-  }
-
-  void _handleDeepLink(Uri uri) {
-    String trackId = uri.queryParameters['trackId'] ?? '';
-    showToast(trackId);
   }
 }

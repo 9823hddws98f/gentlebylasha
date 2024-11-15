@@ -1,7 +1,9 @@
 import 'package:audio_session/audio_session.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
@@ -36,8 +38,6 @@ class AppInit {
     await Get.the<AppSettings>().initialize();
 
     await Get.the<ReminderService>().initialize();
-
-    //TODO: await initializeNotifications();
   }
 
   static void _setSystemChrome() {
@@ -57,5 +57,45 @@ class AppInit {
   static Future<void> initUserBasedServices() async {
     await Get.the<FavoritesTracksCubit>().init();
     await Get.the<FavoritePlaylistsCubit>().init();
+  }
+
+  void setupFirebaseMessaging() {
+    // TODO: setup firebase messaging
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      debugPrint('Received message: ${message.notification?.title}');
+      displayNotification(message);
+    });
+  }
+
+  void displayNotification(RemoteMessage message) async {
+    final localNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+    await localNotificationsPlugin.initialize(initializationSettings);
+
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'sleeptalespush112',
+      'New Tracks',
+      importance: Importance.high,
+      priority: Priority.high,
+    );
+
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await localNotificationsPlugin.show(
+      0,
+      message.notification?.title ?? '',
+      message.notification?.body ?? '',
+      platformChannelSpecifics,
+    );
+  }
+
+  void subscribeToTopic(String topic) async {
+    await FirebaseMessaging.instance.subscribeToTopic(topic);
+    debugPrint('Subscribed to topic: $topic');
   }
 }

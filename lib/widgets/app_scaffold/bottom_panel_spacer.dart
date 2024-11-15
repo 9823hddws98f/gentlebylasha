@@ -42,7 +42,19 @@ class _BottomPanelSpacerState extends State<BottomPanelSpacer> {
       return widget._child ?? const SizedBox.shrink();
     }
 
+    final canPop = MyApp.navigatorKey.currentState?.canPop() ?? false;
+
     final bottomPadding = MediaQuery.of(context).padding.bottom;
+
+    // If app can pop, that means we are on the home screen and the bottom panel is not visible
+    if (canPop) {
+      return Column(
+        children: [
+          Expanded(child: widget._child!),
+          SizedBox(height: bottomPadding),
+        ],
+      );
+    }
 
     final spacer = ValueListenableBuilder(
       valueListenable: _panel.panelVisibility,

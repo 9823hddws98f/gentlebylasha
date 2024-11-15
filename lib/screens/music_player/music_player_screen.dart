@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import '/constants/assets.dart';
 import '/main.dart';
-import '/page_manager.dart';
+import '../../domain/services/audio_manager.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
 import '/widgets/app_image.dart';
@@ -21,7 +21,7 @@ class MusicPlayerScreen extends StatefulWidget {
 }
 
 class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
-  final _pageManager = Get.the<PageManager>();
+  final _pageManager = Get.the<AudioManager>();
 
   static final _borderRadius = BorderRadius.only(
     topLeft: AppTheme.smallBorderRadius.topLeft,

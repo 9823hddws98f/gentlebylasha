@@ -11,7 +11,10 @@ import '/notifiers/progress_notifier.dart';
 import '/notifiers/repeat_notifier.dart';
 import '/utils/get.dart';
 
-class PageManager {
+class AudioManager {
+  AudioManager._();
+  static final instance = AudioManager._();
+
   final _audioHandler = Get.the<AudioHandler>();
   final List<StreamSubscription> _subscriptions = [];
 

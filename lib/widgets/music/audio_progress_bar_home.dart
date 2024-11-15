@@ -2,13 +2,13 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '/page_manager.dart';
+import '../../domain/services/audio_manager.dart';
 import '/utils/get.dart';
 
 class AudioProgressBarHome extends StatelessWidget {
   AudioProgressBarHome({super.key});
 
-  final _progressNotifier = Get.the<PageManager>().progressNotifier;
+  final _progressNotifier = Get.the<AudioManager>().progressNotifier;
 
   @override
   Widget build(BuildContext context) {
