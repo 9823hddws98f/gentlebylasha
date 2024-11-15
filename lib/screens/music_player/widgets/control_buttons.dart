@@ -40,8 +40,10 @@ class _ControlButtonsState extends State<ControlButtons> {
         style: IconButton.styleFrom(
           minimumSize: Size(45, 45),
           iconSize: 26,
-          backgroundColor: colors.surface.withValues(alpha: 0.6),
           foregroundColor: colors.onSurface,
+          backgroundColor: colors.surface.withValues(alpha: 0.6),
+          disabledBackgroundColor: colors.surface.withValues(alpha: 0.3),
+          disabledForegroundColor: colors.onSurface.withValues(alpha: 0.3),
         ),
       ),
       child: Column(
@@ -165,9 +167,7 @@ class _ControlButtonsState extends State<ControlButtons> {
   Widget _buildRepeatButton(Color primary) => ValueListenableBuilder(
         valueListenable: _pageManager.repeatButtonNotifier,
         builder: (context, repeatState, child) => IconButton(
-          icon: Icon(
-            repeatState == RepeatState.repeatSong ? Icons.repeat_one : Icons.repeat,
-          ),
+          icon: Icon(Icons.repeat),
           color: repeatState == RepeatState.off ? null : primary,
           onPressed: () => _pageManager.repeat(),
         ),

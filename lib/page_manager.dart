@@ -201,8 +201,7 @@ class PageManager {
     repeatButtonNotifier.nextState();
     _audioHandler.setRepeatMode(switch (repeatButtonNotifier.value) {
       RepeatState.off => AudioServiceRepeatMode.none,
-      RepeatState.repeatSong => AudioServiceRepeatMode.one,
-      RepeatState.repeatPlaylist => AudioServiceRepeatMode.all,
+      RepeatState.repeat => AudioServiceRepeatMode.all,
     });
   }
 

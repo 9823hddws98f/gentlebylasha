@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 class RepeatButtonNotifier extends ValueNotifier<RepeatState> {
   RepeatButtonNotifier() : super(_initialValue);
+
   static const _initialValue = RepeatState.off;
 
   void nextState() {
@@ -12,6 +13,5 @@ class RepeatButtonNotifier extends ValueNotifier<RepeatState> {
 
 enum RepeatState {
   off,
-  repeatSong,
-  repeatPlaylist,
+  repeat,
 }
