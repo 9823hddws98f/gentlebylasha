@@ -46,7 +46,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyALrpeKIpQfSmRDOQfY51Z2tdXb2EDG-FE',
-    appId: '1:65622286155:android:c30c99ed78a615341e12ce',
+    appId: '1:65622286155:android:f2f757e8ce2c08061e12ce',
     messagingSenderId: '65622286155',
     projectId: 'sleeptales-4bac2',
     storageBucket: 'sleeptales-4bac2.appspot.com',
@@ -54,13 +54,13 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCkLF64zSDE7M1t0f2FHC7vEMmivJNi9UI',
-    appId: '1:65622286155:ios:bf201cbfa0c976401e12ce',
+    appId: '1:65622286155:ios:dab09eb14668c3761e12ce',
     messagingSenderId: '65622286155',
     projectId: 'sleeptales-4bac2',
     storageBucket: 'sleeptales-4bac2.appspot.com',
     androidClientId: '65622286155-6gugiak1h8139igjdi0u8nv55uhvk8ak.apps.googleusercontent.com',
-    iosClientId: '65622286155-ksiqb07766dr4t4nnm07fcna2g8ot7v5.apps.googleusercontent.com',
-    iosBundleId: 'io.sleeptales.sleeptales',
+    iosClientId: '65622286155-e4uodnjmdch7s56iup87j677p49rn43v.apps.googleusercontent.com',
+    iosBundleId: 'com.mezz.gentle',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(

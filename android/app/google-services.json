@@ -7,6 +7,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:65622286155:android:f2f757e8ce2c08061e12ce",
+        "android_client_info": {
+          "package_name": "com.mezz.gentle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "65622286155-5aergsldc7ntm4flft2ql4qu8urlggir.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALrpeKIpQfSmRDOQfY51Z2tdXb2EDG-FE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "65622286155-5aergsldc7ntm4flft2ql4qu8urlggir.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "65622286155-9cumja6igvld4m2gkpoj4j5k64r877f5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.gentleAdmin"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:65622286155:android:c30c99ed78a615341e12ce",
         "android_client_info": {
           "package_name": "io.sleeptales.sleeptales"
@@ -47,10 +83,10 @@
               "client_type": 3
             },
             {
-              "client_id": "65622286155-hnh133hrvtj757bn4i0u41mvld25mn2k.apps.googleusercontent.com",
+              "client_id": "65622286155-9cumja6igvld4m2gkpoj4j5k64r877f5.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.sleeptales.sleeptales"
+                "bundle_id": "com.example.gentleAdmin"
               }
             }
           ]

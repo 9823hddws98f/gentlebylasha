@@ -1,4 +1,4 @@
-package io.sleeptales.sleeptales
+package com.mezz.gentle
 
 import io.flutter.embedding.android.FlutterActivity
 

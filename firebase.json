@@ -1,56 +1,56 @@
 {
-  "flutter": {
-    "platforms": {
-      "android": {
-        "default": {
-          "projectId": "sleeptales-4bac2",
-          "appId": "1:65622286155:android:c30c99ed78a615341e12ce",
-          "fileOutput": "android/app/google-services.json"
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "sleeptales-4bac2",
+                    "appId": "1:65622286155:android:f2f757e8ce2c08061e12ce",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "ios": {
+                "default": {
+                    "projectId": "sleeptales-4bac2",
+                    "appId": "1:65622286155:ios:dab09eb14668c3761e12ce",
+                    "uploadDebugSymbols": false,
+                    "fileOutput": "ios/Runner/GoogleService-Info.plist"
+                }
+            },
+            "macos": {
+                "default": {
+                    "projectId": "sleeptales-4bac2",
+                    "appId": "1:65622286155:ios:bf201cbfa0c976401e12ce",
+                    "uploadDebugSymbols": false,
+                    "fileOutput": "macos/Runner/GoogleService-Info.plist"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "sleeptales-4bac2",
+                    "configurations": {
+                        "android": "1:65622286155:android:f2f757e8ce2c08061e12ce",
+                        "ios": "1:65622286155:ios:dab09eb14668c3761e12ce",
+                        "macos": "1:65622286155:ios:bf201cbfa0c976401e12ce",
+                        "web": "1:65622286155:web:cf2c7cb81edc71f31e12ce"
+                    }
+                }
+            }
         }
-      },
-      "ios": {
-        "default": {
-          "projectId": "sleeptales-4bac2",
-          "appId": "1:65622286155:ios:bf201cbfa0c976401e12ce",
-          "uploadDebugSymbols": false,
-          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+    },
+    "functions": [
+        {
+            "source": "functions",
+            "codebase": "default",
+            "ignore": [
+                "node_modules",
+                ".git",
+                "firebase-debug.log",
+                "firebase-debug.*.log",
+                "*.local"
+            ],
+            "predeploy": [
+                "npm --prefix \"$RESOURCE_DIR\" run lint"
+            ]
         }
-      },
-      "macos": {
-        "default": {
-          "projectId": "sleeptales-4bac2",
-          "appId": "1:65622286155:ios:bf201cbfa0c976401e12ce",
-          "uploadDebugSymbols": false,
-          "fileOutput": "macos/Runner/GoogleService-Info.plist"
-        }
-      },
-      "dart": {
-        "lib/firebase_options.dart": {
-          "projectId": "sleeptales-4bac2",
-          "configurations": {
-            "android": "1:65622286155:android:c30c99ed78a615341e12ce",
-            "ios": "1:65622286155:ios:bf201cbfa0c976401e12ce",
-            "macos": "1:65622286155:ios:bf201cbfa0c976401e12ce",
-            "web": "1:65622286155:web:cf2c7cb81edc71f31e12ce"
-          }
-        }
-      }
-    }
-  },
-  "functions": [
-    {
-      "source": "functions",
-      "codebase": "default",
-      "ignore": [
-        "node_modules",
-        ".git",
-        "firebase-debug.log",
-        "firebase-debug.*.log",
-        "*.local"
-      ],
-      "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run lint"
-      ]
-    }
-  ]
+    ]
 }

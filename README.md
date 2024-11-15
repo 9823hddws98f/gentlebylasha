@@ -1,6 +1,6 @@
-# sleeptales
+# gentle
 
-Sleeptales App
+Gentle App
 
 ## Getting Started
 

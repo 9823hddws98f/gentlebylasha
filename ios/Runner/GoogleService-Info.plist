@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>65622286155-ksiqb07766dr4t4nnm07fcna2g8ot7v5.apps.googleusercontent.com</string>
+	<string>65622286155-e4uodnjmdch7s56iup87j677p49rn43v.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.65622286155-ksiqb07766dr4t4nnm07fcna2g8ot7v5</string>
+	<string>com.googleusercontent.apps.65622286155-e4uodnjmdch7s56iup87j677p49rn43v</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>65622286155-6gugiak1h8139igjdi0u8nv55uhvk8ak.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>io.sleeptales.sleeptales</string>
+	<string>com.mezz.gentle</string>
 	<key>PROJECT_ID</key>
 	<string>sleeptales-4bac2</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:65622286155:ios:bf201cbfa0c976401e12ce</string>
+	<string>1:65622286155:ios:dab09eb14668c3761e12ce</string>
 </dict>
 </plist>
