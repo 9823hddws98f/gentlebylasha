@@ -39,7 +39,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="www.gentle-mu.vercel.app" android:pathPrefix="/shareUrl" />
+                <data android:scheme="https" android:host="www.gentle-mu.vercel.app" android:pathPrefix="/#/shareUrl" />
             </intent-filter>
             <!-- END Deep linking -->
 
