@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sleeptales/utils/app_theme.dart';
-import 'package:sleeptales/utils/enums.dart';
-import 'package:sleeptales/utils/tx_button.dart';
 
+import '/utils/app_theme.dart';
 import '/utils/common_extensions.dart';
+import '/utils/enums.dart';
+import '/utils/tx_button.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/app_scaffold/bottom_panel_spacer.dart';

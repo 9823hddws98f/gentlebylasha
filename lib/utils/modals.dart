@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sleeptales/utils/app_theme.dart';
 
+import '/utils/app_theme.dart';
 import 'enums.dart';
 import 'tx_button.dart';
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sleeptales/screens/favorites/favorites_screen.dart';
 import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 import '/screens/explore/explore_screen.dart';
+import '/screens/favorites/favorites_screen.dart';
 import '/screens/home/home_screen.dart';
 import '/screens/settings/profile_settings_screen.dart';
 
