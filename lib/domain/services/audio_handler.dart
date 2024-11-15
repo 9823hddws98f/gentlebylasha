@@ -8,8 +8,8 @@ import '/utils/common_extensions.dart';
 Future<AudioHandler> initAudioService() => AudioService.init(
       builder: () => MyAudioHandler(),
       config: const AudioServiceConfig(
-        androidNotificationChannelId: 'io.sleeptales.sleeptales.audio',
-        androidNotificationChannelName: 'Audio Service Sleeptales',
+        androidNotificationChannelId: 'com.mezz.gentle.audio',
+        androidNotificationChannelName: 'Audio Service Gentle',
         androidNotificationOngoing: true,
         androidStopForegroundOnPause: true,
       ),

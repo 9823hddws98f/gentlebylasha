@@ -1,0 +1,14 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "com.mezz.gentle",
+            "sha256_cert_fingerprints": [
+                "36:5E:71:49:38:83:A0:85:66:CD:95:BC:B1:20:22:88:54:5F:D0:72:CA:DC:FF:00:97:38:88:D6:F7:A6:62:8D"
+            ]
+        }
+    }
+]
