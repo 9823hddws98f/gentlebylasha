@@ -21,6 +21,7 @@ class AppInit {
     tz.initializeTimeZones();
 
     await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
     _setSystemChrome();
 
     await FlutterTimezone.getAvailableTimezones();
@@ -34,9 +35,7 @@ class AppInit {
 
     /// Initialize App Pages
     await Get.the<PagesCubit>().init();
-
     await Get.the<AppSettings>().initialize();
-
     await Get.the<ReminderService>().initialize();
   }
 

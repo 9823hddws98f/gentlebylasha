@@ -1163,12 +1163,12 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.36):
     - BoringSSL-GRPC/Interface (= 0.0.36)
   - BoringSSL-GRPC/Interface (0.0.36)
-  - cloud_firestore (5.4.4):
+  - cloud_firestore (5.5.0):
     - Firebase/CoreOnly (~> 11.4.0)
     - Firebase/Firestore (~> 11.4.0)
     - firebase_core
     - FlutterMacOS
-  - cloud_functions (5.1.4):
+  - cloud_functions (5.1.5):
     - Firebase/CoreOnly (~> 11.4.0)
     - Firebase/Functions (~> 11.4.0)
     - firebase_core
@@ -1195,20 +1195,20 @@ PODS:
   - Firebase/Storage (11.4.2):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 11.4.0)
-  - firebase_auth (5.3.1):
+  - firebase_auth (5.3.3):
     - Firebase/Auth (~> 11.4.0)
     - Firebase/CoreOnly (~> 11.4.0)
     - firebase_core
     - FlutterMacOS
-  - firebase_core (3.7.0):
+  - firebase_core (3.8.0):
     - Firebase/CoreOnly (~> 11.4.0)
     - FlutterMacOS
-  - firebase_messaging (15.1.3):
+  - firebase_messaging (15.1.5):
     - Firebase/CoreOnly (~> 11.4.0)
     - Firebase/Messaging (~> 11.4.0)
     - firebase_core
     - FlutterMacOS
-  - firebase_storage (12.3.5):
+  - firebase_storage (12.3.6):
     - Firebase/CoreOnly (~> 11.4.0)
     - Firebase/Storage (~> 11.4.0)
     - firebase_core
@@ -1556,15 +1556,15 @@ SPEC CHECKSUMS:
   audio_service: b88ff778e0e3915efd4cd1a5ad6f0beef0c950a9
   audio_session: dea1f41890dbf1718f04a56f1d6150fd50039b72
   BoringSSL-GRPC: ca6a8e5d04812fce8ffd6437810c2d46f925eaeb
-  cloud_firestore: 1185830368aa59f2903913b48961bfccc2110f58
-  cloud_functions: 527b8b9d600040e1cc572b09cd8f519e806c7169
+  cloud_firestore: d85fe469d0b8d5238ea3eb7729e13bf34217a037
+  cloud_functions: 89bf5d34687090976ed28f59a32e951b8e2ca823
   connectivity_plus: 4c41c08fc6d7c91f63bc7aec70ffe3730b04f563
   file_saver: 44e6fbf666677faf097302460e214e977fdd977b
   Firebase: 7fd5466678d964be78fbf536d8a3385da19c4828
-  firebase_auth: abdbc764776cc236e27f715cf2dc5c9e459abb5e
-  firebase_core: b25e3a422ba6577fce705071b930f71874204fee
-  firebase_messaging: 919888afaabb4e49c923a6e8de80c39749cc6c4e
-  firebase_storage: a706c597d5258647cccf056197613dd08820fc2b
+  firebase_auth: 85ed6c80b24da60af13391f9cdc0e566440b1963
+  firebase_core: d95c4a2225d7b6ed46bc31fb2a6f421fc7c8285b
+  firebase_messaging: 821b4f05a071d54d6ed826923a48c9101b93d443
+  firebase_storage: 0e96f4d87b172e34fd0db5c737ca049658f66819
   FirebaseAppCheckInterop: 1b9643ae2f1ee214488caa2f8e32b7bc2f0f3735
   FirebaseAuth: c359af98bd703cbf4293eec107a40de08ede6ce6
   FirebaseAuthInterop: 9ac948965ac13ec9d8a080f39490ddb2bda30520
@@ -1580,7 +1580,7 @@ SPEC CHECKSUMS:
   FirebaseSharedSwift: 505dae2d05969dbf6d43749a642bb1bf230f0252
   FirebaseStorage: 1bf8f80ac3bb02c72844b7350e95e10be7113ef0
   flutter_image_compress_macos: c26c3c13ea0f28ae6dea4e139b3292e7729f99f1
-  flutter_local_notifications: 4b427ffabf278fc6ea9484c97505e231166927a5
+  flutter_local_notifications: 7062189aabf7f50938a7b8b6614ffa97656eb0bf
   flutter_timezone: 6b906d1740654acb16e50b639835628fea851037
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
   google_sign_in_ios: 07375bfbf2620bc93a602c0e27160d6afc6ead38
@@ -1596,10 +1596,10 @@ SPEC CHECKSUMS:
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
-  share_plus: fd717ef89a2801d3491e737630112b80c310640e
+  share_plus: 1fa619de8392a4398bfaf176d441853922614e89
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
   sign_in_with_apple: a9e97e744e8edc36aefc2723111f652102a7a727
-  sqflite_darwin: a553b1fd6fe66f53bbb0fe5b4f5bab93f08d7a13
+  sqflite_darwin: 5a7236e3b501866c1c9befc6771dfd73ffb8702d
 
 PODFILE CHECKSUM: 6e548dc99d29b0f0adb3733a874f8e577a72a510
 

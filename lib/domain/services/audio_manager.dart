@@ -6,16 +6,18 @@ import 'package:flutter/foundation.dart';
 import '/domain/models/block_item/audio_playlist.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_panel_manager.dart';
-import '/helper/firestore_helper.dart';
 import '/notifiers/progress_notifier.dart';
 import '/notifiers/repeat_notifier.dart';
 import '/utils/get.dart';
+import 'analytics_service.dart';
 
 class AudioManager {
   AudioManager._();
   static final instance = AudioManager._();
 
   final _audioHandler = Get.the<AudioHandler>();
+  final _analytics = Get.the<AnalyticsService>();
+
   final List<StreamSubscription> _subscriptions = [];
 
   final currentMediaItemNotifier = ValueNotifier<MediaItem>(
@@ -152,9 +154,12 @@ class AudioManager {
   }
 
   void _updatePlayCount(MediaItem? mediaItem) {
-    if (mediaItem?.id.isNotEmpty ?? false) {
-      addToRecentlyPlayed(mediaItem!.id);
-      incrementPlayCount(mediaItem.id);
+    if (mediaItem?.id.isEmpty ?? true) return;
+    if ((mediaItem!.duration?.inSeconds ?? 0) > 1) {
+      _analytics.logAudioPlay(
+        trackId: mediaItem.id,
+        playlistId: currentPlaylistBlockNotifier.value?.id,
+      );
     }
   }
 
@@ -173,7 +178,16 @@ class AudioManager {
   void play() => _audioHandler.play();
   void pause() => _audioHandler.pause();
 
-  void seek(Duration position) => _audioHandler.seek(position);
+  void seek(Duration position) {
+    _audioHandler.seek(position);
+    _analytics.logAudioSeek(
+      trackId: currentMediaItemNotifier.value.id,
+      playlistId: currentPlaylistBlockNotifier.value?.id,
+      previousPosition: progressNotifier.value.current,
+      newPosition: position,
+      totalDuration: progressNotifier.value.total,
+    );
+  }
 
   void previous() => _audioHandler.skipToPrevious();
   void next() => _audioHandler.skipToNext();

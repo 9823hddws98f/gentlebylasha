@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
-import 'package:gentle/domain/services/deep_linking_service.dart';
 import 'package:get_it/get_it.dart';
 
 import '/domain/blocs/authentication/app_bloc.dart';
@@ -13,11 +12,13 @@ import '/domain/cubits/favorite_tracks.dart';
 import '/domain/cubits/pages/pages_cubit.dart';
 import '/utils/get.dart';
 import 'account_deletion_service.dart';
+import 'analytics_service.dart';
 import 'app_settings.dart';
 import 'audio_handler.dart';
 import 'audio_manager.dart';
 import 'audio_panel_manager.dart';
 import 'audio_timer_service.dart';
+import 'deep_linking_service.dart';
 import 'downloads_service.dart';
 import 'interfaces/app_settings_view.dart';
 import 'language_cubit.dart';
@@ -31,8 +32,10 @@ import 'user_service.dart';
 
 Future<void> setupServiceLocator() async {
   /// Services
-  GetIt.I.registerSingleton<DeepLinkingService>(DeepLinkingService.instance);
-  GetIt.I.registerSingleton<AudioHandler>(await initAudioService());
+  _reg<AnalyticsService>(AnalyticsService.instance);
+  _reg<DeepLinkingService>(DeepLinkingService.instance);
+  _reg<AudioHandler>(await initAudioService());
+  // Only initialized when first called
   _regLazy<AuthRepository>(() => AuthRepository());
   _regLazy<UsersService>(() => UsersService());
   _regLazy<AudioPanelManager>(() => AudioPanelManager.instance);
@@ -57,6 +60,8 @@ Future<void> setupServiceLocator() async {
   _regLazy<AudioManager>(() => AudioManager.instance);
   _regLazy<DownloadsCubit>(() => DownloadsCubit.instance);
 }
+
+void _reg<T extends Object>(T instance) => GetIt.instance.registerSingleton<T>(instance);
 
 void _regLazy<T extends Object>(T Function() factoryFunc) =>
     GetIt.instance.registerLazySingleton<T>(factoryFunc);

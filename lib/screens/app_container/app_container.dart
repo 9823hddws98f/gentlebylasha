@@ -57,15 +57,14 @@ class _AppContainerState extends State<AppContainer> with SingleTickerProviderSt
   }
 
   @override
-  Widget build(BuildContext context) {
-    final bottom = MediaQuery.paddingOf(context).bottom;
-    return BlocProvider.value(
-      value: _navigationCubit,
-      child: Scaffold(
-        body: MyApp.isMobile ? _buildMobile(bottom) : _buildDesktop(),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => BlocProvider.value(
+        value: _navigationCubit,
+        child: Scaffold(
+          body: MyApp.isMobile
+              ? _buildMobile(MediaQuery.paddingOf(context).bottom)
+              : _buildDesktop(),
+        ),
+      );
 
   Widget _buildMobile(double bottom) => Stack(
         children: [
