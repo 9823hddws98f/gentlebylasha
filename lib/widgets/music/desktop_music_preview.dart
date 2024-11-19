@@ -7,9 +7,9 @@ import '/utils/get.dart';
 import '/utils/modals.dart';
 
 class DesktopMusicPreview extends StatelessWidget {
-  DesktopMusicPreview({super.key});
-
   final _pageManager = Get.the<AudioManager>();
+
+  DesktopMusicPreview({super.key});
 
   @override
   Widget build(BuildContext context) => IconButton(
@@ -43,7 +43,6 @@ class DesktopMusicPreview extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),

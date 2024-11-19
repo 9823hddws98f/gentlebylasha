@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '/domain/models/block/block.dart';
 import '/domain/services/crud_service.dart';
-import '../models/block/block.dart';
 
 class BlocksService implements CrudService<Block> {
   final CollectionReference<Map<String, dynamic>> _collectionReference =

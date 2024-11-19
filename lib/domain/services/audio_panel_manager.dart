@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
 import '/main.dart';
-import 'audio_manager.dart';
 import '/utils/get.dart';
+import 'audio_manager.dart';
 
 class AudioPanelManager {
   final panelController = PanelController();

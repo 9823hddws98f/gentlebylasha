@@ -6,12 +6,15 @@ import '/utils/app_theme.dart';
 import '/widgets/music/desktop_music_preview.dart';
 
 class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
+  static const _desktopHeight = 104.0;
+  static const _mobileHeight = 68.0;
   final String title;
   final bool? centerTitle;
   final List<Widget> actions;
-  final PreferredSizeWidget? bottom;
-  final bool hasBottomLine;
 
+  final PreferredSizeWidget? bottom;
+
+  final bool hasBottomLine;
   const AdaptiveAppBar({
     super.key,
     required this.title,
@@ -20,9 +23,6 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.bottom,
     this.hasBottomLine = true,
   });
-
-  static const _desktopHeight = 104.0;
-  static const _mobileHeight = 68.0;
 
   @override
   Size get preferredSize => Size.fromHeight(
@@ -33,8 +33,9 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = MyApp.isMobile;
+    final canPop = Navigator.canPop(context);
     return AppBar(
-      title: _buildTitle(isMobile, context),
+      title: _buildHeader(isMobile, context, canPop),
       toolbarHeight: isMobile ? _mobileHeight : _desktopHeight,
       automaticallyImplyLeading: false,
       centerTitle: centerTitle ?? !isMobile,
@@ -47,58 +48,9 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Widget _buildTitle(bool isMobile, BuildContext context) => Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: isMobile
-            ? [
-                const SizedBox(width: AppTheme.sidePadding / 2),
-                if (Navigator.canPop(context))
-                  IconButton(
-                    icon: Icon(CarbonIcons.arrow_left),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                const SizedBox(width: AppTheme.sidePadding / 2),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: isMobile ? null : 32,
-                      fontWeight: isMobile ? null : FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ]
-            : [
-                Expanded(
-                  child: Stack(
-                    children: [
-                      Center(
-                        child: Text(
-                          title,
-                          style: TextStyle(
-                            fontSize: isMobile ? null : 32,
-                            fontWeight: isMobile ? null : FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      if (Navigator.canPop(context))
-                        Positioned(
-                          left: AppTheme.sidePadding / 2,
-                          child: IconButton(
-                            icon: Icon(CarbonIcons.arrow_left),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                        ),
-                      if (!isMobile)
-                        Positioned(
-                          right: 0,
-                          child: DesktopMusicPreview(),
-                        ),
-                    ],
-                  ),
-                ),
-              ],
+  Widget _buildBackButton(BuildContext context) => IconButton(
+        icon: Icon(CarbonIcons.arrow_left),
+        onPressed: () => Navigator.pop(context),
       );
 
   PreferredSizeWidget _buildBottom(BuildContext context) => PreferredSize(
@@ -115,5 +67,47 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: bottom,
               )
             : bottom ?? SizedBox.shrink(),
+      );
+
+  Widget _buildHeader(bool isMobile, BuildContext context, bool canPop) {
+    const halfPadding = AppTheme.sidePadding / 2;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: isMobile
+          ? [
+              const SizedBox(width: halfPadding),
+              if (canPop) _buildBackButton(context),
+              const SizedBox(width: halfPadding),
+              Expanded(child: _buildTitle(true)),
+            ]
+          : [
+              Expanded(
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Center(child: _buildTitle(false)),
+                    if (canPop)
+                      Positioned(
+                        left: halfPadding,
+                        child: _buildBackButton(context),
+                      ),
+                    Positioned(
+                      right: 0,
+                      child: DesktopMusicPreview(),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+    );
+  }
+
+  Widget _buildTitle(bool isMobile) => Text(
+        title,
+        style: TextStyle(
+          fontSize: isMobile ? null : 32,
+          fontWeight: isMobile ? null : FontWeight.w600,
+        ),
       );
 }

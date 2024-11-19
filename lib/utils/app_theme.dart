@@ -78,10 +78,7 @@ class AppTheme {
       outlinedButtonTheme: OutlinedButtonThemeData(style: buttonStyle),
       elevatedButtonTheme: ElevatedButtonThemeData(style: buttonStyle),
       textTheme: TextTheme(
-        headlineLarge: TextStyle(
-          fontSize: 48,
-          fontFamily: titleFont,
-        ),
+        headlineLarge: TextStyle(fontSize: 48, fontFamily: titleFont),
       ),
       iconTheme: IconThemeData(color: colors.onSurface),
       inputDecorationTheme: InputDecorationTheme(
@@ -156,6 +153,7 @@ class AppTheme {
           color: colors.onSurface,
           fontSize: 14,
           fontWeight: FontWeight.w500,
+          fontFamily: fontFamily,
         ),
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(

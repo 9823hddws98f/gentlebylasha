@@ -34,9 +34,96 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> {
   ReminderModel get _item => widget.item;
 
   @override
+  Widget build(BuildContext context) => AppScaffold(
+        appBar: (_, __) => AdaptiveAppBar(title: _item.heading),
+        body: (context, _) => DefaultTextStyle.merge(
+          style: TextStyle(fontSize: 16),
+          textAlign: TextAlign.center,
+          child: _buildContent(),
+        ),
+      );
+
+  @override
   void initState() {
     super.initState();
     _loadSavedSettings();
+  }
+
+  Widget _buildContent() => BottomPanelSpacer.padding(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(child: _buildReminderList()),
+            _buildGetRemindersRow(),
+            SizedBox(height: 24),
+            _buildSaveButton(),
+            SizedBox(height: AppTheme.sidePadding),
+          ],
+        ),
+      );
+
+  Widget _buildGetRemindersRow() => Row(
+        children: [
+          Expanded(
+            child: Text(
+              'Get reminders',
+              textAlign: TextAlign.left,
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ),
+          CupertinoSwitch(
+            value: _getReminders,
+            onChanged: _handleGetReminders,
+          )
+        ],
+      );
+
+  Widget _buildReminderList() => ListView(
+        children: [
+          SizedBox.shrink(),
+          Text(_item.description),
+          Text(_item.description2),
+          _buildTimeSelector(),
+          if (_item.everyday) _buildWeekdays(),
+        ].interleaveWith(SizedBox(height: 24)),
+      );
+
+  Widget _buildSaveButton() => TxButton.filled(
+        label: Text('Save'),
+        color: RoleColor.secondary,
+        onPressVoid: _saveSettings,
+        onSuccess: () => Navigator.pop(context),
+      );
+
+  Widget _buildTimeSelector() => Center(
+        child: TxButton.filled(
+          icon: Icons.access_alarm,
+          label: Text(_selectedTime.format(context)),
+          color: RoleColor.secondary,
+          dense: true,
+          showSuccess: false,
+          onPressVoid: () => _selectTime(context),
+        ),
+      );
+
+  Widget _buildWeekdays() => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: List.generate(7, (i) => i)
+            .map((i) => DaySelector(
+                  dayInitial: ['S', 'M', 'T', 'W', 'T', 'F', 'S'][i],
+                  isSelected: _selectedDays[(i + 6) % 7],
+                  onSelected: (selected) => _handleWeekdayChoose((i + 6) % 7, selected),
+                ))
+            .toList(),
+      );
+
+  Future<void> _handleGetReminders(bool value) async {
+    setState(() => _getReminders = value);
+  }
+
+  // Helper Methods
+  void _handleWeekdayChoose(int index, bool selected) {
+    setState(() => _selectedDays[index] = selected);
   }
 
   Future<void> _loadSavedSettings() async {
@@ -62,109 +149,12 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) => AppScaffold(
-        appBar: (_, __) => AdaptiveAppBar(title: _item.heading),
-        body: (context, _) => DefaultTextStyle.merge(
-          style: TextStyle(fontSize: 16),
-          textAlign: TextAlign.center,
-          child: _buildContent(),
-        ),
-      );
-
-  Widget _buildContent() => BottomPanelSpacer.padding(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(child: _buildReminderList()),
-            _buildGetRemindersRow(),
-            SizedBox(height: 24),
-            _buildSaveButton(),
-            SizedBox(height: AppTheme.sidePadding),
-          ],
-        ),
-      );
-
-  Widget _buildReminderList() => ListView(
-        children: [
-          SizedBox.shrink(),
-          Text(_item.description),
-          Text(_item.description2),
-          _buildTimeSelector(),
-          if (_item.everyday) _buildWeekdays(),
-        ].interleaveWith(SizedBox(height: 24)),
-      );
-
-  Widget _buildWeekdays() => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: List.generate(7, (i) => i)
-            .map((i) => DaySelector(
-                  dayInitial: ['S', 'M', 'T', 'W', 'T', 'F', 'S'][i],
-                  isSelected: _selectedDays[(i + 6) % 7],
-                  onSelected: (selected) => _handleWeekdayChoose((i + 6) % 7, selected),
-                ))
-            .toList(),
-      );
-
-  Widget _buildGetRemindersRow() => Row(
-        children: [
-          Expanded(
-            child: Text(
-              'Get reminders',
-              textAlign: TextAlign.left,
-              style: TextStyle(fontWeight: FontWeight.w500),
-            ),
-          ),
-          CupertinoSwitch(
-            value: _getReminders,
-            onChanged: _handleGetReminders,
-          )
-        ],
-      );
-
-  Widget _buildTimeSelector() => Center(
-        child: TxButton.filled(
-          icon: Icons.access_alarm,
-          label: Text(_selectedTime.format(context)),
-          color: RoleColor.secondary,
-          dense: true,
-          showSuccess: false,
-          onPressVoid: () => _selectTime(context),
-        ),
-      );
-
-  Widget _buildSaveButton() => TxButton.filled(
-        label: Text('Save'),
-        color: RoleColor.secondary,
-        onPressVoid: _saveSettings,
-        onSuccess: () => Navigator.pop(context),
-      );
-
-  // Helper Methods
-  void _handleWeekdayChoose(int index, bool selected) {
-    setState(() => _selectedDays[index] = selected);
-  }
-
-  Future<void> _handleGetReminders(bool value) async {
-    setState(() => _getReminders = value);
-  }
-
-  Future<void> _selectTime(BuildContext context) async {
-    final selectedTime = await Modals.showTimeOfDayPicker(
-      context,
-      initialTime: _selectedTime,
-    );
-    if (selectedTime != null) {
-      setState(() => _selectedTime = selectedTime);
-    }
-  }
-
   Future<void> _saveSettings() async {
     if (!_getReminders) {
       await _reminderService.cancelReminder(_item.reminderID);
     } else {
       if (_item.everyday && _selectedDays.every((day) => !day)) {
-        showToast("Please select at least 1 day");
+        showToast('Please select at least 1 day');
         return;
       }
 
@@ -191,5 +181,15 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> {
     }
     await _reminderService.saveTimeOfDay(_item.heading, _selectedTime);
     await _reminderService.saveReminderEnabled(_item.heading, _getReminders);
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final selectedTime = await Modals.showTimeOfDayPicker(
+      context,
+      initialTime: _selectedTime,
+    );
+    if (selectedTime != null) {
+      setState(() => _selectedTime = selectedTime);
+    }
   }
 }

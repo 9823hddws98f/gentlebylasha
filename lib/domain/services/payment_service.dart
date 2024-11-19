@@ -106,7 +106,7 @@ class PaymentService {
         // FlutterInappPurchase.instance.finishTransaction(purchasedItem);
         break;
       case TransactionState.failed:
-        _callErrorListeners("Transaction Failed");
+        _callErrorListeners('Transaction Failed');
         FlutterInappPurchase.instance.finishTransaction(purchasedItem);
         break;
       case TransactionState.purchased:
@@ -133,7 +133,7 @@ class PaymentService {
         }
         break;
       default:
-        _callErrorListeners("Something went wrong");
+        _callErrorListeners('Something went wrong');
     }
   }
 
@@ -155,7 +155,7 @@ class PaymentService {
     //   return;
     // }
     on Exception {
-      _callErrorListeners("Something went wrong");
+      _callErrorListeners('Something went wrong');
       return;
     }
 
@@ -165,7 +165,7 @@ class PaymentService {
       // save in sharedPreference here
       _callProStatusChangedListeners();
     } else {
-      _callErrorListeners("Varification failed");
+      _callErrorListeners('Varification failed');
     }
   }
 

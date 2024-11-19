@@ -49,7 +49,13 @@ class _AppSideBarState extends State<AppSideBar> {
                     SizedBox(height: 24),
                     Opacity(
                       opacity: animation,
-                      child: SvgPicture.asset(Assets.logo),
+                      child: SvgPicture.asset(
+                        Assets.logo,
+                        colorFilter: ColorFilter.mode(
+                          colors.primary,
+                          BlendMode.srcIn,
+                        ),
+                      ),
                     ),
                     SizedBox(height: 24),
                     Divider(),
@@ -160,7 +166,8 @@ class _AppSideBarState extends State<AppSideBar> {
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
             backgroundColor: selected ? colorScheme.primary : colorScheme.surface,
-            foregroundColor: selected ? colorScheme.onPrimary : colorScheme.onSurface,
+            overlayColor: selected ? colorScheme.surface : colorScheme.primary,
+            shadowColor: Colors.transparent,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
@@ -168,7 +175,10 @@ class _AppSideBarState extends State<AppSideBar> {
           ),
           child: Row(
             children: [
-              Icon(icon),
+              Icon(
+                icon,
+                color: selected ? colorScheme.onPrimary : colorScheme.onSurface,
+              ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 18),
@@ -177,6 +187,9 @@ class _AppSideBarState extends State<AppSideBar> {
                     child: Text(
                       label,
                       maxLines: 1,
+                      style: TextStyle(
+                        color: selected ? colorScheme.onPrimary : colorScheme.onSurface,
+                      ),
                     ),
                   ),
                 ),

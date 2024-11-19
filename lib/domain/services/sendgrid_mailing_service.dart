@@ -1,8 +1,7 @@
 import 'dart:math';
 
-import '/utils/get.dart';
-
 import '/domain/models/account_deletion_model.dart';
+import '/utils/get.dart';
 import 'account_deletion_service.dart';
 import 'cloud_functions_service.dart';
 import 'mailing_service.dart';

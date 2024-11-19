@@ -65,7 +65,7 @@ class _OnBoarding02ScreenState extends State<OnBoarding02Screen> with Translatio
               label: Text(tr.continueText),
               onPressVoid: () {
                 if (_selectedOption == null) {
-                  showToast("Please select a option first");
+                  showToast('Please select a option first');
                 } else {
                   final bloc = Get.the<UserBloc>();
                   bloc.add(

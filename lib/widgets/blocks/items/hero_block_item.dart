@@ -104,7 +104,6 @@ class HeroBlockItem extends StatelessWidget {
               child: Shimmerize(
                 child: Material(
                   borderRadius: AppTheme.largeImageBorderRadius,
-                  color: Colors.white,
                 ),
               ),
             ),

@@ -6,11 +6,11 @@ import '/domain/services/audio_manager.dart';
 import '/utils/get.dart';
 
 class AudioPlayButton extends StatelessWidget {
-  AudioPlayButton({super.key, this.large = false});
-
   final bool large;
 
   final _pageManager = Get.the<AudioManager>();
+
+  AudioPlayButton({super.key, this.large = false});
 
   @override
   Widget build(BuildContext context) => IconButtonTheme(

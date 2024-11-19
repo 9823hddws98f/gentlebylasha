@@ -8,7 +8,7 @@ Future<bool> isEmailAndPasswordUserLoggedIn() async {
   final user = FirebaseAuth.instance.currentUser;
   if (user != null) {
     final userInfo = await user.getIdTokenResult();
-    return userInfo.signInProvider == "password";
+    return userInfo.signInProvider == 'password';
   }
   return false;
 }
@@ -42,11 +42,11 @@ Future<bool> updateUserEmailAndData(
         showToast('Wrong password provided.');
         return false;
       } else {
-        debugPrint("Error auth $e");
+        debugPrint('Error auth $e');
         return false;
       }
     } catch (e) {
-      debugPrint("Error auth $e");
+      debugPrint('Error auth $e');
       return false;
     }
   } else {

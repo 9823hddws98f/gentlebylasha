@@ -105,7 +105,6 @@ class AudioBlockItem extends StatelessWidget {
                   Shimmerize(
                     child: Material(
                       borderRadius: AppTheme.smallBorderRadius,
-                      color: Colors.white,
                     ),
                   ),
                   Positioned(

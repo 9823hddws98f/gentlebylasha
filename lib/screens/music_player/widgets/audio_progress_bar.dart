@@ -11,16 +11,19 @@ class AudioProgressBar extends StatelessWidget {
   final _pageManager = Get.the<AudioManager>();
 
   @override
-  Widget build(BuildContext context) => ValueListenableBuilder<ProgressBarState>(
-        valueListenable: _pageManager.progressNotifier,
-        builder: (context, value, _) => ProgressBar(
-          progress: value.current,
-          buffered: value.buffered,
-          total: value.total,
-          onSeek: _pageManager.seek,
-          baseBarColor: Colors.white.withAlpha(70),
-          progressBarColor: Colors.white,
-          thumbColor: Colors.white,
-        ),
-      );
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return ValueListenableBuilder<ProgressBarState>(
+      valueListenable: _pageManager.progressNotifier,
+      builder: (context, value, _) => ProgressBar(
+        progress: value.current,
+        buffered: value.buffered,
+        total: value.total,
+        onSeek: _pageManager.seek,
+        baseBarColor: colors.primary.withAlpha(70),
+        progressBarColor: colors.primary,
+        thumbColor: colors.primary,
+      ),
+    );
+  }
 }

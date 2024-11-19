@@ -11,15 +11,15 @@ import '/widgets/shimmerize.dart';
 import '../widgets/item_tag.dart';
 
 class PlaylistBlockItem extends StatelessWidget {
-  final AudioPlaylist playlist;
+  static const height = 219.0;
 
+  static const _imageSize = 164.0;
+
+  final AudioPlaylist playlist;
   const PlaylistBlockItem({
     super.key,
     required this.playlist,
   });
-
-  static const height = 219.0;
-  static const _imageSize = 164.0;
 
   @override
   Widget build(context) {
@@ -95,7 +95,6 @@ class PlaylistBlockItem extends StatelessWidget {
                   Shimmerize(
                     child: Material(
                       borderRadius: AppTheme.smallBorderRadius,
-                      color: Colors.white,
                     ),
                   ),
                   Positioned(
