@@ -17,6 +17,7 @@ import '/utils/enums.dart';
 import '/utils/get.dart';
 import '/utils/modals.dart';
 import '/utils/tx_button.dart';
+import '/utils/tx_color_extensions.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/input/password_edit_text.dart';
@@ -61,7 +62,7 @@ class LoginScreenState extends State<LoginScreen> with Translation {
             child: isMobile
                 ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
-                    child: _buildContent(onSurfaceVariant),
+                    child: _buildContent(onSurfaceVariant, theme.tx.onMono),
                   )
                 : Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -102,7 +103,7 @@ class LoginScreenState extends State<LoginScreen> with Translation {
                                 ),
                                 SizedBox(height: 32),
                                 Expanded(
-                                  child: _buildContent(onSurfaceVariant),
+                                  child: _buildContent(onSurfaceVariant, theme.tx.onMono),
                                 ),
                               ],
                             ),
@@ -115,7 +116,7 @@ class LoginScreenState extends State<LoginScreen> with Translation {
         },
       );
 
-  Widget _buildContent(Color outlineColor) => CustomScrollView(
+  Widget _buildContent(Color outlineColor, Color onMono) => CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
             child: Column(
@@ -160,7 +161,7 @@ class LoginScreenState extends State<LoginScreen> with Translation {
                 ),
                 SizedBox(height: 24),
                 if (!kIsWeb && TargetPlatform.iOS == defaultTargetPlatform) ...[
-                  _buildAppleLoginButton(),
+                  _buildAppleLoginButton(onMono),
                   SizedBox(height: 16),
                 ],
                 _buildGoogleLoginButton(),
@@ -213,12 +214,19 @@ class LoginScreenState extends State<LoginScreen> with Translation {
         ),
       );
 
-  Widget _buildAppleLoginButton() => TxButton.filled(
+  Widget _buildAppleLoginButton(Color onMono) => TxButton.filled(
         color: RoleColor.mono,
         label: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SvgPicture.asset(Assets.appleIcon, height: 20),
+            SvgPicture.asset(
+              Assets.appleIcon,
+              height: 20,
+              colorFilter: ColorFilter.mode(
+                onMono,
+                BlendMode.srcIn,
+              ),
+            ),
             SizedBox(width: 12),
             Text(tr.continueWithApple),
           ],

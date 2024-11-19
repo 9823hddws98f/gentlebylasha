@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
-import '../../domain/services/audio_manager.dart';
+import '/domain/services/audio_manager.dart';
 import '/screens/music_player/music_player_screen.dart';
 import '/utils/get.dart';
 import '/utils/modals.dart';

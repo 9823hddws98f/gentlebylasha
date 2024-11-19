@@ -1,9 +1,10 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
-import 'package:gentle/domain/services/deep_linking_service.dart';
 import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 import '/domain/models/block_item/audio_track.dart';
+import '/domain/services/audio_manager.dart';
+import '/domain/services/deep_linking_service.dart';
 import '/main.dart';
 import '/notifiers/repeat_notifier.dart';
 import '/utils/app_theme.dart';
@@ -11,7 +12,6 @@ import '/utils/common_extensions.dart';
 import '/utils/get.dart';
 import '/widgets/download_button.dart';
 import '/widgets/music/audio_play_button.dart';
-import '../../../domain/services/audio_manager.dart';
 import 'current_song_title.dart';
 import 'favorite_button.dart';
 import 'timer_button.dart';

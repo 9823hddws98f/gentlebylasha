@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gentle/domain/services/deep_linking_service.dart';
 
 import '/domain/blocs/user/user_bloc.dart';
 import '/domain/cubits/navigation.dart';
 import '/domain/services/audio_panel_manager.dart';
+import '/domain/services/deep_linking_service.dart';
 import '/main.dart';
 import '/screens/app_container/user_init.dart';
 import '/utils/get.dart';
 import '/widgets/music/sliding_panel.dart';
-import '../../domain/services/audio_manager.dart';
+import '/domain/services/audio_manager.dart';
 import 'app_bottom_bar.dart';
 import 'app_side_bar.dart';
 

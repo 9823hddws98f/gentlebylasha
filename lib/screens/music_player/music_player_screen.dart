@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '/constants/assets.dart';
+import '/domain/services/audio_manager.dart';
 import '/main.dart';
-import '../../domain/services/audio_manager.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
 import '/widgets/app_image.dart';

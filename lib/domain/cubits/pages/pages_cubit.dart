@@ -17,7 +17,7 @@ class PagesCubit extends Cubit<PagesState> {
 
   Future<void> init() async {
     final pages = await _pagesService.getAll()
-      ..sort((a, b) => a.sequence.compareTo(b.sequence));
+      ..sort((a, b) => a.order.compareTo(b.order));
     final blockSkeletons = await _blocksService.getAll();
 
     emit(state.copyWith(pages: {

@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../../domain/services/audio_manager.dart';
+import '/domain/services/audio_manager.dart';
 import '/utils/get.dart';
 
 class AudioProgressBarHome extends StatelessWidget {

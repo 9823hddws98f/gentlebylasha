@@ -1,7 +1,7 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 
-import '../../../domain/services/audio_manager.dart';
+import '/domain/services/audio_manager.dart';
 import '/utils/get.dart';
 
 class CurrentSongTitle extends StatelessWidget {

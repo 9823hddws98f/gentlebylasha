@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 import 'audio_manager.dart';
-import '../../utils/get.dart';
+import '/utils/get.dart';
 
 class AudioTimerState {
   final bool isActive;

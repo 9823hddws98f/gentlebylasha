@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:gentle/domain/services/deep_linking_service.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 import '/constants/assets.dart';
 import '/domain/models/block_item/audio_playlist.dart';
 import '/domain/models/block_item/audio_track.dart';
+import '/domain/services/audio_manager.dart';
 import '/domain/services/audio_panel_manager.dart';
+import '/domain/services/deep_linking_service.dart';
 import '/domain/services/tracks_service.dart';
 import '/screens/music_player/widgets/favorite_button.dart';
 import '/utils/app_theme.dart';
@@ -16,7 +17,6 @@ import '/widgets/app_image.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/app_scaffold/bottom_panel_spacer.dart';
 import '/widgets/user_avatar.dart';
-import '../../domain/services/audio_manager.dart';
 
 class PlayListTracksScreen extends StatefulWidget {
   final AudioPlaylist playlist;

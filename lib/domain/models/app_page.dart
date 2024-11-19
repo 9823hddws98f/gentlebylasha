@@ -3,23 +3,23 @@ import 'dart:convert';
 class AppPage {
   final String id;
   final String name;
-  final int sequence;
+  final int order;
 
   AppPage({
     required this.id,
     required this.name,
-    required this.sequence,
+    required this.order,
   });
 
   AppPage copyWith({
     String? id,
     String? name,
-    int? sequence,
+    int? order,
   }) {
     return AppPage(
       id: id ?? this.id,
       name: name ?? this.name,
-      sequence: sequence ?? this.sequence,
+      order: order ?? this.order,
     );
   }
 
@@ -27,7 +27,7 @@ class AppPage {
     return <String, dynamic>{
       'id': id,
       'name': name,
-      'sequence': sequence,
+      'order': order,
     };
   }
 
@@ -35,7 +35,7 @@ class AppPage {
     return AppPage(
       id: map['id'] as String,
       name: map['name'] as String,
-      sequence: map['sequence'] as int,
+      order: map['order'] as int,
     );
   }
 
@@ -45,15 +45,15 @@ class AppPage {
       AppPage.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'AppPage(id: $id, name: $name, sequence: $sequence)';
+  String toString() => 'AppPage(id: $id, name: $name, order: $order)';
 
   @override
   bool operator ==(covariant AppPage other) {
     if (identical(this, other)) return true;
 
-    return other.id == id && other.name == name && other.sequence == sequence;
+    return other.id == id && other.name == name && other.order == order;
   }
 
   @override
-  int get hashCode => id.hashCode ^ name.hashCode ^ sequence.hashCode;
+  int get hashCode => id.hashCode ^ name.hashCode ^ order.hashCode;
 }
