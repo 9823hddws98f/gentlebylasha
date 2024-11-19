@@ -77,6 +77,7 @@ class AppTheme {
       textButtonTheme: TextButtonThemeData(style: buttonStyle),
       outlinedButtonTheme: OutlinedButtonThemeData(style: buttonStyle),
       elevatedButtonTheme: ElevatedButtonThemeData(style: buttonStyle),
+      splashFactory: InkSparkle.splashFactory,
       textTheme: TextTheme(
         headlineLarge: TextStyle(fontSize: 48, fontFamily: titleFont),
       ),
