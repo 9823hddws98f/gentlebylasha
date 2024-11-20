@@ -33,7 +33,7 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = MyApp.isMobile;
-    final canPop = Navigator.canPop(context);
+    final canPop = ModalRoute.of(context)?.canPop ?? false;
     return AppBar(
       title: _buildHeader(isMobile, context, canPop),
       toolbarHeight: isMobile ? _mobileHeight : _desktopHeight,
