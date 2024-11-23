@@ -1,25 +1,17 @@
 import 'package:flutter/material.dart';
 
 import '/utils/app_theme.dart';
-import '/utils/common_extensions.dart';
 import '/utils/enums.dart';
 import '/utils/tx_button.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/app_scaffold/bottom_panel_spacer.dart';
+import 'subscribe_modal.dart';
 
 class ManageSubscriptionScreen extends StatelessWidget {
   final String? email;
 
   const ManageSubscriptionScreen({super.key, this.email});
-
-  static const _data = '''
-Your free trial began on August 9, 2021.
-Your yearly subscription will begin on August 16, 2021.
-
-However, if you’ve already stopped recurring payments through iTunes, then your access will lapse at that time, and you won’t be charged.
-
-If you would like to stop recurring payments, you can do so here.Unfortunately, we’re unable to do so on your behalf.''';
 
   @override
   Widget build(BuildContext context) => AppScaffold(
@@ -42,24 +34,14 @@ If you would like to stop recurring payments, you can do so here.Unfortunately, 
                         ),
                       ),
                     ),
-                    Text(
-                      _data,
-                      textAlign: TextAlign.center,
-                    ),
-                  ].interleaveWith(const SizedBox(height: 16)),
-                ),
-              ),
-              Center(
-                child: Text(
-                  'Questions?',
-                  style: TextStyle(fontSize: 16),
+                  ],
                 ),
               ),
               const SizedBox(height: 16),
               TxButton.filled(
-                label: Text('Visit help center'),
+                label: Text('Purchase'),
                 color: RoleColor.mono,
-                onPressVoid: () {},
+                onPressVoid: () => SubscribeModal.show(context),
               ),
               const SizedBox(height: AppTheme.sidePadding),
             ],

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0711B1502CF2117C008CB293 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0711B14F2CF2117C008CB293 /* StoreKit.framework */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3779383E11D4CD8211065909 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD0C84E558A8D90A9AC47117 /* Pods_Runner.framework */; };
@@ -43,6 +44,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0711B14F2CF2117C008CB293 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		07D3AADB2DDE11BED3A35D85 /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0D6E6134C89C4BC4F232848B /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3779383E11D4CD8211065909 /* Pods_Runner.framework in Frameworks */,
+				0711B1502CF2117C008CB293 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -116,6 +119,7 @@
 		7DCD512230CDDA963A951D0D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0711B14F2CF2117C008CB293 /* StoreKit.framework */,
 				FD0C84E558A8D90A9AC47117 /* Pods_Runner.framework */,
 				19CC025ED91EF22B94A34E7D /* Pods_RunnerTests.framework */,
 			);

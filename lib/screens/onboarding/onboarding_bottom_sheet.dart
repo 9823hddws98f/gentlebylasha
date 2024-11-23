@@ -1,10 +1,10 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 
-import '/screens/settings/subscription/subscription.dart';
 import '/utils/app_theme.dart';
 import '/utils/modals.dart';
 import '/widgets/shared_axis_switcher.dart';
+import '../settings/subscription/subscribe_modal.dart';
 import 'onboarding01.dart';
 import 'onboarding02.dart';
 
@@ -45,7 +45,7 @@ class _OnboardingBottomSheetState extends State<OnboardingBottomSheet> {
           child: switch (_selectedPage) {
             1 => OnBoarding01Screen(onSubmit: () => _navigateTo(2)),
             2 => OnBoarding02Screen(onSubmit: () => _navigateTo(3)),
-            _ => SubscriptionScreen()
+            _ => SubscribeModal()
           },
         ),
       );

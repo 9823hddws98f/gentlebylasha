@@ -10,6 +10,8 @@ import '/domain/cubits/downloads_cubit.dart';
 import '/domain/cubits/favorite_playlists.dart';
 import '/domain/cubits/favorite_tracks.dart';
 import '/domain/cubits/pages/pages_cubit.dart';
+import '/domain/cubits/subscription/subscription_cubit.dart';
+import '/domain/cubits/subscription/subscription_service.dart';
 import '/utils/get.dart';
 import 'account_deletion_service.dart';
 import 'analytics_service.dart';
@@ -35,6 +37,7 @@ Future<void> setupServiceLocator() async {
   _reg<AnalyticsService>(AnalyticsService.instance);
   _reg<DeepLinkingService>(DeepLinkingService.instance);
   _reg<AudioHandler>(await initAudioService());
+  _reg<SubscriptionCubit>(SubscriptionCubit.instance);
   // Only initialized when first called
   _regLazy<AuthRepository>(() => AuthRepository());
   _regLazy<UsersService>(() => UsersService());
@@ -50,6 +53,7 @@ Future<void> setupServiceLocator() async {
   _regLazy<AppSettingsView>(() => AppSettings.instance);
   _regLazy<ReminderService>(() => ReminderService.instance);
   _regLazy<AudioTimerService>(() => AudioTimerService.instance);
+  _regLazy<SubscriptionService>(() => SubscriptionService.instance);
 
   /// Blocs/Cubits
   _regLazy<AppBloc>(() => AppBloc(Get.the<AuthRepository>()));
