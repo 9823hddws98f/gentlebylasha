@@ -77,11 +77,14 @@ class _MyAppState extends State<MyApp> {
                   navigatorKey: MyApp.navigatorKey,
                   localizationsDelegates: AppLocalizations.localizationsDelegates,
                   supportedLocales: AppLocalizations.supportedLocales,
-                  initialRoute: InitScreen.routeName,
                   routes: {
-                    InitScreen.routeName: (_) => InitScreen(),
                     LoginScreen.routeName: (_) => const LoginScreen(),
                     AppContainer.routeName: (_) => const AppContainer(),
+                  },
+                  onGenerateInitialRoutes: (initialRoute) {
+                    return [
+                      MaterialPageRoute(builder: (_) => InitScreen()),
+                    ];
                   },
                 )),
       );

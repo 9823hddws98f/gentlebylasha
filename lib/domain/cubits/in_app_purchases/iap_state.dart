@@ -1,32 +1,28 @@
-part of 'subscription_cubit.dart';
+part of 'iap_cubit.dart';
 
 @immutable
-class SubscriptionState {
+class IAPState {
   final List<PurchaseDetails> purchases;
   final List<PurchasableProduct> products;
   final String? errorMessage;
 
   bool get loaded => products.isNotEmpty;
 
-  const SubscriptionState({
+  const IAPState({
     this.purchases = const [],
     this.products = const [],
     this.errorMessage,
   });
 
-  SubscriptionState copyWith({
+  IAPState copyWith({
     List<PurchaseDetails>? purchases,
     List<PurchasableProduct>? products,
     String? errorMessage,
   }) {
-    return SubscriptionState(
+    return IAPState(
       purchases: purchases ?? this.purchases,
       products: products ?? this.products,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
-}
-
-final class SubscriptionInitial extends SubscriptionState {
-  const SubscriptionInitial() : super();
 }

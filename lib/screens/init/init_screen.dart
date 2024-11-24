@@ -14,8 +14,6 @@ import '/utils/get.dart';
 class InitScreen extends StatelessWidget {
   InitScreen({super.key});
 
-  static const routeName = '/init';
-
   final _userBloc = Get.the<UserBloc>();
   final _appBloc = Get.the<AppBloc>();
 
@@ -25,16 +23,13 @@ class InitScreen extends StatelessWidget {
         builder: (context, appBlocState) => BlocListener<UserBloc, UserState>(
           bloc: _userBloc,
           listener: (context, state) async {
-            if (FirebaseAuth.instance.currentUser == null) {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                LoginScreen.routeName,
-                (route) => false,
-              );
-            } else if (state.user.id.isNotEmpty && appBlocState.isAuthenticated) {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                AppContainer.routeName,
-                (route) => false,
-              );
+            final route = FirebaseAuth.instance.currentUser == null
+                ? LoginScreen.routeName
+                : (state.user.id.isNotEmpty && appBlocState.isAuthenticated)
+                    ? AppContainer.routeName
+                    : null;
+            if (route != null) {
+              Navigator.pushNamedAndRemoveUntil(context, route, (_) => false);
             }
           },
           child: Scaffold(

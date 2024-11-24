@@ -89,14 +89,22 @@ class AuthRepository {
 
   Future<UserCredential?> signInWithGoogle() async {
     try {
-      final googleSignInAccount = await GoogleSignIn().signIn();
-      final googleAuth = await googleSignInAccount?.authentication;
-      if (googleAuth == null) return null;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-      final user = await _firebaseAuth!.signInWithCredential(credential);
+      UserCredential? user;
+      if (kIsWeb) {
+        final provider =
+            GoogleAuthProvider().setCustomParameters({'prompt': 'select_account'});
+        user = await _firebaseAuth!.signInWithPopup(provider);
+      } else {
+        final googleSignInAccount = await GoogleSignIn().signIn();
+        final googleAuth = await googleSignInAccount?.authentication;
+        if (googleAuth == null) return null;
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+        user = await _firebaseAuth!.signInWithCredential(credential);
+      }
+
       await _initUserInDBIfNeeded(user);
       return user;
     } catch (e) {

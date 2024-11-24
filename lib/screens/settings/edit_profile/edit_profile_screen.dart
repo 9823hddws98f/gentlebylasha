@@ -103,7 +103,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   imageUrl != null
                       ? AppImage(
                           imageUrl: imageUrl,
-                          placeholderAsset: Assets.avatarIcon,
+                          placeholderAsset: Assets.profile,
                           width: 72,
                           height: 72,
                           borderRadius: BorderRadius.circular(50),

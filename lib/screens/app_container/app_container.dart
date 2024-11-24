@@ -14,7 +14,7 @@ import 'app_bottom_bar.dart';
 import 'app_side_bar.dart';
 
 class AppContainer extends StatefulWidget {
-  static const routeName = '/dashboard';
+  static const routeName = '/app';
 
   const AppContainer({super.key});
 

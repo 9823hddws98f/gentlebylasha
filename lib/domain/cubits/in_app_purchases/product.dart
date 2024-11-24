@@ -11,6 +11,7 @@ class PurchasableProduct {
   String get title => productDetails.title;
   String get description => productDetails.description;
   String get price => productDetails.price;
+
   ProductStatus status;
   ProductDetails productDetails;
 

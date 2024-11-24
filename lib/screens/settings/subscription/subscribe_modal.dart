@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gentle/domain/cubits/subscription/product.dart';
+import 'package:gentle/domain/cubits/in_app_purchases/product.dart';
 
-import '/domain/cubits/subscription/subscription_cubit.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
 import '/utils/modals.dart';
 import '/utils/tx_button.dart';
 import '/widgets/app_scaffold/bottom_panel_spacer.dart';
+import '../../../domain/cubits/in_app_purchases/iap_cubit.dart';
 
 class SubscribeModal extends StatefulWidget {
   const SubscribeModal({super.key, this.scrollController});
@@ -29,7 +29,7 @@ class SubscribeModal extends StatefulWidget {
 }
 
 class _SubscribeModalState extends State<SubscribeModal> {
-  final _subscriptionCubit = Get.the<SubscriptionCubit>();
+  final _subscriptionCubit = Get.the<IAPCubit>();
 
   late ColorScheme _colors;
 
@@ -60,7 +60,7 @@ class _SubscribeModalState extends State<SubscribeModal> {
                         'More then 100 + sleep stories & guided meditations'),
                     _buildBenefitItem('Cancel anytime without questions'),
                     SizedBox(height: 16.0),
-                    BlocBuilder<SubscriptionCubit, SubscriptionState>(
+                    BlocBuilder<IAPCubit, IAPState>(
                       bloc: _subscriptionCubit,
                       builder: (context, state) => Column(
                         children: state.products.map(_buildSubscriptionButton).toList(),
