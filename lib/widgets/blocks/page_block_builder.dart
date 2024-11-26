@@ -24,6 +24,7 @@ class PageBlockBuilder extends StatelessWidget {
 
   Widget _buildBlocksList(List<Block> blocks) => BottomPanelSpacer.padding(
         child: ListView.separated(
+          cacheExtent: 1000,
           separatorBuilder: (_, __) => const Padding(
             padding: EdgeInsets.fromLTRB(
               AppTheme.sidePadding,

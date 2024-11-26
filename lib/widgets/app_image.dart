@@ -31,10 +31,9 @@ class AppImage extends StatelessWidget {
       width: width,
       child: BlurHash(
         hash: image.blurhash,
-        decodingHeight: image.height,
-        decodingWidth: image.width,
         image: image.url,
         duration: fadeInDuration,
+        imageFit: BoxFit.cover,
         color: image.dominantColor ?? Colors.transparent,
         errorBuilder: (context, error, stackTrace) {
           error.logDebug();
