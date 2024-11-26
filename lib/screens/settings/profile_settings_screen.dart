@@ -153,14 +153,13 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Tran
                 SizedBox.square(
                   dimension: 60,
                   child: state.user.photoURL?.isNotEmpty ?? false
-                      ? Image.network(
-                          state.user.photoURL!,
+                      ? Image.network(state.user.photoURL!,
+                          fit: BoxFit.cover,
                           frameBuilder: (context, child, frame, wasSynchronouslyLoaded) =>
                               ClipRRect(
-                            borderRadius: BorderRadius.circular(64),
-                            child: child,
-                          ), // TODO: CHECK
-                        )
+                                borderRadius: BorderRadius.circular(64),
+                                child: child,
+                              ))
                       : Icon(
                           CarbonIcons.user_avatar_filled_alt,
                           size: 56,

@@ -103,11 +103,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           imageUrl,
                           width: 72,
                           height: 72,
+                          fit: BoxFit.cover,
                           frameBuilder: (context, child, frame, wasSynchronouslyLoaded) =>
                               ClipRRect(
                             borderRadius: BorderRadius.circular(50),
                             child: child,
-                          ), // TODO: CHECK
+                          ),
                         )
                       : Icon(Icons.person),
                   TxButton.text(

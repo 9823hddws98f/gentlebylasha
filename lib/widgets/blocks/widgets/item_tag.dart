@@ -7,6 +7,10 @@ class ItemTag extends StatelessWidget {
 
   const ItemTag({super.key, required this.text, this.icon, this.color});
 
+  static const margin = 8.0; // 12
+  static const padding = EdgeInsets.all(4); // 6
+  static const borderRadius = 6.0; // 8
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
@@ -18,14 +22,14 @@ class ItemTag extends StatelessWidget {
       )
     ];
     return Positioned(
-      bottom: 8, // 12
-      left: 8, // 12
+      bottom: margin,
+      left: margin,
       child: Container(
-        padding: const EdgeInsets.all(4), // 6
+        padding: padding,
         decoration: BoxDecoration(
           color:
               color != null ? Color.lerp(color, colors.surface, 0.3) : colors.secondary,
-          borderRadius: BorderRadius.circular(6), // 8
+          borderRadius: BorderRadius.circular(borderRadius),
         ),
         child: Row(
           children: [

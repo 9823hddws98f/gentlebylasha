@@ -102,17 +102,17 @@ class AudioBlockItem extends StatelessWidget {
                 children: [
                   Shimmerize(
                     child: Material(
-                      borderRadius: AppTheme.smallBorderRadius,
+                      borderRadius: AppTheme.largeImageBorderRadius,
                     ),
                   ),
                   Positioned(
-                    bottom: 12,
-                    left: 12,
+                    bottom: ItemTag.margin,
+                    left: ItemTag.margin,
                     child: Shimmerize(
                       child: Material(
-                        borderRadius: AppTheme.smallBorderRadius,
+                        borderRadius: BorderRadius.circular(ItemTag.borderRadius),
                         child: const SizedBox(
-                          width: 48,
+                          width: 62,
                           height: 22,
                         ),
                       ),
@@ -121,7 +121,7 @@ class AudioBlockItem extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             Shimmerize(
               child: Material(
                 borderRadius: AppTheme.smallBorderRadius,

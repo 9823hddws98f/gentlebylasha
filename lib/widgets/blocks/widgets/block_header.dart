@@ -47,7 +47,7 @@ class BlockHeader extends StatelessWidget {
       );
 
   static Widget shimmer() => Padding(
-        padding: _padding,
+        padding: EdgeInsets.fromLTRB(12, 8, 12, 16),
         child: Row(
           children: [
             Shimmerize(

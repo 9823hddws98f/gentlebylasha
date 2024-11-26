@@ -84,7 +84,7 @@ class TrackBlockLoader extends StatelessWidget {
       switch (type) {
         BlockType.hero => HeroBlockItem.shimmer(),
         BlockType.series => Column(
-            // TODO: this may need start crossaxis
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               BlockHeader.shimmer(),
               SizedBox(
@@ -94,7 +94,7 @@ class TrackBlockLoader extends StatelessWidget {
                   physics: NeverScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
                   scrollDirection: Axis.horizontal,
-                  itemCount: 3,
+                  itemCount: length,
                   separatorBuilder: (_, __) => SizedBox(width: 16),
                   itemBuilder: (_, __) => PlaylistBlockItem.shimmer(),
                 ),
@@ -102,6 +102,7 @@ class TrackBlockLoader extends StatelessWidget {
             ],
           ),
         BlockType.normal || BlockType.featured => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               BlockHeader.shimmer(),
               SizedBox(
@@ -110,7 +111,7 @@ class TrackBlockLoader extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
                   physics: NeverScrollableScrollPhysics(),
                   scrollDirection: Axis.horizontal,
-                  itemCount: 3,
+                  itemCount: length,
                   separatorBuilder: (_, __) => SizedBox(width: 16),
                   itemBuilder: (_, __) => AudioBlockItem.shimmer(
                     wide: type == BlockType.featured,
