@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
-import 'package:gentle/utils/common_extensions.dart';
-import 'package:gentle/utils/tx_image.dart';
+
+import '/utils/common_extensions.dart';
+import '/utils/tx_image.dart';
 
 class AppImage extends StatelessWidget {
   const AppImage({

@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:gentle/utils/common_extensions.dart';
 import 'package:http/http.dart' as http;
 import 'package:in_app_purchase/in_app_purchase.dart';
+
+import '/utils/common_extensions.dart';
 
 class PurchasesApi {
   static final PurchasesApi instance = PurchasesApi._();

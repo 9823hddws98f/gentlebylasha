@@ -3,6 +3,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '/constants/assets.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_manager.dart';
 import '/main.dart';
@@ -102,7 +103,14 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
       });
 
   Widget _buildArtwork(TxImage? image, bool isMobile) {
-    if (image == null) return SizedBox();
+    if (image == null) {
+      return Image.asset(
+        Assets.imageBackground,
+        fit: BoxFit.cover,
+        height: double.infinity,
+        width: double.infinity,
+      );
+    }
     return DecoratedBox(
       position: DecorationPosition.foreground,
       decoration: BoxDecoration(

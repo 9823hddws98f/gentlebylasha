@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
-import 'package:gentle/utils/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '/domain/services/interfaces/in_app_purchases.dart';
+import '/utils/get.dart';
 import 'iap_service.dart';
 import 'product.dart';
 

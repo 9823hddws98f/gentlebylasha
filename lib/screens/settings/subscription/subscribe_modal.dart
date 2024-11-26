@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gentle/domain/cubits/in_app_purchases/product.dart';
 
+import '/domain/cubits/in_app_purchases/iap_cubit.dart';
+import '/domain/cubits/in_app_purchases/product.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
 import '/utils/modals.dart';
 import '/utils/tx_button.dart';
 import '/widgets/app_scaffold/bottom_panel_spacer.dart';
-import '../../../domain/cubits/in_app_purchases/iap_cubit.dart';
 
 class SubscribeModal extends StatefulWidget {
   const SubscribeModal({super.key, this.scrollController});
