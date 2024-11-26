@@ -98,9 +98,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  imageUrl != null
+                  imageUrl?.isNotEmpty ?? false
                       ? Image.network(
-                          imageUrl,
+                          imageUrl!,
                           width: 72,
                           height: 72,
                           fit: BoxFit.cover,
