@@ -83,6 +83,7 @@ class TrackBlockLoader extends StatelessWidget {
   static Widget _shimmer(BlockType type) => switch (type) {
         BlockType.hero => HeroBlockItem.shimmer(),
         BlockType.series => Column(
+            // TODO: this may need start crossaxis
             children: [
               BlockHeader.shimmer(),
               SizedBox(
