@@ -34,33 +34,24 @@ class TracksService {
 
     try {
       final normalizedQuery = query.toLowerCase();
-      final firstChar = query.substring(0, 1).toUpperCase();
-      final queryEnd = '$firstChar\uf8ff';
 
-      // Get title matches
-      final titleSnapshot = await _collection
-          .where('title', isGreaterThanOrEqualTo: firstChar)
-          .where('title', isLessThanOrEqualTo: queryEnd)
+      // Get all documents and filter client-side
+      final snapshot = await _collection
+          .limit(100) // Adjust limit as needed
           .get();
 
-      // Filter documents locally for case-insensitive matching
-      final filteredDocs = titleSnapshot.docs.where((doc) {
+      final filteredDocs = snapshot.docs.where((doc) {
         final data = doc.data();
         final title = data['title']?.toString().toLowerCase() ?? '';
-        return title.contains(normalizedQuery);
+        final speaker = data['speaker']?.toString().toLowerCase() ?? '';
+        final writer = data['writer']?.toString().toLowerCase() ?? '';
+
+        return title.contains(normalizedQuery) ||
+            speaker.contains(normalizedQuery) ||
+            writer.contains(normalizedQuery);
       }).toList();
 
-      if (filteredDocs.isNotEmpty) {
-        return filteredDocs.map((doc) => AudioTrack.fromMap(doc.data())).toList();
-      }
-
-      // If no title matches, perform the speaker query
-      final speakerSnapshot = await _collection
-          .where('speaker', isGreaterThanOrEqualTo: firstChar)
-          .where('speaker', isLessThanOrEqualTo: queryEnd)
-          .get();
-
-      return speakerSnapshot.docs.map((doc) => AudioTrack.fromMap(doc.data())).toList();
+      return filteredDocs.map((doc) => AudioTrack.fromMap(doc.data())).toList();
     } catch (e) {
       e.logDebug();
       return [];
