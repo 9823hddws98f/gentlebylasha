@@ -20,7 +20,8 @@ class TrackBlockLoader extends StatelessWidget {
   Widget build(BuildContext context) => switch (block.type) {
         BlockType.hero => TrackBlockItemsLoader<AudioTrack>(
             block: block,
-            builder: (_, items) => HeroBlockItem(track: items.first),
+            builder: (_, items) =>
+                items.isNotEmpty ? HeroBlockItem(track: items.first) : Container(),
             loadingBuilder: (_, type) => shimmer(type),
           ),
         BlockType.series => TrackBlockItemsLoader<AudioPlaylist>(
