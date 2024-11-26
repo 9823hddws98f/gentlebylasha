@@ -34,8 +34,6 @@ dependencies:
   audio_session: ^0.1.21
   audio_video_progress_bar: ^2.0.3
   bloc: ^8.1.4
-  cached_network_image: ^3.4.1
-  cached_network_image_platform_interface: ^4.1.1
   cloud_firestore: ^5.4.4
   cloud_functions: ^5.1.4
   collection: ^1.19.0
@@ -51,6 +49,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.6
+  flutter_blurhash: ^0.8.2
   flutter_image_compress: ^2.3.0
   flutter_inapp_purchase: ^5.4.1
   flutter_local_notifications: ^18.0.1

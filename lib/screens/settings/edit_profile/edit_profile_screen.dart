@@ -2,7 +2,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '/constants/assets.dart';
 import '/domain/blocs/user/app_user.dart';
 import '/domain/blocs/user/user_bloc.dart';
 import '/helper/global_functions.dart';
@@ -10,7 +9,6 @@ import '/utils/app_theme.dart';
 import '/utils/command_trigger.dart';
 import '/utils/get.dart';
 import '/utils/tx_button.dart';
-import '/widgets/app_image.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/app_scaffold/bottom_panel_spacer.dart';
@@ -101,13 +99,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   imageUrl != null
-                      ? AppImage(
-                          imageUrl: imageUrl,
-                          placeholderAsset: Assets.profile,
+                      ? Image.network(
+                          imageUrl,
                           width: 72,
                           height: 72,
-                          borderRadius: BorderRadius.circular(50),
-                          errorWidget: (context, url, error) => Icon(Icons.person),
+                          frameBuilder: (context, child, frame, wasSynchronouslyLoaded) =>
+                              ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: child,
+                          ), // TODO: CHECK
                         )
                       : Icon(Icons.person),
                   TxButton.text(

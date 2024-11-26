@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
-import '/constants/assets.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_panel_manager.dart';
 import '/helper/global_functions.dart';
@@ -59,10 +58,9 @@ class AudioBlockItem extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           AppImage(
-            imageUrl: track.thumbnail,
+            image: track.thumbnail,
             height: _imageSize,
             borderRadius: AppTheme.largeImageBorderRadius,
-            placeholderAsset: Assets.placeholderImage,
           ),
           ItemTag(
             icon: CarbonIcons.play_filled_alt,

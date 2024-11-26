@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '/constants/assets.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_manager.dart';
 import '/domain/services/audio_panel_manager.dart';
@@ -52,11 +51,9 @@ class MobileMusicPreview extends StatelessWidget {
                             return const SizedBox.shrink();
                           }
                           return AppImage(
-                            imageUrl:
-                                (mediaItem.extras?['track'] as AudioTrack).thumbnail,
+                            image: (mediaItem.extras?['track'] as AudioTrack).thumbnail,
                             fit: BoxFit.cover,
                             borderRadius: AppTheme.smallImageBorderRadius,
-                            placeholderAsset: Assets.placeholderImage,
                           );
                         },
                       ),

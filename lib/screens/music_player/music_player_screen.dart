@@ -3,11 +3,12 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '/constants/assets.dart';
+import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_manager.dart';
 import '/main.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
+import '/utils/tx_image.dart';
 import '/widgets/app_image.dart';
 import '/widgets/shared_axis_switcher.dart';
 import 'widgets/audio_progress_bar.dart';
@@ -30,9 +31,6 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
 
   bool _hide = false;
 
-  // Used to avoid showing placeholder asset multiple times
-  Uri? _lastArtworkUri;
-
   void _toggleHide() => setState(() => _hide = !_hide);
 
   @override
@@ -44,38 +42,43 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
           onTap: () => _toggleHide(),
           child: ValueListenableBuilder(
               valueListenable: _pageManager.currentMediaItemNotifier,
-              builder: (context, mediaItem, child) => Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      _buildArtwork(mediaItem.artUri, true),
-                      SafeArea(
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: SharedAxisSwitcher(
-                                transitionType: SharedAxisTransitionType.scaled,
-                                disableFillColor: true,
-                                reverse: !_hide,
-                                child: _hide
-                                    ? SizedBox()
-                                    : ControlButtons(mediaItem: mediaItem),
-                              ),
+              builder: (context, mediaItem, child) {
+                final track = mediaItem.extras?['track'] as AudioTrack?;
+                return Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    _buildArtwork(track?.imageBackground, true),
+                    SafeArea(
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: SharedAxisSwitcher(
+                              transitionType: SharedAxisTransitionType.scaled,
+                              disableFillColor: true,
+                              reverse: !_hide,
+                              child: _hide
+                                  ? SizedBox()
+                                  : ControlButtons(mediaItem: mediaItem),
                             ),
-                            _buildProgressBar(mediaItem),
-                          ],
-                        ),
-                      )
-                    ],
-                  )),
+                          ),
+                          _buildProgressBar(mediaItem),
+                        ],
+                      ),
+                    )
+                  ],
+                );
+              }),
         ),
       );
 
   Widget _buildDesktop() => ValueListenableBuilder(
-        valueListenable: _pageManager.currentMediaItemNotifier,
-        builder: (context, mediaItem, child) => mediaItem.id.isNotEmpty
+      valueListenable: _pageManager.currentMediaItemNotifier,
+      builder: (context, mediaItem, child) {
+        final track = mediaItem.extras?['track'] as AudioTrack;
+        return mediaItem.id.isNotEmpty
             ? Row(
                 children: [
-                  Expanded(child: _buildArtwork(mediaItem.artUri, false)),
+                  Expanded(child: _buildArtwork(track.imageBackground, false)),
                   SizedBox(width: 32),
                   Expanded(
                     child: Column(
@@ -95,13 +98,11 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                   )
                 ],
               )
-            : Center(child: CupertinoActivityIndicator(color: Colors.white)),
-      );
+            : Center(child: CupertinoActivityIndicator(color: Colors.white));
+      });
 
-  Widget _buildArtwork(Uri? artUri, bool isMobile) {
-    if (_lastArtworkUri != artUri) {
-      _lastArtworkUri = artUri;
-    }
+  Widget _buildArtwork(TxImage? image, bool isMobile) {
+    if (image == null) return SizedBox();
     return DecoratedBox(
       position: DecorationPosition.foreground,
       decoration: BoxDecoration(
@@ -118,14 +119,11 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
         ),
       ),
       child: AppImage(
-        imageUrl: artUri?.toString() ?? '',
+        image: image,
         fit: BoxFit.cover,
         height: double.infinity,
         width: double.infinity,
-        fadeInDuration: Durations.short2,
         borderRadius: isMobile ? _borderRadius : BorderRadius.all(Radius.circular(18)),
-        placeholderAsset: _lastArtworkUri == null ? Assets.launchScreenBackground : null,
-        placeholderUri: _lastArtworkUri,
       ),
     );
   }

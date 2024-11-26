@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
-import '/constants/assets.dart';
 import '/domain/models/block_item/audio_playlist.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_manager.dart';
@@ -69,7 +68,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final dominantColor = Color.lerp(
-      widget.playlist.dominantColor ?? colors.surfaceContainerLowest,
+      widget.playlist.thumbnail.dominantColor ?? colors.surfaceContainerLowest,
       colors.surfaceContainerLowest,
       colors.brightness == Brightness.light ? 0.4 : 0.0,
     );
@@ -172,7 +171,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
               Row(
                 children: [
                   UserAvatar(
-                    imageUrl: widget.playlist.authorImage,
+                    imageUrl: widget.playlist.authorImage.url,
                     radius: 20,
                   ),
                   SizedBox(width: 8),
@@ -268,9 +267,8 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
           centerTitle: false,
           stretchModes: const [StretchMode.zoomBackground],
           background: AppImage(
-            imageUrl: widget.playlist.thumbnail,
+            image: widget.playlist.thumbnail,
             fit: BoxFit.cover,
-            placeholderAsset: Assets.placeholderImage,
           ),
         ),
       );
@@ -311,7 +309,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                                 height: 48,
                                 width: 48,
                                 fit: BoxFit.cover,
-                                imageUrl: track.thumbnail,
+                                image: track.thumbnail,
                                 borderRadius: AppTheme.smallImageBorderRadius,
                               ),
                             ),

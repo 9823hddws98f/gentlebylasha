@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import '/utils/tx_image.dart';
+
 class AudioTrack {
   final String id;
   final String title;
@@ -8,8 +10,8 @@ class AudioTrack {
   final String speaker;
   final String trackUrl;
   final String description;
-  final String imageBackground;
-  final String thumbnail;
+  final TxImage imageBackground;
+  final TxImage thumbnail;
   final bool hasTimer;
   final Duration duration;
   final Color? dominantColor;
@@ -38,8 +40,8 @@ class AudioTrack {
     String? speaker,
     String? trackUrl,
     String? description,
-    String? imageBackground,
-    String? thumbnail,
+    TxImage? imageBackground,
+    TxImage? thumbnail,
     bool? hasTimer,
     Duration? duration,
     Color? dominantColor,
@@ -67,8 +69,8 @@ class AudioTrack {
       'speaker': speaker,
       'trackUrl': trackUrl,
       'description': description,
-      'imageBackground': imageBackground,
-      'thumbnail': thumbnail,
+      'imageBackground': imageBackground.toMap(),
+      'thumbnail': thumbnail.toMap(),
       'hasTimer': hasTimer,
       'duration': duration.inMilliseconds,
       // ignore: deprecated_member_use
@@ -84,8 +86,8 @@ class AudioTrack {
       speaker: map['speaker'] as String,
       trackUrl: map['trackUrl'] as String,
       description: map['description'] as String,
-      imageBackground: map['imageBackground'] as String,
-      thumbnail: map['thumbnail'] as String,
+      imageBackground: TxImage.fromMap(map['imageBackground'] as Map<String, dynamic>),
+      thumbnail: TxImage.fromMap(map['thumbnail'] as Map<String, dynamic>),
       hasTimer: map['hasTimer'] ?? false,
       duration: Duration(milliseconds: map['duration'] as int),
       dominantColor:

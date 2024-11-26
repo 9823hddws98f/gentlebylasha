@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
-import '/constants/assets.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_panel_manager.dart';
 import '/helper/global_functions.dart';
@@ -16,7 +15,7 @@ class HeroBlockItem extends StatelessWidget {
 
   HeroBlockItem({super.key, required this.track});
 
-  static const height = 336.0;
+  static const height = 370.0;
 
   static const _imageSize = 255.0;
   final _audioPanelManager = Get.the<AudioPanelManager>();
@@ -54,10 +53,9 @@ class HeroBlockItem extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           AppImage(
-            imageUrl: track.thumbnail,
+            image: track.thumbnail,
             height: _imageSize,
             borderRadius: AppTheme.largeImageBorderRadius,
-            placeholderAsset: Assets.placeholderImage,
           ),
           ItemTag(
             icon: CarbonIcons.play_filled_alt,

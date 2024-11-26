@@ -69,7 +69,7 @@ class AudioManager {
                 album: track.speaker,
                 title: track.title,
                 displayDescription: track.description,
-                artUri: Uri.parse(track.imageBackground),
+                artUri: Uri.parse(track.imageBackground.url),
                 extras: {'track': track},
               ))
           .toList();

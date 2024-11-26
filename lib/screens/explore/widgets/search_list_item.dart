@@ -29,7 +29,7 @@ class SearchListItem extends StatelessWidget {
       leading: ClipRRect(
         borderRadius: AppTheme.smallBorderRadius,
         child: AppImage(
-          imageUrl: track.thumbnail,
+          image: track.thumbnail,
           height: 50,
           width: 50,
           fit: BoxFit.cover,

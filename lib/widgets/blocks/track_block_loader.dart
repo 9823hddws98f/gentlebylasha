@@ -22,12 +22,12 @@ class TrackBlockLoader extends StatelessWidget {
             block: block,
             builder: (_, items) =>
                 items.isNotEmpty ? HeroBlockItem(track: items.first) : Container(),
-            loadingBuilder: (_, type) => shimmer(type),
+            loadingBuilder: (_, type) => _shimmer(type),
           ),
         BlockType.series => TrackBlockItemsLoader<AudioPlaylist>(
             block: block,
             builder: (_, items) => _buildSeriesBlock(items),
-            loadingBuilder: (_, type) => shimmer(type),
+            loadingBuilder: (_, type) => _shimmer(type),
           ),
         BlockType.normal || BlockType.featured => TrackBlockItemsLoader<AudioTrack>(
             block: block,
@@ -35,7 +35,7 @@ class TrackBlockLoader extends StatelessWidget {
               items,
               block.type == BlockType.featured,
             ),
-            loadingBuilder: (_, type) => shimmer(type),
+            loadingBuilder: (_, type) => _shimmer(type),
           ),
       };
 
@@ -80,7 +80,7 @@ class TrackBlockLoader extends StatelessWidget {
         ],
       );
 
-  static Widget shimmer(BlockType type) => switch (type) {
+  static Widget _shimmer(BlockType type) => switch (type) {
         BlockType.hero => HeroBlockItem.shimmer(),
         BlockType.series => Column(
             children: [

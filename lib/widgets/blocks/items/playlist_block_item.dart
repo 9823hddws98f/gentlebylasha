@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
-import '/constants/assets.dart';
 import '/domain/models/block_item/audio_playlist.dart';
 import '/helper/global_functions.dart';
 import '/screens/home/playlist_tracks_screen.dart';
@@ -48,15 +47,14 @@ class PlaylistBlockItem extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           AppImage(
-            imageUrl: playlist.thumbnail,
+            image: playlist.thumbnail,
             height: _imageSize,
             borderRadius: AppTheme.largeImageBorderRadius,
-            placeholderAsset: Assets.placeholderImage,
           ),
           ItemTag(
             icon: CarbonIcons.playlist,
             text: '${playlist.trackIds.length} Sessions',
-            color: playlist.dominantColor,
+            color: playlist.thumbnail.dominantColor,
           ),
         ],
       );

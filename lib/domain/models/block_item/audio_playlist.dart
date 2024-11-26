@@ -1,7 +1,8 @@
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
+
+import '/utils/tx_image.dart';
 
 class AudioPlaylist {
   final String id;
@@ -9,9 +10,8 @@ class AudioPlaylist {
   final String author;
   final String profession;
   final String description;
-  final String thumbnail;
-  final String authorImage;
-  final Color? dominantColor;
+  final TxImage thumbnail;
+  final TxImage authorImage;
   final bool showAudioThumbnails;
   final List<String> trackIds;
 
@@ -24,7 +24,6 @@ class AudioPlaylist {
     required this.thumbnail,
     required this.authorImage,
     required this.showAudioThumbnails,
-    required this.dominantColor,
     required this.trackIds,
   });
 
@@ -34,9 +33,8 @@ class AudioPlaylist {
     String? author,
     String? profession,
     String? description,
-    String? thumbnail,
-    String? authorImage,
-    Color? dominantColor,
+    TxImage? thumbnail,
+    TxImage? authorImage,
     bool? showAudioThumbnails,
     List<String>? trackIds,
   }) {
@@ -49,7 +47,6 @@ class AudioPlaylist {
       thumbnail: thumbnail ?? this.thumbnail,
       authorImage: authorImage ?? this.authorImage,
       showAudioThumbnails: showAudioThumbnails ?? this.showAudioThumbnails,
-      dominantColor: dominantColor ?? this.dominantColor,
       trackIds: trackIds ?? this.trackIds,
     );
   }
@@ -64,8 +61,6 @@ class AudioPlaylist {
         'authorImage': authorImage,
         'showAudioThumbnails': showAudioThumbnails,
         if (trackIds.isNotEmpty) 'trackIds': trackIds,
-        // ignore: deprecated_member_use
-        if (dominantColor != null) 'dominantColor': dominantColor!.value,
       };
 
   factory AudioPlaylist.fromMap(Map<String, dynamic> map) => AudioPlaylist(
@@ -74,11 +69,9 @@ class AudioPlaylist {
         author: map['author'] as String,
         profession: map['profession'] as String,
         description: map['description'] as String,
-        thumbnail: map['thumbnail'] as String,
-        authorImage: map['authorImage'] as String,
+        thumbnail: TxImage.fromMap(map['thumbnail'] as Map<String, dynamic>),
+        authorImage: TxImage.fromMap(map['authorImage'] as Map<String, dynamic>),
         showAudioThumbnails: map['showAudioThumbnails'] as bool,
-        dominantColor:
-            map['dominantColor'] != null ? Color(map['dominantColor'] as int) : null,
         trackIds: map['trackIds'] != null
             ? List<String>.from(map['trackIds'] as List<dynamic>)
             : [],
@@ -91,7 +84,7 @@ class AudioPlaylist {
 
   @override
   String toString() {
-    return 'AudioPlaylist(id: $id, title: $title, author: $author, profession: $profession, description: $description, thumbnail: $thumbnail, showAudioThumbnails: $showAudioThumbnails, trackIds: $trackIds, dominantColor: $dominantColor)';
+    return 'AudioPlaylist(id: $id, title: $title, author: $author, profession: $profession, description: $description, thumbnail: $thumbnail, showAudioThumbnails: $showAudioThumbnails, trackIds: $trackIds)';
   }
 
   @override
@@ -106,8 +99,7 @@ class AudioPlaylist {
         other.thumbnail == thumbnail &&
         other.authorImage == authorImage &&
         other.showAudioThumbnails == showAudioThumbnails &&
-        listEquals(other.trackIds, trackIds) &&
-        other.dominantColor == dominantColor;
+        listEquals(other.trackIds, trackIds);
   }
 
   @override
@@ -120,7 +112,6 @@ class AudioPlaylist {
         thumbnail.hashCode ^
         authorImage.hashCode ^
         showAudioThumbnails.hashCode ^
-        trackIds.hashCode ^
-        dominantColor.hashCode;
+        trackIds.hashCode;
   }
 }

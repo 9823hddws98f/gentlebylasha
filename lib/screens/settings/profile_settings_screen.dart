@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
-import '/constants/assets.dart';
 import '/domain/blocs/user/user_bloc.dart';
 import '/domain/services/language_cubit.dart';
 import '/helper/global_functions.dart';
@@ -17,7 +16,6 @@ import '/screens/settings/display_mode/display_mode_screen.dart';
 import '/utils/app_theme.dart';
 import '/utils/common_extensions.dart';
 import '/utils/get.dart';
-import '/widgets/app_image.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/app_scaffold/bottom_panel_spacer.dart';
@@ -155,14 +153,13 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Tran
                 SizedBox.square(
                   dimension: 60,
                   child: state.user.photoURL?.isNotEmpty ?? false
-                      ? AppImage(
-                          imageUrl: state.user.photoURL!,
-                          borderRadius: BorderRadius.circular(64),
-                          placeholderAsset: Assets.profile,
-                          errorWidget: (context, url, error) => Image.asset(
-                            Assets.profile,
-                            fit: BoxFit.cover,
-                          ),
+                      ? Image.network(
+                          state.user.photoURL!,
+                          frameBuilder: (context, child, frame, wasSynchronouslyLoaded) =>
+                              ClipRRect(
+                            borderRadius: BorderRadius.circular(64),
+                            child: child,
+                          ), // TODO: CHECK
                         )
                       : Icon(
                           CarbonIcons.user_avatar_filled_alt,
