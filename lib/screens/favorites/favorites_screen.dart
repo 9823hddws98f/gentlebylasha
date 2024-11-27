@@ -16,6 +16,7 @@ import '/utils/get.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/app_scaffold/bottom_panel_spacer.dart';
+import '/widgets/input/tx_search_bar.dart';
 
 class FavoritesScreen extends StatefulWidget {
   final bool isPlaylist;
@@ -37,6 +38,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> with Translation {
 
   bool get _isPlaylist => widget.isPlaylist;
 
+  // Optimization: avoid re-fetching the same data multiple times
+  Future? _future;
+
   @override
   Widget build(BuildContext context) {
     return _isPlaylist
@@ -53,7 +57,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> with Translation {
   Widget _buildBlocContent<T extends StateStreamable<List<String>>>() =>
       BlocBuilder<T, List<String>>(
         builder: (context, state) => FutureBuilder(
-          future: _isPlaylist
+          future: _future ??= _isPlaylist
               ? _playlistsService.getByIds(state)
               : _tracksService.getByIds(state),
           builder: (context, snapshot) {
@@ -62,6 +66,18 @@ class _FavoritesScreenState extends State<FavoritesScreen> with Translation {
                 appBar: (context, isMobile) => AdaptiveAppBar(
                   title: _isPlaylist ? tr.favoritePlaylist : tr.favorites,
                   hasBottomLine: false,
+                  // bottom only for good app bar visual on loading (not functional)
+                  bottom: PreferredSize(
+                    preferredSize: const Size(double.infinity, 72),
+                    child: IgnorePointer(
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.symmetric(horizontal: AppTheme.sidePadding) +
+                                const EdgeInsets.only(bottom: 16, top: 8),
+                        child: TxSearchBar(onSearch: (_) async {}),
+                      ),
+                    ),
+                  ),
                 ),
                 body: (context, isMobile) => const Center(
                   child: CupertinoActivityIndicator(),

@@ -5,6 +5,7 @@ import '/domain/models/block_item/audio_track.dart';
 import '/utils/app_theme.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
+import '/widgets/app_scaffold/bottom_panel_spacer.dart';
 import '/widgets/blocks/track_grid.dart';
 import '/widgets/input/tx_search_bar.dart';
 
@@ -31,7 +32,9 @@ class _SearchableTracksScreenState extends State<SearchableTracksScreen> {
   List<AudioTrack>? _filteredTracks;
   List<AudioPlaylist>? _filteredPlaylists;
 
-  bool get _isEmpty => _filteredTracks?.isEmpty ?? _filteredPlaylists?.isEmpty ?? true;
+  bool get _isEmpty => widget.tracks?.isEmpty ?? widget.playlists?.isEmpty ?? true;
+  bool get _isFilteredEmpty =>
+      _filteredTracks?.isEmpty ?? _filteredPlaylists?.isEmpty ?? true;
 
   @override
   void initState() {
@@ -56,11 +59,26 @@ class _SearchableTracksScreenState extends State<SearchableTracksScreen> {
         ),
         body: (context, isMobile) => _isEmpty
             ? widget.emptyBuilder?.call(context) ?? const SizedBox.shrink()
-            : TrackGrid(
-                tracks: _filteredTracks,
-                playlists: _filteredPlaylists,
-                padding: EdgeInsets.only(bottom: AppTheme.sidePadding),
-              ),
+            : _isFilteredEmpty
+                ? _buildEmptyView()
+                : TrackGrid(
+                    tracks: _filteredTracks,
+                    playlists: _filteredPlaylists,
+                    padding: EdgeInsets.only(bottom: AppTheme.sidePadding),
+                  ),
+      );
+
+  Widget _buildEmptyView() => BottomPanelSpacer.padding(
+        child: Center(
+          child: Text(
+            'No results found',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ),
       );
 
   Future<void> _handleSearch(String query) async {
