@@ -145,10 +145,7 @@ class _ExploreScreenState extends State<ExploreScreen>
         title: Padding(
           padding: const EdgeInsets.only(bottom: 8),
           child: CategoryList(
-            onTap: !_isSearching
-                ? (index) => _tabController.animateTo(index,
-                    curve: Easing.standard, duration: Durations.medium1)
-                : null,
+            onTap: !_isSearching ? (index) => _tabController.animateTo(index) : null,
           ),
         ),
       );

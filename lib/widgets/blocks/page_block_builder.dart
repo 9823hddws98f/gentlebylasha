@@ -10,21 +10,33 @@ import '/utils/get.dart';
 import '/widgets/app_scaffold/bottom_panel_spacer.dart';
 import 'track_block_loader.dart';
 
-class PageBlockBuilder extends StatelessWidget {
-  PageBlockBuilder({super.key, required this.page});
+class PageBlockBuilder extends StatefulWidget {
+  const PageBlockBuilder({super.key, required this.page});
 
   final AppPage page;
 
+  @override
+  State<PageBlockBuilder> createState() => _PageBlockBuilderState();
+}
+
+class _PageBlockBuilderState extends State<PageBlockBuilder>
+    with AutomaticKeepAliveClientMixin {
   final _pagesCubit = Get.the<PagesCubit>();
 
   @override
-  Widget build(BuildContext context) => BlocBuilder<PagesCubit, PagesState>(
-        bloc: _pagesCubit,
-        builder: (context, state) => PageConfig(
-          config: page.config,
-          child: _buildBlocksList(state.pages[page] ?? []),
-        ),
-      );
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return BlocBuilder<PagesCubit, PagesState>(
+      bloc: _pagesCubit,
+      builder: (context, state) => PageConfig(
+        config: widget.page.config,
+        child: _buildBlocksList(state.pages[widget.page] ?? []),
+      ),
+    );
+  }
 
   Widget _buildBlocksList(List<Block> blocks) => BottomPanelSpacer.padding(
         child: ListView.separated(
