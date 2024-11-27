@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:gentle/utils/common_extensions.dart';
 
 class ItemTag extends StatelessWidget {
-  final String text;
+  final String? text;
   final IconData? icon;
   final Color? color;
 
-  const ItemTag({super.key, required this.text, this.icon, this.color});
+  const ItemTag({super.key, this.text, this.icon, this.color})
+      : assert(text != null || icon != null, 'text or icon must be provided');
 
   static const margin = 8.0; // 12
-  static const padding = EdgeInsets.all(4); // 6
-  static const borderRadius = 6.0; // 8
+  static const padding = EdgeInsets.all(6);
+  static const borderRadius = 8.0;
 
   @override
   Widget build(BuildContext context) {
@@ -32,21 +34,21 @@ class ItemTag extends StatelessWidget {
           borderRadius: BorderRadius.circular(borderRadius),
         ),
         child: Row(
-          children: [
-            if (icon != null) ...[
+          children: <Widget>[
+            if (icon != null)
               Icon(icon, size: 10, color: colors.onSecondary, shadows: shadows),
-              const SizedBox(width: 4),
-            ],
-            Text(
-              text,
-              style: TextStyle(
-                fontSize: 10,
-                color: colors.onSecondary,
-                fontWeight: FontWeight.w500,
-                shadows: shadows,
+            if (text != null)
+              Text(
+                text!,
+                style: TextStyle(
+                  fontSize: 10,
+                  color: colors.onSecondary,
+                  fontWeight: FontWeight.w500,
+                  height: 0.1,
+                  shadows: shadows,
+                ),
               ),
-            ),
-          ],
+          ].interleaveWith(const SizedBox(width: 4)),
         ),
       ),
     );

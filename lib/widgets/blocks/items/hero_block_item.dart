@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
+import '/domain/models/app_page/app_page_config.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_panel_manager.dart';
 import '/helper/global_functions.dart';
@@ -90,7 +91,7 @@ class HeroBlockItem extends StatelessWidget {
         ],
       );
 
-  static Widget shimmer() => SizedBox(
+  static Widget shimmer(AppPageConfig config) => SizedBox(
         height: height,
         width: _imageSize,
         child: Column(
@@ -99,10 +100,28 @@ class HeroBlockItem extends StatelessWidget {
             SizedBox(
               height: _imageSize,
               width: _imageSize,
-              child: Shimmerize(
-                child: Material(
-                  borderRadius: AppTheme.largeImageBorderRadius,
-                ),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Shimmerize(
+                    child: Material(
+                      borderRadius: AppTheme.largeImageBorderRadius,
+                    ),
+                  ),
+                  Positioned(
+                    bottom: ItemTag.margin,
+                    left: ItemTag.margin,
+                    child: Shimmerize(
+                      child: Material(
+                        borderRadius: BorderRadius.circular(ItemTag.borderRadius),
+                        child: SizedBox(
+                          width: config.showItemDurations ? 62 : 22,
+                          height: 22,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 16),

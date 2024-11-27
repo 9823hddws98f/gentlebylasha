@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 
-import '/domain/models/app_page.dart';
+import '/domain/models/app_page/app_page.dart';
 import '/domain/models/block/block.dart';
 import '/domain/services/blocks_service.dart';
 import '/domain/services/pages_service.dart';

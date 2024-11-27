@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '/domain/models/app_page.dart';
+import '/domain/models/app_page/app_page.dart';
 import '/domain/services/crud_service.dart';
 
 class PagesService implements CrudService<AppPage> {

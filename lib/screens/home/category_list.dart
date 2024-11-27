@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '/domain/cubits/pages/pages_cubit.dart';
-import '/domain/models/app_page.dart';
+import '/domain/models/app_page/app_page.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
 

@@ -10,6 +10,7 @@ import '/widgets/blocks/items/hero_block_item.dart';
 import '/widgets/blocks/items/playlist_block_item.dart';
 import '/widgets/blocks/track_block_items_loader.dart';
 import '/widgets/blocks/widgets/block_header.dart';
+import 'config_of_page.dart';
 
 class TrackBlockLoader extends StatelessWidget {
   const TrackBlockLoader(this.block, {super.key});
@@ -80,45 +81,48 @@ class TrackBlockLoader extends StatelessWidget {
         ],
       );
 
-  static Widget _shimmer(BuildContext context, BlockType type, int length) =>
-      switch (type) {
-        BlockType.hero => HeroBlockItem.shimmer(),
-        BlockType.series => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              BlockHeader.shimmer(),
-              SizedBox(
-                height: PlaylistBlockItem.height,
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: length,
-                  separatorBuilder: (_, __) => SizedBox(width: 16),
-                  itemBuilder: (_, __) => PlaylistBlockItem.shimmer(),
+  static Widget _shimmer(BuildContext context, BlockType type, int length) {
+    final config = PageConfig.of(context);
+    return switch (type) {
+      BlockType.hero => HeroBlockItem.shimmer(config),
+      BlockType.series => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            BlockHeader.shimmer(),
+            SizedBox(
+              height: PlaylistBlockItem.height,
+              child: ListView.separated(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                padding: EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
+                scrollDirection: Axis.horizontal,
+                itemCount: length,
+                separatorBuilder: (_, __) => SizedBox(width: 16),
+                itemBuilder: (_, __) => PlaylistBlockItem.shimmer(config),
+              ),
+            ),
+          ],
+        ),
+      BlockType.normal || BlockType.featured => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            BlockHeader.shimmer(),
+            SizedBox(
+              height: AudioBlockItem.height,
+              child: ListView.separated(
+                padding: EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
+                physics: NeverScrollableScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemCount: length,
+                separatorBuilder: (_, __) => SizedBox(width: 16),
+                itemBuilder: (_, __) => AudioBlockItem.shimmer(
+                  config,
+                  wide: type == BlockType.featured,
                 ),
               ),
-            ],
-          ),
-        BlockType.normal || BlockType.featured => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              BlockHeader.shimmer(),
-              SizedBox(
-                height: AudioBlockItem.height,
-                child: ListView.separated(
-                  padding: EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
-                  physics: NeverScrollableScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: length,
-                  separatorBuilder: (_, __) => SizedBox(width: 16),
-                  itemBuilder: (_, __) => AudioBlockItem.shimmer(
-                    wide: type == BlockType.featured,
-                  ),
-                ),
-              ),
-            ],
-          )
-      };
+            ),
+          ],
+        )
+    };
+  }
 }

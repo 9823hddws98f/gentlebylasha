@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
+import '/domain/models/app_page/app_page_config.dart';
 import '/domain/models/block_item/audio_playlist.dart';
 import '/helper/global_functions.dart';
 import '/screens/home/playlist_tracks_screen.dart';
 import '/utils/app_theme.dart';
 import '/widgets/app_image.dart';
+import '/widgets/blocks/config_of_page.dart';
 import '/widgets/shimmerize.dart';
 import '../widgets/item_tag.dart';
 
@@ -23,6 +25,7 @@ class PlaylistBlockItem extends StatelessWidget {
   @override
   Widget build(context) {
     final ColorScheme(:primary, :onSurfaceVariant) = Theme.of(context).colorScheme;
+    final config = PageConfig.of(context);
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
@@ -33,7 +36,7 @@ class PlaylistBlockItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Expanded(child: _buildImage(primary)),
+              Expanded(child: _buildImage(primary, config.showItemDurations)),
               const SizedBox(height: 16),
               _buildTextContent(onSurfaceVariant),
             ],
@@ -43,7 +46,7 @@ class PlaylistBlockItem extends StatelessWidget {
     );
   }
 
-  Widget _buildImage(Color color) => Stack(
+  Widget _buildImage(Color color, bool showDuration) => Stack(
         fit: StackFit.expand,
         children: [
           AppImage(
@@ -51,11 +54,16 @@ class PlaylistBlockItem extends StatelessWidget {
             height: _imageSize,
             borderRadius: AppTheme.largeImageBorderRadius,
           ),
-          ItemTag(
-            icon: CarbonIcons.playlist,
-            text: '${playlist.trackIds.length} Sessions',
-            color: playlist.thumbnail.dominantColor,
-          ),
+          showDuration
+              ? ItemTag(
+                  icon: CarbonIcons.playlist,
+                  text: '${playlist.trackIds.length} Sessions',
+                  color: playlist.thumbnail.dominantColor,
+                )
+              : ItemTag(
+                  icon: CarbonIcons.playlist,
+                  color: playlist.thumbnail.dominantColor,
+                ),
         ],
       );
 
@@ -79,7 +87,7 @@ class PlaylistBlockItem extends StatelessWidget {
         ],
       );
 
-  static Widget shimmer() => SizedBox(
+  static Widget shimmer(AppPageConfig config) => SizedBox(
         width: _imageSize,
         height: height,
         child: Column(
@@ -101,8 +109,8 @@ class PlaylistBlockItem extends StatelessWidget {
                     child: Shimmerize(
                       child: Material(
                         borderRadius: BorderRadius.circular(ItemTag.borderRadius),
-                        child: const SizedBox(
-                          width: 62,
+                        child: SizedBox(
+                          width: config.showItemDurations ? 62 : 22,
                           height: 22,
                         ),
                       ),
