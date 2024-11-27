@@ -72,7 +72,7 @@ class AudioManager {
               displayDescription: track.description,
               duration: track.duration,
               artist: track.speaker,
-              artUri: Uri.parse(track.imageBackground.url),
+              artUri: Uri.parse(track.thumbnail.url),
               extras: {'track': track},
             ),
           )

@@ -53,7 +53,7 @@ void playTrack(AudioTrack track) {
       artist: track.speaker,
       displayTitle: track.title,
       displaySubtitle: track.speaker,
-      artUri: Uri.parse(track.imageBackground.url),
+      artUri: Uri.parse(track.thumbnail.url),
       extras: {'track': track},
     ),
     track.id,
