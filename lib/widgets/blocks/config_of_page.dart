@@ -15,5 +15,5 @@ class PageConfig extends InheritedWidget {
   bool updateShouldNotify(PageConfig oldWidget) => config != oldWidget.config;
 
   static AppPageConfig of(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<PageConfig>()!.config;
+      context.dependOnInheritedWidgetOfExactType<PageConfig>()?.config ?? AppPageConfig();
 }

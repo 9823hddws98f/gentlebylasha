@@ -1,7 +1,7 @@
 class AppPageConfig {
   final bool showItemDurations;
 
-  AppPageConfig({required this.showItemDurations});
+  AppPageConfig({this.showItemDurations = true});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
