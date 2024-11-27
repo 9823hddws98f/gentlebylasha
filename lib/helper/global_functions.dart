@@ -42,16 +42,20 @@ void pushRemoveAll(BuildContext context, Widget widget) {
       (Route<dynamic> route) => false);
 }
 
-void playTrack(AudioTrack audioTrack) {
+void playTrack(AudioTrack track) {
   Get.the<AudioManager>().playSinglePlaylist(
     MediaItem(
-      id: audioTrack.id,
-      album: audioTrack.speaker,
-      title: audioTrack.title,
-      displayDescription: audioTrack.description,
-      artUri: Uri.parse(audioTrack.imageBackground.url),
-      extras: {'track': audioTrack},
+      id: track.id,
+      album: track.speaker,
+      title: track.title,
+      displayDescription: track.description,
+      duration: track.duration,
+      artist: track.speaker,
+      displayTitle: track.title,
+      displaySubtitle: track.speaker,
+      artUri: Uri.parse(track.imageBackground.url),
+      extras: {'track': track},
     ),
-    audioTrack.id,
+    track.id,
   );
 }

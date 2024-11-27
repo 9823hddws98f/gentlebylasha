@@ -73,6 +73,7 @@ class _ControlButtonsState extends State<ControlButtons> {
                       Expanded(
                         child: DefaultTextStyle.merge(
                           style: TextStyle(
+                            color: Colors.white,
                             shadows: [
                               Shadow(
                                 color: Colors.black38,

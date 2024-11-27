@@ -20,9 +20,12 @@ class AudioProgressBar extends StatelessWidget {
         buffered: value.buffered,
         total: value.total,
         onSeek: _pageManager.seek,
-        baseBarColor: colors.primary.withAlpha(70),
-        progressBarColor: colors.primary,
-        thumbColor: colors.primary,
+        baseBarColor: colors.surface.withAlpha(70),
+        bufferedBarColor: colors.secondary.withAlpha(70),
+        progressBarColor: colors.secondary,
+        timeLabelTextStyle:
+            Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.white),
+        thumbColor: colors.secondary,
       ),
     );
   }

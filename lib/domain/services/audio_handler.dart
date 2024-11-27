@@ -47,47 +47,58 @@ class MyAudioHandler extends BaseAudioHandler {
   }
 
   void _notifyAudioHandlerAboutPlaybackEvents() {
-    _player.playbackEventStream.listen((PlaybackEvent event) {
-      final playing = _player.playing;
-      playbackState.add(playbackState.value.copyWith(
-        controls: [
-          if (_playlist.length > 1) MediaControl.skipToPrevious,
-          if (playing) MediaControl.pause else MediaControl.play,
-          MediaControl.stop,
-          if (_playlist.length > 1) MediaControl.skipToNext,
-        ],
-        systemActions: const {
-          MediaAction.seek,
-        },
-        androidCompactActionIndices: const [0, 1, 3],
-        processingState: const {
-          ProcessingState.idle: AudioProcessingState.idle,
-          ProcessingState.loading: AudioProcessingState.loading,
-          ProcessingState.buffering: AudioProcessingState.buffering,
-          ProcessingState.ready: AudioProcessingState.ready,
-          ProcessingState.completed: AudioProcessingState.completed,
-        }[_player.processingState]!,
-        repeatMode: const {
-          LoopMode.off: AudioServiceRepeatMode.none,
-          LoopMode.one: AudioServiceRepeatMode.one,
-          LoopMode.all: AudioServiceRepeatMode.all,
-        }[_player.loopMode]!,
-        shuffleMode: (_player.shuffleModeEnabled)
-            ? AudioServiceShuffleMode.all
-            : AudioServiceShuffleMode.none,
-        playing: playing,
-        updatePosition: _player.position,
-        bufferedPosition: _player.bufferedPosition,
-        speed: _player.speed,
-        queueIndex: event.currentIndex,
-      ));
-    }, onError: (Object e, StackTrace st) {
-      if (e is PlatformException) {
-        ('AudioSource index: ${e.details?["index"]}').logDebug();
-      } else {
-        ('An error occurred: $e').logDebug();
-      }
-    });
+    _player.playbackEventStream.listen(
+      (event) {
+        final playing = _player.playing;
+        playbackState.add(
+          playbackState.value.copyWith(
+            controls: [
+              if (_playlist.length > 1 &&
+                  _player.currentIndex != null &&
+                  _player.currentIndex! > 0)
+                MediaControl.skipToPrevious,
+              if (playing) MediaControl.pause else MediaControl.play,
+              MediaControl.stop,
+              if (_playlist.length > 1 &&
+                  _player.currentIndex != null &&
+                  _player.currentIndex! < _playlist.length - 1)
+                MediaControl.skipToNext,
+            ],
+            systemActions: const {
+              MediaAction.seek,
+            },
+            androidCompactActionIndices: const [0, 1, 3],
+            processingState: switch (_player.processingState) {
+              ProcessingState.idle => AudioProcessingState.idle,
+              ProcessingState.loading => AudioProcessingState.loading,
+              ProcessingState.buffering => AudioProcessingState.buffering,
+              ProcessingState.ready => AudioProcessingState.ready,
+              ProcessingState.completed => AudioProcessingState.completed,
+            },
+            repeatMode: switch (_player.loopMode) {
+              LoopMode.off => AudioServiceRepeatMode.none,
+              LoopMode.one => AudioServiceRepeatMode.one,
+              LoopMode.all => AudioServiceRepeatMode.all,
+            },
+            shuffleMode: (_player.shuffleModeEnabled)
+                ? AudioServiceShuffleMode.all
+                : AudioServiceShuffleMode.none,
+            playing: playing,
+            updatePosition: _player.position,
+            bufferedPosition: _player.bufferedPosition,
+            speed: _player.speed,
+            queueIndex: event.currentIndex,
+          ),
+        );
+      },
+      onError: (Object e, StackTrace st) {
+        if (e is PlatformException) {
+          ('AudioSource index: ${e.details?["index"]}').logDebug();
+        } else {
+          ('An error occurred: $e').logDebug();
+        }
+      },
+    );
   }
 
   void _listenForDurationChanges() {

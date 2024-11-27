@@ -64,14 +64,18 @@ class AudioManager {
       currentPlaylistBlockNotifier.value = playlist;
       playlistIdNotifier.value = [];
       final mediaItems = list
-          .map((track) => MediaItem(
-                id: track.id,
-                album: track.speaker,
-                title: track.title,
-                displayDescription: track.description,
-                artUri: Uri.parse(track.imageBackground.url),
-                extras: {'track': track},
-              ))
+          .map(
+            (track) => MediaItem(
+              id: track.id,
+              album: track.speaker,
+              title: track.title,
+              displayDescription: track.description,
+              duration: track.duration,
+              artist: track.speaker,
+              artUri: Uri.parse(track.imageBackground.url),
+              extras: {'track': track},
+            ),
+          )
           .toList();
       _audioHandler.addQueueItems(mediaItems);
     }
