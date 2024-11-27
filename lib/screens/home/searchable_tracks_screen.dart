@@ -12,12 +12,14 @@ class SearchableTracksScreen extends StatefulWidget {
   final String heading;
   final List<AudioTrack>? tracks;
   final List<AudioPlaylist>? playlists;
+  final WidgetBuilder? emptyBuilder;
 
   const SearchableTracksScreen({
     super.key,
     required this.heading,
     this.tracks,
     this.playlists,
+    this.emptyBuilder,
   }) : assert((tracks == null) != (playlists == null),
             'Exactly one of tracks or playlists must be provided');
 
@@ -28,6 +30,8 @@ class SearchableTracksScreen extends StatefulWidget {
 class _SearchableTracksScreenState extends State<SearchableTracksScreen> {
   List<AudioTrack>? _filteredTracks;
   List<AudioPlaylist>? _filteredPlaylists;
+
+  bool get _isEmpty => _filteredTracks?.isEmpty ?? _filteredPlaylists?.isEmpty ?? true;
 
   @override
   void initState() {
@@ -50,11 +54,13 @@ class _SearchableTracksScreenState extends State<SearchableTracksScreen> {
             ),
           ),
         ),
-        body: (context, isMobile) => TrackGrid(
-          tracks: _filteredTracks,
-          playlists: _filteredPlaylists,
-          padding: EdgeInsets.only(bottom: AppTheme.sidePadding),
-        ),
+        body: (context, isMobile) => _isEmpty
+            ? widget.emptyBuilder?.call(context) ?? const SizedBox.shrink()
+            : TrackGrid(
+                tracks: _filteredTracks,
+                playlists: _filteredPlaylists,
+                padding: EdgeInsets.only(bottom: AppTheme.sidePadding),
+              ),
       );
 
   Future<void> _handleSearch(String query) async {

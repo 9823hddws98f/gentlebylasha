@@ -1,63 +1,37 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class AnalyticsService {
   AnalyticsService._();
 
   static AnalyticsService instance = AnalyticsService._();
 
-  final _firestore = FirebaseFirestore.instance;
-  final _userId = FirebaseAuth.instance.currentUser?.uid;
+  final analytics = FirebaseAnalytics.instance;
 
-  void logAudioPlay({
-    required String trackId,
-    String? playlistId,
-  }) {
-    final eventData = {
-      'track_id': trackId,
-      'playlist_id': playlistId,
-    };
-    _logEvent('audio_play', eventData);
-  }
+  void logAudioPlay(String trackId, String? playlistId) => _logEvent('audio_play', {
+        'track_id': trackId,
+        'playlist_id': playlistId ?? '',
+      });
 
-  void logAudioSeek({
-    required String trackId,
-    required Duration previousPosition,
-    required Duration newPosition,
-    required Duration totalDuration,
-    String? playlistId,
-  }) {
-    final eventData = {
-      'track_id': trackId,
-      'previous_position_seconds': previousPosition.inSeconds,
-      'new_position_seconds': newPosition.inSeconds,
-      'total_duration_seconds': totalDuration.inSeconds,
-      'playlist_id': playlistId,
-    };
-    _logEvent('audio_seek', eventData);
-  }
+  void logAudioSeek(String trackId, Duration previousPosition, Duration newPosition,
+          Duration totalDuration, String? playlistId) =>
+      _logEvent('audio_seek', {
+        'track_id': trackId,
+        'previous_position_seconds': previousPosition.inSeconds,
+        'new_position_seconds': newPosition.inSeconds,
+        'total_duration_seconds': totalDuration.inSeconds,
+        'playlist_id': playlistId ?? '',
+      });
 
-  void logPlaylistLoad({
-    required String playlistId,
-    required int trackCount,
-    required int startIndex,
-  }) {
-    final eventData = {
-      'playlist_id': playlistId,
-      'track_count': trackCount,
-      'start_index': startIndex,
-    };
-    _logEvent('playlist_load', eventData);
-  }
+  void logPlaylistLoad(String playlistId, int trackCount, int startIndex) =>
+      _logEvent('playlist_load', {
+        'playlist_id': playlistId,
+        'track_count': trackCount,
+        'start_index': startIndex,
+      });
 
-  void _logEvent(String eventName, Map<String, dynamic> eventData) {
-    final eventPayload = {
-      'uid': _userId,
-      'timestamp': DateTime.now().toUtc().toIso8601String(),
-      'name': eventName,
-      'data': eventData,
-    };
+  void logSearch(String query) => analytics.logSearch(searchTerm: query);
 
-    _firestore.collection('analytics').doc().set(eventPayload);
+  void _logEvent(String eventName, Map<String, Object> eventData) {
+    analytics.logEvent(name: eventName, parameters: eventData);
   }
 }

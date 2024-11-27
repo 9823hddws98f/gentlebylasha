@@ -77,6 +77,7 @@ class AudioManager {
     }
     await Future.delayed(const Duration(milliseconds: 100));
     await _audioHandler.skipToQueueItem(index);
+    _analytics.logPlaylistLoad(playlist.id, list.length, index);
   }
 
   void _listenToChangesInPlaylist() {
@@ -156,10 +157,7 @@ class AudioManager {
   void _updatePlayCount(MediaItem? mediaItem) {
     if (mediaItem?.id.isEmpty ?? true) return;
     if ((mediaItem!.duration?.inSeconds ?? 0) > 1) {
-      _analytics.logAudioPlay(
-        trackId: mediaItem.id,
-        playlistId: currentPlaylistBlockNotifier.value?.id,
-      );
+      _analytics.logAudioPlay(mediaItem.id, currentPlaylistBlockNotifier.value?.id);
     }
   }
 
@@ -181,11 +179,11 @@ class AudioManager {
   void seek(Duration position) {
     _audioHandler.seek(position);
     _analytics.logAudioSeek(
-      trackId: currentMediaItemNotifier.value.id,
-      playlistId: currentPlaylistBlockNotifier.value?.id,
-      previousPosition: progressNotifier.value.current,
-      newPosition: position,
-      totalDuration: progressNotifier.value.total,
+      currentMediaItemNotifier.value.id,
+      progressNotifier.value.current,
+      position,
+      progressNotifier.value.total,
+      currentPlaylistBlockNotifier.value?.id,
     );
   }
 

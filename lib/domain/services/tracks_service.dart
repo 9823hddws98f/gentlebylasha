@@ -4,12 +4,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '/domain/models/block_item/audio_track.dart';
 import '/utils/common_extensions.dart';
+import '/utils/get.dart';
+import 'analytics_service.dart';
 
 class TracksService {
   TracksService._();
   static TracksService instance = TracksService._();
 
   final _collection = FirebaseFirestore.instance.collection('tracks');
+  final _analytics = Get.the<AnalyticsService>();
 
   Future<AudioTrack> getById(String id) =>
       _collection.doc(id).get().then((doc) => doc.data() != null
@@ -30,6 +33,8 @@ class TracksService {
   }
 
   Future<List<AudioTrack>> searchTracks(String query) async {
+    _analytics.logSearch(query);
+
     if (query.isEmpty) return [];
 
     try {
