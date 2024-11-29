@@ -13,30 +13,29 @@ const cors = require("cors")({origin: true});
 
 admin.initializeApp();
 sgMail.setApiKey(
-    "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",
+    functions.config().sendgrid_api_key,
 );
-
 
 // method to delete user from firebase auth via uid,
 // this method is called from the client side
 // this should also delete all the data from firestore
-exports.deleteUser = functions.https.onRequest(async (request, response) => {
-  cors(request, response, async () => {
-    const uid = request.body.data.uid;
+exports.deleteUser = functions.https.onCall(async (data, context) => {
+  cors(async () => {
+    const uid = data.uid;
     await admin.auth().deleteUser(uid);
     const userRef = admin.firestore().collection("users").doc(uid);
     const userDoc = await userRef.get();
+
     if (userDoc.exists) {
       await userRef.delete();
       logger.info(`User ${uid} and data deleted successfully`);
-      response.send("User and data deleted successfully");
+      return {success: true, message: "User and data deleted successfully"};
     } else {
       logger.info(`User ${uid} not found`);
-      response.send("User not found");
+      return {success: false, message: "User not found"};
     }
   });
 });
-
 
 // Helper function to send an email
 const sendEmail = async (to, subject, htmlContent) => {
@@ -50,57 +49,61 @@ const sendEmail = async (to, subject, htmlContent) => {
 };
 
 // Callable function to send an email
-exports.sendEmail = functions.https.onRequest(async (request, response) => {
-  cors(request, response, async () => {
+exports.sendEmail = functions.https.onCall(async (data, context) => {
+  cors(async () => {
     try {
-      const {to, subject, htmlContent} = request.body.data;
+      const {to, subject, htmlContent} = data;
 
       // Optionally, you can add authentication/authorization logic here
+      // if (context.auth) { ... }
 
       await sendEmail(to, subject, htmlContent);
-      response.send({
+      return {
         success: true,
         message: "Email sent successfully",
-      });
+      };
     } catch (error) {
       console.error("Error sending email:", error);
-      response.send(new functions.https.HttpsError(
+      throw new functions.https.HttpsError(
           "internal",
           "Unable to send email",
-      ));
+      );
     }
   });
 });
 
+// TODO: FIX DEPLOYMENT OF THIS
+
 exports.onUserCreateOrUpdate = functions.firestore
     .document("users/{userId}")
-    .onWrite(async (change, context) => {
-      const newValue = change.after.exists ? change.after.data() : null;
-      const previousValue = change.before.exists ? change.before.data() : null;
+    .onCreate(async (snapshot, context) => {
+      cors(async () => {
+        const newValue = snapshot.data();
+        const previousValue = context.data().previous.data();
 
-      // Check if the user is newly created
-      if (!previousValue && newValue) {
-        const userEmail = newValue.email;
-        const firstName = newValue.firstName || "";
-        const lastName = newValue.lastName || "";
-        const fullName = `${firstName} ${lastName}`.trim() || "User";
+        // Check if the user is newly created
+        if (!previousValue && newValue) {
+          const userEmail = newValue.email;
+          const firstName = newValue.firstName || "";
+          const lastName = newValue.lastName || "";
+          const fullName = `${firstName} ${lastName}`.trim() || "User";
 
-        // Prepare a simple welcome email
-        const subject = "Welcome to Gentle!";
-        const htmlContent = `
+          // Prepare a simple welcome email
+          const subject = "Welcome to Gentle!";
+          const htmlContent = `
           <h1>Welcome, ${fullName}!</h1>
           <p>Thank you for joining us. We're excited to have you on board!</p>
           <p>If you have any questions, feel free to reach out.</p>
         `;
 
-        // Send the welcome email
-        try {
-          await sendEmail(userEmail, subject, htmlContent);
-          logger.info(`Welcome email sent to ${userEmail}`);
-        } catch (error) {
-          logger.error(`Error sending welcome email: ${error}`);
+          // Send the welcome email
+          try {
+            await sendEmail(userEmail, subject, htmlContent);
+            logger.info(`Welcome email sent to ${userEmail}`);
+          } catch (error) {
+            logger.error(`Error sending welcome email: ${error}`);
+          }
         }
-      }
-
-      return null;
+      });
     });
+
