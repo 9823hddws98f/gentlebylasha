@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+/* Gentle admin — daytime desk tool with the app's night palette as its frame. */
+:root {
+  --paper: #f6f5f1;
+  --surface: #ffffff;
+  --ink: #141a2e;
+  --ink-soft: #4b5468;
+  --ink-faint: #6b7385;
+  --line: #e3e1da;
+  --line-strong: #cfccc2;
+  --night: #10162a;
+  --night-raised: #1a2240;
+  --night-ink: #c9cfe0;
+  --leaf: #52b788;
+  --leaf-ink: #1f6b47;
+  --leaf-wash: #e5f4ec;
+  --dusk: #365dcb;
+  --dusk-ink: #2a4aa6;
+  --dusk-wash: #e7edfb;
+  --ember: #b42318;
+  --ember-wash: #fbe9e7;
+  --focus: #365dcb;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-night: var(--night);
+  --color-night-raised: var(--night-raised);
+  --color-night-ink: var(--night-ink);
+  --color-leaf: var(--leaf);
+  --color-leaf-ink: var(--leaf-ink);
+  --color-leaf-wash: var(--leaf-wash);
+  --color-dusk: var(--dusk);
+  --color-dusk-ink: var(--dusk-ink);
+  --color-dusk-wash: var(--dusk-wash);
+  --color-ember: var(--ember);
+  --color-ember-wash: var(--ember-wash);
+  --font-sans: var(--font-figtree);
+  --font-display: var(--font-fraunces);
+  --font-mono: var(--font-jetbrains);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-figtree), system-ui, sans-serif;
+  font-feature-settings: "ss01";
+}
+
+::selection {
+  background: var(--leaf-wash);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+input,
+select,
+textarea {
+  caret-color: var(--dusk);
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@keyframes issued {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+    filter: blur(2px);
+  }
+}
+
+@keyframes sheet {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+}
