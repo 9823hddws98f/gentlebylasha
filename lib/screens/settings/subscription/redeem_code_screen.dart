@@ -39,12 +39,14 @@ class _RedeemCodeScreenState extends State<RedeemCodeScreen> with Translation {
     setState(() => _error = _success = null);
     try {
       final expiresAt = await CloudFunctionsService.redeemCode(code);
+      if (!mounted) return true;
       final locale = Localizations.localeOf(context).toLanguageTag();
       setState(() => _success = expiresAt == null
           ? tr.codeRedeemedLifetime
           : tr.codeRedeemedUntil(DateFormat.yMMMMd(locale).format(expiresAt)));
       return true;
     } on FirebaseFunctionsException catch (e) {
+      if (!mounted) return false;
       setState(() => _error = switch (e.message) {
             'not-found' => tr.codeNotFound,
             'already-redeemed' => tr.codeAlreadyRedeemed,
@@ -54,6 +56,7 @@ class _RedeemCodeScreenState extends State<RedeemCodeScreen> with Translation {
           });
       return false;
     } catch (_) {
+      if (!mounted) return false;
       setState(() => _error = tr.somethingWentWrong);
       return false;
     }

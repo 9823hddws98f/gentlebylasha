@@ -14,7 +14,7 @@ export function IssueCode({ batches, onIssued }: { batches: Batch[]; onIssued: (
   const [language, setLanguage] = useState<"nl" | "en">("nl");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [issued, setIssued] = useState<{ code: string; email: string; emailed: boolean } | null>(null);
+  const [issued, setIssued] = useState<{ code: string; email: string; emailed: boolean; mailFailed: boolean } | null>(null);
   const [copied, setCopied] = useState(false);
 
   async function submit(e: React.FormEvent) {
@@ -22,14 +22,14 @@ export function IssueCode({ batches, onIssued }: { batches: Batch[]; onIssued: (
     setBusy(true);
     setError(null);
     try {
-      const { code } = await assignCode({
+      const { code, emailed } = await assignCode({
         email,
         note: note || undefined,
         batchId: batchId || undefined,
         sendEmail,
         language,
       });
-      setIssued({ code, email, emailed: sendEmail });
+      setIssued({ code, email, emailed, mailFailed: sendEmail && !emailed });
       setCopied(false);
       setEmail("");
       setNote("");
@@ -120,6 +120,11 @@ export function IssueCode({ batches, onIssued }: { batches: Batch[]; onIssued: (
             <span className="text-sm text-leaf-ink">
               {issued.emailed ? "Gemaild naar" : "Gekoppeld aan"} {issued.email}
             </span>
+            {issued.mailFailed && (
+              <span className="basis-full text-sm text-ember order-last">
+                De mail kon niet worden verstuurd. Kopieer de code en stuur hem zelf.
+              </span>
+            )}
             <Button
               variant="ghost"
               onClick={copy}

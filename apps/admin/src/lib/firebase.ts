@@ -17,7 +17,7 @@ export const app = getApps().length ? getApp() : initializeApp(config);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 // Must match setGlobalOptions({ region }) in functions/src/index.ts.
-const functions = getFunctions(app, "europe-west1");
+const functions = getFunctions(app, "us-central1");
 
 export const call = <Req, Res>(name: string) => {
   const fn = httpsCallable<Req, Res>(functions, name);

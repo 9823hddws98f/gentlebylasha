@@ -31,7 +31,7 @@ export const generateCodes = call<
 
 export const assignCode = call<
   { email: string; code?: string; batchId?: string; note?: string; sendEmail: boolean; language: "nl" | "en" },
-  { code: string }
+  { code: string; emailed: boolean }
 >("adminAssignCode");
 
 export const disableCode = call<{ code: string }, { success: boolean }>("adminDisableCode");

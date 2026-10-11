@@ -18,7 +18,7 @@ import {
 import { escapeHtml, sendMail, SENDGRID_API_KEY } from "./mail.js";
 
 initializeApp();
-setGlobalOptions({ region: "europe-west1", maxInstances: 10 });
+setGlobalOptions({ region: "us-central1", maxInstances: 10 });
 
 const db = getFirestore();
 
@@ -104,7 +104,25 @@ export const onUserCreated = onDocumentCreated(
 // Access codes (Artazest customers)
 // ---------------------------------------------------------------------------
 
-const MAX_FAILED_ATTEMPTS_PER_HOUR = 10;
+const MAX_ATTEMPTS_PER_HOUR = 10;
+
+/** Counts an attempt atomically; throws once the hourly limit is reached. */
+async function takeAttempt(uid: string, now: Date) {
+  const ref = db.collection("code_attempts").doc(uid);
+  await db.runTransaction(async (tx) => {
+    const data = (await tx.get(ref)).data();
+    const windowStart = toDate(data?.windowStart);
+    const inWindow = windowStart && now.getTime() - windowStart.getTime() < 3_600_000;
+    if (!inWindow) {
+      tx.set(ref, { count: 1, windowStart: Timestamp.fromDate(now) });
+      return;
+    }
+    if ((data?.count ?? 0) >= MAX_ATTEMPTS_PER_HOUR) {
+      throw new HttpsError("resource-exhausted", "too-many-attempts");
+    }
+    tx.update(ref, { count: FieldValue.increment(1) });
+  });
+}
 
 /** A signed-in user redeems a code and gets premium access. */
 export const redeemCode = onCall(async (req) => {
@@ -112,26 +130,10 @@ export const redeemCode = onCall(async (req) => {
   const { code: input } = parse(z.object({ code: z.string().max(40) }), req.data);
   const now = new Date();
 
-  const attemptsRef = db.collection("code_attempts").doc(uid);
-  const attempts = (await attemptsRef.get()).data();
-  const windowStart = toDate(attempts?.windowStart);
-  const inWindow = windowStart && now.getTime() - windowStart.getTime() < 3_600_000;
-  if (inWindow && (attempts?.count ?? 0) >= MAX_FAILED_ATTEMPTS_PER_HOUR) {
-    throw new HttpsError("resource-exhausted", "too-many-attempts");
-  }
-
-  const recordFailure = async (reason: string) => {
-    await attemptsRef.set(
-      inWindow
-        ? { count: FieldValue.increment(1) }
-        : { count: 1, windowStart: Timestamp.fromDate(now) },
-      { merge: true },
-    );
-    throw new HttpsError("failed-precondition", reason);
-  };
+  await takeAttempt(uid, now);
 
   const normalized = normalizeCode(input);
-  if (!normalized) return recordFailure("not-found");
+  if (!normalized) throw new HttpsError("failed-precondition", "not-found");
 
   const codeRef = db.collection("access_codes").doc(normalized);
   const subRef = db.collection("subscriptions").doc(uid);
@@ -143,15 +145,19 @@ export const redeemCode = onCall(async (req) => {
       ...(raw as AccessCode),
       createdAt: toDate(raw.createdAt) ?? now,
     };
-    const plan = planRedemption(code, uid, now);
-    if (!plan.ok || plan.alreadyRedeemed) return plan;
-
     const sub = subSnap.data();
     const current: Entitlement | undefined = sub && {
       active: sub.active === true,
       expiresAt: sub.expiresAt === null ? null : (toDate(sub.expiresAt) ?? new Date(0)),
     };
+
+    const plan = planRedemption(code, uid, now);
+    if (!plan.ok) return plan;
+    // Redeeming the same code twice changes nothing; report the access the user has.
+    if (plan.alreadyRedeemed) return { ...plan, expiresAt: current?.expiresAt ?? null };
+
     const expiresAt = mergeEntitlement(current, plan.expiresAt, now);
+    const codeWins = expiresAt === plan.expiresAt;
 
     tx.update(codeRef, {
       status: "redeemed",
@@ -162,23 +168,23 @@ export const redeemCode = onCall(async (req) => {
       subRef,
       {
         active: true,
-        source: "code",
-        code: normalized,
         expiresAt: expiresAt ? Timestamp.fromDate(expiresAt) : null,
         updatedAt: Timestamp.fromDate(now),
+        // Only claim the source when the code is what grants the access.
+        ...(codeWins ? { source: "code", code: normalized } : {}),
       },
       { merge: true },
     );
     return { ...plan, expiresAt };
   });
 
-  if (!result.ok) return recordFailure(result.reason);
+  if (!result.ok) throw new HttpsError("failed-precondition", result.reason);
   logger.info("Code redeemed", { uid, code: normalized });
   return { success: true, expiresAt: result.expiresAt?.toISOString() ?? null };
 });
 
 /** Admin: create a batch of unique codes. */
-export const adminGenerateCodes = onCall(async (req) => {
+export const adminGenerateCodes = onCall({ timeoutSeconds: 300 }, async (req) => {
   const adminUid = requireAdmin(req);
   const { count, durationDays, batchName } = parse(
     z.object({
@@ -189,19 +195,18 @@ export const adminGenerateCodes = onCall(async (req) => {
     req.data,
   );
 
+  // Batch doc first, so codes never point at a batch that doesn't exist.
   const batchRef = db.collection("code_batches").doc();
   const createdAt = FieldValue.serverTimestamp();
+  await batchRef.set({ name: batchName, count: 0, durationDays, createdAt, createdBy: adminUid });
+
   const codes = new Set<string>();
   while (codes.size < count) codes.add(generateCode());
 
   // `create` fails if a code already exists, so a collision can never overwrite a code.
   const writer = db.bulkWriter();
-  const failed: string[] = [];
-  writer.onWriteError((err) => {
-    failed.push(err.documentRef.id);
-    return false;
-  });
-  for (const code of codes) {
+  writer.onWriteError(() => false);
+  const writes = [...codes].map((code) =>
     writer.create(db.collection("access_codes").doc(code), {
       code,
       batchId: batchRef.id,
@@ -209,12 +214,12 @@ export const adminGenerateCodes = onCall(async (req) => {
       durationDays,
       status: "available",
       createdAt,
-    });
-  }
+    }),
+  );
   await writer.close();
+  const created = (await Promise.allSettled(writes)).filter((r) => r.status === "fulfilled").length;
 
-  const created = count - failed.length;
-  await batchRef.set({ name: batchName, count: created, durationDays, createdAt, createdBy: adminUid });
+  await batchRef.update({ count: created });
   await logAdminAction(adminUid, "generateCodes", { batchId: batchRef.id, count: created });
   return { batchId: batchRef.id, created };
 });
@@ -237,25 +242,27 @@ export const adminAssignCode = onCall({ secrets: [SENDGRID_API_KEY] }, async (re
     req.data,
   );
 
-  let codeRef;
+  let fixedRef: FirebaseFirestore.DocumentReference | undefined;
   if (input.code) {
     const normalized = normalizeCode(input.code);
     if (!normalized) throw new HttpsError("invalid-argument", "Invalid code.");
-    codeRef = db.collection("access_codes").doc(normalized);
-  } else {
-    let q = db.collection("access_codes").where("status", "==", "available");
-    if (input.batchId) q = q.where("batchId", "==", input.batchId);
-    const snap = await q.limit(1).get();
-    if (snap.empty) throw new HttpsError("not-found", "No available codes left. Generate a new batch.");
-    codeRef = snap.docs[0].ref;
+    fixedRef = db.collection("access_codes").doc(normalized);
   }
+  let available: FirebaseFirestore.Query = db.collection("access_codes").where("status", "==", "available");
+  if (input.batchId) available = available.where("batchId", "==", input.batchId);
 
   const code = await db.runTransaction(async (tx) => {
-    const snap = await tx.get(codeRef);
-    const data = snap.data();
-    if (!data) throw new HttpsError("not-found", "Code not found.");
-    if (data.status !== "available") throw new HttpsError("failed-precondition", `Code is ${data.status}.`);
-    tx.update(codeRef, {
+    // Picking inside the transaction means two admins can't grab the same code.
+    let ref = fixedRef;
+    if (!ref) {
+      const snap = await tx.get(available.limit(1));
+      if (snap.empty) throw new HttpsError("not-found", "Geen vrije codes meer. Maak een nieuwe batch aan.");
+      ref = snap.docs[0].ref;
+    }
+    const data = (await tx.get(ref)).data();
+    if (!data) throw new HttpsError("not-found", "Code niet gevonden.");
+    if (data.status !== "available") throw new HttpsError("failed-precondition", "Deze code is al gebruikt of uitgegeven.");
+    tx.update(ref, {
       status: "assigned",
       assignedEmail: input.email,
       assignedNote: input.note ?? null,
@@ -265,26 +272,33 @@ export const adminAssignCode = onCall({ secrets: [SENDGRID_API_KEY] }, async (re
     return data as AccessCode;
   });
 
+  let emailed = false;
   if (input.sendEmail) {
     const nl = input.language === "nl";
     const access = code.durationDays === null
       ? (nl ? "onbeperkt" : "unlimited")
       : nl ? `${code.durationDays} dagen` : `${code.durationDays} days`;
-    await sendMail(
-      input.email,
-      nl ? "Je Gentle-code" : "Your Gentle code",
-      nl
-        ? `<p>Bedankt voor je bestelling bij Artazest. Hiermee krijg je ${access} toegang tot Gentle:</p>
-           <p style="font-size:22px;font-weight:bold;letter-spacing:2px">${code.code}</p>
-           <p>Download de Gentle-app, maak een account en vul de code in onder Profiel &rarr; Code invoeren.</p>`
-        : `<p>Thank you for your Artazest order. This gives you ${access} access to Gentle:</p>
-           <p style="font-size:22px;font-weight:bold;letter-spacing:2px">${code.code}</p>
-           <p>Download the Gentle app, create an account and enter the code under Profile &rarr; Redeem code.</p>`,
-    );
+    try {
+      await sendMail(
+        input.email,
+        nl ? "Je Gentle-code" : "Your Gentle code",
+        nl
+          ? `<p>Bedankt voor je bestelling bij Artazest. Hiermee krijg je ${access} toegang tot Gentle:</p>
+             <p style="font-size:22px;font-weight:bold;letter-spacing:2px">${code.code}</p>
+             <p>Download de Gentle-app, maak een account en vul de code in onder Profiel &rarr; Code invoeren.</p>`
+          : `<p>Thank you for your Artazest order. This gives you ${access} access to Gentle:</p>
+             <p style="font-size:22px;font-weight:bold;letter-spacing:2px">${code.code}</p>
+             <p>Download the Gentle app, create an account and enter the code under Profile &rarr; Redeem code.</p>`,
+      );
+      emailed = true;
+    } catch (e) {
+      // The code stays assigned; the admin can copy it and send it by hand.
+      logger.error("Code mail failed", { code: code.code, error: String(e) });
+    }
   }
 
-  await logAdminAction(adminUid, "assignCode", { code: code.code, email: input.email, emailed: input.sendEmail });
-  return { code: code.code };
+  await logAdminAction(adminUid, "assignCode", { code: code.code, email: input.email, emailed });
+  return { code: code.code, emailed };
 });
 
 /** Admin: disable a code that has not been redeemed yet. */

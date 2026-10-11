@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 
 class CloudFunctionsService {
   /// Must match `setGlobalOptions({region})` in functions/src/index.ts.
-  static final _functions = FirebaseFunctions.instanceFor(region: 'europe-west1');
+  static final _functions = FirebaseFunctions.instanceFor(region: 'us-central1');
 
   /// Deletes the signed-in user's own account. The server ignores any uid.
   static Future<dynamic> deleteUser() async {
