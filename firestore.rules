@@ -1,0 +1,81 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isAdmin() { return signedIn() && request.auth.token.admin == true; }
+    function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+
+    // Profile. Users may edit their own profile but never their role.
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow create: if isOwner(uid)
+        && (!('role' in request.resource.data) || request.resource.data.role == 'client');
+      allow update: if isAdmin() || (isOwner(uid)
+        && (!('role' in request.resource.data) || request.resource.data.role == resource.data.get('role', 'client')));
+      allow delete: if isAdmin();
+    }
+
+    match /favorites/{uid} {
+      allow read, write: if isOwner(uid);
+    }
+    match /favorites_playlists/{uid} {
+      allow read, write: if isOwner(uid);
+    }
+
+    // Content: readable for signed-in users, editable by admins.
+    match /tracks/{id} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+    match /playlists/{id} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+    match /pages/{id} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+    match /blocks/{id} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    // Activity log: users append their own entries, admins read.
+    match /activity_log/{id} {
+      allow create: if signedIn() && request.resource.data.userId == request.auth.uid;
+      allow read: if isAdmin();
+    }
+
+    // Legacy client-side deletion codes. Users only touch their own.
+    match /account_deletion/{id} {
+      allow create: if signedIn() && request.resource.data.userId == request.auth.uid;
+      allow read, delete: if signedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // Premium status: written only by Cloud Functions.
+    match /subscriptions/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow write: if false;
+    }
+
+    // Access codes: never visible to app users; changed only by Cloud Functions.
+    match /access_codes/{code} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+    match /code_batches/{id} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+    match /admin_log/{id} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // Everything else (code_attempts, …) is server-only.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

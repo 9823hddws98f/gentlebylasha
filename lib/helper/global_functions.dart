@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '/domain/cubits/entitlement_cubit.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_manager.dart';
 import '/screens/auth/login_screen.dart';
@@ -20,6 +21,7 @@ void showToast(String value) {
 
 void logout(BuildContext context) async {
   Get.the<AudioManager>().dispose();
+  Get.the<EntitlementCubit>().reset();
   final FirebaseAuth auth = FirebaseAuth.instance;
   auth.signOut();
 

@@ -1,0 +1,99 @@
+@font-face {
+  font-family: "Phosphor-Light";
+  src: url("./Phosphor-Light.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+.ph-light {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: "Phosphor-Light" !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Enable Ligatures ================ */
+  letter-spacing: 0;
+  -webkit-font-feature-settings: "liga";
+  -moz-font-feature-settings: "liga=1";
+  -moz-font-feature-settings: "liga";
+  -ms-font-feature-settings: "liga" 1;
+  font-feature-settings: "liga";
+  -webkit-font-variant-ligatures: discretionary-ligatures;
+  font-variant-ligatures: discretionary-ligatures;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ph-light.ph-arrow-right:before {
+  content: "\e06c";
+}
+.ph-light.ph-bell-simple:before {
+  content: "\e0d0";
+}
+.ph-light.ph-check:before {
+  content: "\e182";
+}
+.ph-light.ph-clock:before {
+  content: "\e19a";
+}
+.ph-light.ph-cloud-rain:before {
+  content: "\e1b4";
+}
+.ph-light.ph-coffee:before {
+  content: "\e1c2";
+}
+.ph-light.ph-device-mobile-slash:before {
+  content: "\ee46";
+}
+.ph-light.ph-devices:before {
+  content: "\eba4";
+}
+.ph-light.ph-download-simple:before {
+  content: "\e20c";
+}
+.ph-light.ph-heart:before {
+  content: "\e2a8";
+}
+.ph-light.ph-list:before {
+  content: "\e2f0";
+}
+.ph-light.ph-moon:before {
+  content: "\e330";
+}
+.ph-light.ph-moon-stars:before {
+  content: "\e58e";
+}
+.ph-light.ph-notebook:before {
+  content: "\e34e";
+}
+.ph-light.ph-pause:before {
+  content: "\e39e";
+}
+.ph-light.ph-play:before {
+  content: "\e3d0";
+}
+.ph-light.ph-plus:before {
+  content: "\e3d4";
+}
+.ph-light.ph-smiley:before {
+  content: "\e436";
+}
+.ph-light.ph-thermometer-cold:before {
+  content: "\e5c8";
+}
+.ph-light.ph-waves:before {
+  content: "\e6de";
+}
+.ph-light.ph-wind:before {
+  content: "\e5d2";
+}
+.ph-light.ph-x:before {
+  content: "\e4f6";
+}

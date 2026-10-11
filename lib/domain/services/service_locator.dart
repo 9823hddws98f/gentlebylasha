@@ -8,6 +8,7 @@ import '/domain/blocs/authentication/app_bloc.dart';
 import '/domain/blocs/authentication/auth_repository.dart';
 import '/domain/blocs/user/user_bloc.dart';
 import '/domain/cubits/downloads_cubit.dart';
+import '/domain/cubits/entitlement_cubit.dart';
 import '/domain/cubits/favorite_playlists.dart';
 import '/domain/cubits/favorite_tracks.dart';
 import '/domain/cubits/in_app_purchases/iap_cubit.dart';
@@ -68,6 +69,7 @@ Future<void> setupServiceLocator() async {
   _regLazy<FavoritesTracksCubit>(() => FavoritesTracksCubit.instance);
   _regLazy<FavoritePlaylistsCubit>(() => FavoritePlaylistsCubit.instance);
   _regLazy<PagesCubit>(() => PagesCubit.instance);
+  _regLazy<EntitlementCubit>(() => EntitlementCubit.instance);
   _regLazy<AudioManager>(() => AudioManager.instance);
   _regLazy<DownloadsCubit>(() => DownloadsCubit.instance);
 }

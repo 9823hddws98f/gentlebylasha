@@ -1,0 +1,27 @@
+<header class="site-header"{{SOLID}}>
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="Gentle, naar de homepage">
+      <img src="assets/img/gentle-logo.svg" alt="Gentle" width="92" height="45">
+    </a>
+    <nav class="nav" aria-label="Hoofdmenu">
+        {{NAV}}
+    </nav>
+    <div class="header-actions">
+      <a class="login" href="{{APP_URL}}">Inloggen</a>
+      <a class="btn btn-primary btn-sm" href="{{APP_URL}}">Gratis beginnen</a>
+      <button class="menu-toggle" type="button" data-menu-open aria-expanded="false" aria-controls="mobile-menu"><i class="ph-light ph-list" aria-hidden="true"></i><span class="sr-only">Menu openen</span></button>
+    </div>
+  </div>
+</header>
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <button class="menu-toggle mobile-menu-close" type="button" data-menu-close><i class="ph-light ph-x" aria-hidden="true"></i><span class="sr-only">Menu sluiten</span></button>
+  <nav aria-label="Mobiel menu">
+        <a href="index.html">Home</a>
+        {{NAV}}
+  </nav>
+  <div style="display:grid;gap:10px">
+    <a class="btn btn-primary" href="{{APP_URL}}">Gratis beginnen</a>
+    <a class="btn btn-quiet" href="{{APP_URL}}">Inloggen</a>
+  </div>
+</div>
+<main id="main">

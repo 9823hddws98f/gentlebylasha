@@ -3,11 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/domain/cubits/in_app_purchases/iap_cubit.dart';
 import '/domain/cubits/in_app_purchases/product.dart';
+import '/domain/services/language_cubit.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
 import '/utils/modals.dart';
 import '/utils/tx_button.dart';
 import '/widgets/app_scaffold/bottom_panel_spacer.dart';
+import 'redeem_code_screen.dart';
 
 class SubscribeModal extends StatefulWidget {
   const SubscribeModal({super.key, this.scrollController});
@@ -28,7 +30,7 @@ class SubscribeModal extends StatefulWidget {
   State<SubscribeModal> createState() => _SubscribeModalState();
 }
 
-class _SubscribeModalState extends State<SubscribeModal> {
+class _SubscribeModalState extends State<SubscribeModal> with Translation {
   final _subscriptionCubit = Get.the<IAPCubit>();
 
   late ColorScheme _colors;
@@ -49,7 +51,7 @@ class _SubscribeModalState extends State<SubscribeModal> {
                   children: [
                     SizedBox(height: 16),
                     Text(
-                      'Unlock Sleeptales',
+                      'Unlock Gentle',
                       style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.w600,
@@ -75,6 +77,18 @@ class _SubscribeModalState extends State<SubscribeModal> {
                   label: Text('Try for free and subscribe'),
                   onPressVoid: () {
                     Navigator.pop(context);
+                  },
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(bottom: 16),
+                child: TxButton.text(
+                  label: Text(tr.haveACode),
+                  onPressVoid: () {
+                    // Grab the navigator first: this modal's context is gone after pop.
+                    final navigator = Navigator.of(context);
+                    navigator.pop();
+                    navigator.push(MaterialPageRoute(builder: (_) => const RedeemCodeScreen()));
                   },
                 ),
               ),

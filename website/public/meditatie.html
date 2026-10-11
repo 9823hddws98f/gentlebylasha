@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Meditatie | Gentle</title>
+  <meta name="description" content="Begeleide meditaties van drie tot twintig minuten voor stress, focus en het slapengaan. Probeer meteen een ademhalingsoefening op deze pagina.">
+  <link rel="canonical" href="https://gentle.example/meditatie">
+  <meta name="theme-color" content="#0e1529">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Gentle">
+  <meta property="og:title" content="Meditatie | Gentle">
+  <meta property="og:description" content="Begeleide meditaties van drie tot twintig minuten voor stress, focus en het slapengaan. Probeer meteen een ademhalingsoefening op deze pagina.">
+  <meta property="og:image" content="https://gentle.example/assets/img/bergmeer-1200.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="preload" href="assets/fonts/matter-light.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/matter-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/site.css">
+  <link rel="stylesheet" href="assets/vendor/phosphor/style.css">
+  <script defer src="assets/js/site.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Naar de inhoud</a>
+<div id="top-sentinel" aria-hidden="true" style="position:absolute;top:0;left:0;width:1px;height:120px;pointer-events:none"></div>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="Gentle, naar de homepage">
+      <img src="assets/img/gentle-logo.svg" alt="Gentle" width="92" height="45">
+    </a>
+    <nav class="nav" aria-label="Hoofdmenu">
+        <a href="slapen.html">Slapen</a>
+        <a href="meditatie.html" aria-current="page">Meditatie</a>
+        <a href="geluiden.html">Geluiden</a>
+        <a href="prijzen.html">Prijzen</a>
+    </nav>
+    <div class="header-actions">
+      <a class="login" href="https://gentle-mu.vercel.app">Inloggen</a>
+      <a class="btn btn-primary btn-sm" href="https://gentle-mu.vercel.app">Gratis beginnen</a>
+      <button class="menu-toggle" type="button" data-menu-open aria-expanded="false" aria-controls="mobile-menu"><i class="ph-light ph-list" aria-hidden="true"></i><span class="sr-only">Menu openen</span></button>
+    </div>
+  </div>
+</header>
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <button class="menu-toggle mobile-menu-close" type="button" data-menu-close><i class="ph-light ph-x" aria-hidden="true"></i><span class="sr-only">Menu sluiten</span></button>
+  <nav aria-label="Mobiel menu">
+        <a href="index.html">Home</a>
+        <a href="slapen.html">Slapen</a>
+        <a href="meditatie.html" aria-current="page">Meditatie</a>
+        <a href="geluiden.html">Geluiden</a>
+        <a href="prijzen.html">Prijzen</a>
+  </nav>
+  <div style="display:grid;gap:10px">
+    <a class="btn btn-primary" href="https://gentle-mu.vercel.app">Gratis beginnen</a>
+    <a class="btn btn-quiet" href="https://gentle-mu.vercel.app">Inloggen</a>
+  </div>
+</div>
+<main id="main">
+<section class="hero page-hero">
+  <div class="hero-media">
+    <img src="assets/img/bergmeer-1200.jpg" alt="Een bergmeer dat de bergtoppen weerspiegelt in het avondlicht" fetchpriority="high" width="1200" height="800">
+  </div>
+  <div class="wrap">
+    <div class="hero-content">
+      <h1 class="h1">Even <em>niets</em> hoeven</h1>
+      <p class="lead">Korte, begeleide meditaties voor drukke hoofden. Geen ervaring nodig, alleen een paar minuten.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="https://gentle-mu.vercel.app">Gratis beginnen</a>
+        <a class="btn btn-ghost" href="#ademen">Probeer een oefening</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="ademen" aria-labelledby="adem-titel">
+  <div class="wrap breath" data-breath>
+    <div data-reveal>
+      <h2 class="h2" id="adem-titel">Adem mee, nu meteen</h2>
+      <p class="lead" style="margin-top:1.1rem">Volg de cirkel. Hij wordt groter als je inademt en kleiner als je uitademt. Een paar rondes is genoeg.</p>
+      <div class="breath-controls">
+        <div class="seg" role="radiogroup" aria-label="Ritme">
+          <button type="button" role="radio" aria-checked="true" data-pattern="rust">Rustig 4-6</button>
+          <button type="button" role="radio" aria-checked="false" data-pattern="box">Vierkant</button>
+          <button type="button" role="radio" aria-checked="false" data-pattern="478">4-7-8</button>
+        </div>
+        <button class="btn btn-quiet" type="button" data-breath-start aria-pressed="false"><i class="ph-light ph-play" aria-hidden="true"></i>Start</button>
+      </div>
+    </div>
+    <div class="breath-stage" data-reveal style="--i:1">
+      <div class="breath-ring" aria-hidden="true"></div>
+      <div class="breath-ring inner" aria-hidden="true"></div>
+      <div class="breath-orb" aria-hidden="true"></div>
+      <div class="breath-label" aria-live="polite">
+        <strong data-breath-word>Klaar wanneer jij het bent</strong>
+        <span data-breath-count>Druk op start</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0" aria-labelledby="duur-titel">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <h2 class="h2" id="duur-titel">Voor elk moment een lengte</h2>
+      <p class="lead">Kies op basis van hoeveel tijd je hebt, niet hoeveel je zou moeten.</p>
+    </div>
+    <div class="durations">
+      <div class="duration" data-reveal><div class="n">3<small>min</small></div><h3>Tussendoor</h3><p>Voor een vergadering, in de trein of als het je even te veel wordt.</p></div>
+      <div class="duration" data-reveal style="--i:1"><div class="n">10<small>min</small></div><h3>Dagelijks moment</h3><p>Een vast rustpunt in je dag. In de ochtend of als de kinderen slapen.</p></div>
+      <div class="duration" data-reveal style="--i:2"><div class="n">20<small>min</small></div><h3>Diep ontspannen</h3><p>Een bodyscan of lange meditatie, ideaal in bed voor het slapen.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0" aria-labelledby="thema-titel">
+  <div class="wrap media-row flip">
+    <figure data-reveal><img src="assets/img/bloemen-rust-1200.jpg" alt="Iemand ligt met gesloten ogen tussen de bloemen" loading="lazy" width="1200" height="800" style="object-position:40% 50%"></figure>
+    <div data-reveal style="--i:1">
+      <h2 class="h2" id="thema-titel">Meditaties voor wat er speelt</h2>
+      <p class="lead">Begin bij hoe je je nu voelt. Een korte check-in helpt je de juiste meditatie te vinden.</p>
+      <ul class="checklist">
+        <li><i class="ph-light ph-check" aria-hidden="true"></i>Stress en onrust loslaten</li>
+        <li><i class="ph-light ph-check" aria-hidden="true"></i>Dankbaarheid en een korte dagreflectie</li>
+        <li><i class="ph-light ph-check" aria-hidden="true"></i>Bodyscan en ontspanning voor het slapen</li>
+        <li><i class="ph-light ph-check" aria-hidden="true"></i>Een eigen meditatietimer, met of zonder geluid</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="closing" aria-labelledby="slot-titel">
+  <div class="closing-media"><img src="assets/img/zee-1200.jpg" alt="" loading="lazy" width="1200" height="800"></div>
+  <div class="wrap" data-reveal>
+    <h2 class="h1" id="slot-titel">Drie minuten is genoeg</h2>
+    <p class="lead">Begin met de kortste meditatie. Meer mag, hoeft niet.</p>
+    <a class="btn btn-primary" href="https://gentle-mu.vercel.app">Gratis beginnen</a>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" aria-label="Gentle"><img src="assets/img/gentle-logo.svg" alt="Gentle" width="92" height="45"></a>
+        <p>Slaapverhalen, meditaties en zachte geluiden voor rustige avonden en betere nachten.</p>
+      </div>
+      <div class="footer-col">
+        <h2>Ontdek</h2>
+        <ul>
+          <li><a href="slapen.html">Slapen</a></li>
+          <li><a href="meditatie.html">Meditatie</a></li>
+          <li><a href="geluiden.html">Geluiden</a></li>
+          <li><a href="prijzen.html">Prijzen</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Gentle</h2>
+        <ul>
+          <li><a href="over.html">Over Gentle</a></li>
+          <li><a href="help.html">Help en veelgestelde vragen</a></li>
+          <li><a href="https://gentle-mu.vercel.app">Inloggen</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Juridisch</h2>
+        <ul>
+          <li><a href="privacy.html">Privacy</a></li>
+          <li><a href="voorwaarden.html">Voorwaarden</a></li>
+          <li><a href="help.html#account-verwijderen">Account verwijderen</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-base">
+      <span>&copy; 2026 Gentle</span>
+      <span>Gentle is geen vervanging voor medisch advies.</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

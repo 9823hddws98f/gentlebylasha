@@ -1,0 +1,78 @@
+<!--
+title: Prijzen
+description: Begin gratis met Gentle. Kies Premium per maand of per jaar voor de volledige bibliotheek met slaapverhalen, meditaties, muziek en geluiden.
+nav: prijzen
+header: solid
+-->
+<!-- TODO prijzen: voorbeeldbedragen. Vervangen door de echte prijzen uit Stripe en de stores. -->
+<section class="doc-hero" style="border-bottom:0;padding-bottom:0">
+  <div class="wrap" style="text-align:center">
+    <h1 class="h1">Begin gratis. <em>Blijf als het helpt.</em></h1>
+    <p class="lead" style="margin-inline:auto">Een account is gratis. Met Premium krijg je de hele bibliotheek, op al je apparaten.</p>
+    <div style="margin-top:2rem">
+      <div class="price-toggle" role="radiogroup" aria-label="Betaalperiode" data-price-toggle>
+        <span class="thumb" aria-hidden="true"></span>
+        <button type="button" role="radio" aria-checked="false" data-period="monthly">Per maand</button>
+        <button type="button" role="radio" aria-checked="true" data-period="yearly">Per jaar<span class="save">-48%</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight" style="padding-top:0" aria-label="Abonnementen">
+  <div class="wrap">
+    <div class="plans">
+      <div class="plan" data-reveal>
+        <h3>Gratis</h3>
+        <p class="price">&euro;0</p>
+        <p class="per">Voor altijd</p>
+        <ul>
+          <li><i class="ph-light ph-check" aria-hidden="true"></i>Een selectie slaapverhalen en meditaties</li>
+          <li><i class="ph-light ph-check" aria-hidden="true"></i>Geluiden zoals regen, zee en ruis</li>
+          <li><i class="ph-light ph-check" aria-hidden="true"></i>Bedtijdherinneringen en check-ins</li>
+          <li><i class="ph-light ph-check" aria-hidden="true"></i>Favorieten bewaren</li>
+        </ul>
+        <a class="btn btn-quiet" href="{{APP_URL}}">Gratis beginnen</a>
+      </div>
+      <div class="plan plan-premium" data-reveal style="--i:1">
+        <h3>Premium <span class="tag">Alles</span></h3>
+        <p class="price" data-monthly="&euro;7,99&lt;small&gt;/ maand&lt;/small&gt;" data-yearly="&euro;49,99&lt;small&gt;/ jaar&lt;/small&gt;">&euro;49,99<small>/ jaar</small></p>
+        <p class="per" data-monthly="Maandelijks opzegbaar" data-yearly="Dat is &euro;4,17 per maand">Dat is &euro;4,17 per maand</p>
+        <ul>
+          <li><i class="ph-light ph-check" aria-hidden="true"></i>De volledige bibliotheek: verhalen, meditaties, muziek en geluiden</li>
+          <li><i class="ph-light ph-check" aria-hidden="true"></i>Nieuwe verhalen en meditaties zodra ze uitkomen</li>
+          <li><i class="ph-light ph-check" aria-hidden="true"></i>Offline luisteren met downloads</li>
+          <li><i class="ph-light ph-check" aria-hidden="true"></i>Op iPhone, Android en web met hetzelfde account</li>
+        </ul>
+        <a class="btn btn-primary" href="{{APP_URL}}">Premium kiezen</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="vragen-titel">
+  <div class="wrap split">
+    <div data-reveal>
+      <h2 class="h2" id="vragen-titel">Vragen over betalen</h2>
+      <p class="lead" style="margin-top:1.1rem">Staat je vraag er niet bij? Kijk op de <a class="link-arrow" href="help.html" style="display:inline">helppagina</a>.</p>
+    </div>
+    <div class="faq" data-reveal style="--i:1">
+      <details>
+        <summary>Hoe betaal ik?<i class="ph-light ph-plus" aria-hidden="true"></i></summary>
+        <div class="answer"><p>Op iPhone betaal je via de App Store, op Android via Google Play. In de browser betaal je veilig met iDEAL, creditcard of andere methodes via Stripe.</p></div>
+      </details>
+      <details>
+        <summary>Hoe zeg ik op?<i class="ph-light ph-plus" aria-hidden="true"></i></summary>
+        <div class="answer"><p>Je zegt op waar je hebt afgesloten: in de instellingen van de App Store of Google Play, of via Abonnement beheren in de webapp. Je houdt Premium tot het einde van de periode die je al betaald hebt.</p></div>
+      </details>
+      <details>
+        <summary>Werkt Premium op al mijn apparaten?<i class="ph-light ph-plus" aria-hidden="true"></i></summary>
+        <div class="answer"><p>Ja. Premium hoort bij je account. Log op een ander apparaat in met hetzelfde account en alles staat klaar.</p></div>
+      </details>
+      <details>
+        <summary>Ik heb al betaald, maar zie geen Premium<i class="ph-light ph-plus" aria-hidden="true"></i></summary>
+        <div class="answer"><p>Kies in de app bij je profiel voor Aankopen herstellen. Lukt het dan nog niet, neem contact met ons op via de helppagina.</p></div>
+      </details>
+    </div>
+  </div>
+</section>

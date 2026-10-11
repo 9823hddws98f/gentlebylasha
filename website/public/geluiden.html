@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Geluiden | Gentle</title>
+  <meta name="description" content="Meng je eigen achtergrondgeluid van regen, zee, wind en bruine ruis. Met slaaptimer. Direct te proberen in je browser.">
+  <link rel="canonical" href="https://gentle.example/geluiden">
+  <meta name="theme-color" content="#0e1529">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Gentle">
+  <meta property="og:title" content="Geluiden | Gentle">
+  <meta property="og:description" content="Meng je eigen achtergrondgeluid van regen, zee, wind en bruine ruis. Met slaaptimer. Direct te proberen in je browser.">
+  <meta property="og:image" content="https://gentle.example/assets/img/regen-raam-1200.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="preload" href="assets/fonts/matter-light.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/matter-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/site.css">
+  <link rel="stylesheet" href="assets/vendor/phosphor/style.css">
+  <script defer src="assets/js/site.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Naar de inhoud</a>
+<div id="top-sentinel" aria-hidden="true" style="position:absolute;top:0;left:0;width:1px;height:120px;pointer-events:none"></div>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="Gentle, naar de homepage">
+      <img src="assets/img/gentle-logo.svg" alt="Gentle" width="92" height="45">
+    </a>
+    <nav class="nav" aria-label="Hoofdmenu">
+        <a href="slapen.html">Slapen</a>
+        <a href="meditatie.html">Meditatie</a>
+        <a href="geluiden.html" aria-current="page">Geluiden</a>
+        <a href="prijzen.html">Prijzen</a>
+    </nav>
+    <div class="header-actions">
+      <a class="login" href="https://gentle-mu.vercel.app">Inloggen</a>
+      <a class="btn btn-primary btn-sm" href="https://gentle-mu.vercel.app">Gratis beginnen</a>
+      <button class="menu-toggle" type="button" data-menu-open aria-expanded="false" aria-controls="mobile-menu"><i class="ph-light ph-list" aria-hidden="true"></i><span class="sr-only">Menu openen</span></button>
+    </div>
+  </div>
+</header>
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <button class="menu-toggle mobile-menu-close" type="button" data-menu-close><i class="ph-light ph-x" aria-hidden="true"></i><span class="sr-only">Menu sluiten</span></button>
+  <nav aria-label="Mobiel menu">
+        <a href="index.html">Home</a>
+        <a href="slapen.html">Slapen</a>
+        <a href="meditatie.html">Meditatie</a>
+        <a href="geluiden.html" aria-current="page">Geluiden</a>
+        <a href="prijzen.html">Prijzen</a>
+  </nav>
+  <div style="display:grid;gap:10px">
+    <a class="btn btn-primary" href="https://gentle-mu.vercel.app">Gratis beginnen</a>
+    <a class="btn btn-quiet" href="https://gentle-mu.vercel.app">Inloggen</a>
+  </div>
+</div>
+<main id="main">
+<section class="hero page-hero">
+  <div class="hero-media">
+    <img src="assets/img/regen-raam-1200.jpg" alt="Regendruppels op een raam met zachte lichtjes erachter" fetchpriority="high" width="1200" height="800">
+  </div>
+  <div class="wrap">
+    <div class="hero-content">
+      <h1 class="h1">Het geluid van <em>buiten,</em> binnen</h1>
+      <p class="lead">Regen, zee, wind of ruis dempen wat je wakker houdt. Meng je eigen sfeer en laat hem vanzelf uitgaan.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#mixer">Naar de mixer</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="mixer" aria-labelledby="mixer-titel">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <h2 class="h2" id="mixer-titel">Maak je eigen mix</h2>
+      <p class="lead">Zet een of meer geluiden aan en stel het volume per geluid in. Deze mixer draait in je browser, er wordt niets gedownload.</p>
+    </div>
+    <div class="mixer" data-reveal>
+      <div class="mixer-row">
+        <button class="mixer-toggle" type="button" data-sound="regen" aria-pressed="false"><i class="ph-light ph-cloud-rain" aria-hidden="true"></i><span class="sr-only">Regen aan of uit</span></button>
+        <div><h3>Regen</h3><p>Gelijkmatige regen op het dak</p></div>
+        <input type="range" min="0" max="100" value="60" data-level="regen" aria-label="Volume regen" disabled>
+      </div>
+      <div class="mixer-row">
+        <button class="mixer-toggle" type="button" data-sound="zee" aria-pressed="false"><i class="ph-light ph-waves" aria-hidden="true"></i><span class="sr-only">Zee aan of uit</span></button>
+        <div><h3>Zee</h3><p>Golven die langzaam aanrollen</p></div>
+        <input type="range" min="0" max="100" value="50" data-level="zee" aria-label="Volume zee" disabled>
+      </div>
+      <div class="mixer-row">
+        <button class="mixer-toggle" type="button" data-sound="wind" aria-pressed="false"><i class="ph-light ph-wind" aria-hidden="true"></i><span class="sr-only">Wind aan of uit</span></button>
+        <div><h3>Wind</h3><p>Wind die door de bomen waait</p></div>
+        <input type="range" min="0" max="100" value="45" data-level="wind" aria-label="Volume wind" disabled>
+      </div>
+      <div class="mixer-row">
+        <button class="mixer-toggle" type="button" data-sound="brom" aria-pressed="false"><i class="ph-light ph-moon-stars" aria-hidden="true"></i><span class="sr-only">Bruine ruis aan of uit</span></button>
+        <div><h3>Bruine ruis</h3><p>Een diepe, warme ruis die andere geluiden maskeert</p></div>
+        <input type="range" min="0" max="100" value="50" data-level="brom" aria-label="Volume bruine ruis" disabled>
+      </div>
+      <div class="mixer-foot">
+        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:0.5rem">
+          <span class="label">Slaaptimer</span>
+          <div class="seg" role="radiogroup" aria-label="Slaaptimer">
+            <button type="button" role="radio" aria-checked="true" data-timer="0">Uit</button>
+            <button type="button" role="radio" aria-checked="false" data-timer="15">15 min</button>
+            <button type="button" role="radio" aria-checked="false" data-timer="30">30 min</button>
+            <button type="button" role="radio" aria-checked="false" data-timer="60">60 min</button>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:1rem">
+          <span class="mixer-status" data-sound-status aria-live="polite"><span class="eq" aria-hidden="true"><b></b><b></b><b></b></span><span data-status-text>Stil</span></span>
+          <button class="btn btn-quiet btn-sm" type="button" data-sound-stop>Alles uit</button>
+        </div>
+      </div>
+    </div>
+    <p class="muted" style="margin-top:1rem;font-size:0.92rem">Tip: begin zacht. Het beste achtergrondgeluid hoor je bijna niet meer.</p>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0" aria-labelledby="waarom-titel">
+  <div class="wrap media-row">
+    <figure data-reveal><img src="assets/img/regen-water-1200.jpg" alt="Regendruppels die op een wateroppervlak vallen" loading="lazy" width="1200" height="800"></figure>
+    <div data-reveal style="--i:1">
+      <h2 class="h2" id="waarom-titel">Waarom het werkt</h2>
+      <p class="lead">Een gelijkmatig geluid maakt pieken minder opvallend. Een dichtslaande deur of verkeer op straat valt dan minder op, en je schrikt minder snel wakker.</p>
+      <ul class="checklist">
+        <li><i class="ph-light ph-check" aria-hidden="true"></i>In de app nog meer geluiden en opnames uit de natuur</li>
+        <li><i class="ph-light ph-check" aria-hidden="true"></i>Download ze en luister zonder internet</li>
+        <li><i class="ph-light ph-check" aria-hidden="true"></i>Zet je favorieten bij elkaar voor elke avond</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="closing" aria-labelledby="slot-titel">
+  <div class="closing-media"><img src="assets/img/mistbos-1200.jpg" alt="" loading="lazy" width="1200" height="800"></div>
+  <div class="wrap" data-reveal>
+    <h2 class="h1" id="slot-titel">Neem je mix mee naar bed</h2>
+    <p class="lead">In de app luister je ook offline en bewaar je je favorieten.</p>
+    <a class="btn btn-primary" href="https://gentle-mu.vercel.app">Gratis beginnen</a>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" aria-label="Gentle"><img src="assets/img/gentle-logo.svg" alt="Gentle" width="92" height="45"></a>
+        <p>Slaapverhalen, meditaties en zachte geluiden voor rustige avonden en betere nachten.</p>
+      </div>
+      <div class="footer-col">
+        <h2>Ontdek</h2>
+        <ul>
+          <li><a href="slapen.html">Slapen</a></li>
+          <li><a href="meditatie.html">Meditatie</a></li>
+          <li><a href="geluiden.html">Geluiden</a></li>
+          <li><a href="prijzen.html">Prijzen</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Gentle</h2>
+        <ul>
+          <li><a href="over.html">Over Gentle</a></li>
+          <li><a href="help.html">Help en veelgestelde vragen</a></li>
+          <li><a href="https://gentle-mu.vercel.app">Inloggen</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Juridisch</h2>
+        <ul>
+          <li><a href="privacy.html">Privacy</a></li>
+          <li><a href="voorwaarden.html">Voorwaarden</a></li>
+          <li><a href="help.html#account-verwijderen">Account verwijderen</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-base">
+      <span>&copy; 2026 Gentle</span>
+      <span>Gentle is geen vervanging voor medisch advies.</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

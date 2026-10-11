@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 import '/domain/blocs/user/user_bloc.dart';
 import '/domain/services/language_cubit.dart';
@@ -24,6 +23,7 @@ import 'change_password/change_password_screen.dart';
 import 'delete_account/delete_account_screen.dart';
 import 'edit_profile/edit_profile_screen.dart';
 import 'subscription/manage_subscription.dart';
+import 'subscription/redeem_code_screen.dart';
 
 class ProfileSettingsScreen extends StatefulWidget {
   const ProfileSettingsScreen({super.key});
@@ -88,6 +88,12 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Tran
                 title: tr.manageSubscription,
                 colors: colors,
                 onTap: () => pushName(context, ManageSubscriptionScreen()),
+              ),
+              _buildListTile(
+                icon: Icons.redeem_rounded,
+                title: tr.redeemCode,
+                colors: colors,
+                onTap: () => pushName(context, const RedeemCodeScreen()),
               ),
               Divider(height: 24),
               _buildListTile(
@@ -161,7 +167,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Tran
                                 child: child,
                               ))
                       : Icon(
-                          CarbonIcons.user_avatar_filled_alt,
+                          Icons.account_circle,
                           size: 56,
                         ),
                 ),

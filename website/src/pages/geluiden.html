@@ -1,0 +1,92 @@
+<!--
+title: Geluiden
+description: Meng je eigen achtergrondgeluid van regen, zee, wind en bruine ruis. Met slaaptimer. Direct te proberen in je browser.
+nav: geluiden
+header: overlay
+image: /assets/img/regen-raam-1200.jpg
+-->
+<section class="hero page-hero">
+  <div class="hero-media">
+    <img src="assets/img/regen-raam-1200.jpg" alt="Regendruppels op een raam met zachte lichtjes erachter" fetchpriority="high" width="1200" height="800">
+  </div>
+  <div class="wrap">
+    <div class="hero-content">
+      <h1 class="h1">Het geluid van <em>buiten,</em> binnen</h1>
+      <p class="lead">Regen, zee, wind of ruis dempen wat je wakker houdt. Meng je eigen sfeer en laat hem vanzelf uitgaan.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#mixer">Naar de mixer</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="mixer" aria-labelledby="mixer-titel">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <h2 class="h2" id="mixer-titel">Maak je eigen mix</h2>
+      <p class="lead">Zet een of meer geluiden aan en stel het volume per geluid in. Deze mixer draait in je browser, er wordt niets gedownload.</p>
+    </div>
+    <div class="mixer" data-reveal>
+      <div class="mixer-row">
+        <button class="mixer-toggle" type="button" data-sound="regen" aria-pressed="false"><i class="ph-light ph-cloud-rain" aria-hidden="true"></i><span class="sr-only">Regen aan of uit</span></button>
+        <div><h3>Regen</h3><p>Gelijkmatige regen op het dak</p></div>
+        <input type="range" min="0" max="100" value="60" data-level="regen" aria-label="Volume regen" disabled>
+      </div>
+      <div class="mixer-row">
+        <button class="mixer-toggle" type="button" data-sound="zee" aria-pressed="false"><i class="ph-light ph-waves" aria-hidden="true"></i><span class="sr-only">Zee aan of uit</span></button>
+        <div><h3>Zee</h3><p>Golven die langzaam aanrollen</p></div>
+        <input type="range" min="0" max="100" value="50" data-level="zee" aria-label="Volume zee" disabled>
+      </div>
+      <div class="mixer-row">
+        <button class="mixer-toggle" type="button" data-sound="wind" aria-pressed="false"><i class="ph-light ph-wind" aria-hidden="true"></i><span class="sr-only">Wind aan of uit</span></button>
+        <div><h3>Wind</h3><p>Wind die door de bomen waait</p></div>
+        <input type="range" min="0" max="100" value="45" data-level="wind" aria-label="Volume wind" disabled>
+      </div>
+      <div class="mixer-row">
+        <button class="mixer-toggle" type="button" data-sound="brom" aria-pressed="false"><i class="ph-light ph-moon-stars" aria-hidden="true"></i><span class="sr-only">Bruine ruis aan of uit</span></button>
+        <div><h3>Bruine ruis</h3><p>Een diepe, warme ruis die andere geluiden maskeert</p></div>
+        <input type="range" min="0" max="100" value="50" data-level="brom" aria-label="Volume bruine ruis" disabled>
+      </div>
+      <div class="mixer-foot">
+        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:0.5rem">
+          <span class="label">Slaaptimer</span>
+          <div class="seg" role="radiogroup" aria-label="Slaaptimer">
+            <button type="button" role="radio" aria-checked="true" data-timer="0">Uit</button>
+            <button type="button" role="radio" aria-checked="false" data-timer="15">15 min</button>
+            <button type="button" role="radio" aria-checked="false" data-timer="30">30 min</button>
+            <button type="button" role="radio" aria-checked="false" data-timer="60">60 min</button>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:1rem">
+          <span class="mixer-status" data-sound-status aria-live="polite"><span class="eq" aria-hidden="true"><b></b><b></b><b></b></span><span data-status-text>Stil</span></span>
+          <button class="btn btn-quiet btn-sm" type="button" data-sound-stop>Alles uit</button>
+        </div>
+      </div>
+    </div>
+    <p class="muted" style="margin-top:1rem;font-size:0.92rem">Tip: begin zacht. Het beste achtergrondgeluid hoor je bijna niet meer.</p>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0" aria-labelledby="waarom-titel">
+  <div class="wrap media-row">
+    <figure data-reveal><img src="assets/img/regen-water-1200.jpg" alt="Regendruppels die op een wateroppervlak vallen" loading="lazy" width="1200" height="800"></figure>
+    <div data-reveal style="--i:1">
+      <h2 class="h2" id="waarom-titel">Waarom het werkt</h2>
+      <p class="lead">Een gelijkmatig geluid maakt pieken minder opvallend. Een dichtslaande deur of verkeer op straat valt dan minder op, en je schrikt minder snel wakker.</p>
+      <ul class="checklist">
+        <li><i class="ph-light ph-check" aria-hidden="true"></i>In de app nog meer geluiden en opnames uit de natuur</li>
+        <li><i class="ph-light ph-check" aria-hidden="true"></i>Download ze en luister zonder internet</li>
+        <li><i class="ph-light ph-check" aria-hidden="true"></i>Zet je favorieten bij elkaar voor elke avond</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="closing" aria-labelledby="slot-titel">
+  <div class="closing-media"><img src="assets/img/mistbos-1200.jpg" alt="" loading="lazy" width="1200" height="800"></div>
+  <div class="wrap" data-reveal>
+    <h2 class="h1" id="slot-titel">Neem je mix mee naar bed</h2>
+    <p class="lead">In de app luister je ook offline en bewaar je je favorieten.</p>
+    <a class="btn btn-primary" href="{{APP_URL}}">Gratis beginnen</a>
+  </div>
+</section>
