@@ -1,6 +1,6 @@
 {
-  "countryCode": "DE",
-  "myProfile":"Mijn profiel",
+  "countryCode": "NL",
+  "myProfile": "Mijn profiel",
   "changeLanguage": "Taal wijzigen",
   "editProfile": "Bewerk profiel",
   "favoriteList": "Favoriete lijst",
@@ -15,36 +15,23 @@
   "deleteAccount": "Account verwijderen",
   "deleteAccountMessage": "Weet je zeker dat je je account wilt verwijderen?",
   "deleteAccountDescription": "Je profiel en alle gegevens worden verwijderd en je kunt niet meer inloggen.",
-
   "home": "Thuis",
   "forMe": "Voor mij",
   "explore": "Ontdekken",
   "profile": "Profiel",
-
   "goodMorning": "Goedemorgen",
   "goodAfternoon": "Goedemiddag",
   "goodEvening": "Goedeavond",
   "goodNight": "Goedeavond",
-
-
   "workWithUs": "Werk met ons",
   "termsOfService": "Servicevoorwaarden",
   "privacyPolicy": "Privacybeleid",
-
-
   "mindfulnessAndMeditation": "Mindfullness en meditatie",
   "bedtime": "Bedtijd",
   "moodCheckIn": "Stemming check-in",
   "gratitudeCheckIn": "Dankbaarheid inchecken",
   "dailyReflection": "Dagelijkse reflectie",
   "sleepCheckIn": "Slaap check-in",
-
-
-
-
-
-
-
   "welcomeToSleepytales": "Welkom bij gentle",
   "launchScreenMessage": "sluit gewoon je ogen en luister",
   "createYourAccount": "Maak een account aan",
@@ -52,19 +39,13 @@
   "continueWithApple": "Ga verder met Apple",
   "continueWithFacebook": "Ga verder met Facebook",
   "continueWithGoogle": "Ga verder met Google",
-
-
   "authThrough": "Authenticatie door",
   "unableToAuth": "Kan niet verifiëren via",
   "signingIn": "Inloggen",
   "unableToSignIn": "Onmogelijk om in te loggen",
   "signInSuccess": "Aanmelden gelukt",
-
-
   "haveAnAccount": "Een account hebben",
   "login": "Inloggen",
-
-
   "joinSleepytales": "Sluit je aan bij Gentle",
   "yourName": "Uw naam",
   "email": "E-mail",
@@ -79,17 +60,26 @@
   "authenticationEmail": "Authenticeren met e-mail",
   "pleaseFillForm": "Vul het formulier in",
   "signUp": "Aanmelden",
-
-
   "loginToSleepytales": "Log in op Gentle",
   "notMember": "Geen lid",
   "forgotYourPassword": "Je wachtwoord vergeten",
   "reset": "Resetten",
-
   "whatBringsYouToSleepytales": "Wat brengt je naar Gentle",
   "personalizeRecMessage": "We personaliseren aanbevelingen op basis van uw doelen.",
   "continueText": "Doorgaan",
-
-  "favoritePlaylist": "Favoriete afspeellijst"
-
+  "favoritePlaylist": "Favoriete afspeellijst",
+  "redeemCode": "Code invoeren",
+  "redeemCodeDescription": "Heb je bij je Artazest-kunstwerk een code gekregen? Vul hem hier in om Gentle te ontgrendelen.",
+  "redeem": "Inwisselen",
+  "codeRedeemedLifetime": "Gelukt! Je hebt nu onbeperkt toegang tot Gentle.",
+  "codeRedeemedUntil": "Gelukt! Je hebt toegang tot Gentle tot {date}.",
+  "codeNotFound": "Deze code bestaat niet. Controleer of je hem goed hebt overgenomen.",
+  "codeAlreadyRedeemed": "Deze code is al gebruikt.",
+  "codeDisabled": "Deze code is niet meer geldig.",
+  "codeTooManyAttempts": "Te veel pogingen. Probeer het over een uur opnieuw.",
+  "somethingWentWrong": "Er ging iets mis. Probeer het opnieuw.",
+  "premiumLifetime": "Premium – onbeperkt toegang",
+  "premiumUntil": "Premium tot {date}",
+  "noSubscription": "Geen actief abonnement",
+  "haveACode": "Heb je een code?"
 }

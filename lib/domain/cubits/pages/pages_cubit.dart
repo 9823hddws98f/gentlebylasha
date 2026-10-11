@@ -16,9 +16,17 @@ class PagesCubit extends Cubit<PagesState> {
   static final PagesCubit instance = PagesCubit._();
 
   Future<void> init() async {
-    final pages = await _pagesService.getAll()
-      ..sort((a, b) => a.order.compareTo(b.order));
-    final blockSkeletons = await _blocksService.getAll();
+    final List<AppPage> pages;
+    final List<Block> blockSkeletons;
+    try {
+      pages = await _pagesService.getAll()
+        ..sort((a, b) => a.order.compareTo(b.order));
+      blockSkeletons = await _blocksService.getAll();
+    } catch (e) {
+      // Don't block app start on content loading; screens show an empty state.
+      addError(e);
+      return;
+    }
 
     emit(state.copyWith(pages: {
       for (final page in pages)

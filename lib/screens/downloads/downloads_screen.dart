@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 import '/domain/cubits/downloads_cubit.dart';
 import '/domain/models/block_item/audio_track.dart';
@@ -35,7 +34,7 @@ class _DownloadsScreen extends State<DownloadsScreen> {
                   _cubit.removeAll();
                 }
               },
-              icon: const Icon(CarbonIcons.delete),
+              icon: const Icon(Icons.delete_outline_rounded),
             ),
           ],
         ),

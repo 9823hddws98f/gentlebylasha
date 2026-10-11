@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 import '/domain/services/storage_service.dart';
 import '/utils/app_theme.dart';
@@ -236,7 +235,7 @@ class _FileDropzoneSelectorState extends State<FileDropzoneSelector> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const SizedBox(width: 16),
-        Icon(CarbonIcons.upload),
+        Icon(Icons.upload_rounded),
         const SizedBox(width: 8),
         Flexible(
           child: Text(

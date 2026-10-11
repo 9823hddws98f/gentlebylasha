@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 import '/constants/assets.dart';
 import '/domain/blocs/authentication/auth_repository.dart';
@@ -94,7 +93,7 @@ class _AppSideBarState extends State<AppSideBar> {
                       child: _buildButton(
                         -1,
                         label: 'Logout',
-                        icon: CarbonIcons.logout,
+                        icon: Icons.logout_rounded,
                         selected: false,
                         colorScheme: colors,
                         animation: animation,
@@ -145,7 +144,7 @@ class _AppSideBarState extends State<AppSideBar> {
             backgroundColor: colors.surface,
             side: BorderSide(color: colors.outline),
           ),
-          icon: const Icon(CarbonIcons.chevron_right),
+          icon: const Icon(Icons.chevron_right_rounded),
           onPressed: () => setState(() => _isExpanded = !_isExpanded),
         ),
       );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 import '/domain/models/app_page/app_page_config.dart';
 import '/domain/models/block_item/audio_playlist.dart';
@@ -56,12 +55,12 @@ class PlaylistBlockItem extends StatelessWidget {
           ),
           showDuration
               ? ItemTag(
-                  icon: CarbonIcons.playlist,
+                  icon: Icons.queue_music_rounded,
                   text: '${playlist.trackIds.length} Sessions',
                   color: playlist.thumbnail.dominantColor,
                 )
               : ItemTag(
-                  icon: CarbonIcons.playlist,
+                  icon: Icons.queue_music_rounded,
                   color: playlist.thumbnail.dominantColor,
                 ),
         ],

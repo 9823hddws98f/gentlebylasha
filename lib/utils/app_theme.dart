@@ -121,7 +121,7 @@ class AppTheme {
           ),
         ),
       ),
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         backgroundColor: colors.surface,
         titleTextStyle: TextStyle(
           fontSize: 22,
@@ -134,7 +134,7 @@ class AppTheme {
       datePickerTheme: DatePickerThemeData(
         rangePickerBackgroundColor: colors.surface,
       ),
-      tabBarTheme: const TabBarTheme(
+      tabBarTheme: const TabBarThemeData(
         labelStyle: TextStyle(
           fontSize: 20,
           fontFamily: titleFont,

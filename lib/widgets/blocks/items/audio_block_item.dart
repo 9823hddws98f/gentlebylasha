@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gentle/domain/models/app_page/app_page_config.dart';
 import 'package:gentle/widgets/blocks/config_of_page.dart';
-import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_panel_manager.dart';
@@ -67,12 +66,12 @@ class AudioBlockItem extends StatelessWidget {
           ),
           showDuration
               ? ItemTag(
-                  icon: CarbonIcons.play_filled_alt,
+                  icon: Icons.play_arrow_rounded,
                   text: '${track.durationString} min',
                   color: track.dominantColor,
                 )
               : ItemTag(
-                  icon: CarbonIcons.play_filled_alt,
+                  icon: Icons.play_arrow_rounded,
                   color: track.dominantColor,
                 ),
         ],

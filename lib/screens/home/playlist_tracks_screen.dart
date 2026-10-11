@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 import '/domain/models/block_item/audio_playlist.dart';
 import '/domain/models/block_item/audio_track.dart';
@@ -120,7 +118,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  Iconsax.warning_2,
+                  Icons.warning_amber_rounded,
                   size: 48,
                   color: colors.error,
                 ),
@@ -259,7 +257,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
           ),
         ),
         leading: IconButton(
-          icon: const Icon(CarbonIcons.arrow_left),
+          icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => Navigator.of(context).pop(),
         ),
         backgroundColor: color,

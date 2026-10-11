@@ -7,6 +7,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
+import '/domain/cubits/entitlement_cubit.dart';
 import '/domain/cubits/favorite_playlists.dart';
 import '/domain/cubits/favorite_tracks.dart';
 import '/domain/cubits/pages/pages_cubit.dart';
@@ -33,8 +34,6 @@ class AppInit {
     /// Initialize service locator
     await setupServiceLocator();
 
-    /// Initialize App Pages
-    await Get.the<PagesCubit>().init();
     await Get.the<AppSettings>().initialize();
     await Get.the<ReminderService>().initialize();
   }
@@ -54,6 +53,9 @@ class AppInit {
   }
 
   static Future<void> initUserBasedServices() async {
+    // Content is only readable for signed-in users, so pages load after auth.
+    await Get.the<PagesCubit>().init();
+    await Get.the<EntitlementCubit>().init();
     await Get.the<FavoritesTracksCubit>().init();
     await Get.the<FavoritePlaylistsCubit>().init();
   }

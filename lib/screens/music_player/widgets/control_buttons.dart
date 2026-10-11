@@ -1,7 +1,6 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_manager.dart';
@@ -55,7 +54,7 @@ class _ControlButtonsState extends State<ControlButtons> {
               ? Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: IconButton(
-                    icon: Icon(CarbonIcons.arrow_left),
+                    icon: Icon(Icons.arrow_back_rounded),
                     onPressed: () => Navigator.maybePop(context),
                   ),
                 )
@@ -136,7 +135,7 @@ class _ControlButtonsState extends State<ControlButtons> {
   Widget _buildShuffleButton(Color primary) => ValueListenableBuilder(
         valueListenable: _pageManager.isShuffleModeEnabledNotifier,
         builder: (context, isShuffleModeEnabled, child) => IconButton(
-          icon: Icon(CarbonIcons.shuffle),
+          icon: Icon(Icons.shuffle_rounded),
           color: isShuffleModeEnabled ? primary : null,
           onPressed: () => _pageManager.shuffle(),
         ),
@@ -145,7 +144,7 @@ class _ControlButtonsState extends State<ControlButtons> {
   Widget _buildSkipBackward() => ValueListenableBuilder(
         valueListenable: _pageManager.isFirstSongNotifier,
         builder: (context, isFirstSong, child) => IconButton(
-          icon: Icon(CarbonIcons.skip_back_filled),
+          icon: Icon(Icons.skip_previous_rounded),
           onPressed: isFirstSong ? null : () => _pageManager.previous(),
         ),
       );
@@ -153,18 +152,18 @@ class _ControlButtonsState extends State<ControlButtons> {
   Widget _buildSkipForward() => ValueListenableBuilder(
         valueListenable: _pageManager.isLastSongNotifier,
         builder: (context, isLastSong, child) => IconButton(
-          icon: Icon(CarbonIcons.skip_forward_filled),
+          icon: Icon(Icons.skip_next_rounded),
           onPressed: isLastSong ? null : () => _pageManager.next(),
         ),
       );
 
   Widget _buildSeekBackward() => IconButton(
-        icon: Icon(CarbonIcons.rewind_10),
+        icon: Icon(Icons.replay_10_rounded),
         onPressed: () => _pageManager.skipBackward(),
       );
 
   Widget _buildSeekForward() => IconButton(
-        icon: Icon(CarbonIcons.forward_10),
+        icon: Icon(Icons.forward_10_rounded),
         onPressed: () => _pageManager.skipForward(),
       );
 
@@ -178,12 +177,12 @@ class _ControlButtonsState extends State<ControlButtons> {
       );
 
   Widget _buildStopButton() => IconButton(
-        icon: Icon(CarbonIcons.stop_filled_alt),
+        icon: Icon(Icons.stop_rounded),
         onPressed: () => _pageManager.stop(),
       );
 
   Widget _buildShareButton() => IconButton(
-        icon: Icon(CarbonIcons.share),
+        icon: Icon(Icons.share_outlined),
         onPressed:
             _trackId != null ? () => _deepLinkingService.shareTrack(_trackId!) : null,
       );

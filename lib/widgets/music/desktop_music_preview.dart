@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 import '/domain/services/audio_manager.dart';
 import '/screens/music_player/music_player_screen.dart';
@@ -27,7 +26,7 @@ class DesktopMusicPreview extends StatelessWidget {
         icon: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(CarbonIcons.music),
+            Icon(Icons.music_note_rounded),
             AnimatedSize(
               duration: Durations.medium2,
               curve: Easing.standard,

@@ -24,8 +24,8 @@ class _HomeScreenState extends State<HomeScreen> with Translation {
           hasBottomLine: false,
         ),
         bodyPadding: EdgeInsets.zero,
-        body: (context, isMobile) => PageBlockBuilder(
-          page: _pagesCubit.state.pages.keys.first,
-        ),
+        body: (context, isMobile) => _pagesCubit.state.pages.isEmpty
+            ? const Center(child: Icon(Icons.nightlight_round, size: 48))
+            : PageBlockBuilder(page: _pagesCubit.state.pages.keys.first),
       );
 }

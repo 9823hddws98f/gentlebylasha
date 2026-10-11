@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:iconsax/iconsax.dart';
 
 import '/domain/cubits/favorite_playlists.dart';
 import '/domain/cubits/favorite_tracks.dart';
@@ -123,7 +122,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> with Translation {
                         text: 'To save any ${_isPlaylist ? 'series' : 'audio'}, tap the ',
                       ),
                       WidgetSpan(
-                        child: Icon(Iconsax.heart5, size: 16),
+                        child: Icon(Icons.favorite_rounded, size: 16),
                         alignment: PlaceholderAlignment.middle,
                       ),
                       const TextSpan(text: ' icon'),

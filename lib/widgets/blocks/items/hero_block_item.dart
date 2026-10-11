@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 import '/domain/models/app_page/app_page_config.dart';
 import '/domain/models/block_item/audio_track.dart';
@@ -59,7 +58,7 @@ class HeroBlockItem extends StatelessWidget {
             borderRadius: AppTheme.largeImageBorderRadius,
           ),
           ItemTag(
-            icon: CarbonIcons.play_filled_alt,
+            icon: Icons.play_arrow_rounded,
             text: '${track.durationString} min',
             color: track.dominantColor,
           ),

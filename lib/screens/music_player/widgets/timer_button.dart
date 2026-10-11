@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:number_ticker/number_ticker.dart';
-import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 import '/domain/services/audio_timer_service.dart';
 import '/helper/global_functions.dart';
@@ -38,7 +37,7 @@ class _TimerButtonState extends State<TimerButton> {
 
   @override
   Widget build(BuildContext context) => IconButton(
-        icon: _isActive ? _buildTicker() : const Icon(CarbonIcons.timer),
+        icon: _isActive ? _buildTicker() : const Icon(Icons.timer_outlined),
         onPressed: () => _navigateToTimerPicker(context),
       );
 

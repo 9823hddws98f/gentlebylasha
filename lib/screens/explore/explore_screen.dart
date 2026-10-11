@@ -1,7 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 import '/domain/cubits/pages/pages_cubit.dart';
 import '/domain/models/block_item/audio_track.dart';
@@ -107,7 +106,7 @@ class _ExploreScreenState extends State<ExploreScreen>
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(CarbonIcons.search, size: 62, color: color),
+          Icon(Icons.search_rounded, size: 62, color: color),
           const SizedBox(height: 16),
           Text.rich(
             TextSpan(

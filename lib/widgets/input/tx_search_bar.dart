@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 class TxSearchBar extends StatefulWidget {
   const TxSearchBar({
@@ -53,9 +52,9 @@ class _TxSearchBarState extends State<TxSearchBar> {
         suffixIcon: _loading
             ? const CupertinoActivityIndicator()
             : _controller.text.isEmpty
-                ? const Icon(CarbonIcons.search)
+                ? const Icon(Icons.search_rounded)
                 : IconButton(
-                    icon: const Icon(CarbonIcons.close),
+                    icon: const Icon(Icons.close_rounded),
                     tooltip: 'Clear search',
                     onPressed: () {
                       _timer?.cancel();

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 import '/screens/explore/explore_screen.dart';
 import '/screens/favorites/favorites_screen.dart';
@@ -23,31 +22,31 @@ class AppNavigation {
     NavItem(
       index: 0,
       title: 'Home',
-      icon: CarbonIcons.home,
+      icon: Icons.home_outlined,
       screen: HomeScreen(),
     ),
     NavItem(
       index: 1,
       title: 'Explore',
-      icon: CarbonIcons.search,
+      icon: Icons.search_rounded,
       screen: ExploreScreen(),
     ),
     NavItem(
       index: 2,
       title: 'Profile',
-      icon: CarbonIcons.user_avatar,
+      icon: Icons.account_circle_outlined,
       screen: ProfileSettingsScreen(),
     ),
     NavItem(
       index: 3,
       title: 'My Library',
-      icon: CarbonIcons.favorite,
+      icon: Icons.favorite_border_rounded,
       screen: FavoritesScreen(),
     ),
     NavItem(
       index: 4,
       title: 'More',
-      icon: CarbonIcons.user_avatar,
+      icon: Icons.account_circle_outlined,
       screen: ProfileSettingsScreen(),
     ),
   ];

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 import '/domain/cubits/downloads_cubit.dart';
 import '/domain/models/block_item/audio_track.dart';
@@ -34,7 +33,7 @@ class _TrackDownloadButtonState extends State<TrackDownloadButton> {
             builder: (context, state) {
               final downloaded = state.any((t) => t.id == widget.track?.id);
               return IconButton(
-                icon: downloaded ? Icon(Icons.download_done) : Icon(CarbonIcons.download),
+                icon: downloaded ? Icon(Icons.download_done) : Icon(Icons.download_rounded),
                 onPressed: widget.track != null && !downloaded ? _saveFile : null,
               );
             },

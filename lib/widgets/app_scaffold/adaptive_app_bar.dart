@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:supa_carbon_icons/supa_carbon_icons.dart';
 
 import '/main.dart';
 import '/utils/app_theme.dart';
@@ -49,7 +48,7 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Widget _buildBackButton(BuildContext context) => IconButton(
-        icon: Icon(CarbonIcons.arrow_left),
+        icon: Icon(Icons.arrow_back_rounded),
         onPressed: () => Navigator.pop(context),
       );
 

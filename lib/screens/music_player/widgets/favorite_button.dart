@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:iconsax/iconsax.dart';
 
 import '/domain/cubits/favorite_playlists.dart';
 import '/domain/cubits/favorite_tracks.dart';
@@ -47,7 +46,7 @@ class _FavoriteButtonState extends State<FavoriteButton> {
 
   Widget _buildButton(bool favorite) => IconButton(
         iconSize: widget.size,
-        icon: favorite ? Icon(Iconsax.heart5) : Icon(Iconsax.heart),
+        icon: favorite ? Icon(Icons.favorite_rounded) : Icon(Icons.favorite_border_rounded),
         onPressed: _toggleFavorite,
       );
 
