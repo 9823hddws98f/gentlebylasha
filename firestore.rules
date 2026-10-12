@@ -47,14 +47,6 @@ service cloud.firestore {
       allow read: if isAdmin();
     }
 
-    // Legacy client-side deletion codes. Users only touch their own.
-    match /account_deletion/{id} {
-      allow create: if signedIn() && request.resource.data.userId == request.auth.uid;
-      // The app looks the code up by email, so ownership is provable by email too.
-      allow read, delete: if signedIn() && (resource.data.userId == request.auth.uid
-        || resource.data.email == request.auth.token.email);
-    }
-
     // Premium status: written only by Cloud Functions.
     match /subscriptions/{uid} {
       allow read: if isOwner(uid) || isAdmin();

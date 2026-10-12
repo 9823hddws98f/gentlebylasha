@@ -15,6 +15,13 @@ import {
   normalizeCode,
   planRedemption,
 } from "./codes.js";
+import {
+  checkDeletionCode,
+  DELETION_CODE_TTL_MS,
+  hashCode,
+  newDeletionCode,
+  type StoredDeletionCode,
+} from "./deletion.js";
 import { escapeHtml, sendMail, SENDGRID_API_KEY } from "./mail.js";
 
 initializeApp();
@@ -51,34 +58,60 @@ function toDate(value: unknown): Date | undefined {
 // Account
 // ---------------------------------------------------------------------------
 
-/** Deletes the caller's own account. Ignores any uid sent by the client. */
-export const deleteUser = onCall(async (req) => {
+/** Emails a one-time code that the user must enter to delete their account. */
+export const requestAccountDeletion = onCall({ secrets: [SENDGRID_API_KEY] }, async (req) => {
   const uid = requireAuth(req);
-  const batch = db.batch();
-  batch.delete(db.collection("users").doc(uid));
-  batch.delete(db.collection("favorites").doc(uid));
-  batch.delete(db.collection("favorites_playlists").doc(uid));
-  await batch.commit();
-  await getAuth().deleteUser(uid);
-  logger.info("User deleted", { uid });
+  const email = req.auth?.token.email;
+  if (!email) throw new HttpsError("failed-precondition", "no-email");
+
+  const ref = db.collection("deletion_codes").doc(uid);
+  const previous = (await ref.get()).data();
+  const sentAt = toDate(previous?.sentAt);
+  if (sentAt && Date.now() - sentAt.getTime() < 60_000) {
+    throw new HttpsError("resource-exhausted", "wait-before-resend");
+  }
+
+  const code = newDeletionCode();
+  const now = new Date();
+  await ref.set({
+    codeHash: hashCode(uid, code),
+    expiresAt: Timestamp.fromMillis(now.getTime() + DELETION_CODE_TTL_MS),
+    sentAt: Timestamp.fromDate(now),
+    attempts: 0,
+  });
+  await sendMail(
+    email,
+    "Delete your Gentle account",
+    `<p>You asked to delete your Gentle account. Enter this code in the app to confirm:</p>
+     <p style="font-size:24px;font-weight:bold;letter-spacing:4px">${code}</p>
+     <p>The code is valid for 15 minutes. Didn't ask for this? Ignore this email.</p>`,
+  );
   return { success: true };
 });
 
-/**
- * Kept for the app's account-deletion mail. Only sends to the caller's own
- * verified address, so it can no longer be used as an open relay.
- */
-export const sendEmail = onCall({ secrets: [SENDGRID_API_KEY] }, async (req) => {
-  requireAuth(req);
-  const { to, subject, htmlContent } = parse(
-    z.object({ to: z.string().email(), subject: z.string().max(200), htmlContent: z.string().max(5000) }),
-    req.data,
-  );
-  const ownEmail = req.auth?.token.email;
-  if (!ownEmail || ownEmail.toLowerCase() !== to.toLowerCase()) {
-    throw new HttpsError("permission-denied", "You can only email yourself.");
+/** Deletes the caller's own account after checking the emailed code. */
+export const deleteUser = onCall(async (req) => {
+  const uid = requireAuth(req);
+  const { code } = parse(z.object({ code: z.string().max(20) }), req.data);
+  const ref = db.collection("deletion_codes").doc(uid);
+  const data = (await ref.get()).data();
+  const stored: StoredDeletionCode | undefined = data && {
+    codeHash: data.codeHash,
+    expiresAt: toDate(data.expiresAt) ?? new Date(0),
+    attempts: data.attempts ?? 0,
+  };
+
+  const check = checkDeletionCode(stored, uid, code, new Date());
+  if (check === "wrong-code") await ref.update({ attempts: FieldValue.increment(1) });
+  if (check !== "ok") throw new HttpsError("failed-precondition", check);
+
+  const batch = db.batch();
+  for (const collection of ["users", "favorites", "favorites_playlists", "subscriptions", "deletion_codes", "code_attempts"]) {
+    batch.delete(db.collection(collection).doc(uid));
   }
-  await sendMail(to, subject, htmlContent);
+  await batch.commit();
+  await getAuth().deleteUser(uid);
+  logger.info("User deleted", { uid });
   return { success: true };
 });
 

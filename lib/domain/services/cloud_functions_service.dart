@@ -1,14 +1,18 @@
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:flutter/foundation.dart';
 
 class CloudFunctionsService {
   /// Must match `setGlobalOptions({region})` in functions/src/index.ts.
   static final _functions = FirebaseFunctions.instanceFor(region: 'us-central1');
 
-  /// Deletes the signed-in user's own account. The server ignores any uid.
-  static Future<dynamic> deleteUser() async {
-    return await _functions.httpsCallable('deleteUser').call();
-  }
+  /// Emails the signed-in user a code that confirms account deletion.
+  static Future<void> requestAccountDeletion() =>
+      _functions.httpsCallable('requestAccountDeletion').call();
+
+  /// Deletes the signed-in user's account and data. Throws
+  /// [FirebaseFunctionsException] whose `message` is one of: no-code, expired,
+  /// too-many-attempts, wrong-code.
+  static Future<void> deleteUser(String code) =>
+      _functions.httpsCallable('deleteUser').call({'code': code});
 
   /// Redeems an access code. Throws [FirebaseFunctionsException] whose
   /// `message` is one of: not-found, disabled, already-redeemed, too-many-attempts.
@@ -16,24 +20,5 @@ class CloudFunctionsService {
     final result = await _functions.httpsCallable('redeemCode').call({'code': code});
     final expiresAt = result.data['expiresAt'] as String?;
     return expiresAt == null ? null : DateTime.parse(expiresAt);
-  }
-
-  static Future<dynamic> sendEmail(String to, String subject, String htmlContent) async {
-    try {
-      HttpsCallable callable = _functions.httpsCallable('sendEmail');
-      final response = await callable.call(<String, dynamic>{
-        'to': to,
-        'subject': subject,
-        'htmlContent': htmlContent,
-      });
-
-      if (response.data['success']) {
-        debugPrint('Email sent successfully');
-      } else {
-        debugPrint('Failed to send email');
-      }
-    } catch (e) {
-      debugPrint('Error: $e');
-    }
   }
 }

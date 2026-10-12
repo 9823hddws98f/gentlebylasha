@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '/domain/services/mailing_service.dart';
-import '/utils/get.dart';
+import '/domain/services/cloud_functions_service.dart';
+import '/helper/global_functions.dart';
 import '/utils/modals.dart';
 import 'account_delete_dialog2.dart';
 
@@ -15,7 +15,6 @@ class AccountDeleteDialog1 extends StatefulWidget {
 }
 
 class _AccountDeleteDialog1State extends State<AccountDeleteDialog1> {
-  final _mailingService = Get.the<MailingService>();
   bool _loading = false;
 
   @override
@@ -31,21 +30,21 @@ class _AccountDeleteDialog1State extends State<AccountDeleteDialog1> {
         FilledButton(
           onPressed: () async {
             final user = FirebaseAuth.instance.currentUser;
-            if (user != null) {
-              setState(() => _loading = true);
-              await _mailingService.sendAccountDeletionMail(user.email!, user.uid);
-              setState(() => _loading = false);
-
-              if (!context.mounted) return;
-              Navigator.of(context).pop();
-              Modals.show(
-                context,
-                builder: (_) => AccountDeleteDialog2(
-                  email: user.email!,
-                  userId: user.uid,
-                ),
-              );
+            if (user == null || _loading) return;
+            setState(() => _loading = true);
+            try {
+              await CloudFunctionsService.requestAccountDeletion();
+            } catch (_) {
+              if (mounted) setState(() => _loading = false);
+              showToast('Could not send the code. Please try again.');
+              return;
             }
+            if (!context.mounted) return;
+            Navigator.of(context).pop();
+            Modals.show(
+              context,
+              builder: (_) => AccountDeleteDialog2(email: user.email ?? ''),
+            );
           },
           child: Row(
             mainAxisSize: MainAxisSize.min,
