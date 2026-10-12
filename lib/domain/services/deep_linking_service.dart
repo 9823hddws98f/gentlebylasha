@@ -13,7 +13,9 @@ import '/screens/home/playlist_tracks_screen.dart';
 import '/utils/get.dart';
 
 class DeepLinkingService {
-  static const _baseUrl = 'https://www.gentle-mu.vercel.app';
+  // Also in AndroidManifest.xml (App Links) and web/.well-known/assetlinks.json.
+  // Change all three when the app moves to its own domain.
+  static const _baseUrl = 'https://gentle-mu.vercel.app';
 
   DeepLinkingService._();
   static final instance = DeepLinkingService._();

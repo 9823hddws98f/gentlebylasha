@@ -2,10 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
   <dict>
-    <key>BGTaskSchedulerPermittedIdentifiers</key>
-    <array>
-      <string>io.sleeptales.sleeptales.sleeptalesBackgroundTask</string>
-    </array>
     <key>CADisableMinimumFrameDurationOnPhone</key>
     <true/>
     <key>CFBundleDevelopmentRegion</key>
@@ -31,7 +27,7 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>sleeptalessceme</string>
+          <string>gentle</string>
         </array>
       </dict>
       <dict>
@@ -57,10 +53,6 @@
     <false/>
     <key>LSRequiresIPhoneOS</key>
     <true/>
-    <key>NSCalendarsUsageDescription</key>
-    <string>This app needs access to your calendar to schedule notifications.</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>Some of our 3rd party API's require Microphone permission to tune the audio playback</string>
     <key>NSUserNotificationEnabled</key>
     <string>YES</string>
     <key>UIApplicationSupportsIndirectInputEvents</key>
@@ -75,6 +67,7 @@
     <key>BGTaskSchedulerPermittedIdentifiers</key>
     <array>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+      <string>io.sleeptales.sleeptales.sleeptalesBackgroundTask</string>
     </array>
     <key>UILaunchStoryboardName</key>
     <string>LaunchScreen</string>
