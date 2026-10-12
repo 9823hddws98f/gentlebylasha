@@ -12,12 +12,33 @@ class TracksService {
   static TracksService instance = TracksService._();
 
   final _collection = FirebaseFirestore.instance.collection('tracks');
+
+  /// Audio URLs of premium tracks; only readable with premium (firestore.rules).
+  final _audio = FirebaseFirestore.instance.collection('track_audio');
+
+  /// Fills in the audio URL of premium tracks, which is kept out of `tracks`.
+  /// Throws when the user may not read it.
+  Future<List<AudioTrack>> withAudioUrls(List<AudioTrack> tracks) async {
+    final missing = tracks.where((t) => t.trackUrl.isEmpty).map((t) => t.id).toList();
+    if (missing.isEmpty) return tracks;
+    final urls = <String, String>{};
+    for (var i = 0; i < missing.length; i += 30) {
+      final chunk = missing.sublist(i, (i + 30).clamp(0, missing.length));
+      final snap = await _audio.where(FieldPath.documentId, whereIn: chunk).get();
+      for (final doc in snap.docs) {
+        urls[doc.id] = doc.data()['url'] as String;
+      }
+    }
+    return [
+      for (final t in tracks)
+        t.trackUrl.isEmpty && urls[t.id] != null ? t.copyWith(trackUrl: urls[t.id]) : t,
+    ];
+  }
+
   final _analytics = Get.the<AnalyticsService>();
 
-  Future<AudioTrack> getById(String id) =>
-      _collection.doc(id).get().then((doc) => doc.data() != null
-          ? AudioTrack.fromMap(doc.data()!)
-          : throw Exception('track not found'));
+  Future<AudioTrack> getById(String id) => _collection.doc(id).get().then((doc) =>
+      doc.data() != null ? AudioTrack.fromMap(doc.data()!) : throw Exception('track not found'));
 
   Future<List<AudioTrack>> getByIds(List<String> trackIds) {
     if (trackIds.isEmpty) return Future.value([]);

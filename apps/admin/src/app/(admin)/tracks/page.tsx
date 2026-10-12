@@ -1,10 +1,14 @@
 "use client";
 
-import { collection, doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { Lock, Search } from "lucide-react";
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui";
-import { db } from "@/lib/firebase";
+import { errorMessage } from "@/lib/codes";
+import { call, db } from "@/lib/firebase";
+
+// Moves the audio URL out of reach of free users and rotates its token.
+const setTrackPremium = call<{ trackId: string; premium: boolean }, { success: boolean }>("adminSetTrackPremium");
 
 interface Track {
   id: string;
@@ -64,9 +68,9 @@ export default function TracksPage() {
     setSaving(t.id);
     setError(null);
     try {
-      await updateDoc(doc(db, "tracks", t.id), { premium: !t.premium });
-    } catch {
-      setError(`Opslaan van “${t.title}” mislukt.`);
+      await setTrackPremium({ trackId: t.id, premium: !t.premium });
+    } catch (e) {
+      setError(`Opslaan van “${t.title}” mislukt: ${errorMessage(e)}`);
     } finally {
       setSaving(null);
     }

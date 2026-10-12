@@ -8,6 +8,7 @@ import '/domain/cubits/favorite_playlists.dart';
 import '/domain/cubits/favorite_tracks.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_manager.dart';
+import '/domain/services/tracks_service.dart';
 import '/helper/premium_gate.dart';
 import '/screens/auth/login_screen.dart';
 import '/utils/common_extensions.dart';
@@ -45,13 +46,19 @@ void pushName(BuildContext context, Widget widget) {
 }
 
 void pushRemoveAll(BuildContext context, Widget widget) {
-  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => widget),
-      (Route<dynamic> route) => false);
+  Navigator.pushAndRemoveUntil(
+      context, MaterialPageRoute(builder: (context) => widget), (Route<dynamic> route) => false);
 }
 
 /// Starts [track], or opens the paywall when it is premium and the user isn't.
-bool playTrack(AudioTrack track) {
+Future<bool> playTrack(AudioTrack track) async {
   if (!requireAccess(track)) return false;
+  try {
+    track = (await Get.the<TracksService>().withAudioUrls([track])).first;
+  } catch (_) {
+    showToast('This track could not be loaded.');
+    return false;
+  }
   Get.the<AudioManager>().playSinglePlaylist(
     MediaItem(
       id: track.id,

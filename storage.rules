@@ -1,0 +1,23 @@
+rules_version = '2';
+
+// Audio and images are played through download URLs, which carry their own
+// token and don't go through these rules. Premium audio tokens are rotated by
+// the adminSetTrackPremium function so old URLs stop working.
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isAdmin() { return request.auth != null && request.auth.token.admin == true; }
+
+    // Profile photos.
+    match /users/{uid}/{allPaths=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == uid
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    // Content (tracks, thumbnails, covers): managed by admins.
+    match /{allPaths=**} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

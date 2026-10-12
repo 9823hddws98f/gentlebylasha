@@ -6,6 +6,7 @@ import '/domain/services/audio_manager.dart';
 import '/domain/services/audio_panel_manager.dart';
 import '/domain/services/deep_linking_service.dart';
 import '/domain/services/tracks_service.dart';
+import '/helper/global_functions.dart';
 import '/helper/premium_gate.dart';
 import '/screens/music_player/widgets/favorite_button.dart';
 import '/utils/app_theme.dart';
@@ -160,8 +161,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                   ),
                   IconButton(
                     icon: const Icon(Icons.share),
-                    onPressed: () =>
-                        _deepLinkingService.sharePlaylist(widget.playlist.id),
+                    onPressed: () => _deepLinkingService.sharePlaylist(widget.playlist.id),
                   ),
                   FavoriteButton(playlistId: widget.playlist.id)
                 ],
@@ -205,8 +205,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
   Widget _buildPlayButton(ColorScheme colors) => FilledButtonTheme(
         data: FilledButtonThemeData(
           style: FilledButton.styleFrom(
-            backgroundColor:
-                _tracks.isEmpty ? colors.outline : colors.surfaceContainerHigh,
+            backgroundColor: _tracks.isEmpty ? colors.outline : colors.surfaceContainerHigh,
             foregroundColor: colors.onSurface,
             iconColor: colors.onSurface,
             iconSize: 24,
@@ -224,11 +223,11 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                 icon: Icon(isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded),
                 onPressed: () {
                   if (_isPlaying) {
-                    isPlaying
-                        ? _pageManager.pause()
-                        : _audioPanelManager.maximizeAndPlay(true);
-                  } else if (_startPlaylist(0)) {
-                    _audioPanelManager.maximizeAndPlay(false);
+                    isPlaying ? _pageManager.pause() : _audioPanelManager.maximizeAndPlay(true);
+                  } else {
+                    _startPlaylist(0).then((ok) {
+                      if (ok) _audioPanelManager.maximizeAndPlay(false);
+                    });
                   }
                 },
               );
@@ -273,13 +272,20 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
 
   /// Queues the tracks the user may play, starting at [index].
   /// Without premium, premium tracks are left out of the queue.
-  bool _startPlaylist(int index) {
+  Future<bool> _startPlaylist(int index) async {
     final requested = _tracks[index];
     if (index > 0 && !requireAccess(requested)) return false;
-    final playable = _tracks.where(canPlay).toList();
-    if (playable.isEmpty) return requireAccess(requested);
-    final start = index == 0 ? 0 : playable.indexOf(requested);
-    _pageManager.loadPlaylist(widget.playlist, playable, start);
+    final allowed = _tracks.where(canPlay).toList();
+    if (allowed.isEmpty) return requireAccess(requested);
+    final List<AudioTrack> playable;
+    try {
+      playable = await _tracksService.withAudioUrls(allowed);
+    } catch (_) {
+      showToast('This playlist could not be loaded.');
+      return false;
+    }
+    final start = index == 0 ? 0 : playable.indexWhere((t) => t.id == requested.id);
+    await _pageManager.loadPlaylist(widget.playlist, playable, start);
     return true;
   }
 
@@ -296,8 +302,10 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                   onTap: () {
                     if (mediaItem.id == widget.playlist.trackIds[index] && _isPlaying) {
                       _audioPanelManager.maximizeAndPlay(false);
-                    } else if (_startPlaylist(index)) {
-                      _audioPanelManager.maximizeAndPlay(false);
+                    } else {
+                      _startPlaylist(index).then((ok) {
+                        if (ok) _audioPanelManager.maximizeAndPlay(false);
+                      });
                     }
                   },
                   borderRadius: BorderRadius.circular(12),

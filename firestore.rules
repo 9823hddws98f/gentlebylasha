@@ -5,6 +5,11 @@ service cloud.firestore {
     function signedIn() { return request.auth != null; }
     function isAdmin() { return signedIn() && request.auth.token.admin == true; }
     function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+    function hasPremium() {
+      let path = /databases/$(database)/documents/subscriptions/$(request.auth.uid);
+      return signedIn() && exists(path) && get(path).data.active == true
+        && (get(path).data.expiresAt == null || get(path).data.expiresAt > request.time);
+    }
 
     // Profile. Users may edit their own profile but never their role.
     match /users/{uid} {
@@ -39,6 +44,12 @@ service cloud.firestore {
     match /blocks/{id} {
       allow read: if signedIn();
       allow write: if isAdmin();
+    }
+
+    // Audio of premium tracks: only for premium users; written by Cloud Functions.
+    match /track_audio/{id} {
+      allow read: if hasPremium() || isAdmin();
+      allow write: if false;
     }
 
     // Activity log: users append their own entries, admins read.

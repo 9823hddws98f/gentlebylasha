@@ -1,4 +1,5 @@
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:uuid/uuid.dart';
 
@@ -13,13 +14,17 @@ class StorageService {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final _uuid = const Uuid();
 
-  static const _thumbnailsPath = 'track/thumbnails';
-
+  /// User uploads (profile photos) live under the user's own folder;
+  /// content (track/...) is admin-only in storage.rules.
   Future<String> uploadThumbnail(
     FileInfo file, {
     void Function(double)? onProgress,
   }) =>
-      _uploadFile(_thumbnailsPath, file, onProgress: onProgress);
+      _uploadFile(
+        'users/${FirebaseAuth.instance.currentUser!.uid}/images',
+        file,
+        onProgress: onProgress,
+      );
 
   String _generateUniqueFileName(String originalPath) {
     final uuid = _uuid.v4();

@@ -1,8 +1,9 @@
 import 'package:file_saver/file_saver.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '/domain/models/block_item/audio_track.dart';
+import '/domain/services/tracks_service.dart';
 
 class DownloadsService {
   DownloadsService._();
@@ -21,13 +22,11 @@ class DownloadsService {
 
   Future<void> saveTrack(AudioTrack track) async {
     try {
-      final ref = FirebaseStorage.instance.refFromURL(track.trackUrl);
-      final metadata = await ref.getMetadata();
-      final int fileSize = metadata.size ?? 0;
-
-      final bytes = await ref.getData(fileSize);
-
-      if (bytes == null) throw Exception('Failed to download file');
+      track = (await TracksService.instance.withAudioUrls([track])).first;
+      // The download URL carries its own access token, so no Storage rules apply.
+      final response = await http.get(Uri.parse(track.trackUrl));
+      if (response.statusCode != 200) throw Exception('Failed to download file');
+      final bytes = response.bodyBytes;
 
       final fileName = '${track.id}.mp3';
       final localPath = await _fileSaver.saveFile(

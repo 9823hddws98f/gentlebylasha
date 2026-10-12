@@ -20,7 +20,9 @@ class SearchListItem extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     return ListTile(
       onTap: () {
-        if (playTrack(track)) _audioPanelManager.maximizeAndPlay(false);
+        playTrack(track).then((ok) {
+          if (ok) _audioPanelManager.maximizeAndPlay(false);
+        });
       },
       contentPadding: const EdgeInsets.symmetric(
         horizontal: AppTheme.sidePadding,

@@ -24,6 +24,7 @@ import {
 import { computeEntitlement, entitlementFields, readSources, setSourceGrant } from "./entitlement.js";
 import { escapeHtml, sendMail, SENDGRID_API_KEY } from "./mail.js";
 import { releaseBilling } from "./purchases.js";
+import { rotateDownloadUrl } from "./track-audio.js";
 import { STRIPE_SECRET_KEY } from "./stores/stripe.js";
 
 initializeApp();
@@ -356,6 +357,35 @@ export const adminDisableCode = onCall(async (req) => {
     tx.update(ref, { status: "disabled" });
   });
   await logAdminAction(adminUid, "disableCode", { code: normalized });
+  return { success: true };
+});
+
+/**
+ * Admin: make a track premium or free. A premium track's audio URL moves to
+ * track_audio/{id} (premium users only) and gets a new token, so the URL that
+ * was readable in tracks/{id} stops working.
+ */
+export const adminSetTrackPremium = onCall(async (req) => {
+  const adminUid = requireAdmin(req);
+  const { trackId, premium } = parse(z.object({ trackId: z.string().min(1), premium: z.boolean() }), req.data);
+  const trackRef = db.collection("tracks").doc(trackId);
+  const audioRef = db.collection("track_audio").doc(trackId);
+  const [track, audio] = await Promise.all([trackRef.get(), audioRef.get()]);
+  if (!track.exists) throw new HttpsError("not-found", "Track niet gevonden.");
+
+  if (premium) {
+    const url: string = track.data()?.trackUrl || audio.data()?.url;
+    if (!url) throw new HttpsError("failed-precondition", "Track heeft geen audio.");
+    const newUrl = await rotateDownloadUrl(url);
+    await audioRef.set({ url: newUrl });
+    await trackRef.update({ premium: true, trackUrl: "" });
+  } else {
+    const url: string | undefined = audio.data()?.url;
+    if (url) await trackRef.update({ premium: false, trackUrl: url });
+    else await trackRef.update({ premium: false });
+    await audioRef.delete();
+  }
+  await logAdminAction(adminUid, "setTrackPremium", { trackId, premium });
   return { success: true };
 });
 
