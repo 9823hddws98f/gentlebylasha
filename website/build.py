@@ -136,6 +136,36 @@ def nav_links(lang, active, base):
     return "\n        ".join(out)
 
 
+IMG_DIR = OUT / "assets" / "img"
+DEFAULT_SIZES = "(max-width: 900px) 100vw, 50vw"
+
+
+def responsive(body):
+    """Turn <img src="assets/img/name-W.jpg"> into a <picture> with WebP and JPEG
+    srcsets built from the variants tools/images.py generated."""
+
+    def widths(name, ext):
+        found = [int(m.group(1)) for f in IMG_DIR.glob(f"{name}-*.{ext}")
+                 if (m := re.fullmatch(rf"{re.escape(name)}-(\d+)\.{ext}", f.name))]
+        return sorted(found)
+
+    def replace(m):
+        tag, name = m.group(0), m.group(1)
+        jpgs, webps = widths(name, "jpg"), widths(name, "webp")
+        if len(jpgs) < 2:
+            return tag
+        sizes_m = re.search(r'\ssizes="([^"]*)"', tag)
+        sizes = sizes_m.group(1) if sizes_m else DEFAULT_SIZES
+        srcset = lambda ws, ext: ", ".join(f"assets/img/{name}-{w}.{ext} {w}w" for w in ws)
+        fallback = min((w for w in jpgs if w >= 1200), default=jpgs[-1])
+        img = re.sub(r'\s(srcset|sizes)="[^"]*"', "", tag)
+        img = re.sub(r'src="[^"]*"', f'src="assets/img/{name}-{fallback}.jpg" srcset="{srcset(jpgs, "jpg")}" sizes="{sizes}"', img, count=1)
+        source = f'<source type="image/webp" srcset="{srcset(webps, "webp")}" sizes="{sizes}">' if webps else ""
+        return f"<picture>{source}{img}</picture>"
+
+    return re.sub(r'<img\b[^>]*\bsrc="assets/img/([a-z-]+)-\d+\.jpg"[^>]*>', replace, body)
+
+
 def rebase(body, base):
     """Point root-relative asset paths in a page body at the site root."""
     if not base:
@@ -180,7 +210,7 @@ def render(lang, key, meta, body):
     html = (
         partial("head")
         + partial("header").replace("{{NAV}}", nav_links(lang, meta.get("nav", ""), base))
-        + rebase(body, base)
+        + rebase(responsive(body), base)
         + partial("footer")
     )
     tokens = {

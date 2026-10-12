@@ -6,7 +6,7 @@ Statische marketingsite voor Gentle in het Nederlands (`/`) en Engels (`/en/`). 
 src/partials/   head, header, footer (gedeeld door alle pagina's)
 src/pages/nl/   Nederlandse pagina's, één bestand per pagina met een meta-blok bovenaan
 src/pages/en/   Engelse pagina's (meta `key:` koppelt aan de NL-pagina)
-tools/          subset_icons.py voor de Phosphor-iconen
+tools/          images.py (fotovarianten) en subset_icons.py (Phosphor-iconen)
 public/         gebouwde site + assets (css, js, fonts, img)
 build.py        bouwt public/*.html en public/en/*.html, plus sitemap.xml en robots.txt.
                 Teksten van header en footer staan in STRINGS, URL's per taal in SLUGS.
@@ -34,7 +34,8 @@ Talen: elke pagina heeft hreflang-links en een taalwissel in footer en mobiel me
 - Radius-regel: knoppen pill, media en panelen 22px, kleine elementen 10px.
 - Iconen: Phosphor Light, lokaal en gesubset in `public/assets/vendor/phosphor`. Nieuw icoon gebruikt? Draai na de build `python3 tools/subset_icons.py` (vereist `pip install fonttools brotli`), anders blijft het icoon leeg.
 - Geluiden op de site worden live gesynthetiseerd met Web Audio (`assets/js/site.js`), er zijn geen audiobestanden.
-- Foto's: eigen app-foto (`fuji-nacht`) en Unsplash (vrij te gebruiken).
+- Foto's: eigen app-foto (`fuji-nacht`) en Unsplash (vrij te gebruiken). Bewaar een nieuwe foto als `naam-<breedte>.jpg` en draai `python3 tools/images.py` (vereist ffmpeg): dat maakt 640/1200/2400-varianten in JPEG en WebP. De build zet elke `<img>` dan automatisch om naar een `<picture>` met srcset. Geef full-bleed foto's `sizes="100vw"`.
+- Lighthouse (mobiel, lokaal zonder compressie): performance 96-99, accessibility, best practices en SEO 100.
 
 ## Nog in te vullen voor livegang
 

@@ -303,7 +303,7 @@ p { margin: 0; text-wrap: pretty; }
 .plans { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 40px; }
 .plan { border-radius: var(--r-lg); padding: clamp(28px, 3.4vw, 44px); background: var(--night-850); border: 1px solid var(--line); display: flex; flex-direction: column; }
 .plan-premium { background: linear-gradient(160deg, #18324a 0%, var(--night-800) 55%); border-color: rgb(82 183 136 / 0.35); }
-.plan h3 { font-size: 1.4rem; display: flex; align-items: center; gap: 0.6rem; }
+.plan h2, .plan h3 { font-size: 1.4rem; display: flex; align-items: center; gap: 0.6rem; }
 .plan .tag { font-size: 0.75rem; font-weight: 500; padding: 0.25rem 0.6rem; border-radius: var(--r-pill); background: var(--accent-soft); color: var(--accent); letter-spacing: 0.02em; }
 .plan .price { margin: 1.4rem 0 0.2rem; font-size: clamp(2.6rem, 2rem + 2vw, 3.4rem); font-weight: 300; letter-spacing: -0.03em; line-height: 1; }
 .plan .price small { font-size: 1rem; color: var(--muted); letter-spacing: 0; margin-left: 0.25rem; }
@@ -508,3 +508,5 @@ input[type="range"]:disabled { opacity: 0.35; cursor: default; }
 .lang-hint button { width: 36px; height: 36px; border: 0; border-radius: 50%; background: transparent; color: var(--muted); cursor: pointer; display: grid; place-items: center; }
 @media (hover: hover) and (pointer: fine) { .lang-hint button:hover { color: var(--text); } }
 @starting-style { .lang-hint { opacity: 0; transform: translateY(8px); } }
+
+picture { display: contents; }
