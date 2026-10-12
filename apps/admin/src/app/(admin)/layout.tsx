@@ -1,12 +1,15 @@
 "use client";
 
-import { KeyRound, LogOut } from "lucide-react";
+import { AudioLines, KeyRound, LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { signOut, useAuth } from "@/lib/auth";
 
-const nav = [{ href: "/codes", label: "Toegangscodes", icon: KeyRound }];
+const nav = [
+  { href: "/codes", label: "Toegangscodes", icon: KeyRound },
+  { href: "/tracks", label: "Tracks", icon: AudioLines },
+];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { user, isAdmin, loading } = useAuth();
