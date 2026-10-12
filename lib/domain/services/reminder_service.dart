@@ -32,16 +32,16 @@ class ReminderService {
   Future<void> _initializeNotifications() async {
     const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     final iosSettings = DarwinInitializationSettings(
-      requestSoundPermission: true,
-      requestBadgePermission: true,
-      requestAlertPermission: true,
+      // Asked when the user turns a reminder on, not at first launch.
+      requestSoundPermission: false,
+      requestBadgePermission: false,
+      requestAlertPermission: false,
     );
 
     await _notificationsPlugin.initialize(
       InitializationSettings(android: androidSettings, iOS: iosSettings),
     );
 
-    await _requestPermissions();
     await _setupNotificationChannels();
   }
 
@@ -244,6 +244,7 @@ class ReminderService {
   }
 
   Future<void> saveReminderEnabled(String id, bool value) async {
+    if (value) await _requestPermissions();
     await _prefs.setBool(id, value);
   }
 

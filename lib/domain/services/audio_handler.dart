@@ -141,12 +141,13 @@ class MyAudioHandler extends BaseAudioHandler {
   Future<void> addQueueItems(List<MediaItem> mediaItems) async {
     // manage Just Audio
 
+    // The player's playlist is replaced, so the queue must be replaced too;
+    // otherwise queue indexes no longer match the playlist.
     _playlist.clear();
     final audioSource = mediaItems.map(_createAudioSource);
     _playlist.addAll(audioSource.toList());
 
-    final newQueue = queue.value..addAll(mediaItems);
-    queue.add(newQueue);
+    queue.add(List.of(mediaItems));
   }
 
   @override
@@ -156,9 +157,8 @@ class MyAudioHandler extends BaseAudioHandler {
     final audioSource = _createAudioSource(mediaItem);
     _playlist.add(audioSource);
 
-    // notify system
-    final newQueue = queue.value..add(mediaItem);
-    queue.add(newQueue);
+    // notify system; the queue mirrors the replaced playlist
+    queue.add([mediaItem]);
   }
 
   UriAudioSource _createAudioSource(MediaItem mediaItem) {
