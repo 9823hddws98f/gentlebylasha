@@ -1,0 +1,155 @@
+<!--
+title: Home
+description: Gentle helps you fall asleep calmly with sleep stories, meditations, sleep music and soft sounds. Start for free on your phone or in your browser.
+nav: home
+header: overlay
+-->
+<section class="hero">
+  <div class="hero-media">
+    <img src="assets/img/meer-nacht-2400.jpg" srcset="assets/img/meer-nacht-1200.jpg 1200w, assets/img/meer-nacht-2400.jpg 2400w" sizes="100vw" alt="A small boat on a still lake under a clear starry sky" fetchpriority="high" width="2400" height="1600">
+  </div>
+  <div class="wrap">
+    <div class="hero-content">
+      <h1 class="display">Close your eyes <em>and listen.</em></h1>
+      <p class="lead">Sleep stories, meditations and soft sounds that quiet a busy mind. Put your phone down, Gentle does the rest.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="{{APP_URL}}">Start for free</a>
+        <button class="btn btn-ghost" type="button" data-sound-preset="regen:0.55,zee:0.35" aria-pressed="false">
+          <span class="eq" aria-hidden="true"><b></b><b></b><b></b></span><span data-label>Have a listen</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="offer-title">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <h2 class="h2" id="offer-title">Four ways to wind down</h2>
+      <p class="lead">Pick whatever suits your evening. Everything is made to be heard with your eyes closed.</p>
+    </div>
+    <div class="bento">
+      <a class="tile tile-a" href="{{href.slapen}}" data-reveal>
+        <img src="assets/img/maan-wolken-1200.jpg" alt="" loading="lazy" width="1200" height="800">
+        <h3 class="h3">Sleep stories</h3>
+        <p>Calmly told stories that carry your thoughts away until you drift off.</p>
+        <span class="link-arrow">About sleep <i class="ph-light ph-arrow-right" aria-hidden="true"></i></span>
+      </a>
+      <a class="tile tile-b" href="{{href.meditatie}}" data-reveal style="--i:1">
+        <img src="assets/img/bergmeer-1200.jpg" alt="" loading="lazy" width="1200" height="800">
+        <h3 class="h3">Meditations</h3>
+        <p>Guided moments from three to twenty minutes, for the day and for bedtime.</p>
+        <span class="link-arrow">About meditation <i class="ph-light ph-arrow-right" aria-hidden="true"></i></span>
+      </a>
+      <a class="tile" href="{{href.slapen}}#music" data-reveal style="--i:2">
+        <img src="assets/img/sterren-1200.jpg" alt="" loading="lazy" width="1200" height="800">
+        <h3 class="h3">Sleep music</h3>
+        <p>Slow, warm music without surprises.</p>
+      </a>
+      <a class="tile" href="{{href.geluiden}}" data-reveal style="--i:3">
+        <img src="assets/img/regen-raam-1200.jpg" alt="" loading="lazy" width="1200" height="800">
+        <h3 class="h3">Sounds</h3>
+        <p>Rain, sea, wind or noise. Mix your own.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0" aria-labelledby="evening-title">
+  <div class="wrap evening">
+    <div class="evening-head" data-reveal>
+      <h2 class="h2" id="evening-title">An evening <em>with Gentle</em></h2>
+      <p class="lead">Sleep doesn't start when you close your eyes. Gentle helps you slow the evening down.</p>
+    </div>
+    <ol class="timeline">
+      <li data-reveal>
+        <time>21:45</time>
+        <div><h3>A gentle reminder</h3><p>At a time you choose, Gentle lets you know it's time to start winding down.</p></div>
+      </li>
+      <li data-reveal>
+        <time>22:00</time>
+        <div><h3>Five minutes of breathing</h3><p>A short meditation to let the day go. No experience needed.</p></div>
+      </li>
+      <li data-reveal>
+        <time>22:10</time>
+        <div><h3>A sleep story</h3><p>A calm voice, a slow story. Most nights you won't hear the ending.</p></div>
+      </li>
+      <li data-reveal>
+        <time>07:00</time>
+        <div><h3>How did you sleep?</h3><p>A quick morning check-in, so you can see what helps you.</p></div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="section-tight" aria-labelledby="listen-title">
+  <div class="wrap">
+    <div class="band" data-reveal>
+      <div class="band-media"><img src="assets/img/mistbos-1200.jpg" alt="" loading="lazy" width="1200" height="800"></div>
+      <div>
+        <h2 class="h2" id="listen-title">Try it now, right here</h2>
+        <p class="lead">Turn your volume down low and pick a mood. Combining is allowed.</p>
+        <p style="margin-top:1.6rem"><a class="link-arrow" href="{{href.geluiden}}">Open the sound mixer <i class="ph-light ph-arrow-right" aria-hidden="true"></i></a></p>
+      </div>
+      <div class="sound-grid" role="group" aria-label="Sounds">
+        <button class="sound-chip" type="button" data-sound="regen" aria-pressed="false"><i class="ph-light ph-cloud-rain" aria-hidden="true"></i><div><span>Rain</span><small>Softly on the roof</small></div></button>
+        <button class="sound-chip" type="button" data-sound="zee" aria-pressed="false"><i class="ph-light ph-waves" aria-hidden="true"></i><div><span>Sea</span><small>Slow waves</small></div></button>
+        <button class="sound-chip" type="button" data-sound="wind" aria-pressed="false"><i class="ph-light ph-wind" aria-hidden="true"></i><div><span>Wind</span><small>Through the trees</small></div></button>
+        <button class="sound-chip" type="button" data-sound="brom" aria-pressed="false"><i class="ph-light ph-moon-stars" aria-hidden="true"></i><div><span>Brown noise</span><small>Deep and warm</small></div></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:clamp(56px,7vw,96px)" aria-labelledby="night-title">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <h2 class="h2" id="night-title">Made for the night</h2>
+    </div>
+    <div class="features">
+      <div class="feature" data-reveal><i class="ph-light ph-moon" aria-hidden="true"></i><h3>Dark and calm</h3><p>A dark design without bright colours. Easy on your eyes, even at midnight.</p></div>
+      <div class="feature" data-reveal style="--i:1"><i class="ph-light ph-download-simple" aria-hidden="true"></i><h3>Works offline</h3><p>Download your favourites and listen without internet, even in flight mode.</p></div>
+      <div class="feature" data-reveal style="--i:2"><i class="ph-light ph-bell-simple" aria-hidden="true"></i><h3>Reminders</h3><p>Choose your own bedtime. Gentle helps you remember it, without nagging.</p></div>
+      <div class="feature" data-reveal><i class="ph-light ph-heart" aria-hidden="true"></i><h3>Your favourites</h3><p>Save the stories and playlists that work, so you never have to search.</p></div>
+      <div class="feature" data-reveal style="--i:1"><i class="ph-light ph-smiley" aria-hidden="true"></i><h3>Quick check-ins</h3><p>How do you feel, how did you sleep? A few taps, nothing more.</p></div>
+      <div class="feature" data-reveal style="--i:2"><i class="ph-light ph-devices" aria-hidden="true"></i><h3>The same everywhere</h3><p>On iPhone, Android and in your browser. Your account and favourites come along.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0" aria-labelledby="faq-title">
+  <div class="wrap split">
+    <div data-reveal>
+      <h2 class="h2" id="faq-title">Good to know</h2>
+      <p class="lead" style="margin-top:1.1rem">Start for free. If you want the full library, choose Premium monthly or yearly.</p>
+      <p style="margin-top:1.6rem"><a class="link-arrow" href="{{href.prijzen}}">See pricing <i class="ph-light ph-arrow-right" aria-hidden="true"></i></a></p>
+    </div>
+    <div class="faq" data-reveal style="--i:1">
+      <details>
+        <summary>Is Gentle free?<i class="ph-light ph-plus" aria-hidden="true"></i></summary>
+        <div class="answer"><p>Yes. You can create an account for free and use part of the stories, meditations and sounds. Premium gives you everything.</p></div>
+      </details>
+      <details>
+        <summary>Which devices does it work on?<i class="ph-light ph-plus" aria-hidden="true"></i></summary>
+        <div class="answer"><p>iPhone, Android and any modern browser. With the same account you can pick up where you left off anywhere.</p></div>
+      </details>
+      <details>
+        <summary>Can I cancel Premium at any time?<i class="ph-light ph-plus" aria-hidden="true"></i></summary>
+        <div class="answer"><p>Yes. Cancel through the App Store, Google Play or your account page, depending on where you subscribed. You keep Premium until the end of the period you paid for.</p></div>
+      </details>
+      <details>
+        <summary>Does Gentle help with insomnia?<i class="ph-light ph-plus" aria-hidden="true"></i></summary>
+        <div class="answer"><p>Many people fall asleep more easily with calm audio. Gentle is not a treatment, though. If you've been sleeping badly for a while, talk to your doctor.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="closing" aria-labelledby="closing-title">
+  <div class="closing-media"><img style="object-position:50% 25%" src="assets/img/maan-wolken-2400.jpg" srcset="assets/img/maan-wolken-1200.jpg 1200w, assets/img/maan-wolken-2400.jpg 2400w" sizes="100vw" alt="" loading="lazy" width="2400" height="1600"></div>
+  <div class="wrap" data-reveal>
+    <h2 class="h1" id="closing-title">Sleep better, starting tonight?</h2>
+    <p class="lead">Create an account in a minute and listen to your first story this evening.</p>
+    <a class="btn btn-primary" href="{{APP_URL}}">Start for free</a>
+  </div>
+</section>

@@ -6,9 +6,13 @@
   <title>Help | Gentle</title>
   <meta name="description" content="Antwoorden op veelgestelde vragen over je Gentle-account, Premium, offline luisteren en het verwijderen van je account.">
   <link rel="canonical" href="https://gentle.example/help">
+  <link rel="alternate" hreflang="nl" href="https://gentle.example/help">
+  <link rel="alternate" hreflang="en" href="https://gentle.example/en/help">
+  <link rel="alternate" hreflang="x-default" href="https://gentle.example/help">
   <meta name="theme-color" content="#0e1529">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Gentle">
+  <meta property="og:locale" content="nl_NL">
   <meta property="og:title" content="Help | Gentle">
   <meta property="og:description" content="Antwoorden op veelgestelde vragen over je Gentle-account, Premium, offline luisteren en het verwijderen van je account.">
   <meta property="og:image" content="https://gentle.example/assets/img/meer-nacht-1200.jpg">
@@ -19,6 +23,7 @@
   <link rel="stylesheet" href="assets/css/site.css">
   <link rel="stylesheet" href="assets/vendor/phosphor/style.css">
   <script defer src="assets/js/site.js"></script>
+
 </head>
 <body>
 <a class="skip" href="#main">Naar de inhoud</a>
@@ -53,6 +58,7 @@
   <div style="display:grid;gap:10px">
     <a class="btn btn-primary" href="https://gentle-mu.vercel.app">Gratis beginnen</a>
     <a class="btn btn-quiet" href="https://gentle-mu.vercel.app">Inloggen</a>
+    <a class="lang-switch" href="en/help.html" hreflang="en" lang="en"><i class="ph-light ph-globe-simple" aria-hidden="true"></i>English</a>
   </div>
 </div>
 <main id="main">
@@ -170,9 +176,14 @@
     </div>
     <div class="footer-base">
       <span>&copy; 2026 Gentle</span>
+      <a class="lang-switch" href="en/help.html" hreflang="en" lang="en"><i class="ph-light ph-globe-simple" aria-hidden="true"></i>English</a>
       <span>Gentle is geen vervanging voor medisch advies.</span>
     </div>
   </div>
 </footer>
+<div class="lang-hint" data-lang-hint="en" hidden>
+  <a href="en/help.html" hreflang="en" lang="en">Read this page in English</a>
+  <button type="button" data-lang-hint-close aria-label="Close"><i class="ph-light ph-x" aria-hidden="true"></i></button>
+</div>
 </body>
 </html>

@@ -58,6 +58,9 @@
 .ph-light.ph-download-simple:before {
   content: "\e20c";
 }
+.ph-light.ph-globe-simple:before {
+  content: "\e28e";
+}
 .ph-light.ph-heart:before {
   content: "\e2a8";
 }

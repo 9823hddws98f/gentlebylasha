@@ -3,40 +3,45 @@
   <div class="wrap">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a href="index.html" aria-label="Gentle"><img src="assets/img/gentle-logo.svg" alt="Gentle" width="92" height="45"></a>
-        <p>Slaapverhalen, meditaties en zachte geluiden voor rustige avonden en betere nachten.</p>
+        <a href="{{href.index}}" aria-label="Gentle"><img src="{{BASE}}assets/img/gentle-logo.svg" alt="Gentle" width="92" height="45"></a>
+        <p>{{t.footer_tagline}}</p>
       </div>
       <div class="footer-col">
-        <h2>Ontdek</h2>
+        <h2>{{t.discover}}</h2>
         <ul>
-          <li><a href="slapen.html">Slapen</a></li>
-          <li><a href="meditatie.html">Meditatie</a></li>
-          <li><a href="geluiden.html">Geluiden</a></li>
-          <li><a href="prijzen.html">Prijzen</a></li>
+          <li><a href="{{href.slapen}}">{{nav.slapen}}</a></li>
+          <li><a href="{{href.meditatie}}">{{nav.meditatie}}</a></li>
+          <li><a href="{{href.geluiden}}">{{nav.geluiden}}</a></li>
+          <li><a href="{{href.prijzen}}">{{nav.prijzen}}</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h2>Gentle</h2>
         <ul>
-          <li><a href="over.html">Over Gentle</a></li>
-          <li><a href="help.html">Help en veelgestelde vragen</a></li>
-          <li><a href="{{APP_URL}}">Inloggen</a></li>
+          <li><a href="{{href.over}}">{{t.about}}</a></li>
+          <li><a href="{{href.help}}">{{t.help}}</a></li>
+          <li><a href="{{APP_URL}}">{{t.login}}</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h2>Juridisch</h2>
+        <h2>{{t.legal}}</h2>
         <ul>
-          <li><a href="privacy.html">Privacy</a></li>
-          <li><a href="voorwaarden.html">Voorwaarden</a></li>
-          <li><a href="help.html#account-verwijderen">Account verwijderen</a></li>
+          <li><a href="{{href.privacy}}">{{t.privacy}}</a></li>
+          <li><a href="{{href.voorwaarden}}">{{t.terms}}</a></li>
+          <li><a href="{{href.help}}#{{t.delete_anchor}}">{{t.delete}}</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-base">
       <span>&copy; {{YEAR}} Gentle</span>
-      <span>Gentle is geen vervanging voor medisch advies.</span>
+      <a class="lang-switch" href="{{OTHER_HREF}}" hreflang="{{OTHER_LANG}}" lang="{{OTHER_LANG}}"><i class="ph-light ph-globe-simple" aria-hidden="true"></i>{{OTHER_LABEL}}</a>
+      <span>{{t.disclaimer}}</span>
     </div>
   </div>
 </footer>
+<div class="lang-hint" data-lang-hint="{{OTHER_LANG}}" hidden>
+  <a href="{{OTHER_HREF}}" hreflang="{{OTHER_LANG}}" lang="{{OTHER_LANG}}">{{OTHER_HINT}}</a>
+  <button type="button" data-lang-hint-close aria-label="{{OTHER_HINT_CLOSE}}"><i class="ph-light ph-x" aria-hidden="true"></i></button>
+</div>
 </body>
 </html>

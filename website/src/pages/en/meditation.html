@@ -1,0 +1,88 @@
+<!--
+key: meditatie
+title: Meditation
+description: Guided meditations from three to twenty minutes for stress, focus and bedtime. Try a breathing exercise right on this page.
+nav: meditatie
+header: overlay
+image: /assets/img/bergmeer-1200.jpg
+-->
+<section class="hero page-hero">
+  <div class="hero-media">
+    <img src="assets/img/bergmeer-1200.jpg" alt="A mountain lake reflecting the peaks in evening light" fetchpriority="high" width="1200" height="800">
+  </div>
+  <div class="wrap">
+    <div class="hero-content">
+      <h1 class="h1">A moment to do <em>nothing</em></h1>
+      <p class="lead">Short guided meditations for busy minds. No experience needed, just a few minutes.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="{{APP_URL}}">Start for free</a>
+        <a class="btn btn-ghost" href="#breathe">Try an exercise</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="breathe" aria-labelledby="breathe-title">
+  <div class="wrap breath" data-breath>
+    <div data-reveal>
+      <h2 class="h2" id="breathe-title">Breathe along, right now</h2>
+      <p class="lead" style="margin-top:1.1rem">Follow the circle. It grows as you breathe in and shrinks as you breathe out. A few rounds is enough.</p>
+      <div class="breath-controls">
+        <div class="seg" role="radiogroup" aria-label="Rhythm">
+          <button type="button" role="radio" aria-checked="true" data-pattern="rust">Calm 4-6</button>
+          <button type="button" role="radio" aria-checked="false" data-pattern="box">Box</button>
+          <button type="button" role="radio" aria-checked="false" data-pattern="478">4-7-8</button>
+        </div>
+        <button class="btn btn-quiet" type="button" data-breath-start aria-pressed="false"><i class="ph-light ph-play" aria-hidden="true"></i>Start</button>
+      </div>
+    </div>
+    <div class="breath-stage" data-reveal style="--i:1">
+      <div class="breath-ring" aria-hidden="true"></div>
+      <div class="breath-ring inner" aria-hidden="true"></div>
+      <div class="breath-orb" aria-hidden="true"></div>
+      <div class="breath-label" aria-live="polite">
+        <strong data-breath-word>Ready when you are</strong>
+        <span data-breath-count>Press start</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0" aria-labelledby="length-title">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <h2 class="h2" id="length-title">A length for every moment</h2>
+      <p class="lead">Choose by how much time you have, not how much you think you should.</p>
+    </div>
+    <div class="durations">
+      <div class="duration" data-reveal><div class="n">3<small>min</small></div><h3>In between</h3><p>Before a meeting, on the train or when things get a bit much.</p></div>
+      <div class="duration" data-reveal style="--i:1"><div class="n">10<small>min</small></div><h3>Daily pause</h3><p>A steady resting point in your day. In the morning or once the kids are asleep.</p></div>
+      <div class="duration" data-reveal style="--i:2"><div class="n">20<small>min</small></div><h3>Deep relaxation</h3><p>A body scan or longer meditation, ideal in bed before sleep.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0" aria-labelledby="theme-title">
+  <div class="wrap media-row flip">
+    <figure data-reveal><img src="assets/img/bloemen-rust-1200.jpg" alt="Someone lying among flowers with their eyes closed" loading="lazy" width="1200" height="800" style="object-position:40% 50%"></figure>
+    <div data-reveal style="--i:1">
+      <h2 class="h2" id="theme-title">Meditations for whatever's going on</h2>
+      <p class="lead">Start with how you feel right now. A quick check-in helps you find the right meditation.</p>
+      <ul class="checklist">
+        <li><i class="ph-light ph-check" aria-hidden="true"></i>Letting go of stress and restlessness</li>
+        <li><i class="ph-light ph-check" aria-hidden="true"></i>Gratitude and a short daily reflection</li>
+        <li><i class="ph-light ph-check" aria-hidden="true"></i>Body scan and relaxation before sleep</li>
+        <li><i class="ph-light ph-check" aria-hidden="true"></i>Your own meditation timer, with or without sound</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="closing" aria-labelledby="closing-title">
+  <div class="closing-media"><img src="assets/img/zee-1200.jpg" alt="" loading="lazy" width="1200" height="800"></div>
+  <div class="wrap" data-reveal>
+    <h2 class="h1" id="closing-title">Three minutes is enough</h2>
+    <p class="lead">Start with the shortest meditation. More is welcome, never required.</p>
+    <a class="btn btn-primary" href="{{APP_URL}}">Start for free</a>
+  </div>
+</section>

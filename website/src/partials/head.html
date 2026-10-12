@@ -1,25 +1,28 @@
 <!doctype html>
-<html lang="nl">
+<html lang="{{LANG}}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>{{TITLE}}</title>
   <meta name="description" content="{{DESCRIPTION}}">
   <link rel="canonical" href="{{CANONICAL}}">
+{{ALTERNATES}}
   <meta name="theme-color" content="#0e1529">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Gentle">
+  <meta property="og:locale" content="{{OG_LOCALE}}">
   <meta property="og:title" content="{{TITLE}}">
   <meta property="og:description" content="{{DESCRIPTION}}">
   <meta property="og:image" content="{{OG_IMAGE}}">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" type="image/png" href="assets/img/favicon.png">
-  <link rel="preload" href="assets/fonts/matter-light.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/matter-regular.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/site.css">
-  <link rel="stylesheet" href="assets/vendor/phosphor/style.css">
-  <script defer src="assets/js/site.js"></script>
+  <link rel="icon" type="image/png" href="{{BASE}}assets/img/favicon.png">
+  <link rel="preload" href="{{BASE}}assets/fonts/matter-light.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{BASE}}assets/fonts/matter-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{{BASE}}assets/css/site.css">
+  <link rel="stylesheet" href="{{BASE}}assets/vendor/phosphor/style.css">
+  <script defer src="{{BASE}}assets/js/site.js"></script>
+{{JSONLD}}
 </head>
 <body>
-<a class="skip" href="#main">Naar de inhoud</a>
+<a class="skip" href="#main">{{t.skip}}</a>
 <div id="top-sentinel" aria-hidden="true" style="position:absolute;top:0;left:0;width:1px;height:120px;pointer-events:none"></div>

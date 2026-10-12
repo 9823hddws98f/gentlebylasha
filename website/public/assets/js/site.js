@@ -4,6 +4,13 @@
   "use strict";
   document.documentElement.classList.add("js");
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var T = document.documentElement.lang === "en" ? {
+    inhale: "Breathe in", hold: "Hold", exhale: "Breathe out", ready: "Ready when you are", pressStart: "Press start",
+    start: "Start", stop: "Stop", soundOff: "Sound off", playing: "Playing", quiet: "Quiet", stopsIn: "Stops in "
+  } : {
+    inhale: "Adem in", hold: "Houd vast", exhale: "Adem uit", ready: "Klaar wanneer jij het bent", pressStart: "Druk op start",
+    start: "Start", stop: "Stop", soundOff: "Geluid uit", playing: "Speelt nu", quiet: "Stil", stopsIn: "Stopt over "
+  };
 
   /* ---------- Header: solid once the hero scrolls away ---------- */
   var header = document.querySelector(".site-header");
@@ -32,6 +39,21 @@
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && menu && menu.classList.contains("is-open")) setMenu(false);
   });
+
+  /* ---------- Language hint: offer the other language once, never redirect ---------- */
+  var hint = document.querySelector("[data-lang-hint]");
+  if (hint) {
+    var target = hint.getAttribute("data-lang-hint");
+    var prefersTarget = (navigator.languages || [navigator.language || ""]).some(function (l) { return l.toLowerCase().indexOf(target) === 0; });
+    var pageLang = document.documentElement.lang;
+    var prefersPage = (navigator.language || "").toLowerCase().indexOf(pageLang) === 0;
+    var dismissed = false;
+    try { dismissed = localStorage.getItem("gentle-lang-hint") === "1"; } catch (e) {}
+    if (prefersTarget && !prefersPage && !dismissed) hint.hidden = false;
+    var remember = function () { try { localStorage.setItem("gentle-lang-hint", "1"); } catch (e) {} };
+    hint.querySelector("a").addEventListener("click", remember);
+    hint.querySelector("[data-lang-hint-close]").addEventListener("click", function () { remember(); hint.hidden = true; });
+  }
 
   /* ---------- Reveal on scroll ---------- */
   var revealEls = document.querySelectorAll("[data-reveal]");
@@ -92,9 +114,9 @@
     var startBtn = breath.querySelector("[data-breath-start]");
     var patternBtns = breath.querySelectorAll("[data-pattern]");
     var patterns = {
-      rust: [["Adem in", 4, 1], ["Adem uit", 6, 0]],
-      box: [["Adem in", 4, 1], ["Houd vast", 4, 1], ["Adem uit", 4, 0], ["Houd vast", 4, 0]],
-      "478": [["Adem in", 4, 1], ["Houd vast", 7, 1], ["Adem uit", 8, 0]]
+      rust: [[T.inhale, 4, 1], [T.exhale, 6, 0]],
+      box: [[T.inhale, 4, 1], [T.hold, 4, 1], [T.exhale, 4, 0], [T.hold, 4, 0]],
+      "478": [[T.inhale, 4, 1], [T.hold, 7, 1], [T.exhale, 8, 0]]
     };
     var current = "rust", running = false, timer = null, tick = null;
 
@@ -121,15 +143,15 @@
       running = false;
       clearTimeout(timer); clearInterval(tick);
       setOrb(false, 1.2);
-      word.textContent = "Klaar wanneer jij het bent";
-      count.textContent = "Druk op start";
-      startBtn.innerHTML = '<i class="ph-light ph-play"></i>Start';
+      word.textContent = T.ready;
+      count.textContent = T.pressStart;
+      startBtn.innerHTML = '<i class="ph-light ph-play" aria-hidden="true"></i>' + T.start;
       startBtn.setAttribute("aria-pressed", "false");
     }
     startBtn.addEventListener("click", function () {
       if (running) return stop();
       running = true;
-      startBtn.innerHTML = '<i class="ph-light ph-pause"></i>Stop';
+      startBtn.innerHTML = '<i class="ph-light ph-pause" aria-hidden="true"></i>' + T.stop;
       startBtn.setAttribute("aria-pressed", "true");
       runStep(0);
     });
@@ -264,13 +286,13 @@
       el.setAttribute("aria-pressed", on ? "true" : "false");
       el.classList.toggle("is-playing", on);
       var label = el.querySelector("[data-label]");
-      if (label) label.textContent = on ? "Geluid uit" : el.dataset.labelOff;
+      if (label) label.textContent = on ? T.soundOff : el.dataset.labelOff;
     });
     var any = Sound.anyOn();
     document.querySelectorAll("[data-sound-status]").forEach(function (el) {
       el.classList.toggle("is-playing", any);
       var t = el.querySelector("[data-status-text]");
-      if (t && !timerEnd) t.textContent = any ? "Speelt nu" : "Stil";
+      if (t && !timerEnd) t.textContent = any ? T.playing : T.quiet;
     });
     document.querySelectorAll("[data-level]").forEach(function (r) { r.disabled = !Sound.isOn(r.dataset.level); });
   }
@@ -321,7 +343,7 @@
         var left = Math.max(0, timerEnd - Date.now());
         if (left === 0) { Sound.stopAll(20); clearSleepTimer(); return; }
         var m = Math.floor(left / 60000), s = Math.floor((left % 60000) / 1000);
-        if (text) text.textContent = "Stopt over " + m + ":" + (s < 10 ? "0" : "") + s;
+        if (text) text.textContent = T.stopsIn + m + ":" + (s < 10 ? "0" : "") + s;
       };
       update();
       timerTick = setInterval(update, 1000);

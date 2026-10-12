@@ -1,0 +1,93 @@
+<!--
+key: geluiden
+title: Sounds
+description: Mix your own background sound from rain, sea, wind and brown noise, with a sleep timer. Try it right in your browser.
+nav: geluiden
+header: overlay
+image: /assets/img/regen-raam-1200.jpg
+-->
+<section class="hero page-hero">
+  <div class="hero-media">
+    <img src="assets/img/regen-raam-1200.jpg" alt="Raindrops on a window with soft lights behind it" fetchpriority="high" width="1200" height="800">
+  </div>
+  <div class="wrap">
+    <div class="hero-content">
+      <h1 class="h1">The sound of <em>outside,</em> inside</h1>
+      <p class="lead">Rain, sea, wind or noise soften whatever keeps you awake. Mix your own mood and let it fade out by itself.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#mixer">Open the mixer</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="mixer" aria-labelledby="mixer-title">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <h2 class="h2" id="mixer-title">Make your own mix</h2>
+      <p class="lead">Turn on one or more sounds and set the volume for each. This mixer runs in your browser, nothing is downloaded.</p>
+    </div>
+    <div class="mixer" data-reveal>
+      <div class="mixer-row">
+        <button class="mixer-toggle" type="button" data-sound="regen" aria-pressed="false"><i class="ph-light ph-cloud-rain" aria-hidden="true"></i><span class="sr-only">Rain on or off</span></button>
+        <div><h3>Rain</h3><p>Steady rain on the roof</p></div>
+        <input type="range" min="0" max="100" value="60" data-level="regen" aria-label="Rain volume" disabled>
+      </div>
+      <div class="mixer-row">
+        <button class="mixer-toggle" type="button" data-sound="zee" aria-pressed="false"><i class="ph-light ph-waves" aria-hidden="true"></i><span class="sr-only">Sea on or off</span></button>
+        <div><h3>Sea</h3><p>Waves rolling in slowly</p></div>
+        <input type="range" min="0" max="100" value="50" data-level="zee" aria-label="Sea volume" disabled>
+      </div>
+      <div class="mixer-row">
+        <button class="mixer-toggle" type="button" data-sound="wind" aria-pressed="false"><i class="ph-light ph-wind" aria-hidden="true"></i><span class="sr-only">Wind on or off</span></button>
+        <div><h3>Wind</h3><p>Wind moving through the trees</p></div>
+        <input type="range" min="0" max="100" value="45" data-level="wind" aria-label="Wind volume" disabled>
+      </div>
+      <div class="mixer-row">
+        <button class="mixer-toggle" type="button" data-sound="brom" aria-pressed="false"><i class="ph-light ph-moon-stars" aria-hidden="true"></i><span class="sr-only">Brown noise on or off</span></button>
+        <div><h3>Brown noise</h3><p>A deep, warm noise that masks other sounds</p></div>
+        <input type="range" min="0" max="100" value="50" data-level="brom" aria-label="Brown noise volume" disabled>
+      </div>
+      <div class="mixer-foot">
+        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:0.5rem">
+          <span class="label">Sleep timer</span>
+          <div class="seg" role="radiogroup" aria-label="Sleep timer">
+            <button type="button" role="radio" aria-checked="true" data-timer="0">Off</button>
+            <button type="button" role="radio" aria-checked="false" data-timer="15">15 min</button>
+            <button type="button" role="radio" aria-checked="false" data-timer="30">30 min</button>
+            <button type="button" role="radio" aria-checked="false" data-timer="60">60 min</button>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:1rem">
+          <span class="mixer-status" data-sound-status aria-live="polite"><span class="eq" aria-hidden="true"><b></b><b></b><b></b></span><span data-status-text>Quiet</span></span>
+          <button class="btn btn-quiet btn-sm" type="button" data-sound-stop>All off</button>
+        </div>
+      </div>
+    </div>
+    <p class="muted" style="margin-top:1rem;font-size:0.92rem">Tip: start quietly. The best background sound is one you barely notice.</p>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0" aria-labelledby="why-title">
+  <div class="wrap media-row">
+    <figure data-reveal><img src="assets/img/regen-water-1200.jpg" alt="Raindrops falling on the surface of water" loading="lazy" width="1200" height="800"></figure>
+    <div data-reveal style="--i:1">
+      <h2 class="h2" id="why-title">Why it works</h2>
+      <p class="lead">A steady sound makes sudden noises stand out less. A slamming door or traffic outside becomes less noticeable, so you're less likely to wake with a start.</p>
+      <ul class="checklist">
+        <li><i class="ph-light ph-check" aria-hidden="true"></i>More sounds and nature recordings in the app</li>
+        <li><i class="ph-light ph-check" aria-hidden="true"></i>Download them and listen without internet</li>
+        <li><i class="ph-light ph-check" aria-hidden="true"></i>Keep your favourites together for every night</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="closing" aria-labelledby="closing-title">
+  <div class="closing-media"><img src="assets/img/mistbos-1200.jpg" alt="" loading="lazy" width="1200" height="800"></div>
+  <div class="wrap" data-reveal>
+    <h2 class="h1" id="closing-title">Take your sounds to bed</h2>
+    <p class="lead">In the app you can listen offline and keep your favourites.</p>
+    <a class="btn btn-primary" href="{{APP_URL}}">Start for free</a>
+  </div>
+</section>

@@ -1,0 +1,79 @@
+<!--
+key: prijzen
+title: Pricing
+description: Start Gentle for free. Choose Premium monthly or yearly for the full library of sleep stories, meditations, music and sounds.
+nav: prijzen
+header: solid
+-->
+<!-- TODO prices: example amounts. Replace with the real prices from Stripe and the stores. -->
+<section class="doc-hero" style="border-bottom:0;padding-bottom:0">
+  <div class="wrap" style="text-align:center">
+    <h1 class="h1">Start for free. <em>Stay if it helps.</em></h1>
+    <p class="lead" style="margin-inline:auto">An account is free. Premium gives you the full library, on all your devices.</p>
+    <div style="margin-top:2rem">
+      <div class="price-toggle" role="radiogroup" aria-label="Billing period" data-price-toggle>
+        <span class="thumb" aria-hidden="true"></span>
+        <button type="button" role="radio" aria-checked="false" data-period="monthly">Monthly</button>
+        <button type="button" role="radio" aria-checked="true" data-period="yearly">Yearly<span class="save">-48%</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight" style="padding-top:0" aria-label="Plans">
+  <div class="wrap">
+    <div class="plans">
+      <div class="plan" data-reveal>
+        <h3>Free</h3>
+        <p class="price">&euro;0</p>
+        <p class="per">Forever</p>
+        <ul>
+          <li><i class="ph-light ph-check" aria-hidden="true"></i>A selection of sleep stories and meditations</li>
+          <li><i class="ph-light ph-check" aria-hidden="true"></i>Sounds like rain, sea and noise</li>
+          <li><i class="ph-light ph-check" aria-hidden="true"></i>Bedtime reminders and check-ins</li>
+          <li><i class="ph-light ph-check" aria-hidden="true"></i>Save your favourites</li>
+        </ul>
+        <a class="btn btn-quiet" href="{{APP_URL}}">Start for free</a>
+      </div>
+      <div class="plan plan-premium" data-reveal style="--i:1">
+        <h3>Premium <span class="tag">Everything</span></h3>
+        <p class="price" data-monthly="&euro;7.99&lt;small&gt;/ month&lt;/small&gt;" data-yearly="&euro;49.99&lt;small&gt;/ year&lt;/small&gt;">&euro;49.99<small>/ year</small></p>
+        <p class="per" data-monthly="Cancel any month" data-yearly="That's &euro;4.17 a month">That's &euro;4.17 a month</p>
+        <ul>
+          <li><i class="ph-light ph-check" aria-hidden="true"></i>The full library: stories, meditations, music and sounds</li>
+          <li><i class="ph-light ph-check" aria-hidden="true"></i>New stories and meditations as soon as they're out</li>
+          <li><i class="ph-light ph-check" aria-hidden="true"></i>Offline listening with downloads</li>
+          <li><i class="ph-light ph-check" aria-hidden="true"></i>On iPhone, Android and web with one account</li>
+        </ul>
+        <a class="btn btn-primary" href="{{APP_URL}}">Choose Premium</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="faq-title">
+  <div class="wrap split">
+    <div data-reveal>
+      <h2 class="h2" id="faq-title">Questions about paying</h2>
+      <p class="lead" style="margin-top:1.1rem">Can't find your question? Visit the <a class="link-arrow" href="{{href.help}}" style="display:inline">help page</a>.</p>
+    </div>
+    <div class="faq" data-reveal style="--i:1">
+      <details>
+        <summary>How do I pay?<i class="ph-light ph-plus" aria-hidden="true"></i></summary>
+        <div class="answer"><p>On iPhone you pay through the App Store, on Android through Google Play. In the browser you pay securely by card, iDEAL or other methods through Stripe.</p></div>
+      </details>
+      <details>
+        <summary>How do I cancel?<i class="ph-light ph-plus" aria-hidden="true"></i></summary>
+        <div class="answer"><p>Cancel where you subscribed: in your App Store or Google Play settings, or through Manage subscription in the web app. You keep Premium until the end of the period you've already paid for.</p></div>
+      </details>
+      <details>
+        <summary>Does Premium work on all my devices?<i class="ph-light ph-plus" aria-hidden="true"></i></summary>
+        <div class="answer"><p>Yes. Premium belongs to your account. Log in on another device with the same account and everything is ready.</p></div>
+      </details>
+      <details>
+        <summary>I've paid but don't see Premium<i class="ph-light ph-plus" aria-hidden="true"></i></summary>
+        <div class="answer"><p>Go to your profile in the app and choose Restore purchases. If that doesn't work, get in touch through the help page.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
