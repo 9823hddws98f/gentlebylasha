@@ -21,7 +21,7 @@ import {
   newDeletionCode,
   type StoredDeletionCode,
 } from "./deletion.js";
-import { computeEntitlement, entitlementFields, readSources } from "./entitlement.js";
+import { computeEntitlement, entitlementFields, readSources, setSourceGrant } from "./entitlement.js";
 import { escapeHtml, sendMail, SENDGRID_API_KEY } from "./mail.js";
 
 initializeApp();
@@ -334,6 +334,21 @@ export const adminDisableCode = onCall(async (req) => {
     tx.update(ref, { status: "disabled" });
   });
   await logAdminAction(adminUid, "disableCode", { code: normalized });
+  return { success: true };
+});
+
+/** Admin: give or take away premium by hand (gifts, support cases). */
+export const adminSetManualPremium = onCall(async (req) => {
+  const adminUid = requireAdmin(req);
+  const { uid, active, expiresAt } = parse(
+    z.object({ uid: z.string().min(1), active: z.boolean(), expiresAt: z.string().datetime().nullable() }),
+    req.data,
+  );
+  await getAuth().getUser(uid).catch(() => {
+    throw new HttpsError("not-found", "Gebruiker niet gevonden.");
+  });
+  await setSourceGrant(uid, "manual", { active, expiresAt: expiresAt ? new Date(expiresAt) : null });
+  await logAdminAction(adminUid, "setManualPremium", { uid, active, expiresAt });
   return { success: true };
 });
 
