@@ -23,6 +23,8 @@ import {
 } from "./deletion.js";
 import { computeEntitlement, entitlementFields, readSources, setSourceGrant } from "./entitlement.js";
 import { escapeHtml, sendMail, SENDGRID_API_KEY } from "./mail.js";
+import { releaseBilling } from "./purchases.js";
+import { STRIPE_SECRET_KEY } from "./stores/stripe.js";
 
 initializeApp();
 setGlobalOptions({ region: "us-central1", maxInstances: 10 });
@@ -65,19 +67,27 @@ export const requestAccountDeletion = onCall({ secrets: [SENDGRID_API_KEY] }, as
   if (!email) throw new HttpsError("failed-precondition", "no-email");
 
   const ref = db.collection("deletion_codes").doc(uid);
-  const previous = (await ref.get()).data();
-  const sentAt = toDate(previous?.sentAt);
-  if (sentAt && Date.now() - sentAt.getTime() < 60_000) {
-    throw new HttpsError("resource-exhausted", "wait-before-resend");
-  }
-
   const code = newDeletionCode();
   const now = new Date();
-  await ref.set({
-    codeHash: hashCode(uid, code),
-    expiresAt: Timestamp.fromMillis(now.getTime() + DELETION_CODE_TTL_MS),
-    sentAt: Timestamp.fromDate(now),
-    attempts: 0,
+  await db.runTransaction(async (tx) => {
+    const previous = (await tx.get(ref)).data();
+    const sentAt = toDate(previous?.sentAt);
+    if (sentAt && now.getTime() - sentAt.getTime() < 60_000) {
+      throw new HttpsError("resource-exhausted", "wait-before-resend");
+    }
+    // Failed attempts and resends count per day, so resending can't reset the guess limit.
+    const dayStart = toDate(previous?.dayStart);
+    const sameDay = dayStart && now.getTime() - dayStart.getTime() < 86_400_000;
+    const sends = sameDay ? (previous?.sends ?? 0) : 0;
+    if (sends >= 5) throw new HttpsError("resource-exhausted", "wait-before-resend");
+    tx.set(ref, {
+      codeHash: hashCode(uid, code),
+      expiresAt: Timestamp.fromMillis(now.getTime() + DELETION_CODE_TTL_MS),
+      sentAt: Timestamp.fromDate(now),
+      dayStart: sameDay ? previous!.dayStart : Timestamp.fromDate(now),
+      sends: sends + 1,
+      attempts: sameDay ? (previous?.attempts ?? 0) : 0,
+    });
   });
   await sendMail(
     email,
@@ -90,23 +100,35 @@ export const requestAccountDeletion = onCall({ secrets: [SENDGRID_API_KEY] }, as
 });
 
 /** Deletes the caller's own account after checking the emailed code. */
-export const deleteUser = onCall(async (req) => {
+export const deleteUser = onCall({ secrets: [STRIPE_SECRET_KEY] }, async (req) => {
   const uid = requireAuth(req);
   const { code } = parse(z.object({ code: z.string().max(20) }), req.data);
   const ref = db.collection("deletion_codes").doc(uid);
-  const data = (await ref.get()).data();
-  const stored: StoredDeletionCode | undefined = data && {
-    codeHash: data.codeHash,
-    expiresAt: toDate(data.expiresAt) ?? new Date(0),
-    attempts: data.attempts ?? 0,
-  };
-
-  const check = checkDeletionCode(stored, uid, code, new Date());
-  if (check === "wrong-code") await ref.update({ attempts: FieldValue.increment(1) });
+  // Check and count in one transaction so parallel guesses can't skip the limit.
+  const check = await db.runTransaction(async (tx) => {
+    const data = (await tx.get(ref)).data();
+    const stored: StoredDeletionCode | undefined = data && {
+      codeHash: data.codeHash,
+      expiresAt: toDate(data.expiresAt) ?? new Date(0),
+      attempts: data.attempts ?? 0,
+    };
+    const result = checkDeletionCode(stored, uid, code, new Date());
+    if (result === "wrong-code") tx.update(ref, { attempts: FieldValue.increment(1) });
+    return result;
+  });
   if (check !== "ok") throw new HttpsError("failed-precondition", check);
 
+  await releaseBilling(uid);
   const batch = db.batch();
-  for (const collection of ["users", "favorites", "favorites_playlists", "subscriptions", "deletion_codes", "code_attempts"]) {
+  for (const collection of [
+    "users",
+    "favorites",
+    "favorites_playlists",
+    "subscriptions",
+    "deletion_codes",
+    "code_attempts",
+    "purchase_attempts",
+  ]) {
     batch.delete(db.collection(collection).doc(uid));
   }
   await batch.commit();

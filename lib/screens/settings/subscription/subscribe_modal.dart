@@ -93,6 +93,7 @@ class _SubscribeModalState extends State<SubscribeModal> with Translation {
               : switch (state.error) {
                   IAPError.purchaseFailed => tr.purchaseFailed,
                   IAPError.verificationFailed => tr.verificationFailed,
+                  IAPError.otherAccount => tr.purchaseOtherAccount,
                   IAPError.none =>
                     state.storeAvailable == false ? tr.storeUnavailable : null,
                 };

@@ -56,3 +56,17 @@ describe("decodeJwsPayload", () => {
     expect(() => decodeJwsPayload("nope")).toThrow();
   });
 });
+
+describe("appleGrant grace period", () => {
+  it("uses the grace period end while Apple retries billing", () => {
+    const expired = new Date("2026-10-01T00:00:00Z").getTime();
+    const grace = new Date("2026-10-20T00:00:00Z");
+    expect(appleGrant(4, expired, grace.getTime())).toEqual({ active: true, expiresAt: grace });
+  });
+  it("keeps the later date when both exist", () => {
+    expect(appleGrant(1, exp.getTime(), new Date("2026-10-01T00:00:00Z").getTime())).toEqual({
+      active: true,
+      expiresAt: exp,
+    });
+  });
+});

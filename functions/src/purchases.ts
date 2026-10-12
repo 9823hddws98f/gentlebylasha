@@ -1,11 +1,20 @@
 import { createHash } from "node:crypto";
-import { getFirestore } from "firebase-admin/firestore";
+import { getAuth } from "firebase-admin/auth";
+import { FieldValue, getFirestore, Timestamp } from "firebase-admin/firestore";
 import { logger } from "firebase-functions";
+import { defineBoolean } from "firebase-functions/params";
 import { CallableRequest, HttpsError, onCall, onRequest } from "firebase-functions/v2/https";
 import { onMessagePublished } from "firebase-functions/v2/pubsub";
 import { z } from "zod";
 
-import { computeEntitlement, readSources, setSourceGrant, type Source } from "./entitlement.js";
+import {
+  accountToken,
+  computeEntitlement,
+  readSources,
+  setSourceGrant,
+  type Source,
+  type SourceGrant,
+} from "./entitlement.js";
 import { APPLE_IAP_KEY, appleNotificationTransactionId, appleSubscription } from "./stores/apple.js";
 import { googleSubscription } from "./stores/google.js";
 import {
@@ -21,32 +30,79 @@ import {
 const db = () => getFirestore();
 // Pub/Sub topic that Play Console publishes real-time developer notifications to.
 const PLAY_RTDN_TOPIC = "play-rtdn";
+// Enable once Stripe Tax has an origin address (Stripe dashboard → Tax).
+const STRIPE_AUTOMATIC_TAX = defineBoolean("STRIPE_AUTOMATIC_TAX", { default: false });
+const MAX_VERIFY_PER_HOUR = 20;
 
 function requireAuth(req: CallableRequest): string {
   if (!req.auth) throw new HttpsError("unauthenticated", "Sign in first.");
   return req.auth.uid;
 }
 
-/** One store purchase belongs to one account; remembered so renewals find the user. */
+const userExists = (uid: string) =>
+  getAuth()
+    .getUser(uid)
+    .then(() => true)
+    .catch(() => false);
+
+// ---------------------------------------------------------------------------
+// Store purchases: one store_links doc per purchase, holding its owner and grant
+// ---------------------------------------------------------------------------
+
 const linkRef = (source: Source, id: string) =>
   db().collection("store_links").doc(`${source}_${createHash("sha256").update(id).digest("hex").slice(0, 40)}`);
-
-async function claimLink(source: Source, id: string, uid: string) {
-  const ref = linkRef(source, id);
-  await db().runTransaction(async (tx) => {
-    const owner = (await tx.get(ref)).data()?.uid;
-    if (owner && owner !== uid) throw new HttpsError("already-exists", "linked-to-other-account");
-    if (!owner) tx.set(ref, { uid, source, purchaseId: id });
-  });
-}
 
 async function linkedUid(source: Source, id: string): Promise<string | undefined> {
   return (await linkRef(source, id).get()).data()?.uid;
 }
 
-// ---------------------------------------------------------------------------
-// App Store / Google Play
-// ---------------------------------------------------------------------------
+/** Premium from a store = the best grant over all of the user's purchases there. */
+async function recomputeSource(uid: string, source: Source) {
+  const links = await db().collection("store_links").where("uid", "==", uid).where("source", "==", source).get();
+  let best: SourceGrant = { active: false, expiresAt: null };
+  for (const doc of links.docs) {
+    const g = doc.data().grant;
+    const grant: SourceGrant = {
+      active: g?.active === true,
+      expiresAt: g?.expiresAt instanceof Timestamp ? g.expiresAt.toDate() : null,
+    };
+    const e = computeEntitlement({ best, grant }, new Date());
+    if (e.source === "grant") best = grant;
+  }
+  await setSourceGrant(uid, source, best);
+}
+
+/**
+ * Stores a purchase's grant for `uid`. A purchase belongs to one account; it can
+ * only move when the previous owner's account no longer exists.
+ */
+async function recordPurchase(source: Source, purchaseId: string, uid: string, grant: SourceGrant) {
+  const ref = linkRef(source, purchaseId);
+  const owner = (await ref.get()).data()?.uid as string | undefined;
+  if (owner && owner !== uid && (await userExists(owner))) {
+    throw new HttpsError("already-exists", "linked-to-other-account");
+  }
+  await ref.set({
+    uid,
+    source,
+    purchaseId,
+    grant: { active: grant.active, expiresAt: grant.expiresAt ? Timestamp.fromDate(grant.expiresAt) : null },
+    updatedAt: FieldValue.serverTimestamp(),
+  });
+  await recomputeSource(uid, source);
+}
+
+async function takeVerifyAttempt(uid: string) {
+  const ref = db().collection("purchase_attempts").doc(uid);
+  const now = Date.now();
+  await db().runTransaction(async (tx) => {
+    const d = (await tx.get(ref)).data();
+    const start = d?.windowStart instanceof Timestamp ? d.windowStart.toMillis() : 0;
+    if (now - start > 3_600_000) return tx.set(ref, { count: 1, windowStart: Timestamp.fromMillis(now) });
+    if ((d?.count ?? 0) >= MAX_VERIFY_PER_HOUR) throw new HttpsError("resource-exhausted", "too-many-attempts");
+    tx.update(ref, { count: FieldValue.increment(1) });
+  });
+}
 
 /** Called by the app after a purchase or restore. The server asks the store; the app is not trusted. */
 export const verifyPurchase = onCall({ secrets: [APPLE_IAP_KEY] }, async (req) => {
@@ -56,16 +112,22 @@ export const verifyPurchase = onCall({ secrets: [APPLE_IAP_KEY] }, async (req) =
     .safeParse(req.data);
   if (!input.success) throw new HttpsError("invalid-argument", "Invalid purchase.");
   const { platform, purchaseId } = input.data;
+  await takeVerifyAttempt(uid);
 
   try {
     if (platform === "ios") {
-      const { originalTransactionId, grant } = await appleSubscription(purchaseId);
-      await claimLink("apple", originalTransactionId, uid);
-      await setSourceGrant(uid, "apple", grant);
+      const result = await appleSubscription(purchaseId);
+      // Purchases made by this app carry the account's token; a different one belongs to someone else.
+      if (result.appAccountToken && result.appAccountToken !== accountToken(uid)) {
+        throw new HttpsError("already-exists", "linked-to-other-account");
+      }
+      await recordPurchase("apple", result.originalTransactionId, uid, result.grant);
     } else {
-      const { grant } = await googleSubscription(purchaseId);
-      await claimLink("google", purchaseId, uid);
-      await setSourceGrant(uid, "google", grant);
+      const result = await googleSubscription(purchaseId);
+      if (result.obfuscatedAccountId && result.obfuscatedAccountId !== accountToken(uid)) {
+        throw new HttpsError("already-exists", "linked-to-other-account");
+      }
+      await recordPurchase("google", purchaseId, uid, result.grant);
     }
   } catch (e) {
     if (e instanceof HttpsError) throw e;
@@ -85,7 +147,7 @@ export const appleNotifications = onRequest({ secrets: [APPLE_IAP_KEY] }, async 
     const uid = originalTransactionId && (await linkedUid("apple", originalTransactionId));
     if (originalTransactionId && uid) {
       const { grant } = await appleSubscription(originalTransactionId);
-      await setSourceGrant(uid, "apple", grant);
+      await recordPurchase("apple", originalTransactionId, uid, grant);
     }
     res.sendStatus(200);
   } catch (e) {
@@ -94,15 +156,17 @@ export const appleNotifications = onRequest({ secrets: [APPLE_IAP_KEY] }, async 
   }
 });
 
-/** Google Play real-time developer notifications (Pub/Sub). */
-export const googleRtdn = onMessagePublished(PLAY_RTDN_TOPIC, async (event) => {
+/** Google Play real-time developer notifications (Pub/Sub). Retried on failure. */
+export const googleRtdn = onMessagePublished({ topic: PLAY_RTDN_TOPIC, retry: true }, async (event) => {
   const token = (event.data.message.json as { subscriptionNotification?: { purchaseToken?: string } })
     ?.subscriptionNotification?.purchaseToken;
   if (!token) return;
-  const uid = await linkedUid("google", token);
-  if (!uid) return;
-  const { grant } = await googleSubscription(token);
-  await setSourceGrant(uid, "google", grant);
+  const result = await googleSubscription(token);
+  // A plan change or resubscribe creates a new token that points at the old one.
+  const uid =
+    (await linkedUid("google", token)) ??
+    (result.linkedPurchaseToken ? await linkedUid("google", result.linkedPurchaseToken) : undefined);
+  if (uid) await recordPurchase("google", token, uid, result.grant);
 });
 
 // ---------------------------------------------------------------------------
@@ -113,7 +177,8 @@ async function stripeCustomerId(uid: string, email: string | undefined): Promise
   const ref = db().collection("subscriptions").doc(uid);
   const existing = (await ref.get()).data()?.stripeCustomerId;
   if (existing) return existing;
-  const customer = await stripe().customers.create({ email, metadata: { uid } });
+  // Idempotency key: parallel checkouts get the same customer back from Stripe.
+  const customer = await stripe().customers.create({ email, metadata: { uid } }, { idempotencyKey: `customer-${uid}` });
   await ref.set({ stripeCustomerId: customer.id }, { merge: true });
   return customer.id;
 }
@@ -125,6 +190,12 @@ export const createCheckoutSession = onCall({ secrets: [STRIPE_SECRET_KEY] }, as
   const price = plan.data.plan === "monthly" ? STRIPE_PRICE_MONTHLY.value() : STRIPE_PRICE_YEARLY.value();
   if (!price) throw new HttpsError("failed-precondition", "Stripe prices are not configured.");
 
+  const sources = readSources((await db().collection("subscriptions").doc(uid).get()).data());
+  const paying = (["stripe", "apple", "google"] as const).find(
+    (s) => computeEntitlement({ [s]: sources[s] ?? { active: false, expiresAt: null } }, new Date()).active,
+  );
+  if (paying) throw new HttpsError("failed-precondition", `already-subscribed:${paying}`);
+
   const session = await stripe().checkout.sessions.create({
     mode: "subscription",
     customer: await stripeCustomerId(uid, req.auth?.token.email),
@@ -132,8 +203,9 @@ export const createCheckoutSession = onCall({ secrets: [STRIPE_SECRET_KEY] }, as
     client_reference_id: uid,
     subscription_data: { metadata: { uid } },
     allow_promotion_codes: true,
-    automatic_tax: { enabled: true },
-    customer_update: { address: "auto" },
+    ...(STRIPE_AUTOMATIC_TAX.value()
+      ? { automatic_tax: { enabled: true }, customer_update: { address: "auto" as const } }
+      : {}),
     success_url: `${APP_URL.value()}/?checkout=success`,
     cancel_url: `${APP_URL.value()}/?checkout=cancelled`,
   });
@@ -166,9 +238,12 @@ export const stripeWebhook = onRequest({ secrets: [STRIPE_SECRET_KEY, STRIPE_WEB
     const sent = event.data.object as { id: string };
     try {
       // Events can arrive out of order; always use the subscription's current state.
-      const sub = await stripe().subscriptions.retrieve(sent.id);
-      const uid = sub.metadata.uid;
-      if (uid) await setSourceGrant(uid, "stripe", subscriptionGrant(sub));
+      const sub = await stripe().subscriptions.retrieve(sent.id, { expand: ["customer"] });
+      const customer = typeof sub.customer === "object" && !("deleted" in sub.customer) ? sub.customer : null;
+      const uid = sub.metadata.uid || customer?.metadata.uid;
+      if (!uid) logger.warn("Stripe subscription without uid", { subscription: sub.id });
+      // Ignore accounts that were deleted meanwhile; don't recreate their data.
+      else if (await userExists(uid)) await setSourceGrant(uid, "stripe", subscriptionGrant(sub));
     } catch (e) {
       logger.error("stripeWebhook failed", { event: event.id, error: String(e) });
       res.sendStatus(500); // Stripe retries
@@ -177,3 +252,22 @@ export const stripeWebhook = onRequest({ secrets: [STRIPE_SECRET_KEY, STRIPE_WEB
   }
   res.sendStatus(200);
 });
+
+/**
+ * Called when an account is deleted: stops Stripe billing and frees the user's
+ * store purchases so they can be restored on a new account. App Store and
+ * Google Play subscriptions can only be cancelled by the user in the store.
+ */
+export async function releaseBilling(uid: string) {
+  const customer = (await db().collection("subscriptions").doc(uid).get()).data()?.stripeCustomerId;
+  if (customer && STRIPE_SECRET_KEY.value()) {
+    const subs = await stripe().subscriptions.list({ customer, status: "all", limit: 20 });
+    for (const sub of subs.data) {
+      if (!["canceled", "incomplete_expired"].includes(sub.status)) await stripe().subscriptions.cancel(sub.id);
+    }
+  }
+  const links = await db().collection("store_links").where("uid", "==", uid).get();
+  const batch = db().batch();
+  links.docs.forEach((d) => batch.delete(d.ref));
+  await batch.commit();
+}

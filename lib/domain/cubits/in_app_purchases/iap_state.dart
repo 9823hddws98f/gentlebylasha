@@ -1,6 +1,6 @@
 part of 'iap_cubit.dart';
 
-enum IAPError { none, purchaseFailed, verificationFailed }
+enum IAPError { none, purchaseFailed, verificationFailed, otherAccount }
 
 @immutable
 class IAPState {

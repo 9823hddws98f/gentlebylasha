@@ -16,7 +16,16 @@ class Entitlement {
   /// 'apple' | 'google' | 'stripe' | 'code' | 'manual'
   final String? source;
 
-  const Entitlement({this.active = false, this.expiresAt, this.source});
+  /// Paid subscriptions that are running, whether or not they are the source
+  /// that currently grants premium. Each can be managed or cancelled.
+  final Set<String> billingSources;
+
+  const Entitlement({
+    this.active = false,
+    this.expiresAt,
+    this.source,
+    this.billingSources = const {},
+  });
 
   bool isPremiumAt(DateTime now) =>
       active && (expiresAt == null || expiresAt!.isAfter(now));
@@ -28,10 +37,20 @@ class Entitlement {
 
   static Entitlement fromMap(Map<String, dynamic>? map) {
     if (map == null) return const Entitlement();
+    final sources = (map['sources'] as Map<String, dynamic>?) ?? {};
+    final now = DateTime.now();
     return Entitlement(
       active: map['active'] == true,
       expiresAt: (map['expiresAt'] as Timestamp?)?.toDate(),
       source: map['source'] as String?,
+      billingSources: {
+        for (final MapEntry(:key, :value) in sources.entries)
+          if (const {'stripe', 'apple', 'google'}.contains(key) &&
+              value is Map &&
+              value['active'] == true &&
+              ((value['expiresAt'] as Timestamp?)?.toDate().isAfter(now) ?? true))
+            key,
+      },
     );
   }
 }

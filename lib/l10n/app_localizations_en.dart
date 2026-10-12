@@ -314,4 +314,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get manageInStore => 'Manage or cancel your subscription';
+
+  @override
+  String get purchaseOtherAccount =>
+      'This purchase belongs to another Gentle account. Sign in with that account to use it.';
 }

@@ -22,7 +22,7 @@ class ManageSubscriptionScreen extends StatelessWidget with Translation {
 
   ManageSubscriptionScreen({super.key, this.email});
 
-  static const _managedSources = {'stripe', 'apple', 'google'};
+  static const _sourceName = {'stripe': 'web', 'apple': 'App Store', 'google': 'Google Play'};
 
   /// Where the user can change or cancel their subscription, per source.
   /// Codes and manual grants have nothing to manage.
@@ -73,11 +73,16 @@ class ManageSubscriptionScreen extends StatelessWidget with Translation {
                     ],
                   ),
                 ),
-                if (entitlement.isPremium && _managedSources.contains(entitlement.source))
-                  TxButton.outlined(
-                    label: Text(tr.manageInStore),
-                    showSuccess: false,
-                    onPressVoid: () => _openManage(entitlement.source!),
+                for (final source in entitlement.billingSources)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: TxButton.outlined(
+                      label: Text(entitlement.billingSources.length > 1
+                          ? '${tr.manageInStore} (${_sourceName[source]})'
+                          : tr.manageInStore),
+                      showSuccess: false,
+                      onPressVoid: () => _openManage(source),
+                    ),
                   ),
                 if (!entitlement.isPremium) ...[
                   TxButton.filled(

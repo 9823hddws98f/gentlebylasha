@@ -14,6 +14,11 @@ interface TransactionPayload {
   productId?: string;
   expiresDate?: number;
   bundleId?: string;
+  appAccountToken?: string;
+}
+
+interface RenewalPayload {
+  gracePeriodExpiresDate?: number;
 }
 
 function client(env: Environment) {
@@ -29,6 +34,8 @@ function client(env: Environment) {
 export interface AppleResult {
   originalTransactionId: string;
   grant: SourceGrant;
+  /** Set when the app passed it at purchase; ties the purchase to an account. */
+  appAccountToken?: string;
 }
 
 /**
@@ -45,9 +52,12 @@ export async function appleSubscription(transactionId: string): Promise<AppleRes
           if (!item.signedTransactionInfo) continue;
           const tx = decodeJwsPayload<TransactionPayload>(item.signedTransactionInfo);
           if (!tx.originalTransactionId) continue;
-          const grant = appleGrant(Number(item.status), tx.expiresDate);
+          const renewal = item.signedRenewalInfo
+            ? decodeJwsPayload<RenewalPayload>(item.signedRenewalInfo)
+            : {};
+          const grant = appleGrant(Number(item.status), tx.expiresDate, renewal.gracePeriodExpiresDate);
           if (!best || (grant.active && (!best.grant.active || grant.expiresAt! > best.grant.expiresAt!))) {
-            best = { originalTransactionId: tx.originalTransactionId, grant };
+            best = { originalTransactionId: tx.originalTransactionId, grant, appAccountToken: tx.appAccountToken };
           }
         }
       }

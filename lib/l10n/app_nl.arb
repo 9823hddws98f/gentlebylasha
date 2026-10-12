@@ -96,5 +96,6 @@
   "verificationFailed": "We konden je aankoop niet bevestigen. Tik op Aankopen herstellen om het opnieuw te proberen.",
   "storeUnavailable": "De winkel is nu niet bereikbaar. Probeer het later opnieuw.",
   "premiumWelcome": "Je hebt Premium. Slaap lekker.",
-  "manageInStore": "Abonnement beheren of opzeggen"
+  "manageInStore": "Abonnement beheren of opzeggen",
+  "purchaseOtherAccount": "Deze aankoop hoort bij een ander Gentle-account. Log in met dat account om hem te gebruiken."
 }

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
 
 /// Talks to the purchase Cloud Functions. The server checks every purchase
 /// with Apple, Google or Stripe and updates `subscriptions/{uid}`.
@@ -20,10 +21,16 @@ class PurchasesApi {
       'platform': isIos ? 'ios' : 'android',
       // Apple: a transaction id of the subscription. Google: the purchase token.
       'purchaseId': isIos
-          ? details.purchaseID
+          ? _appleTransactionId(details)
           : details.verificationData.serverVerificationData,
     });
   }
+
+  /// StoreKit 1 restores carry a new local id; Apple knows the original one.
+  String? _appleTransactionId(PurchaseDetails details) => details is AppStorePurchaseDetails
+      ? details.skPaymentTransaction.originalTransaction?.transactionIdentifier ??
+          details.purchaseID
+      : details.purchaseID;
 
   /// Stripe Checkout URL for the web. [plan] is 'monthly' or 'yearly'.
   Future<Uri> checkoutUrl(String plan) async {

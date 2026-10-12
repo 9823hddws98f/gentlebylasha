@@ -685,6 +685,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Manage or cancel your subscription'**
   String get manageInStore;
+
+  /// No description provided for @purchaseOtherAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'This purchase belongs to another Gentle account. Sign in with that account to use it.'**
+  String get purchaseOtherAccount;
 }
 
 class _AppLocalizationsDelegate

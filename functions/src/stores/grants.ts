@@ -6,8 +6,14 @@ const none: SourceGrant = { active: false, expiresAt: null };
  * Apple subscription status: 1 active, 2 expired, 3 billing retry,
  * 4 billing grace period, 5 revoked.
  */
-export function appleGrant(status: number | undefined, expiresDateMs: number | undefined): SourceGrant {
-  if ((status === 1 || status === 4) && expiresDateMs) return { active: true, expiresAt: new Date(expiresDateMs) };
+export function appleGrant(
+  status: number | undefined,
+  expiresDateMs: number | undefined,
+  gracePeriodExpiresMs?: number,
+): SourceGrant {
+  // In the grace period the transaction has already expired; access runs until the grace period ends.
+  const end = Math.max(expiresDateMs ?? 0, status === 4 ? (gracePeriodExpiresMs ?? 0) : 0);
+  if ((status === 1 || status === 4) && end) return { active: true, expiresAt: new Date(end) };
   return none;
 }
 

@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
 
 export type Source = "apple" | "google" | "stripe" | "code" | "manual";
@@ -31,6 +32,10 @@ export function computeEntitlement(sources: Record<string, SourceGrant>, now: Da
 const toDate = (v: unknown) => (v instanceof Timestamp ? v.toDate() : null);
 
 export function readSources(data: FirebaseFirestore.DocumentData | undefined): Record<string, SourceGrant> {
+  // Documents written before per-source grants existed only held a redeemed code.
+  if (data && !data.sources && data.active === true) {
+    return { code: { active: true, expiresAt: toDate(data.expiresAt) } };
+  }
   const raw = (data?.sources ?? {}) as Record<string, { active?: boolean; expiresAt?: unknown }>;
   return Object.fromEntries(
     Object.entries(raw).map(([k, v]) => [k, { active: v.active === true, expiresAt: toDate(v.expiresAt) }]),
@@ -64,4 +69,14 @@ export async function setSourceGrant(uid: string, source: Source, grant: SourceG
     sources[source] = grant;
     tx.set(ref, entitlementFields(sources, new Date(), extra), { merge: true });
   });
+}
+
+/**
+ * UUID-shaped id derived from the uid. The app passes it to the store at
+ * purchase (Apple appAccountToken, Google obfuscatedAccountId) so the server
+ * can check a purchase belongs to the account. Must match lib/helper/account_token.dart.
+ */
+export function accountToken(uid: string): string {
+  const h = createHash("sha256").update(uid).digest("hex");
+  return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20, 32)}`;
 }

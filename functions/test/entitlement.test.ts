@@ -47,3 +47,39 @@ describe("computeEntitlement", () => {
     expect(computeEntitlement(sources, now).active).toBe(true);
   });
 });
+
+describe("readSources (legacy documents)", () => {
+  it("treats an old top-level code grant as the code source", async () => {
+    const { readSources } = await import("../src/entitlement.js");
+    const { Timestamp } = await import("firebase-admin/firestore");
+    const exp = new Date("2027-01-01T00:00:00Z");
+    expect(readSources({ active: true, source: "code", expiresAt: Timestamp.fromDate(exp) })).toEqual({
+      code: { active: true, expiresAt: exp },
+    });
+    expect(readSources({ active: true, source: "code", expiresAt: null })).toEqual({
+      code: { active: true, expiresAt: null },
+    });
+  });
+
+  it("prefers the sources map when present", async () => {
+    const { readSources } = await import("../src/entitlement.js");
+    expect(readSources({ active: true, expiresAt: null, sources: { apple: { active: false, expiresAt: null } } })).toEqual({
+      apple: { active: false, expiresAt: null },
+    });
+  });
+});
+
+describe("accountToken", () => {
+  it("is a stable UUID-shaped string per uid", async () => {
+    const { accountToken } = await import("../src/entitlement.js");
+    expect(accountToken("u1")).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
+    expect(accountToken("u1")).toBe(accountToken("u1"));
+    expect(accountToken("u1")).not.toBe(accountToken("u2"));
+  });
+
+  it("matches the value the app computes for a known uid", async () => {
+    const { accountToken } = await import("../src/entitlement.js");
+    // sha256("abc") = ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
+    expect(accountToken("abc")).toBe("ba7816bf-8f01-cfea-4141-40de5dae2223");
+  });
+});

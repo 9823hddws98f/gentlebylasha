@@ -16,6 +16,10 @@ const api = () =>
 export interface GoogleResult {
   grant: SourceGrant;
   productId?: string;
+  /** Previous token when this purchase replaced one (plan change, resubscribe). */
+  linkedPurchaseToken?: string;
+  /** Set when the app passed it at purchase; ties the purchase to an account. */
+  obfuscatedAccountId?: string;
 }
 
 /** Current state of a Play subscription; acknowledges it if needed (else Google refunds after 3 days). */
@@ -33,5 +37,10 @@ export async function googleSubscription(purchaseToken: string): Promise<GoogleR
       requestBody: {},
     });
   }
-  return { grant, productId: item?.productId ?? undefined };
+  return {
+    grant,
+    productId: item?.productId ?? undefined,
+    linkedPurchaseToken: data.linkedPurchaseToken ?? undefined,
+    obfuscatedAccountId: data.externalAccountIdentifiers?.obfuscatedExternalAccountId ?? undefined,
+  };
 }
