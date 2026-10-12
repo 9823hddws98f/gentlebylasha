@@ -81,5 +81,20 @@
   "premiumLifetime": "Premium – onbeperkt toegang",
   "premiumUntil": "Premium tot {date}",
   "noSubscription": "Geen actief abonnement",
-  "haveACode": "Heb je een code?"
+  "haveACode": "Heb je een code?",
+  "unlockGentle": "Ontgrendel Gentle",
+  "benefitAllContent": "Alle slaapverhalen, meditaties en geluiden",
+  "benefitNewContent": "Elke week nieuwe verhalen en meditaties",
+  "benefitCancel": "Altijd opzegbaar",
+  "planMonthly": "Maandelijks",
+  "planYearly": "Jaarlijks",
+  "perMonth": "/ maand",
+  "perYear": "/ jaar",
+  "subscribe": "Abonneren",
+  "restorePurchases": "Aankopen herstellen",
+  "purchaseFailed": "De aankoop is niet gelukt. Probeer het opnieuw.",
+  "verificationFailed": "We konden je aankoop niet bevestigen. Tik op Aankopen herstellen om het opnieuw te proberen.",
+  "storeUnavailable": "De winkel is nu niet bereikbaar. Probeer het later opnieuw.",
+  "premiumWelcome": "Je hebt Premium. Slaap lekker.",
+  "manageInStore": "Abonnement beheren of opzeggen"
 }

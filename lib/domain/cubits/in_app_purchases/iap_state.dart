@@ -1,28 +1,36 @@
 part of 'iap_cubit.dart';
 
+enum IAPError { none, purchaseFailed, verificationFailed }
+
 @immutable
 class IAPState {
-  final List<PurchaseDetails> purchases;
   final List<PurchasableProduct> products;
-  final String? errorMessage;
+
+  /// null while unknown; false on web and when the store can't be reached.
+  final bool? storeAvailable;
+  final bool busy;
+  final IAPError error;
 
   bool get loaded => products.isNotEmpty;
 
   const IAPState({
-    this.purchases = const [],
     this.products = const [],
-    this.errorMessage,
+    this.storeAvailable,
+    this.busy = false,
+    this.error = IAPError.none,
   });
 
   IAPState copyWith({
-    List<PurchaseDetails>? purchases,
     List<PurchasableProduct>? products,
-    String? errorMessage,
+    bool? storeAvailable,
+    bool? busy,
+    IAPError? error,
   }) {
     return IAPState(
-      purchases: purchases ?? this.purchases,
       products: products ?? this.products,
-      errorMessage: errorMessage ?? this.errorMessage,
+      storeAvailable: storeAvailable ?? this.storeAvailable,
+      busy: busy ?? this.busy,
+      error: error ?? this.error,
     );
   }
 }

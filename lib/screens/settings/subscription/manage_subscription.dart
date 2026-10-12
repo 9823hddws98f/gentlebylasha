@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '/domain/cubits/entitlement_cubit.dart';
+import '/domain/cubits/in_app_purchases/iap_service.dart';
 import '/domain/services/language_cubit.dart';
 import '/helper/global_functions.dart';
 import '/utils/app_theme.dart';
@@ -19,6 +21,27 @@ class ManageSubscriptionScreen extends StatelessWidget with Translation {
   final String? email;
 
   ManageSubscriptionScreen({super.key, this.email});
+
+  static const _managedSources = {'stripe', 'apple', 'google'};
+
+  /// Where the user can change or cancel their subscription, per source.
+  /// Codes and manual grants have nothing to manage.
+  Future<Uri>? _manageUrl(String? source) => switch (source) {
+        'stripe' => PurchasesApi.instance.portalUrl(),
+        'apple' => Future.value(Uri.parse('https://apps.apple.com/account/subscriptions')),
+        'google' => Future.value(Uri.parse(
+            'https://play.google.com/store/account/subscriptions?package=com.mezz.gentle')),
+        _ => null,
+      };
+
+  Future<void> _openManage(String source) async {
+    try {
+      final url = await _manageUrl(source);
+      if (url != null) await launchUrl(url, mode: LaunchMode.externalApplication);
+    } catch (_) {
+      showToast(tr.somethingWentWrong);
+    }
+  }
 
   String _statusText(BuildContext context, Entitlement e) {
     if (!e.isPremium) return tr.noSubscription;
@@ -50,9 +73,15 @@ class ManageSubscriptionScreen extends StatelessWidget with Translation {
                     ],
                   ),
                 ),
+                if (entitlement.isPremium && _managedSources.contains(entitlement.source))
+                  TxButton.outlined(
+                    label: Text(tr.manageInStore),
+                    showSuccess: false,
+                    onPressVoid: () => _openManage(entitlement.source!),
+                  ),
                 if (!entitlement.isPremium) ...[
                   TxButton.filled(
-                    label: const Text('Purchase'),
+                    label: Text(tr.subscribe),
                     color: RoleColor.mono,
                     onPressVoid: () => SubscribeModal.show(context),
                   ),

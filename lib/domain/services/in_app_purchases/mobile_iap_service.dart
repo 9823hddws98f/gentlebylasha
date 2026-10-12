@@ -26,4 +26,7 @@ class MobileIapService implements InAppPurchases {
   @override
   Future<void> completePurchase(PurchaseDetails purchaseDetails) =>
       _inAppPurchase.completePurchase(purchaseDetails);
+
+  @override
+  Future<void> restorePurchases() => _inAppPurchase.restorePurchases();
 }

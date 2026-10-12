@@ -595,6 +595,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Have a code?'**
   String get haveACode;
+
+  /// No description provided for @unlockGentle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Gentle'**
+  String get unlockGentle;
+
+  /// No description provided for @benefitAllContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Every sleep story, meditation and sound'**
+  String get benefitAllContent;
+
+  /// No description provided for @benefitNewContent.
+  ///
+  /// In en, this message translates to:
+  /// **'New stories and meditations every week'**
+  String get benefitNewContent;
+
+  /// No description provided for @benefitCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel anytime'**
+  String get benefitCancel;
+
+  /// No description provided for @planMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get planMonthly;
+
+  /// No description provided for @planYearly.
+  ///
+  /// In en, this message translates to:
+  /// **'Yearly'**
+  String get planYearly;
+
+  /// No description provided for @perMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'/ month'**
+  String get perMonth;
+
+  /// No description provided for @perYear.
+  ///
+  /// In en, this message translates to:
+  /// **'/ year'**
+  String get perYear;
+
+  /// No description provided for @subscribe.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe'**
+  String get subscribe;
+
+  /// No description provided for @restorePurchases.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore purchases'**
+  String get restorePurchases;
+
+  /// No description provided for @purchaseFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The purchase did not go through. Please try again.'**
+  String get purchaseFailed;
+
+  /// No description provided for @verificationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'We could not confirm your purchase. Tap Restore purchases to try again.'**
+  String get verificationFailed;
+
+  /// No description provided for @storeUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The store is not available right now. Please try again later.'**
+  String get storeUnavailable;
+
+  /// No description provided for @premiumWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'You have Premium. Sleep well.'**
+  String get premiumWelcome;
+
+  /// No description provided for @manageInStore.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage or cancel your subscription'**
+  String get manageInStore;
 }
 
 class _AppLocalizationsDelegate

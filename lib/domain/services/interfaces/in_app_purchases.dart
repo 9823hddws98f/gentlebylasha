@@ -6,4 +6,5 @@ abstract class InAppPurchases {
   Future<ProductDetailsResponse> queryProductDetails(Set<String> identifiers);
   Future<bool> buyNonConsumable(PurchaseParam purchaseParam);
   Future<void> completePurchase(PurchaseDetails purchaseDetails);
+  Future<void> restorePurchases();
 }

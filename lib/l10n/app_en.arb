@@ -95,5 +95,20 @@
         "type": "String"
       }
     }
-  }
+  },
+  "unlockGentle": "Unlock Gentle",
+  "benefitAllContent": "Every sleep story, meditation and sound",
+  "benefitNewContent": "New stories and meditations every week",
+  "benefitCancel": "Cancel anytime",
+  "planMonthly": "Monthly",
+  "planYearly": "Yearly",
+  "perMonth": "/ month",
+  "perYear": "/ year",
+  "subscribe": "Subscribe",
+  "restorePurchases": "Restore purchases",
+  "purchaseFailed": "The purchase did not go through. Please try again.",
+  "verificationFailed": "We could not confirm your purchase. Tap Restore purchases to try again.",
+  "storeUnavailable": "The store is not available right now. Please try again later.",
+  "premiumWelcome": "You have Premium. Sleep well.",
+  "manageInStore": "Manage or cancel your subscription"
 }

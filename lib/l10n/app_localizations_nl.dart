@@ -268,4 +268,52 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get haveACode => 'Heb je een code?';
+
+  @override
+  String get unlockGentle => 'Ontgrendel Gentle';
+
+  @override
+  String get benefitAllContent => 'Alle slaapverhalen, meditaties en geluiden';
+
+  @override
+  String get benefitNewContent => 'Elke week nieuwe verhalen en meditaties';
+
+  @override
+  String get benefitCancel => 'Altijd opzegbaar';
+
+  @override
+  String get planMonthly => 'Maandelijks';
+
+  @override
+  String get planYearly => 'Jaarlijks';
+
+  @override
+  String get perMonth => '/ maand';
+
+  @override
+  String get perYear => '/ jaar';
+
+  @override
+  String get subscribe => 'Abonneren';
+
+  @override
+  String get restorePurchases => 'Aankopen herstellen';
+
+  @override
+  String get purchaseFailed =>
+      'De aankoop is niet gelukt. Probeer het opnieuw.';
+
+  @override
+  String get verificationFailed =>
+      'We konden je aankoop niet bevestigen. Tik op Aankopen herstellen om het opnieuw te proberen.';
+
+  @override
+  String get storeUnavailable =>
+      'De winkel is nu niet bereikbaar. Probeer het later opnieuw.';
+
+  @override
+  String get premiumWelcome => 'Je hebt Premium. Slaap lekker.';
+
+  @override
+  String get manageInStore => 'Abonnement beheren of opzeggen';
 }

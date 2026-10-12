@@ -266,4 +266,52 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get haveACode => 'Have a code?';
+
+  @override
+  String get unlockGentle => 'Unlock Gentle';
+
+  @override
+  String get benefitAllContent => 'Every sleep story, meditation and sound';
+
+  @override
+  String get benefitNewContent => 'New stories and meditations every week';
+
+  @override
+  String get benefitCancel => 'Cancel anytime';
+
+  @override
+  String get planMonthly => 'Monthly';
+
+  @override
+  String get planYearly => 'Yearly';
+
+  @override
+  String get perMonth => '/ month';
+
+  @override
+  String get perYear => '/ year';
+
+  @override
+  String get subscribe => 'Subscribe';
+
+  @override
+  String get restorePurchases => 'Restore purchases';
+
+  @override
+  String get purchaseFailed =>
+      'The purchase did not go through. Please try again.';
+
+  @override
+  String get verificationFailed =>
+      'We could not confirm your purchase. Tap Restore purchases to try again.';
+
+  @override
+  String get storeUnavailable =>
+      'The store is not available right now. Please try again later.';
+
+  @override
+  String get premiumWelcome => 'You have Premium. Sleep well.';
+
+  @override
+  String get manageInStore => 'Manage or cancel your subscription';
 }

@@ -7,7 +7,8 @@ class WebIapService implements InAppPurchases {
 
   static final WebIapService instance = WebIapService._();
 
-  // TODO: Implement Stripe IAP
+  // The web sells subscriptions through Stripe Checkout (see PurchasesApi),
+  // not through a store, so store purchases are unavailable here.
 
   @override
   Stream<List<PurchaseDetails>> get purchaseStream => Stream.empty();
@@ -27,4 +28,7 @@ class WebIapService implements InAppPurchases {
 
   @override
   Future<void> completePurchase(PurchaseDetails purchaseDetails) => Future.value();
+
+  @override
+  Future<void> restorePurchases() => Future.value();
 }

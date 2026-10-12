@@ -11,10 +11,12 @@ import 'product.dart';
 
 part 'iap_state.dart';
 
+/// Store purchases on iOS/Android. Premium itself is read from
+/// `subscriptions/{uid}` by EntitlementCubit once the server has verified it.
 class IAPCubit extends Cubit<IAPState> {
   IAPCubit._() : super(const IAPState()) {
     _subscription = _iapService.purchaseStream.listen(_onPurchaseDetailsReceived);
-    loadPurchases();
+    loadProducts();
   }
   static final IAPCubit instance = IAPCubit._();
 
@@ -23,75 +25,72 @@ class IAPCubit extends Cubit<IAPState> {
 
   StreamSubscription<List<PurchaseDetails>>? _subscription;
 
-  static const productIds = [
-    'gentle_premium_monthly',
-    'gentle_premium_yearly',
-  ];
+  static const monthlyId = 'gentle_premium_monthly';
+  static const yearlyId = 'gentle_premium_yearly';
+  static const productIds = [monthlyId, yearlyId];
 
-  Future<void> loadPurchases() async {
-    // Emit loading state while keeping existing data
+  Future<void> loadProducts() async {
     if (state.loaded) return;
-
-    final isAvailable = await _iapService.isAvailable();
-    if (!isAvailable) {
-      emit(state.copyWith(errorMessage: 'In-app purchase is not available'));
+    if (!await _iapService.isAvailable()) {
+      emit(state.copyWith(storeAvailable: false));
       return;
     }
 
     final response = await _iapService.queryProductDetails(productIds.toSet());
     if (response.notFoundIDs.isNotEmpty) {
-      debugPrint('Warning: Some ids where not found: ${response.notFoundIDs}');
+      debugPrint('Store products not found: ${response.notFoundIDs}');
     }
-
-    emit(state.copyWith(
-      products: response.productDetails.map((e) => PurchasableProduct(e)).toList(),
-      errorMessage: null,
-    ));
+    final products = response.productDetails.map(PurchasableProduct.new).toList()
+      ..sort((a, b) => productIds.indexOf(a.id).compareTo(productIds.indexOf(b.id)));
+    emit(state.copyWith(products: products, storeAvailable: true));
   }
 
   Future<void> purchaseProduct(ProductDetails productDetails) async {
+    emit(state.copyWith(busy: true, error: IAPError.none));
     try {
-      if (!state.loaded) return;
-      emit(state.copyWith(errorMessage: null));
-      final purchaseParam = PurchaseParam(productDetails: productDetails);
-      await _iapService.buyNonConsumable(purchaseParam);
-    } catch (e) {
-      emit(state.copyWith(errorMessage: e.toString()));
+      await _iapService.buyNonConsumable(PurchaseParam(productDetails: productDetails));
+    } catch (_) {
+      emit(state.copyWith(busy: false, error: IAPError.purchaseFailed));
     }
+  }
+
+  Future<void> restorePurchases() async {
+    emit(state.copyWith(busy: true, error: IAPError.none));
+    try {
+      await _iapService.restorePurchases();
+    } catch (_) {
+      emit(state.copyWith(busy: false, error: IAPError.purchaseFailed));
+      return;
+    }
+    // Restored purchases arrive on the purchase stream; if there are none,
+    // nothing else will clear the busy state.
+    Future.delayed(const Duration(seconds: 8), () {
+      if (state.busy) emit(state.copyWith(busy: false));
+    });
   }
 
   Future<void> _onPurchaseDetailsReceived(List<PurchaseDetails> purchases) async {
     for (final details in purchases) {
-      if (details.status == PurchaseStatus.purchased) {
-        try {
-          final purchaseVerified = await _purchases.verifyPurchase(details);
-          if (purchaseVerified) {
-            emit(state.copyWith(
-              errorMessage: null,
-              purchases: [...state.purchases, details],
-            ));
-          } else {
-            throw Exception('Purchase verification failed');
+      switch (details.status) {
+        case PurchaseStatus.pending:
+          emit(state.copyWith(busy: true));
+        case PurchaseStatus.canceled:
+          emit(state.copyWith(busy: false));
+        case PurchaseStatus.error:
+          emit(state.copyWith(busy: false, error: IAPError.purchaseFailed));
+        case PurchaseStatus.purchased:
+        case PurchaseStatus.restored:
+          try {
+            await _purchases.verifyPurchase(details);
+            emit(state.copyWith(busy: false, error: IAPError.none));
+          } catch (e) {
+            debugPrint('verifyPurchase failed: $e');
+            emit(state.copyWith(busy: false, error: IAPError.verificationFailed));
           }
-        } catch (e) {
-          emit(state.copyWith(
-            errorMessage: e.toString(),
-          ));
-        }
       }
+      // Always finish the transaction; the server keeps the entitlement.
       if (details.pendingCompletePurchase) {
-        try {
-          await _purchases.completePurchase(details);
-          await _iapService.completePurchase(details);
-          emit(state.copyWith(
-            errorMessage: null,
-            purchases: [...state.purchases, details],
-          ));
-        } catch (e) {
-          emit(state.copyWith(
-            errorMessage: e.toString(),
-          ));
-        }
+        await _iapService.completePurchase(details);
       }
     }
   }

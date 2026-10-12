@@ -1,52 +1,40 @@
-import 'dart:convert';
+import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
-import '/utils/common_extensions.dart';
-
+/// Talks to the purchase Cloud Functions. The server checks every purchase
+/// with Apple, Google or Stripe and updates `subscriptions/{uid}`.
 class PurchasesApi {
   static final PurchasesApi instance = PurchasesApi._();
 
   PurchasesApi._();
 
-  String get _serverUrl => kDebugMode
-      ? 'http://localhost:8080/'
-      : 'https://gentle-backend-3joud9n-mezzlasha.globeapp.dev';
+  /// Must match `setGlobalOptions({region})` in functions/src/index.ts.
+  final _functions = FirebaseFunctions.instanceFor(region: 'us-central1');
 
-  String get _userId => FirebaseAuth.instance.currentUser?.uid ?? '';
-
-  Future<bool> verifyPurchase(PurchaseDetails details) async {
-    final url = Uri.parse('$_serverUrl/verifypurchase');
-    const headers = {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-    };
-    final response = await http.post(
-      url,
-      body: jsonEncode({
-        'source': details.verificationData.source,
-        'productId': details.productID,
-        'verificationData': details.verificationData.serverVerificationData,
-        'userId': _userId,
-      }),
-      headers: headers,
-    );
-    if (response.statusCode == 200) {
-      'Successfully verified purchase'.logDebug();
-      return true;
-    } else {
-      'failed request: ${response.statusCode} - ${response.body}'.logDebug();
-      return false;
-    }
+  /// Sends a store purchase to the server for verification.
+  Future<void> verifyPurchase(PurchaseDetails details) async {
+    final isIos = Platform.isIOS || Platform.isMacOS;
+    await _functions.httpsCallable('verifyPurchase').call({
+      'platform': isIos ? 'ios' : 'android',
+      // Apple: a transaction id of the subscription. Google: the purchase token.
+      'purchaseId': isIos
+          ? details.purchaseID
+          : details.verificationData.serverVerificationData,
+    });
   }
 
-  Future<void> completePurchase(PurchaseDetails purchaseDetails) {
-    // final purchaseId = Platform.isAndroid
-    //     ? purchaseDetails.purchaseID?.split('.')[1]
-    //     : purchaseDetails.purchaseID;
-    throw UnimplementedError();
+  /// Stripe Checkout URL for the web. [plan] is 'monthly' or 'yearly'.
+  Future<Uri> checkoutUrl(String plan) async {
+    final result =
+        await _functions.httpsCallable('createCheckoutSession').call({'plan': plan});
+    return Uri.parse(result.data['url'] as String);
+  }
+
+  /// Stripe customer portal URL (change card, switch plan, cancel).
+  Future<Uri> portalUrl() async {
+    final result = await _functions.httpsCallable('createPortalSession').call();
+    return Uri.parse(result.data['url'] as String);
   }
 }
