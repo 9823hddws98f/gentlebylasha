@@ -9,7 +9,6 @@ import { z } from "zod";
 
 import {
   type AccessCode,
-  type Entitlement,
   generateCode,
   mergeEntitlement,
   normalizeCode,
@@ -22,6 +21,7 @@ import {
   newDeletionCode,
   type StoredDeletionCode,
 } from "./deletion.js";
+import { computeEntitlement, entitlementFields, readSources } from "./entitlement.js";
 import { escapeHtml, sendMail, SENDGRID_API_KEY } from "./mail.js";
 
 initializeApp();
@@ -178,37 +178,23 @@ export const redeemCode = onCall(async (req) => {
       ...(raw as AccessCode),
       createdAt: toDate(raw.createdAt) ?? now,
     };
-    const sub = subSnap.data();
-    const current: Entitlement | undefined = sub && {
-      active: sub.active === true,
-      expiresAt: sub.expiresAt === null ? null : (toDate(sub.expiresAt) ?? new Date(0)),
-    };
+    const sources = readSources(subSnap.data());
 
     const plan = planRedemption(code, uid, now);
     if (!plan.ok) return plan;
     // Redeeming the same code twice changes nothing; report the access the user has.
-    if (plan.alreadyRedeemed) return { ...plan, expiresAt: current?.expiresAt ?? null };
+    if (plan.alreadyRedeemed) return { ...plan, expiresAt: computeEntitlement(sources, now).expiresAt };
 
-    const expiresAt = mergeEntitlement(current, plan.expiresAt, now);
-    const codeWins = expiresAt === plan.expiresAt;
+    // A second code extends the code grant; other sources are kept as they are.
+    sources.code = { active: true, expiresAt: mergeEntitlement(sources.code, plan.expiresAt, now) };
 
     tx.update(codeRef, {
       status: "redeemed",
       redeemedBy: uid,
       redeemedAt: Timestamp.fromDate(now),
     });
-    tx.set(
-      subRef,
-      {
-        active: true,
-        expiresAt: expiresAt ? Timestamp.fromDate(expiresAt) : null,
-        updatedAt: Timestamp.fromDate(now),
-        // Only claim the source when the code is what grants the access.
-        ...(codeWins ? { source: "code", code: normalized } : {}),
-      },
-      { merge: true },
-    );
-    return { ...plan, expiresAt };
+    tx.set(subRef, entitlementFields(sources, now, { code: normalized }), { merge: true });
+    return { ...plan, expiresAt: computeEntitlement(sources, now).expiresAt };
   });
 
   if (!result.ok) throw new HttpsError("failed-precondition", result.reason);
@@ -363,3 +349,12 @@ export const adminSetAdmin = onCall(async (req) => {
   await logAdminAction(adminUid, "setAdmin", { email, admin });
   return { success: true };
 });
+
+export {
+  appleNotifications,
+  createCheckoutSession,
+  createPortalSession,
+  googleRtdn,
+  stripeWebhook,
+  verifyPurchase,
+} from "./purchases.js";
