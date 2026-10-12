@@ -24,8 +24,8 @@ class IAPCubit extends Cubit<IAPState> {
   StreamSubscription<List<PurchaseDetails>>? _subscription;
 
   static const productIds = [
-    'sleepytales_monthly_11.99',
-    'sleepytales_annually_47.00',
+    'gentle_premium_monthly',
+    'gentle_premium_yearly',
   ];
 
   Future<void> loadPurchases() async {

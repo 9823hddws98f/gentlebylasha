@@ -40,7 +40,7 @@ class _OnBoarding02ScreenState extends State<OnBoarding02Screen> with Translatio
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),
               child: Text(
-                'How did you hear about Sleepytales?',
+                'How did you hear about Gentle?',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               ),
             ),

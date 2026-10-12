@@ -110,7 +110,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get sleepCheckIn => 'Slaap check-in';
 
   @override
-  String get welcomeToSleepytales => 'Welkom bij gentle';
+  String get welcomeToSleepytales => 'Welkom bij Gentle';
 
   @override
   String get launchScreenMessage => 'sluit gewoon je ogen en luister';

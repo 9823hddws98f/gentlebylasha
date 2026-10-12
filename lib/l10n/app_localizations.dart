@@ -299,7 +299,7 @@ abstract class AppLocalizations {
   /// No description provided for @welcomeToSleepytales.
   ///
   /// In en, this message translates to:
-  /// **'Welcome to gentle'**
+  /// **'Welcome to Gentle'**
   String get welcomeToSleepytales;
 
   /// No description provided for @launchScreenMessage.
