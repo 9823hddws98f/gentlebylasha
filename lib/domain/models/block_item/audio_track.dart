@@ -16,6 +16,9 @@ class AudioTrack {
   final Duration duration;
   final Color? dominantColor;
 
+  /// Only playable with an active entitlement (subscription or access code).
+  final bool premium;
+
   String get durationString =>
       '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
 
@@ -31,6 +34,7 @@ class AudioTrack {
     required this.hasTimer,
     required this.duration,
     this.dominantColor,
+    this.premium = false,
   });
 
   AudioTrack copyWith({
@@ -45,6 +49,7 @@ class AudioTrack {
     bool? hasTimer,
     Duration? duration,
     Color? dominantColor,
+    bool? premium,
   }) {
     return AudioTrack(
       id: id ?? this.id,
@@ -58,6 +63,7 @@ class AudioTrack {
       hasTimer: hasTimer ?? this.hasTimer,
       duration: duration ?? this.duration,
       dominantColor: dominantColor ?? this.dominantColor,
+      premium: premium ?? this.premium,
     );
   }
 
@@ -73,6 +79,7 @@ class AudioTrack {
       'thumbnail': thumbnail.toMap(),
       'hasTimer': hasTimer,
       'duration': duration.inMilliseconds,
+      'premium': premium,
       // ignore: deprecated_member_use
       if (dominantColor != null) 'dominantColor': dominantColor!.value,
     };
@@ -92,6 +99,7 @@ class AudioTrack {
       duration: Duration(milliseconds: map['duration'] as int),
       dominantColor:
           map['dominantColor'] != null ? Color(map['dominantColor'] as int) : null,
+      premium: map['premium'] == true,
     );
   }
 
@@ -119,7 +127,8 @@ class AudioTrack {
         other.thumbnail == thumbnail &&
         other.duration == duration &&
         other.hasTimer == hasTimer &&
-        other.dominantColor == dominantColor;
+        other.dominantColor == dominantColor &&
+        other.premium == premium;
   }
 
   @override

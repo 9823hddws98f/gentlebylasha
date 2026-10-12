@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/domain/cubits/downloads_cubit.dart';
 import '/domain/models/block_item/audio_track.dart';
+import '/helper/global_functions.dart';
+import '/helper/premium_gate.dart';
 import '/utils/get.dart';
 
 class TrackDownloadButton extends StatefulWidget {
@@ -48,8 +50,14 @@ class _TrackDownloadButtonState extends State<TrackDownloadButton> {
       );
 
   Future<void> _saveFile() async {
+    if (!requireAccess(widget.track!)) return;
     setState(() => _downloading = true);
-    await _cubit.downloadTrack(widget.track!);
-    setState(() => _downloading = false);
+    try {
+      await _cubit.downloadTrack(widget.track!);
+    } catch (_) {
+      showToast('Download failed');
+    } finally {
+      if (mounted) setState(() => _downloading = false);
+    }
   }
 }

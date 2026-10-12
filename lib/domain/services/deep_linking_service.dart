@@ -63,8 +63,7 @@ class DeepLinkingService {
 
       showToast('Playing track: ${track.title}');
 
-      playTrack(track);
-      _audioPanelManager.maximizeAndPlay(false);
+      if (playTrack(track)) _audioPanelManager.maximizeAndPlay(false);
     } catch (e) {
       showToast('Track not found');
     }

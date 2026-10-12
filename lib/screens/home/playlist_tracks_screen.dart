@@ -6,6 +6,7 @@ import '/domain/services/audio_manager.dart';
 import '/domain/services/audio_panel_manager.dart';
 import '/domain/services/deep_linking_service.dart';
 import '/domain/services/tracks_service.dart';
+import '/helper/premium_gate.dart';
 import '/screens/music_player/widgets/favorite_button.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
@@ -226,8 +227,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                     isPlaying
                         ? _pageManager.pause()
                         : _audioPanelManager.maximizeAndPlay(true);
-                  } else {
-                    _pageManager.loadPlaylist(widget.playlist, _tracks, 0);
+                  } else if (_startPlaylist(0)) {
                     _audioPanelManager.maximizeAndPlay(false);
                   }
                 },
@@ -271,6 +271,18 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
         ),
       );
 
+  /// Queues the tracks the user may play, starting at [index].
+  /// Without premium, premium tracks are left out of the queue.
+  bool _startPlaylist(int index) {
+    final requested = _tracks[index];
+    if (index > 0 && !requireAccess(requested)) return false;
+    final playable = _tracks.where(canPlay).toList();
+    if (playable.isEmpty) return requireAccess(requested);
+    final start = index == 0 ? 0 : playable.indexOf(requested);
+    _pageManager.loadPlaylist(widget.playlist, playable, start);
+    return true;
+  }
+
   Widget _buildTrackItem(AudioTrack track, int index, ColorScheme colors) => Material(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -284,8 +296,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                   onTap: () {
                     if (mediaItem.id == widget.playlist.trackIds[index] && _isPlaying) {
                       _audioPanelManager.maximizeAndPlay(false);
-                    } else {
-                      _pageManager.loadPlaylist(widget.playlist, _tracks, index);
+                    } else if (_startPlaylist(index)) {
                       _audioPanelManager.maximizeAndPlay(false);
                     }
                   },
@@ -331,6 +342,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                               ],
                             ),
                           ),
+                          PremiumLock(track: track),
                           FavoriteButton(
                             trackId: track.id,
                             size: 18,

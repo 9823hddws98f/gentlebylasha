@@ -5,6 +5,7 @@ import 'package:gentle/widgets/blocks/config_of_page.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_panel_manager.dart';
 import '/helper/global_functions.dart';
+import '/helper/premium_gate.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
 import '/widgets/app_image.dart';
@@ -37,8 +38,7 @@ class AudioBlockItem extends StatelessWidget {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          playTrack(track);
-          _audioPanelManager.maximizeAndPlay(false);
+          if (playTrack(track)) _audioPanelManager.maximizeAndPlay(false);
         },
         child: SizedBox(
           height: height,
@@ -80,10 +80,18 @@ class AudioBlockItem extends StatelessWidget {
   Widget _buildTextContent(Color secondaryColor) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            track.title,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontWeight: FontWeight.w500),
+          Row(
+            children: [
+              Flexible(
+                child: Text(
+                  track.title,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontWeight: FontWeight.w500),
+                ),
+              ),
+              const SizedBox(width: 4),
+              PremiumLock(track: track, size: 14),
+            ],
           ),
           const SizedBox(height: 2),
           Text(

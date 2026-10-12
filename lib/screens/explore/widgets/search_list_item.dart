@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '/helper/premium_gate.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_panel_manager.dart';
 import '/helper/global_functions.dart';
@@ -19,8 +20,7 @@ class SearchListItem extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     return ListTile(
       onTap: () {
-        playTrack(track);
-        _audioPanelManager.maximizeAndPlay(false);
+        if (playTrack(track)) _audioPanelManager.maximizeAndPlay(false);
       },
       contentPadding: const EdgeInsets.symmetric(
         horizontal: AppTheme.sidePadding,
@@ -41,9 +41,16 @@ class SearchListItem extends StatelessWidget {
         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
         overflow: TextOverflow.ellipsis,
       ),
-      trailing: Text(
-        '${track.duration.inMinutes}:${(track.duration.inSeconds % 60).toString().padLeft(2, '0')}',
-        style: TextStyle(fontSize: 12, color: colors.onSurfaceVariant),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          PremiumLock(track: track, size: 14),
+          const SizedBox(width: 6),
+          Text(
+            track.durationString,
+            style: TextStyle(fontSize: 12, color: colors.onSurfaceVariant),
+          ),
+        ],
       ),
     );
   }

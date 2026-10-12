@@ -18,8 +18,13 @@ class Entitlement {
 
   const Entitlement({this.active = false, this.expiresAt, this.source});
 
-  bool get isPremium =>
-      active && (expiresAt == null || expiresAt!.isAfter(DateTime.now()));
+  bool isPremiumAt(DateTime now) =>
+      active && (expiresAt == null || expiresAt!.isAfter(now));
+
+  bool get isPremium => isPremiumAt(DateTime.now());
+
+  bool canPlay({required bool premiumTrack, DateTime? now}) =>
+      !premiumTrack || isPremiumAt(now ?? DateTime.now());
 
   static Entitlement fromMap(Map<String, dynamic>? map) {
     if (map == null) return const Entitlement();

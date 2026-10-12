@@ -27,8 +27,7 @@ class HeroBlockItem extends StatelessWidget {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          playTrack(track);
-          _audioPanelManager.maximizeAndPlay(false);
+          if (playTrack(track)) _audioPanelManager.maximizeAndPlay(false);
         },
         child: SizedBox(
           height: height,

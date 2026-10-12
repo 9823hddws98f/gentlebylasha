@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '/domain/cubits/entitlement_cubit.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_manager.dart';
+import '/helper/premium_gate.dart';
 import '/screens/auth/login_screen.dart';
 import '/utils/common_extensions.dart';
 import '/utils/get.dart';
@@ -44,7 +45,9 @@ void pushRemoveAll(BuildContext context, Widget widget) {
       (Route<dynamic> route) => false);
 }
 
-void playTrack(AudioTrack track) {
+/// Starts [track], or opens the paywall when it is premium and the user isn't.
+bool playTrack(AudioTrack track) {
+  if (!requireAccess(track)) return false;
   Get.the<AudioManager>().playSinglePlaylist(
     MediaItem(
       id: track.id,
@@ -60,4 +63,5 @@ void playTrack(AudioTrack track) {
     ),
     track.id,
   );
+  return true;
 }
