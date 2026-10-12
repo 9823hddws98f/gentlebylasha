@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '/domain/cubits/entitlement_cubit.dart';
+import '/domain/cubits/favorite_playlists.dart';
+import '/domain/cubits/favorite_tracks.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_manager.dart';
 import '/helper/premium_gate.dart';
@@ -23,6 +25,8 @@ void showToast(String value) {
 void logout(BuildContext context) async {
   Get.the<AudioManager>().dispose();
   Get.the<EntitlementCubit>().reset();
+  Get.the<FavoritesTracksCubit>().reset();
+  Get.the<FavoritePlaylistsCubit>().reset();
   final FirebaseAuth auth = FirebaseAuth.instance;
   auth.signOut();
 

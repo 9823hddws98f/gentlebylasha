@@ -144,7 +144,7 @@ class AuthRepository {
         .doc(_firebaseAuth!.currentUser!.uid)
         .set(AppUser(
           id: user.uid,
-          email: user.email!,
+          email: user.email ?? '',
           name: name ?? user.displayName ?? '',
           photoURL: user.photoURL ?? '',
           language: 'en',

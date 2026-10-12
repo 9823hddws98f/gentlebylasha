@@ -18,6 +18,8 @@ class FavoritePlaylistsCubit extends Cubit<List<String>> with ActivityLogger {
 
   Future<void> init() => _fetchFavorites();
 
+  void reset() => emit([]);
+
   /// Adds a playlist to favorites in Firestore
   Future<void> addPlaylistToFavorites(String playlistId) async {
     final currentFavorites = List<String>.from(state);

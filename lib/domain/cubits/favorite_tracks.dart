@@ -18,6 +18,8 @@ class FavoritesTracksCubit extends Cubit<List<String>> with ActivityLogger {
 
   Future<void> init() => _fetchFavorites();
 
+  void reset() => emit([]);
+
   /// Adds a track to favorites in Firestore
   Future<void> addTrackToFavorites(String trackId) async {
     final currentFavorites = List<String>.from(state);

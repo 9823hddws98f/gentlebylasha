@@ -22,8 +22,17 @@ class TracksService {
   Future<List<AudioTrack>> getByIds(List<String> trackIds) {
     if (trackIds.isEmpty) return Future.value([]);
 
-    return _collection.where('id', whereIn: trackIds).get().then((snapshot) {
-      final tracks = snapshot.docs.map((doc) => AudioTrack.fromMap(doc.data())).toList();
+    // Firestore allows at most 30 values in a whereIn query.
+    return Future.wait([
+      for (var i = 0; i < trackIds.length; i += 30)
+        _collection
+            .where('id', whereIn: trackIds.sublist(i, (i + 30).clamp(0, trackIds.length)))
+            .get(),
+    ]).then((snapshots) {
+      final tracks = [
+        for (final snapshot in snapshots)
+          for (final doc in snapshot.docs) AudioTrack.fromMap(doc.data()),
+      ];
 
       // Sort tracks to match original trackIds order
       tracks.sort((a, b) => trackIds.indexOf(a.id).compareTo(trackIds.indexOf(b.id)));
