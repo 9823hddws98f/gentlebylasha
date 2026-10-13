@@ -23,6 +23,7 @@ import {
 } from "./deletion.js";
 import { computeEntitlement, entitlementFields, readSources, setSourceGrant } from "./entitlement.js";
 import { escapeHtml, sendMail, SENDGRID_API_KEY } from "./mail.js";
+import { APPLE_SIGNIN_KEY, revokeAppleToken, storeAppleRefreshToken } from "./apple-signin.js";
 import { releaseBilling } from "./purchases.js";
 import { sendPush } from "./push.js";
 import { computeStats } from "./stats.js";
@@ -103,7 +104,7 @@ export const requestAccountDeletion = onCall({ secrets: [SENDGRID_API_KEY] }, as
 });
 
 /** Deletes the caller's own account after checking the emailed code. */
-export const deleteUser = onCall({ secrets: [STRIPE_SECRET_KEY] }, async (req) => {
+export const deleteUser = onCall({ secrets: [STRIPE_SECRET_KEY, APPLE_SIGNIN_KEY] }, async (req) => {
   const uid = requireAuth(req);
   const { code } = parse(z.object({ code: z.string().max(20) }), req.data);
   const ref = db.collection("deletion_codes").doc(uid);
@@ -122,6 +123,7 @@ export const deleteUser = onCall({ secrets: [STRIPE_SECRET_KEY] }, async (req) =
   if (check !== "ok") throw new HttpsError("failed-precondition", check);
 
   await releaseBilling(uid);
+  await revokeAppleToken(uid).catch((e) => logger.error("revokeAppleToken failed", { uid, error: String(e) }));
   const batch = db.batch();
   for (const collection of [
     "users",
@@ -131,12 +133,30 @@ export const deleteUser = onCall({ secrets: [STRIPE_SECRET_KEY] }, async (req) =
     "deletion_codes",
     "code_attempts",
     "purchase_attempts",
+    "apple_tokens",
   ]) {
     batch.delete(db.collection(collection).doc(uid));
   }
   await batch.commit();
   await getAuth().deleteUser(uid);
   logger.info("User deleted", { uid });
+  return { success: true };
+});
+
+/** After Sign in with Apple: keep a revocable token (Apple requires revoking it on account deletion). */
+export const linkAppleSignIn = onCall({ secrets: [APPLE_SIGNIN_KEY] }, async (req) => {
+  const uid = requireAuth(req);
+  const { authorizationCode } = parse(z.object({ authorizationCode: z.string().min(1).max(2000) }), req.data);
+  const user = await getAuth().getUser(uid);
+  if (!user.providerData.some((p) => p.providerId === "apple.com")) {
+    throw new HttpsError("failed-precondition", "Not an Apple account.");
+  }
+  try {
+    await storeAppleRefreshToken(uid, authorizationCode);
+  } catch (e) {
+    logger.error("linkAppleSignIn failed", { uid, error: String(e) });
+    throw new HttpsError("unavailable", "apple-token-failed");
+  }
   return { success: true };
 });
 

@@ -1,4 +1,9 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -68,8 +73,7 @@ class AuthRepository {
     return null;
   }
 
-  Future<UserCredential?> signUpWithEmail(
-      String name, String email, String password) async {
+  Future<UserCredential?> signUpWithEmail(String name, String email, String password) async {
     try {
       final user = await _firebaseAuth!.createUserWithEmailAndPassword(
         email: email,
@@ -91,8 +95,7 @@ class AuthRepository {
     try {
       UserCredential? user;
       if (kIsWeb) {
-        final provider =
-            GoogleAuthProvider().setCustomParameters({'prompt': 'select_account'});
+        final provider = GoogleAuthProvider().setCustomParameters({'prompt': 'select_account'});
         user = await _firebaseAuth!.signInWithPopup(provider);
       } else {
         final googleSignInAccount = await GoogleSignIn().signIn();
@@ -115,19 +118,28 @@ class AuthRepository {
 
   Future<UserCredential?> signInWithApple() async {
     try {
+      // The nonce ties Apple's identity token to this sign-in, so a stolen
+      // token can't be replayed (Firebase checks it against rawNonce).
+      final rawNonce = _randomNonce();
       final appleCredential = await SignInWithApple.getAppleIDCredential(
         scopes: [
           AppleIDAuthorizationScopes.email,
           AppleIDAuthorizationScopes.fullName,
         ],
+        nonce: sha256.convert(utf8.encode(rawNonce)).toString(),
       );
 
       final credential = OAuthProvider('apple.com').credential(
-        idToken: String.fromCharCodes(appleCredential.identityToken!.codeUnits),
-        accessToken: String.fromCharCodes(appleCredential.authorizationCode.codeUnits),
+        idToken: appleCredential.identityToken,
+        rawNonce: rawNonce,
+        accessToken: appleCredential.authorizationCode,
       );
       final user = await _firebaseAuth!.signInWithCredential(credential);
       await _initUserInDBIfNeeded(user);
+      // Lets the server revoke Apple access when the account is deleted (Apple requires it).
+      FirebaseFunctions.instanceFor(region: 'us-central1')
+          .httpsCallable('linkAppleSignIn')
+          .call({'authorizationCode': appleCredential.authorizationCode}).ignore();
       return user;
     } catch (e) {
       showToast(e.toString());
@@ -135,8 +147,7 @@ class AuthRepository {
     }
   }
 
-  Future<void> _initUserInDBIfNeeded(UserCredential userCredential,
-      [String? name]) async {
+  Future<void> _initUserInDBIfNeeded(UserCredential userCredential, [String? name]) async {
     if (userCredential.additionalUserInfo?.isNewUser == false) return;
     final user = userCredential.user!;
     return await FirebaseFirestore.instance
@@ -153,8 +164,8 @@ class AuthRepository {
         ).toMap());
   }
 
-  Future<bool> isPasswordAccount() async => _firebaseAuth!.currentUser!.providerData
-      .any((provider) => provider.providerId == 'password');
+  Future<bool> isPasswordAccount() async =>
+      _firebaseAuth!.currentUser!.providerData.any((provider) => provider.providerId == 'password');
 
   Future<void> resetPassword(String email) async {
     await _firebaseAuth!.sendPasswordResetEmail(email: email);
@@ -182,8 +193,7 @@ class AuthRepository {
 
   Future<void> reauthenticate(String password) async {
     if (currentUser == null) return;
-    var credential =
-        EmailAuthProvider.credential(email: currentUser!.email, password: password);
+    var credential = EmailAuthProvider.credential(email: currentUser!.email, password: password);
     await _firebaseAuth!.currentUser!.reauthenticateWithCredential(credential);
   }
 
@@ -225,4 +235,10 @@ extension on User {
       photoURL ?? '',
     );
   }
+}
+
+String _randomNonce([int length = 32]) {
+  const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+  final random = Random.secure();
+  return List.generate(length, (_) => chars[random.nextInt(chars.length)]).join();
 }
