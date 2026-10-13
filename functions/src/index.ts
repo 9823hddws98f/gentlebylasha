@@ -27,7 +27,7 @@ import { escapeHtml, sendMail, SENDGRID_API_KEY } from "./mail.js";
 import { APPLE_SIGNIN_KEY, revokeAppleToken, storeAppleRefreshToken } from "./apple-signin.js";
 import { releaseBilling } from "./purchases.js";
 import { pushResult, sendPush } from "./push.js";
-import { computeStats } from "./stats.js";
+import { computeStats, STATS_VERSION } from "./stats.js";
 import { parseDownloadUrl, rotateDownloadUrl } from "./track-audio.js";
 import { STRIPE_SECRET_KEY } from "./stores/stripe.js";
 
@@ -571,13 +571,14 @@ export const adminCancelPush = onCall(async (req) => {
   return { success: true };
 });
 
-/** Admin: dashboard numbers, cached for 15 minutes unless a refresh is asked for. */
+/** Admin: dashboard numbers, cached for an hour unless a refresh is asked for. */
 export const adminStats = onCall({ timeoutSeconds: 120 }, async (req) => {
   await requireAdmin(req);
   const { refresh } = parse(z.object({ refresh: z.boolean().default(false) }), req.data ?? {});
   const ref = db.collection("admin_cache").doc("stats");
   const cached = (await ref.get()).data();
-  if (!refresh && cached && Date.now() - Date.parse(cached.generatedAt) < 15 * 60_000) return cached;
+  const fresh = cached?.version === STATS_VERSION && Date.now() - Date.parse(cached.generatedAt) < 60 * 60_000;
+  if (!refresh && fresh) return cached;
   const stats = await computeStats();
   await ref.set(stats);
   return stats;
@@ -614,6 +615,15 @@ export const adminFindUser = onCall(async (req) => {
       disabled: user.disabled,
     },
   };
+});
+
+/** Admin: email addresses for uids (the activity log stores uids). Unknown uids are left out. */
+export const adminUserEmails = onCall(async (req) => {
+  await requireAdmin(req);
+  const { uids } = parse(z.object({ uids: z.array(z.string().min(1).max(128)).max(100) }), req.data);
+  if (!uids.length) return {};
+  const { users } = await getAuth().getUsers([...new Set(uids)].map((uid) => ({ uid })));
+  return Object.fromEntries(users.map((u) => [u.uid, u.email ?? ""]));
 });
 
 /** Admin: grant or revoke admin rights. */

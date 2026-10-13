@@ -70,6 +70,7 @@ Stand: 13 oktober 2026. Alles hieronder kan alleen de eigenaar doen: accounts, s
    - Review notes over de toegangscodes, plus een demo-account.
 3. **In-App Purchase-sleutel** (Users and Access → Integrations): noteer de key id en de issuer id.
 4. **Server Notifications v2**, voor productie en sandbox: `https://us-central1-sleeptales-4bac2.cloudfunctions.net/appleNotifications`.
+   - Zet het **Apple ID** van de app (App Store Connect → App Information → Apple ID, een getal) als `APPLE_APP_ID` in `functions/.env.sleeptales-4bac2`. Zonder dit nummer kan de server productiemeldingen niet volledig controleren (sandbox werkt wel).
 5. **Sign in with Apple-sleutel:** noteer de key id en het team id.
 6. **Mail aan "Verberg mijn e-mail"-gebruikers.** Registreer het afzenderdomein van `MAIL_FROM` bij "Sign in with Apple for Email Communication". Anders komt de verwijdercode niet aan bij gebruikers die hun e-mail verbergen, en dat is een afwijzingsreden.
 7. **Universal links:**
@@ -120,10 +121,8 @@ Android-builds zijn op deze Mac niet getest, want hier staat geen Android SDK. D
 
 Kleiner of afhankelijk van keuzes hierboven:
 
-- Handtekeningcontrole (JWS) op Apple Server Notifications. De status wordt altijd opnieuw bij Apple opgevraagd, dus premium valt er niet mee te vervalsen.
-- Firebase App Check.
-- Downloads per gebruiker scheiden en wissen bij uitloggen.
+- Firebase App Check. Daarvoor zijn reCAPTCHA Enterprise (web), App Attest (iOS) en Play Integrity (Android) in de console nodig.
+- Webpush in de klant-webapp. Daarvoor is een VAPID-sleutel uit de Firebase-console nodig. De app en de admin sturen nu alleen push naar iOS en Android.
 - In de admin:
   - Slepen in plaats van pijltjes voor de volgorde.
   - Een voorbeeld van een pagina.
-  - Opzeggingen in de statistieken.

@@ -13,9 +13,16 @@ interface Stats {
   signupsPerWeek: { weekStart: string; count: number }[];
   premium: number;
   premiumBySource: Record<string, number>;
+  /** Running paid subscriptions per store. Missing from functions older than this page. */
+  paying?: Record<PaidSource, number>;
+  /** Users who stopped paying in the last `days` days, per store that ended. */
+  cancellations?: { days: number; total: number; bySource: Record<PaidSource, number> };
   codes: Record<string, number>;
   topTracks: { id: string; title: string; plays: number }[];
 }
+
+type PaidSource = "apple" | "google" | "stripe";
+const PAID_SOURCES: PaidSource[] = ["apple", "google", "stripe"];
 
 const getStats = call<{ refresh: boolean }, Stats>("adminStats");
 
@@ -75,6 +82,9 @@ export default function StatsPage() {
             {[
               ["Gebruikers", stats.users],
               ["Premium nu", stats.premium],
+              ...(stats.cancellations
+                ? [[`Opzeggingen (${stats.cancellations.days} dagen)`, stats.cancellations.total] as const]
+                : []),
               ["Codes ingewisseld", stats.codes.redeemed ?? 0],
               ["Codes nog vrij", stats.codes.available ?? 0],
             ].map(([label, value]) => (
@@ -94,25 +104,62 @@ export default function StatsPage() {
           </section>
 
           <div className="grid gap-6 md:grid-cols-2">
-            <section className="rounded-2xl border border-line bg-surface p-5 sm:p-6">
-              <h2 className="mb-3 text-[15px] font-semibold text-ink">Premium via</h2>
-              {stats.premium === 0 ? (
-                <p className="text-sm text-ink-faint">Nog niemand heeft premium.</p>
-              ) : (
-                <table className="w-full text-sm">
-                  <tbody>
-                    {Object.entries(stats.premiumBySource)
-                      .sort((a, b) => b[1] - a[1])
-                      .map(([source, n]) => (
-                        <tr key={source} className="border-b border-line last:border-0">
-                          <td className="py-2 text-ink">{SOURCE[source] ?? source}</td>
-                          <td className="tabular py-2 text-right text-ink">{num.format(n)}</td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
+            <div className="space-y-6">
+              <section className="rounded-2xl border border-line bg-surface p-5 sm:p-6">
+                <h2 className="mb-3 text-[15px] font-semibold text-ink">Premium via</h2>
+                {stats.premium === 0 ? (
+                  <p className="text-sm text-ink-faint">Nog niemand heeft premium.</p>
+                ) : (
+                  <table className="w-full text-sm">
+                    <tbody>
+                      {Object.entries(stats.premiumBySource)
+                        .sort((a, b) => b[1] - a[1])
+                        .map(([source, n]) => (
+                          <tr key={source} className="border-b border-line last:border-0">
+                            <td className="py-2 text-ink">{SOURCE[source] ?? source}</td>
+                            <td className="tabular py-2 text-right text-ink">{num.format(n)}</td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                )}
+              </section>
+
+              {stats.paying && stats.cancellations && (
+                <section className="rounded-2xl border border-line bg-surface p-5 sm:p-6">
+                  <h2 className="text-[15px] font-semibold text-ink">Betaalde abonnementen</h2>
+                  <p className="mb-3 text-sm text-ink-faint">
+                    Opgezegd: gestopt in de laatste {stats.cancellations.days} dagen, zonder ander betaald abonnement.
+                  </p>
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-line text-[13px] text-ink-faint">
+                        <th scope="col" className="py-2 text-left font-medium">Via</th>
+                        <th scope="col" className="py-2 text-right font-medium">Betalend</th>
+                        <th scope="col" className="py-2 pl-4 text-right font-medium">Opgezegd</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {PAID_SOURCES.map((source) => {
+                        const paying = stats.paying?.[source] ?? 0;
+                        const cancelled = stats.cancellations?.bySource[source] ?? 0;
+                        return (
+                          <tr key={source} className="border-b border-line last:border-0">
+                            <td className="py-2 text-ink">{SOURCE[source]}</td>
+                            <td className={`tabular py-2 text-right ${paying ? "text-ink" : "text-ink-faint"}`}>
+                              {num.format(paying)}
+                            </td>
+                            <td className={`tabular py-2 pl-4 text-right ${cancelled ? "text-ink" : "text-ink-faint"}`}>
+                              {num.format(cancelled)}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </section>
               )}
-            </section>
+            </div>
 
             <section className="rounded-2xl border border-line bg-surface p-5 sm:p-6">
               <h2 className="mb-3 text-[15px] font-semibold text-ink">Meest beluisterd</h2>

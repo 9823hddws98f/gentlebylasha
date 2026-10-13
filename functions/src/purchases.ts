@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { VerificationException, VerificationStatus } from "@apple/app-store-server-library";
 import { getAuth } from "firebase-admin/auth";
 import { FieldValue, getFirestore, Timestamp } from "firebase-admin/firestore";
 import { logger } from "firebase-functions";
@@ -16,7 +17,7 @@ import {
   type Source,
   type SourceGrant,
 } from "./entitlement.js";
-import { APPLE_IAP_KEY, appleNotificationTransactionId, appleSubscription } from "./stores/apple.js";
+import { APPLE_IAP_KEY, appleSubscription, InvalidNotification, verifyAppleNotification } from "./stores/apple.js";
 import { googleSubscription } from "./stores/google.js";
 import {
   APP_URL,
@@ -140,8 +141,12 @@ export const verifyPurchase = onCall({ secrets: [APPLE_IAP_KEY] }, async (req) =
 /** App Store Server Notifications v2: renewals, expiries, refunds. */
 export const appleNotifications = onRequest({ secrets: [APPLE_IAP_KEY] }, async (req, res) => {
   try {
+    const notification = await verifyAppleNotification(String(req.body?.signedPayload ?? ""));
+    if (!notification.verified) {
+      logger.warn("appleNotifications: production notification not verified; set APPLE_APP_ID");
+    }
     // The payload is only used to find the subscription; its status comes from Apple's API.
-    const originalTransactionId = appleNotificationTransactionId(String(req.body?.signedPayload ?? ""));
+    const { originalTransactionId } = notification;
     const uid = originalTransactionId && (await linkedUid("apple", originalTransactionId));
     if (originalTransactionId && uid) {
       const { grant } = await appleSubscription(originalTransactionId);
@@ -149,7 +154,14 @@ export const appleNotifications = onRequest({ secrets: [APPLE_IAP_KEY] }, async 
     }
     res.sendStatus(200);
   } catch (e) {
-    logger.error("appleNotifications failed", String(e));
+    if (e instanceof InvalidNotification) {
+      logger.warn("appleNotifications: rejected", { reason: e.message });
+      res.sendStatus(400);
+      return;
+    }
+    // VerificationException has no message of its own; its status and cause say what happened.
+    const error = e instanceof VerificationException ? `${VerificationStatus[e.status]}: ${e.cause ?? ""}` : String(e);
+    logger.error("appleNotifications failed", { error });
     res.sendStatus(500); // Apple retries
   }
 });
