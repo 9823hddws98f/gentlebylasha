@@ -1,12 +1,13 @@
 "use client";
 
-import { AudioLines, BellRing, KeyRound, LayoutList, ListMusic, LogOut, Users } from "lucide-react";
+import { AudioLines, BarChart3, BellRing, KeyRound, LayoutList, ListMusic, LogOut, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { signOut, useAuth } from "@/lib/auth";
 
 const nav = [
+  { href: "/stats", label: "Statistieken", icon: BarChart3 },
   { href: "/pages", label: "Pagina's", icon: LayoutList },
   { href: "/tracks", label: "Tracks", icon: AudioLines },
   { href: "/playlists", label: "Playlists", icon: ListMusic },

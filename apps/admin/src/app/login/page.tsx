@@ -14,7 +14,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!loading && isAdmin) router.replace("/codes");
+    if (!loading && isAdmin) router.replace("/stats");
   }, [loading, isAdmin, router]);
 
   async function run(action: () => Promise<unknown>) {

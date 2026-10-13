@@ -52,6 +52,15 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Play counts: anyone signed in may add exactly one play; admins read.
+    match /track_stats/{trackId} {
+      allow read: if isAdmin();
+      allow create: if signedIn() && request.resource.data.keys().hasOnly(['plays'])
+        && request.resource.data.plays == 1;
+      allow update: if signedIn() && request.resource.data.keys().hasOnly(['plays'])
+        && request.resource.data.plays == resource.data.plays + 1;
+    }
+
     // Activity log: users append their own entries, admins read.
     match /activity_log/{id} {
       allow create: if signedIn() && request.resource.data.userId == request.auth.uid;

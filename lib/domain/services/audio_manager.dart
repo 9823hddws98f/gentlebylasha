@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 import '/domain/models/block_item/audio_playlist.dart';
@@ -162,6 +163,12 @@ class AudioManager {
     if (mediaItem?.id.isEmpty ?? true) return;
     if ((mediaItem!.duration?.inSeconds ?? 0) > 1) {
       _analytics.logAudioPlay(mediaItem.id, currentPlaylistBlockNotifier.value?.id);
+      // Play count for the admin's statistics; rules only allow +1.
+      FirebaseFirestore.instance
+          .collection('track_stats')
+          .doc(mediaItem.id)
+          .set({'plays': FieldValue.increment(1)}, SetOptions(merge: true))
+          .catchError((_) {});
     }
   }
 

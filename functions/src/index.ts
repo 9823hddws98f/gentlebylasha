@@ -25,6 +25,7 @@ import { computeEntitlement, entitlementFields, readSources, setSourceGrant } fr
 import { escapeHtml, sendMail, SENDGRID_API_KEY } from "./mail.js";
 import { releaseBilling } from "./purchases.js";
 import { sendPush } from "./push.js";
+import { computeStats } from "./stats.js";
 import { rotateDownloadUrl } from "./track-audio.js";
 import { STRIPE_SECRET_KEY } from "./stores/stripe.js";
 
@@ -456,6 +457,18 @@ export const adminCancelPush = onCall(async (req) => {
   });
   await logAdminAction(adminUid, "cancelPush", { job: id });
   return { success: true };
+});
+
+/** Admin: dashboard numbers, cached for 15 minutes unless a refresh is asked for. */
+export const adminStats = onCall({ timeoutSeconds: 120 }, async (req) => {
+  requireAdmin(req);
+  const { refresh } = parse(z.object({ refresh: z.boolean().default(false) }), req.data ?? {});
+  const ref = db.collection("admin_cache").doc("stats");
+  const cached = (await ref.get()).data();
+  if (!refresh && cached && Date.now() - Date.parse(cached.generatedAt) < 15 * 60_000) return cached;
+  const stats = await computeStats();
+  await ref.set(stats);
+  return stats;
 });
 
 /** Admin: grant or revoke admin rights by email. */
