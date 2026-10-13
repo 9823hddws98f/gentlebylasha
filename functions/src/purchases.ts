@@ -259,6 +259,9 @@ export const stripeWebhook = onRequest({ secrets: [STRIPE_SECRET_KEY, STRIPE_WEB
           ? (await stripe().subscriptions.list({ customer: customer.id, status: "all", limit: 100 })).data
           : [sub];
         await setSourceGrant(uid, "stripe", bestGrant(all.map(subscriptionGrant), new Date()));
+        // The account may have been deleted while this ran (deleting cancels Stripe,
+        // which triggers this webhook); don't leave its subscription doc behind.
+        if (!(await userExists(uid))) await db().collection("subscriptions").doc(uid).delete();
       }
     } catch (e) {
       logger.error("stripeWebhook failed", { event: event.id, error: String(e) });

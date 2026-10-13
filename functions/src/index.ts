@@ -41,9 +41,16 @@ function requireAuth(req: CallableRequest): string {
   return req.auth.uid;
 }
 
-function requireAdmin(req: CallableRequest): string {
+/**
+ * Checks the claim on the account itself, not only in the ID token, so an
+ * admin whose rights were taken away can't keep using an older token. (The
+ * security rules only see the token; that window closes when it expires.)
+ */
+async function requireAdmin(req: CallableRequest): Promise<string> {
   const uid = requireAuth(req);
   if (req.auth?.token.admin !== true) throw new HttpsError("permission-denied", "Admins only.");
+  const user = await getAuth().getUser(uid);
+  if (user.customClaims?.admin !== true) throw new HttpsError("permission-denied", "Admins only.");
   return uid;
 }
 
@@ -149,15 +156,17 @@ async function deleteAccount(uid: string) {
   // activity_log entries carry the user's name and email.
   const activity = await db.collection("activity_log").where("userId", "==", uid).get();
   const writer = db.bulkWriter();
-  activity.docs.forEach((d) => writer.delete(d.ref));
+  const deletes = activity.docs.map((d) => writer.delete(d.ref));
   await writer.close();
+  await Promise.all(deletes);
   await getStorage()
     .bucket()
     .deleteFiles({ prefix: `users/${uid}/` })
     .catch((e) => logger.error("Deleting profile files failed", { uid, error: String(e) }));
   await getAuth().deleteUser(uid);
   // Cancelling Stripe above fires a webhook that may have rewritten the
-  // subscription before the Auth user was gone; the webhook skips it from now on.
+  // subscription before the Auth user was gone; the webhook cleans up after
+  // itself when it finishes later.
   await db.collection("subscriptions").doc(uid).delete();
 }
 
@@ -273,7 +282,7 @@ export const redeemCode = onCall(async (req) => {
 
 /** Admin: create a batch of unique codes. */
 export const adminGenerateCodes = onCall({ timeoutSeconds: 300 }, async (req) => {
-  const adminUid = requireAdmin(req);
+  const adminUid = await requireAdmin(req);
   const { count, durationDays, batchName } = parse(
     z.object({
       count: z.number().int().min(1).max(1000),
@@ -317,7 +326,7 @@ export const adminGenerateCodes = onCall({ timeoutSeconds: 300 }, async (req) =>
  * next available one from the batch (or any batch). Optionally emails it.
  */
 export const adminAssignCode = onCall({ secrets: [SENDGRID_API_KEY] }, async (req) => {
-  const adminUid = requireAdmin(req);
+  const adminUid = await requireAdmin(req);
   const input = parse(
     z.object({
       email: z.string().trim().toLowerCase().email(),
@@ -392,7 +401,7 @@ export const adminAssignCode = onCall({ secrets: [SENDGRID_API_KEY] }, async (re
 
 /** Admin: disable a code that has not been redeemed yet. */
 export const adminDisableCode = onCall(async (req) => {
-  const adminUid = requireAdmin(req);
+  const adminUid = await requireAdmin(req);
   const { code: input } = parse(z.object({ code: z.string() }), req.data);
   const normalized = normalizeCode(input);
   if (!normalized) throw new HttpsError("invalid-argument", "Invalid code.");
@@ -413,7 +422,7 @@ export const adminDisableCode = onCall(async (req) => {
  * was readable in tracks/{id} stops working.
  */
 export const adminSetTrackPremium = onCall(async (req) => {
-  const adminUid = requireAdmin(req);
+  const adminUid = await requireAdmin(req);
   const { trackId, premium, url: newAudio } = parse(
     z.object({ trackId: z.string().min(1), premium: z.boolean(), url: z.string().url().optional() }),
     req.data,
@@ -451,7 +460,7 @@ export const adminSetTrackPremium = onCall(async (req) => {
  * files. Refuses while a playlist or page row still uses it.
  */
 export const adminDeleteTrack = onCall(async (req) => {
-  const adminUid = requireAdmin(req);
+  const adminUid = await requireAdmin(req);
   const { trackId } = parse(z.object({ trackId: z.string().min(1) }), req.data);
   const [playlists, rows, heroes] = await Promise.all([
     db.collection("playlists").where("trackIds", "array-contains", trackId).get(),
@@ -497,7 +506,7 @@ async function deleteStorageFiles(urls: unknown[]) {
 
 /** Admin: give or take away premium by hand (gifts, support cases). */
 export const adminSetManualPremium = onCall(async (req) => {
-  const adminUid = requireAdmin(req);
+  const adminUid = await requireAdmin(req);
   const { uid, active, expiresAt } = parse(
     z.object({ uid: z.string().min(1), active: z.boolean(), expiresAt: z.string().datetime().nullable() }),
     req.data,
@@ -512,7 +521,7 @@ export const adminSetManualPremium = onCall(async (req) => {
 
 /** Admin: send a push now, or schedule it (sendScheduledPushes sends it later). */
 export const adminSendPush = onCall(async (req) => {
-  const adminUid = requireAdmin(req);
+  const adminUid = await requireAdmin(req);
   const text = z.string().trim().min(1).max(200);
   const job = parse(
     z.object({
@@ -549,7 +558,7 @@ export const adminSendPush = onCall(async (req) => {
 
 /** Admin: cancel a scheduled push that hasn't gone out yet. */
 export const adminCancelPush = onCall(async (req) => {
-  const adminUid = requireAdmin(req);
+  const adminUid = await requireAdmin(req);
   const { id } = parse(z.object({ id: z.string().min(1) }), req.data);
   const ref = db.collection("push_jobs").doc(id);
   await db.runTransaction(async (tx) => {
@@ -564,7 +573,7 @@ export const adminCancelPush = onCall(async (req) => {
 
 /** Admin: dashboard numbers, cached for 15 minutes unless a refresh is asked for. */
 export const adminStats = onCall({ timeoutSeconds: 120 }, async (req) => {
-  requireAdmin(req);
+  await requireAdmin(req);
   const { refresh } = parse(z.object({ refresh: z.boolean().default(false) }), req.data ?? {});
   const ref = db.collection("admin_cache").doc("stats");
   const cached = (await ref.get()).data();
@@ -587,7 +596,7 @@ async function getUserOrThrow(uid: string) {
  * without a profile document can be found too.
  */
 export const adminFindUser = onCall(async (req) => {
-  requireAdmin(req);
+  await requireAdmin(req);
   const { query } = parse(z.object({ query: z.string().trim().min(1).max(200) }), req.data);
   const user = await (query.includes("@") ? getAuth().getUserByEmail(query.toLowerCase()) : getAuth().getUser(query))
     .catch(() => null);
@@ -609,12 +618,12 @@ export const adminFindUser = onCall(async (req) => {
 
 /** Admin: grant or revoke admin rights. */
 export const adminSetAdmin = onCall(async (req) => {
-  const adminUid = requireAdmin(req);
+  const adminUid = await requireAdmin(req);
   const { uid, admin } = parse(z.object({ uid: z.string().min(1), admin: z.boolean() }), req.data);
   const user = await getUserOrThrow(uid);
   if (user.uid === adminUid && !admin) throw new HttpsError("failed-precondition", "Je kunt jezelf geen admin-rechten afnemen.");
   await getAuth().setCustomUserClaims(user.uid, { ...user.customClaims, admin });
-  // Without this a removed admin keeps the claim in their ID token for up to an hour.
+  // No new tokens with the old claim; requireAdmin already rejects the current one.
   if (!admin) await getAuth().revokeRefreshTokens(user.uid);
   await logAdminAction(adminUid, "setAdmin", { uid, email: user.email ?? null, admin });
   return { success: true };
@@ -622,7 +631,7 @@ export const adminSetAdmin = onCall(async (req) => {
 
 /** Admin: delete someone's account, the same way users delete their own. */
 export const adminDeleteUser = onCall({ secrets: [STRIPE_SECRET_KEY, APPLE_SIGNIN_KEY] }, async (req) => {
-  const adminUid = requireAdmin(req);
+  const adminUid = await requireAdmin(req);
   const { uid } = parse(z.object({ uid: z.string().min(1) }), req.data);
   if (uid === adminUid) throw new HttpsError("failed-precondition", "Je kunt je eigen account hier niet verwijderen.");
   const user = await getUserOrThrow(uid);
