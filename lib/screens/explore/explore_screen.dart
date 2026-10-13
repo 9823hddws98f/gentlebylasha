@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show ScrollCacheExtent;
@@ -28,11 +30,12 @@ class ExploreScreen extends StatefulWidget {
 }
 
 class _ExploreScreenState extends State<ExploreScreen>
-    with SingleTickerProviderStateMixin, Translation {
+    with TickerProviderStateMixin, Translation {
   final _trackService = Get.the<TracksService>();
   final _pagesCubit = Get.the<PagesCubit>();
 
-  late final TabController _tabController;
+  late TabController _tabController;
+  StreamSubscription<PagesState>? _pagesSubscription;
   final _scrollController = ScrollController();
 
   /// Search
@@ -49,6 +52,23 @@ class _ExploreScreenState extends State<ExploreScreen>
       length: _pagesCubit.state.explorePages.length,
       vsync: this,
     );
+    // Pages can load (or change) after this screen opened; keep the tabs in step.
+    _pagesSubscription = _pagesCubit.stream.listen((state) {
+      final length = state.explorePages.length;
+      if (!mounted || length == _tabController.length) return;
+      setState(() {
+        _tabController.dispose();
+        _tabController = TabController(length: length, vsync: this);
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _pagesSubscription?.cancel();
+    _tabController.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override

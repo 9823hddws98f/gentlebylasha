@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 
@@ -21,16 +23,21 @@ class CategoryListState extends State<CategoryList> {
   final Map<int, GlobalKey> _itemKeys = {};
 
   List<AppPage> _appPages = [];
+  StreamSubscription<PagesState>? _pagesSubscription;
   int _selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
     _appPages = _pagesCubit.state.explorePages.keys.toList();
+    _pagesSubscription = _pagesCubit.stream.listen((state) {
+      if (mounted) setState(() => _appPages = state.explorePages.keys.toList());
+    });
   }
 
   @override
   void dispose() {
+    _pagesSubscription?.cancel();
     _itemKeys.forEach((_, key) => key.currentState?.dispose());
     _itemKeys.clear();
     super.dispose();

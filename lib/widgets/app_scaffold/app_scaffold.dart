@@ -19,6 +19,9 @@ class AppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Screens read their texts through `tr` without a BuildContext; depending on
+    // the locale here rebuilds every screen (title and body) after a language switch.
+    Localizations.localeOf(context);
     final isMobile = MyApp.isMobile;
     return Scaffold(
       appBar: appBar?.call(context, isMobile) as PreferredSizeWidget?,

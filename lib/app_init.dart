@@ -1,7 +1,11 @@
 import 'dart:async';
 
 import 'package:audio_session/audio_session.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,7 +28,7 @@ class AppInit {
   static Future<void> initialize() async {
     tz.initializeTimeZones();
 
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    await _initializeFirebase();
 
     _setSystemChrome();
 
@@ -39,6 +43,38 @@ class AppInit {
 
     await Get.the<AppSettings>().initialize();
     await Get.the<ReminderService>().initialize();
+  }
+
+  /// Local development against the Firebase emulators:
+  /// `--dart-define=FIREBASE_EMULATORS=true` (optionally `EMULATOR_HOST`,
+  /// e.g. 10.0.2.2 on an Android emulator). Uses the demo project
+  /// `demo-gentle`, so nothing can reach production. On web a reload loses the
+  /// session (Firebase restores it before the emulator is connected): sign in again.
+  static const useEmulators = bool.fromEnvironment('FIREBASE_EMULATORS');
+  static const _emulatorHost = String.fromEnvironment('EMULATOR_HOST', defaultValue: '127.0.0.1');
+
+  static Future<void> _initializeFirebase() async {
+    final options = DefaultFirebaseOptions.currentPlatform;
+    if (!useEmulators) {
+      await Firebase.initializeApp(options: options);
+      return;
+    }
+    // No measurementId: Analytics can't run against a demo project.
+    await Firebase.initializeApp(
+      options: FirebaseOptions(
+        apiKey: options.apiKey,
+        appId: options.appId,
+        messagingSenderId: options.messagingSenderId,
+        projectId: 'demo-gentle',
+        authDomain: options.authDomain,
+        storageBucket: 'demo-gentle.appspot.com',
+        iosBundleId: options.iosBundleId,
+      ),
+    );
+    await FirebaseAuth.instance.useAuthEmulator(_emulatorHost, 9099);
+    FirebaseFirestore.instance.useFirestoreEmulator(_emulatorHost, 8080);
+    await FirebaseStorage.instance.useStorageEmulator(_emulatorHost, 9199);
+    FirebaseFunctions.instanceFor(region: 'us-central1').useFunctionsEmulator(_emulatorHost, 5001);
   }
 
   static void _setSystemChrome() {

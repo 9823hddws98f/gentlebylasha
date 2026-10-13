@@ -30,6 +30,8 @@ class _PageBlockBuilderState extends State<PageBlockBuilder>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    // Row titles come from the content (titleNl); rebuild them when the language changes.
+    Localizations.localeOf(context);
     return BlocBuilder<PagesCubit, PagesState>(
       bloc: _pagesCubit,
       builder: (context, state) => PageConfig(

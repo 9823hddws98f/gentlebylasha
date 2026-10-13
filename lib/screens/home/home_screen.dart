@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/domain/cubits/pages/pages_cubit.dart';
 import '/domain/services/language_cubit.dart';
@@ -24,8 +25,12 @@ class _HomeScreenState extends State<HomeScreen> with Translation {
           hasBottomLine: false,
         ),
         bodyPadding: EdgeInsets.zero,
-        body: (context, isMobile) => _pagesCubit.state.pages.isEmpty
-            ? const Center(child: Icon(Icons.nightlight_round, size: 48))
-            : PageBlockBuilder(page: _pagesCubit.state.pages.keys.first),
+        // Content can arrive after this screen opens (sign-in navigates first).
+        body: (context, isMobile) => BlocBuilder<PagesCubit, PagesState>(
+          bloc: _pagesCubit,
+          builder: (context, state) => state.pages.isEmpty
+              ? const Center(child: Icon(Icons.nightlight_round, size: 48))
+              : PageBlockBuilder(page: state.pages.keys.first),
+        ),
       );
 }
