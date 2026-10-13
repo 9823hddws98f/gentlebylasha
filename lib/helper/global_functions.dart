@@ -8,6 +8,7 @@ import '/domain/cubits/favorite_playlists.dart';
 import '/domain/cubits/favorite_tracks.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_manager.dart';
+import '/domain/services/push_service.dart';
 import '/domain/services/tracks_service.dart';
 import '/helper/premium_gate.dart';
 import '/screens/auth/login_screen.dart';
@@ -25,6 +26,7 @@ void showToast(String value) {
 
 void logout(BuildContext context) async {
   Get.the<AudioManager>().dispose();
+  PushService.instance.stop();
   Get.the<EntitlementCubit>().reset();
   Get.the<FavoritesTracksCubit>().reset();
   Get.the<FavoritePlaylistsCubit>().reset();

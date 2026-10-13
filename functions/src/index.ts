@@ -24,6 +24,7 @@ import {
 import { computeEntitlement, entitlementFields, readSources, setSourceGrant } from "./entitlement.js";
 import { escapeHtml, sendMail, SENDGRID_API_KEY } from "./mail.js";
 import { releaseBilling } from "./purchases.js";
+import { sendPush } from "./push.js";
 import { rotateDownloadUrl } from "./track-audio.js";
 import { STRIPE_SECRET_KEY } from "./stores/stripe.js";
 
@@ -404,6 +405,59 @@ export const adminSetManualPremium = onCall(async (req) => {
   return { success: true };
 });
 
+/** Admin: send a push now, or schedule it (sendScheduledPushes sends it later). */
+export const adminSendPush = onCall(async (req) => {
+  const adminUid = requireAdmin(req);
+  const text = z.string().trim().min(1).max(200);
+  const job = parse(
+    z.object({
+      title: z.object({ en: text, nl: text }),
+      body: z.object({ en: z.string().trim().min(1).max(500), nl: z.string().trim().min(1).max(500) }),
+      audience: z.enum(["all", "premium", "free"]),
+      sendAt: z.string().datetime().nullable(),
+    }),
+    req.data,
+  );
+  const sendAt = job.sendAt ? new Date(job.sendAt) : null;
+  const scheduled = sendAt !== null && sendAt.getTime() > Date.now() + 60_000;
+  const ref = db.collection("push_jobs").doc();
+  await ref.set({
+    title: job.title,
+    body: job.body,
+    audience: job.audience,
+    sendAt: Timestamp.fromDate(sendAt ?? new Date()),
+    status: scheduled ? "scheduled" : "sending",
+    createdBy: adminUid,
+    createdAt: FieldValue.serverTimestamp(),
+  });
+  if (!scheduled) {
+    try {
+      await sendPush(job);
+      await ref.update({ status: "sent", sentAt: FieldValue.serverTimestamp() });
+    } catch (e) {
+      await ref.update({ status: "failed", error: String(e).slice(0, 500) });
+      throw new HttpsError("internal", "Versturen mislukt.");
+    }
+  }
+  await logAdminAction(adminUid, "sendPush", { job: ref.id, audience: job.audience, scheduled });
+  return { id: ref.id, scheduled };
+});
+
+/** Admin: cancel a scheduled push that hasn't gone out yet. */
+export const adminCancelPush = onCall(async (req) => {
+  const adminUid = requireAdmin(req);
+  const { id } = parse(z.object({ id: z.string().min(1) }), req.data);
+  const ref = db.collection("push_jobs").doc(id);
+  await db.runTransaction(async (tx) => {
+    if ((await tx.get(ref)).data()?.status !== "scheduled") {
+      throw new HttpsError("failed-precondition", "Dit bericht is al verstuurd.");
+    }
+    tx.update(ref, { status: "cancelled" });
+  });
+  await logAdminAction(adminUid, "cancelPush", { job: id });
+  return { success: true };
+});
+
 /** Admin: grant or revoke admin rights by email. */
 export const adminSetAdmin = onCall(async (req) => {
   const adminUid = requireAdmin(req);
@@ -425,3 +479,5 @@ export {
   stripeWebhook,
   verifyPurchase,
 } from "./purchases.js";
+
+export { sendScheduledPushes } from "./push.js";

@@ -1,6 +1,6 @@
 "use client";
 
-import { AudioLines, KeyRound, LayoutList, ListMusic, LogOut, Users } from "lucide-react";
+import { AudioLines, BellRing, KeyRound, LayoutList, ListMusic, LogOut, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -12,6 +12,7 @@ const nav = [
   { href: "/playlists", label: "Playlists", icon: ListMusic },
   { href: "/codes", label: "Toegangscodes", icon: KeyRound },
   { href: "/users", label: "Gebruikers", icon: Users },
+  { href: "/push", label: "Push", icon: BellRing },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
