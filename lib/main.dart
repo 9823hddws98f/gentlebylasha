@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +8,7 @@ import 'package:gentle/l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '/app_init.dart';
+import '/domain/services/deep_linking_service.dart';
 import '/domain/services/language_cubit.dart';
 import '/screens/auth/login_screen.dart';
 import '/screens/init/init_screen.dart';
@@ -23,14 +23,11 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await AppInit.initialize();
+  // Listen for shared links from the start, so one that opens the app while
+  // signed out is kept until after sign-in.
+  DeepLinkingService.instance.initialize();
 
-  runApp(
-    DevicePreview(
-      enabled: !kReleaseMode && defaultTargetPlatform == TargetPlatform.macOS,
-      data: DevicePreviewData(isDarkMode: true),
-      builder: (context) => MyApp(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {

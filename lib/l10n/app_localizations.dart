@@ -1199,7 +1199,7 @@ abstract class AppLocalizations {
   /// No description provided for @favoriteUpdateFailed.
   ///
   /// In en, this message translates to:
-  /// **'Failed to update favorite status.'**
+  /// **'Your favorites couldn\'t be updated just now. Please try again.'**
   String get favoriteUpdateFailed;
 
   /// No description provided for @search.
@@ -1501,6 +1501,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Playlist not found'**
   String get playlistNotFound;
+
+  /// No description provided for @emailManagedByProvider.
+  ///
+  /// In en, this message translates to:
+  /// **'You sign in with Google or Apple, so your email address is managed there.'**
+  String get emailManagedByProvider;
+
+  /// No description provided for @currentPasswordForEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'To change your email address, enter your current password.'**
+  String get currentPasswordForEmail;
+
+  /// No description provided for @checkYourInbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your inbox'**
+  String get checkYourInbox;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
 }
 
 class _AppLocalizationsDelegate

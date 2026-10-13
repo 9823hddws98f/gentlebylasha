@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
 import '/domain/services/interfaces/in_app_purchases.dart';
 
@@ -29,4 +31,14 @@ class MobileIapService implements InAppPurchases {
 
   @override
   Future<void> restorePurchases() => _inAppPurchase.restorePurchases();
+
+  @override
+  Future<List<PurchaseDetails>> ownedPurchases() async {
+    if (defaultTargetPlatform != TargetPlatform.android) return const [];
+    final response = await _inAppPurchase
+        .getPlatformAddition<InAppPurchaseAndroidPlatformAddition>()
+        .queryPastPurchases();
+    if (response.error != null) debugPrint('Querying Play purchases failed: ${response.error}');
+    return response.pastPurchases;
+  }
 }

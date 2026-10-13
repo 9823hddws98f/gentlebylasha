@@ -45,7 +45,7 @@ class _AppContainerState extends State<AppContainer> with SingleTickerProviderSt
     // Initialize after the frame is rendered to ensure the user is set
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      _deepLinkingService.initialize();
+      _deepLinkingService.attach(this);
       handleCheckoutReturn();
       UserInit(user: _userBloc.state.user).initialize(context);
     });
@@ -53,6 +53,7 @@ class _AppContainerState extends State<AppContainer> with SingleTickerProviderSt
 
   @override
   void dispose() {
+    _deepLinkingService.detach(this);
     _audioPlayerAnimCtrl.dispose();
     _pageManager.dispose();
     super.dispose();

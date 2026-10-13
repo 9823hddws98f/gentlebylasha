@@ -7,4 +7,8 @@ abstract class InAppPurchases {
   Future<bool> buyNonConsumable(PurchaseParam purchaseParam);
   Future<void> completePurchase(PurchaseDetails purchaseDetails);
   Future<void> restorePurchases();
+
+  /// Google Play: the purchases the Play account has now (subscriptions that
+  /// are running). Empty elsewhere.
+  Future<List<PurchaseDetails>> ownedPurchases();
 }

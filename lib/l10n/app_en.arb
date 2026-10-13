@@ -241,7 +241,7 @@
       }
     }
   },
-  "favoriteUpdateFailed": "Failed to update favorite status.",
+  "favoriteUpdateFailed": "Your favorites couldn't be updated just now. Please try again.",
   "search": "Search",
   "clearSearch": "Clear search",
   "noResultsFound": "No results found",
@@ -334,5 +334,9 @@
     }
   },
   "trackNotFound": "Track not found",
-  "playlistNotFound": "Playlist not found"
+  "playlistNotFound": "Playlist not found",
+  "emailManagedByProvider": "You sign in with Google or Apple, so your email address is managed there.",
+  "currentPasswordForEmail": "To change your email address, enter your current password.",
+  "checkYourInbox": "Check your inbox",
+  "ok": "OK"
 }

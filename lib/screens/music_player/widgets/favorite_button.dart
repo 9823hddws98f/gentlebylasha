@@ -3,9 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/domain/cubits/favorite_playlists.dart';
 import '/domain/cubits/favorite_tracks.dart';
-import '/domain/services/language_cubit.dart';
 import '/utils/get.dart';
-import '/utils/tx_loader.dart';
 
 class FavoriteButton extends StatefulWidget {
   const FavoriteButton({
@@ -24,11 +22,9 @@ class FavoriteButton extends StatefulWidget {
   State<FavoriteButton> createState() => _FavoriteButtonState();
 }
 
-class _FavoriteButtonState extends State<FavoriteButton> with Translation {
+class _FavoriteButtonState extends State<FavoriteButton> {
   final _favoriteTracksCubit = Get.the<FavoritesTracksCubit>();
   final _favoritePlaylistsCubit = Get.the<FavoritePlaylistsCubit>();
-
-  final _txLoader = TxLoader();
 
   @override
   Widget build(BuildContext context) {
@@ -51,35 +47,23 @@ class _FavoriteButtonState extends State<FavoriteButton> with Translation {
         onPressed: _toggleFavorite,
       );
 
+  /// The cubit shows the change right away, and undoes it with a message
+  /// when it can't be saved.
   Future<void> _toggleFavorite() async {
-    late final bool isFavorite;
-    if (widget.trackId != null) {
-      isFavorite = _favoriteTracksCubit.state.contains(widget.trackId!);
-    } else {
-      isFavorite = _favoritePlaylistsCubit.state.contains(widget.playlistId!);
+    final trackId = widget.trackId;
+    if (trackId != null) {
+      if (_favoriteTracksCubit.state.contains(trackId)) {
+        await _favoriteTracksCubit.removeFavorite(trackId);
+      } else {
+        await _favoriteTracksCubit.addTrackToFavorites(trackId);
+      }
+      return;
     }
-
-    await _txLoader.load(
-      () async {
-        if (widget.trackId != null) {
-          if (!isFavorite) {
-            await _favoriteTracksCubit.addTrackToFavorites(widget.trackId!);
-          } else {
-            await _favoriteTracksCubit.removeFavorite(widget.trackId!);
-          }
-        } else {
-          if (!isFavorite) {
-            await _favoritePlaylistsCubit.addPlaylistToFavorites(widget.playlistId!);
-          } else {
-            await _favoritePlaylistsCubit.removePlaylist(widget.playlistId!);
-          }
-        }
-      },
-      onError: (error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(tr.favoriteUpdateFailed)),
-        );
-      },
-    );
+    final playlistId = widget.playlistId!;
+    if (_favoritePlaylistsCubit.state.contains(playlistId)) {
+      await _favoritePlaylistsCubit.removePlaylist(playlistId);
+    } else {
+      await _favoritePlaylistsCubit.addPlaylistToFavorites(playlistId);
+    }
   }
 }

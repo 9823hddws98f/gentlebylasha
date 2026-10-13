@@ -182,7 +182,7 @@
   "seeAll": "Alles bekijken",
   "durationMinutes": "{duration} min",
   "sessionCount": "{count, plural, =1{1 sessie} other{{count} sessies}}",
-  "favoriteUpdateFailed": "Je favorieten konden niet worden bijgewerkt.",
+  "favoriteUpdateFailed": "Je favorieten konden nu niet worden bijgewerkt. Probeer het zo nog eens.",
   "search": "Zoeken",
   "clearSearch": "Zoekopdracht wissen",
   "noResultsFound": "Geen resultaten gevonden",
@@ -232,5 +232,9 @@
   "linkInvalid": "Deze link kon niet worden geopend.",
   "playingTrack": "Speelt nu: {title}",
   "trackNotFound": "Audio niet gevonden",
-  "playlistNotFound": "Afspeellijst niet gevonden"
+  "playlistNotFound": "Afspeellijst niet gevonden",
+  "emailManagedByProvider": "Je logt in met Google of Apple, dus je e-mailadres beheer je daar.",
+  "currentPasswordForEmail": "Vul je huidige wachtwoord in om je e-mailadres te wijzigen.",
+  "checkYourInbox": "Kijk in je inbox",
+  "ok": "OK"
 }

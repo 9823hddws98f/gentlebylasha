@@ -31,15 +31,9 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> with Translation
   String? _currentPass;
   String? _newPass;
 
-  bool _isPasswordAccount = true;
+  late final _isPasswordAccount = _auth.isPasswordAccount;
 
   bool _dirty = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _auth.isPasswordAccount().then((value) => setState(() => _isPasswordAccount = value));
-  }
 
   @override
   Widget build(BuildContext context) {

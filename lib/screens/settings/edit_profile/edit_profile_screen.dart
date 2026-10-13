@@ -1,19 +1,24 @@
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '/domain/blocs/user/app_user.dart';
+import '/domain/blocs/authentication/auth_repository.dart';
 import '/domain/blocs/user/user_bloc.dart';
 import '/domain/services/language_cubit.dart';
+import '/helper/auth_errors.dart';
 import '/helper/global_functions.dart';
+import '/helper/validators.dart';
 import '/utils/app_theme.dart';
 import '/utils/command_trigger.dart';
 import '/utils/get.dart';
+import '/utils/modals.dart';
 import '/utils/tx_button.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/app_scaffold/bottom_panel_spacer.dart';
 import '/widgets/input/file_dropzone_selector.dart';
+import '/widgets/input/password_edit_text.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -24,11 +29,23 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> with Translation {
   final _userBloc = Get.the<UserBloc>();
+  final _auth = Get.the<AuthRepository>();
 
   final _formKey = GlobalKey<FormState>();
   final _trigger = ActionTrigger();
 
-  String? _name, _photoPath;
+  /// Google and Apple accounts get their address from there.
+  late final _canChangeEmail = _auth.isPasswordAccount;
+
+  String? _name, _photoPath, _password;
+
+  /// The email as typed; null while untouched.
+  String? _email;
+
+  bool get _emailChanged =>
+      _canChangeEmail &&
+      _email != null &&
+      _email!.toLowerCase() != _userBloc.state.user.email.trim().toLowerCase();
 
   @override
   Widget build(BuildContext context) => AppScaffold(
@@ -155,12 +172,45 @@ class _EditProfileScreenState extends State<EditProfileScreen> with Translation 
             buildWhen: (previous, current) => previous.user.email != current.user.email,
             builder: (context, state) => TextFormField(
               initialValue: state.user.email,
-              enabled: false, // Email changes not supported
-              // keyboardType: TextInputType.emailAddress,
-              // decoration: InputDecoration(hintText: 'Enter your email'),
-              // validator: AppValidators.emailValidator,
-              // onSaved: (value) => _email = value?.trim(),
+              enabled: _canChangeEmail,
+              keyboardType: TextInputType.emailAddress,
+              autocorrect: false,
+              decoration: InputDecoration(
+                helperText: _canChangeEmail ? null : tr.emailManagedByProvider,
+                helperMaxLines: 3,
+              ),
+              validator: _canChangeEmail ? AppValidators.emailValidator : null,
+              onChanged: (value) => setState(() => _email = value.trim()),
+              onSaved: (value) => _email = value?.trim(),
             ),
+          ),
+          // Changing the address needs the current password.
+          AnimatedSize(
+            duration: Durations.medium2,
+            curve: Curves.easeOutCubic,
+            alignment: Alignment.topCenter,
+            child: _emailChanged
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 20, 0, 4),
+                        child: Text('${tr.currentPassword}:', style: TextStyle(fontSize: 16)),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          tr.currentPasswordForEmail,
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                        ),
+                      ),
+                      PasswordEditText(
+                        onSaved: (value) => _password = value,
+                        onFieldSubmitted: (_) => _trigger.trigger(),
+                      ),
+                    ],
+                  )
+                : SizedBox(width: double.infinity),
           ),
         ],
       );
@@ -170,30 +220,65 @@ class _EditProfileScreenState extends State<EditProfileScreen> with Translation 
 
     _formKey.currentState!.save();
 
-    // Check if anything changed
-    if (_name == _userBloc.state.user.name &&
-        _photoPath == _userBloc.state.user.photoURL) {
+    final user = _userBloc.state.user;
+    final nameChanged = _name != null && _name != user.name;
+    // _photoPath is only set once a new photo was picked.
+    final photoChanged = _photoPath != null && _photoPath != user.photoURL;
+    final emailChanged = _emailChanged;
+    if (!nameChanged && !photoChanged && !emailChanged) {
       showToast(tr.noChangesMade);
       return false;
     }
 
+    // The email first: a wrong password then stops the whole update.
+    if (emailChanged && !await _changeEmail(_email!)) return false;
+
     try {
-      AppUser user = _userBloc.state.user;
-
-      if (_name != user.name) {
-        user = user.copyWith(name: _name);
+      if (nameChanged || photoChanged) {
+        _userBloc.add(UserModified(user.copyWith(name: _name, photoURL: _photoPath)));
       }
-
-      if (_photoPath != user.photoURL) {
-        user = user.copyWith(photoURL: _photoPath);
-      }
-
-      _userBloc.add(UserModified(user));
-      return true;
     } catch (e) {
       debugPrint('Updating the profile failed: $e');
       showToast(tr.somethingWentWrong);
       return false;
     }
+
+    if (emailChanged && mounted) await _showConfirmEmail(_email!);
+    return true;
   }
+
+  /// Sends the confirmation link to [email]; false (with a message) when that failed.
+  Future<bool> _changeEmail(String email) async {
+    try {
+      await _auth.changeEmail(email, _password ?? '');
+      return true;
+    } on FirebaseAuthException catch (e) {
+      showToast(switch (e.code) {
+        // Reauthentication with a wrong current password.
+        'wrong-password' || 'invalid-credential' => tr.currentPasswordWrong,
+        _ => authErrorMessage(e.code, tr, fallback: tr.somethingWentWrong) ??
+            tr.somethingWentWrong,
+      });
+      return false;
+    } catch (e) {
+      debugPrint('Changing the email failed: $e');
+      showToast(tr.somethingWentWrong);
+      return false;
+    }
+  }
+
+  /// The address only changes once the link in the email is opened.
+  Future<void> _showConfirmEmail(String email) => Modals.show<void>(
+        context,
+        builder: (context) => AlertDialog(
+          title: Text(tr.checkYourInbox),
+          content: Text(tr.confirmNewEmail(email)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(tr.ok),
+            ),
+          ],
+        ),
+      );
 }

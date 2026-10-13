@@ -176,9 +176,9 @@ export default function StatsPage() {
                   <tbody>
                     {stats.topTracks.map((t, i) => (
                       <tr key={t.id} className="border-b border-line last:border-0">
-                        <td className="tabular w-6 py-2 text-ink-faint">{i + 1}</td>
-                        <td className="max-w-0 truncate py-2 text-ink">{t.title}</td>
-                        <td className="tabular py-2 text-right text-ink">{num.format(t.plays)}</td>
+                        <td className="tabular w-6 py-2 pr-3 text-ink-faint">{i + 1}</td>
+                        <td className="w-full max-w-0 truncate py-2 text-ink">{t.title}</td>
+                        <td className="tabular py-2 pl-3 text-right text-ink">{num.format(t.plays)}</td>
                       </tr>
                     ))}
                   </tbody>

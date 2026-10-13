@@ -32,33 +32,78 @@ class DeepLinkingService {
 
   AppLocalizations get _tr => Get.the<LanguageCubit>().translation;
 
+  bool _listening = false;
+
+  /// The signed-in app on screen (an AppContainer); null when signed out.
+  Object? _screen;
+
+  /// Premium and favorites of the signed-in account are loaded (UserBloc).
+  bool _accountReady = false;
+
+  /// A link that arrived while it couldn't be opened yet (signed out, or the
+  /// app was still starting); opened once the account is ready.
+  SharedLink? _pending;
+
+  /// Starts listening for links; safe to call more than once. Called at app
+  /// start, so links that arrive while signed out are kept. On iOS and
+  /// Android the stream also delivers the link that opened the app, on the
+  /// web the page URL.
   void initialize() {
+    if (_listening) return;
+    _listening = true;
     _appLinks.uriLinkStream.listen(
-      (uri) => _handleDeepLink(uri),
+      _onLink,
       onError: (err) {
         debugPrint('Deep link error: $err');
         showToast(_tr.linkInvalid);
       },
     );
-
-    // Handle initial deep link for cold start
-    _appLinks.getInitialLink().then(_handleDeepLink);
   }
 
-  Future<void> _handleDeepLink(Uri? uri) async {
-    if (uri == null || uri.pathSegments.isEmpty) return;
+  /// The signed-in app ([screen]) is shown; opens a link that is waiting.
+  void attach(Object screen) {
+    initialize();
+    _screen = screen;
+    _openPending();
+  }
 
-    if (!_isUserLoggedIn()) return;
+  /// [screen] is gone (logout); links wait for the next sign-in. A newer
+  /// screen that attached in the meantime stays attached.
+  void detach(Object screen) {
+    if (identical(_screen, screen)) _screen = null;
+  }
 
-    final segments = uri.pathSegments;
-    final id = segments.length > 1 ? segments[1] : null;
-    if (id == null) return;
+  /// Whether the signed-in account is loaded; opens a link that is waiting.
+  void setAccountReady(bool ready) {
+    _accountReady = ready;
+    _openPending();
+  }
 
-    switch (segments[0]) {
-      case 'shareTrack':
-        await _handleTrackDeepLink(id);
-      case 'sharePlaylist':
-        await _handlePlaylistDeepLink(id);
+  bool get _canOpen => _screen != null && _accountReady && _isUserLoggedIn();
+
+  void _onLink(Uri uri) {
+    final link = SharedLink.parse(uri);
+    if (link == null) return;
+    if (_canOpen) {
+      _open(link);
+    } else {
+      _pending = link;
+    }
+  }
+
+  void _openPending() {
+    final link = _pending;
+    if (link == null || !_canOpen) return;
+    _pending = null;
+    _open(link);
+  }
+
+  Future<void> _open(SharedLink link) async {
+    switch (link.type) {
+      case SharedLink.track:
+        await _handleTrackDeepLink(link.id);
+      case SharedLink.playlist:
+        await _handlePlaylistDeepLink(link.id);
       default:
         showToast(_tr.linkInvalid);
     }
@@ -99,12 +144,30 @@ class DeepLinkingService {
   bool _isUserLoggedIn() => FirebaseAuth.instance.currentUser != null;
 
   void shareTrack(String trackId) => Share.share(
-        _createDeepLink('shareTrack', trackId),
+        _createDeepLink(SharedLink.track, trackId),
       );
 
   void sharePlaylist(String playlistId) => Share.share(
-        _createDeepLink('sharePlaylist', playlistId),
+        _createDeepLink(SharedLink.playlist, playlistId),
       );
 
   String _createDeepLink(String type, String id) => AppConfig.shareLink(type, id);
+}
+
+/// A shared track or playlist link: `<APP_URL>/<type>/<id>`.
+class SharedLink {
+  const SharedLink(this.type, this.id);
+
+  static const track = 'shareTrack';
+  static const playlist = 'sharePlaylist';
+
+  final String type;
+  final String id;
+
+  /// null when [uri] has no `<type>/<id>` path (e.g. the web app's start page).
+  static SharedLink? parse(Uri uri) {
+    final segments = uri.pathSegments.where((s) => s.isNotEmpty).toList();
+    if (segments.length < 2) return null;
+    return SharedLink(segments[0], segments[1]);
+  }
 }

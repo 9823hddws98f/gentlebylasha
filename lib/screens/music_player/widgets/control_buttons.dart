@@ -1,10 +1,10 @@
 import 'package:audio_service/audio_service.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_manager.dart';
 import '/domain/services/deep_linking_service.dart';
+import '/domain/services/downloads_service.dart';
 import '/main.dart';
 import '/notifiers/repeat_notifier.dart';
 import '/utils/app_theme.dart';
@@ -104,8 +104,7 @@ class _ControlButtonsState extends State<ControlButtons> {
                           _buildShareButton(),
                           if (_track?.hasTimer ?? false) TimerButton(),
                           if (isPlaylist) _buildShuffleButton(primary),
-                          if (!kIsWeb && defaultTargetPlatform != TargetPlatform.macOS)
-                            TrackDownloadButton(track: _track)
+                          if (DownloadsService.supported) TrackDownloadButton(track: _track)
                         ].interleaveWith(SizedBox(width: 20)),
                       ),
                       SizedBox(height: 40),

@@ -626,7 +626,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get favoriteUpdateFailed => 'Failed to update favorite status.';
+  String get favoriteUpdateFailed =>
+      'Your favorites couldn\'t be updated just now. Please try again.';
 
   @override
   String get search => 'Search';
@@ -789,4 +790,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get playlistNotFound => 'Playlist not found';
+
+  @override
+  String get emailManagedByProvider =>
+      'You sign in with Google or Apple, so your email address is managed there.';
+
+  @override
+  String get currentPasswordForEmail =>
+      'To change your email address, enter your current password.';
+
+  @override
+  String get checkYourInbox => 'Check your inbox';
+
+  @override
+  String get ok => 'OK';
 }

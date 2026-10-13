@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '/domain/cubits/downloads_cubit.dart';
 import '/domain/cubits/entitlement_cubit.dart';
 import '/domain/cubits/favorite_playlists.dart';
 import '/domain/cubits/favorite_tracks.dart';
@@ -31,8 +32,8 @@ void showToast(String value) {
 }
 
 /// Signs out and clears everything tied to the account: playback, push
-/// topics, premium and favorites. Every logout goes through here; [confirm]
-/// asks the user first.
+/// topics, premium, favorites and offline downloads. Every logout (also after
+/// deleting the account) goes through here; [confirm] asks the user first.
 Future<void> logout(BuildContext context, {bool confirm = false}) async {
   if (confirm) {
     final tr = Get.the<LanguageCubit>().translation;
@@ -47,6 +48,8 @@ Future<void> logout(BuildContext context, {bool confirm = false}) async {
   await Get.the<EntitlementCubit>().reset();
   Get.the<FavoritesTracksCubit>().reset();
   Get.the<FavoritePlaylistsCubit>().reset();
+  // Downloads belong to the account; delete them while its uid is still known.
+  await Get.the<DownloadsCubit>().removeAll();
   await FirebaseAuth.instance.signOut();
 
   navigator.pushAndRemoveUntil(

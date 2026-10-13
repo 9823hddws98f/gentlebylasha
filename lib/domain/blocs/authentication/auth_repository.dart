@@ -16,7 +16,6 @@ import '/domain/blocs/user/app_user.dart';
 import '/domain/services/language_cubit.dart';
 import '/helper/auth_errors.dart';
 import '/helper/global_functions.dart';
-import '/main.dart';
 import '/utils/get.dart';
 
 class AuthRepository {
@@ -34,23 +33,6 @@ class AuthRepository {
         currentUser = user;
         return user;
       });
-
-  Future<void> logInWithEmailAndPassword(String email, String password, bool rememberMe) {
-    if (!kDebugMode) {
-      _firebaseAuth!.setPersistence(rememberMe ? Persistence.LOCAL : Persistence.SESSION);
-    }
-    return _firebaseAuth!.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-  }
-
-  /// Asks for confirmation, then logs out through the app-wide [logout].
-  Future<void> logOut() async {
-    final context = MyApp.navigatorKey.currentContext;
-    if (context == null) return;
-    await logout(context, confirm: true);
-  }
 
   /// Shows a translated message for a failed sign-in; nothing when the user
   /// cancelled it.
@@ -199,8 +181,10 @@ class AuthRepository {
         ).toMap());
   }
 
-  Future<bool> isPasswordAccount() async =>
-      _firebaseAuth!.currentUser!.providerData.any((provider) => provider.providerId == 'password');
+  /// Whether the user can sign in with a password. Google and Apple accounts
+  /// can't: their password and email address are managed there.
+  bool get isPasswordAccount =>
+      _firebaseAuth!.currentUser?.providerData.any((p) => p.providerId == 'password') ?? false;
 
   Future<void> resetPassword(String email) async {
     await _firebaseAuth!.sendPasswordResetEmail(email: email);
@@ -210,8 +194,16 @@ class AuthRepository {
     await _firebaseAuth!.currentUser!.updatePassword(password);
   }
 
-  Future<void> changeEmail(String email) async {
-    await _firebaseAuth!.currentUser!.verifyBeforeUpdateEmail(email);
+  /// Starts an email change after checking the current [password]. Firebase
+  /// mails a link to [newEmail] and switches the sign-in address only once
+  /// that link is opened; UserBloc then copies it to the profile. Throws a
+  /// FirebaseAuthException (e.g. a wrong password, an address in use).
+  Future<void> changeEmail(String newEmail, String password) async {
+    final user = _firebaseAuth!.currentUser!;
+    await user.reauthenticateWithCredential(
+      EmailAuthProvider.credential(email: user.email!, password: password),
+    );
+    await user.verifyBeforeUpdateEmail(newEmail);
   }
 
   Future<void> changeName(String name) async {

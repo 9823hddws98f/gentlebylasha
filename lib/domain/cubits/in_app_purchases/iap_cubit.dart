@@ -5,11 +5,14 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_android/billing_client_wrappers.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
 import '/domain/services/interfaces/in_app_purchases.dart';
 import '/helper/account_token.dart';
 import '/utils/get.dart';
 import 'iap_service.dart';
+import 'play_plans.dart';
 import 'product.dart';
 
 part 'iap_state.dart';
@@ -59,7 +62,8 @@ class IAPCubit extends Cubit<IAPState> {
     if (response.notFoundIDs.isNotEmpty) {
       debugPrint('Store products not found: ${response.notFoundIDs}');
     }
-    final products = response.productDetails.map(PurchasableProduct.new).toList()
+    // Google Play lists every offer of a subscription; show one per plan.
+    final products = onePerProduct(response.productDetails).map(PurchasableProduct.new).toList()
       ..sort((a, b) => productIds.indexOf(a.id).compareTo(productIds.indexOf(b.id)));
     emit(state.copyWith(products: products, storeAvailable: true));
   }
@@ -68,12 +72,39 @@ class IAPCubit extends Cubit<IAPState> {
     emit(state.copyWith(busy: true, error: IAPError.none));
     try {
       final uid = FirebaseAuth.instance.currentUser?.uid;
-      await _iapService.buyNonConsumable(PurchaseParam(
-        productDetails: productDetails,
-        applicationUserName: uid == null ? null : accountToken(uid),
-      ));
+      final token = uid == null ? null : accountToken(uid);
+      final plan = playPurchasePlan(
+        await _ownedPurchases(),
+        productId: productDetails.id,
+        planIds: productIds,
+        accountToken: token,
+      );
+      if (plan.restore) return await restorePurchases();
+      final replace = plan.replace;
+      await _iapService.buyNonConsumable(replace == null
+          ? PurchaseParam(productDetails: productDetails, applicationUserName: token)
+          // Monthly <-> yearly on Google Play: replace the running plan right
+          // away, crediting its unused time, instead of a second subscription.
+          : GooglePlayPurchaseParam(
+              productDetails: productDetails,
+              applicationUserName: token,
+              changeSubscriptionParam: ChangeSubscriptionParam(
+                oldPurchaseDetails: replace,
+                replacementMode: ReplacementMode.withTimeProration,
+              ),
+            ));
     } catch (_) {
       emit(state.copyWith(busy: false, error: IAPError.purchaseFailed));
+    }
+  }
+
+  /// Google Play subscriptions the Play account has; none when that can't be read.
+  Future<List<PurchaseDetails>> _ownedPurchases() async {
+    try {
+      return await _iapService.ownedPurchases();
+    } catch (e) {
+      debugPrint('Reading owned purchases failed: $e');
+      return const [];
     }
   }
 

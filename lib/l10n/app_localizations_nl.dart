@@ -630,7 +630,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get favoriteUpdateFailed =>
-      'Je favorieten konden niet worden bijgewerkt.';
+      'Je favorieten konden nu niet worden bijgewerkt. Probeer het zo nog eens.';
 
   @override
   String get search => 'Zoeken';
@@ -794,4 +794,18 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get playlistNotFound => 'Afspeellijst niet gevonden';
+
+  @override
+  String get emailManagedByProvider =>
+      'Je logt in met Google of Apple, dus je e-mailadres beheer je daar.';
+
+  @override
+  String get currentPasswordForEmail =>
+      'Vul je huidige wachtwoord in om je e-mailadres te wijzigen.';
+
+  @override
+  String get checkYourInbox => 'Kijk in je inbox';
+
+  @override
+  String get ok => 'OK';
 }

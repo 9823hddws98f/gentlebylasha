@@ -4,8 +4,6 @@ class AppEvent {
   const AppEvent();
 }
 
-class AppLogoutRequested extends AppEvent {}
-
 class AppUserChanged extends AppEvent {
   final AuthUser user;
 

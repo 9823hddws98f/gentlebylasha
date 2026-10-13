@@ -31,4 +31,7 @@ class WebIapService implements InAppPurchases {
 
   @override
   Future<void> restorePurchases() => Future.value();
+
+  @override
+  Future<List<PurchaseDetails>> ownedPurchases() => Future.value(const []);
 }

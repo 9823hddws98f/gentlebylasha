@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/domain/blocs/user/user_bloc.dart';
+import '/domain/services/downloads_service.dart';
 import '/domain/services/language_cubit.dart';
 import '/helper/global_functions.dart';
 import '/screens/about/about_screen.dart';
@@ -64,12 +65,13 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Tran
                   const FavoritesScreen.playlist(),
                 ),
               ),
-              _buildListTile(
-                icon: Icons.download,
-                title: tr.downloads,
-                colors: colors,
-                onTap: () => pushName(context, DownloadsScreen()),
-              ),
+              if (DownloadsService.supported)
+                _buildListTile(
+                  icon: Icons.download,
+                  title: tr.downloads,
+                  colors: colors,
+                  onTap: () => pushName(context, DownloadsScreen()),
+                ),
               Divider(height: 24),
               _buildListTile(
                 icon: Icons.lock,

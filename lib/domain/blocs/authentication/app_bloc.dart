@@ -17,7 +17,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   late final _userBloc = Get.the<UserBloc>();
 
   AppBloc(this._auth) : super(AppState(user: _auth.currentUser)) {
-    on<AppEvent>((event, emit) async {
+    on<AppEvent>((event, emit) {
       if (event is AppUserChanged) {
         emit(event.user.isNotEmpty
             ? AppState(user: event.user)
@@ -25,9 +25,6 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
         // Firebase auth was successful, now we need to login with userBloc
         _userBloc.add(UserLoaded(event.user.toAppUser()));
-      } else if (event is AppLogoutRequested) {
-        await _auth.logOut();
-        emit(const AppState(user: null));
       }
     });
 
