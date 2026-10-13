@@ -15,7 +15,7 @@ interface Job {
   id: string;
   title: Record<Lang, string>;
   audience: Audience;
-  status: "scheduled" | "sending" | "sent" | "failed" | "cancelled";
+  status: "scheduled" | "sending" | "sent" | "partial" | "failed" | "cancelled";
   sendAt?: Date;
 }
 
@@ -30,6 +30,7 @@ const STATUS: Record<Job["status"], string> = {
   scheduled: "Gepland",
   sending: "Bezig",
   sent: "Verstuurd",
+  partial: "Deels verstuurd",
   failed: "Mislukt",
   cancelled: "Geannuleerd",
 };
@@ -148,7 +149,7 @@ export default function PushPage() {
               <span className="min-w-0 flex-1 truncate font-medium text-ink">{j.title?.nl}</span>
               <span className="text-ink-faint">{AUDIENCE[j.audience]}</span>
               <span className="tabular text-ink-faint">{j.sendAt ? dateFmt.format(j.sendAt) : ""}</span>
-              <span className={j.status === "failed" ? "text-ember" : j.status === "sent" ? "text-leaf-ink" : "text-ink-soft"}>
+              <span className={j.status === "failed" || j.status === "partial" ? "text-ember" : j.status === "sent" ? "text-leaf-ink" : "text-ink-soft"}>
                 {STATUS[j.status]}
               </span>
               {j.status === "scheduled" && (

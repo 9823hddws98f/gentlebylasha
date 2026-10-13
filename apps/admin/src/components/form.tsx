@@ -102,7 +102,10 @@ export function ImageField({
         )}
         <span className="text-sm text-ink-soft">{value ? "Andere afbeelding kiezen" : "Afbeelding kiezen"}</span>
       </label>
-      <input id={id} type="file" accept="image/*" className="sr-only" onChange={(e) => pick(e.target.files?.[0])} />
+      <input id={id} type="file" accept="image/*" className="sr-only" onChange={(e) => {
+          pick(e.target.files?.[0]);
+          e.target.value = ""; // allow picking the same file again
+        }} />
       {progress !== null && <Progress value={progress} />}
       {error && <p className="mt-1.5 text-sm text-ember">{error}</p>}
     </div>
@@ -169,7 +172,10 @@ export function AudioField({
           )}
         </span>
       </label>
-      <input id={id} type="file" accept="audio/*" className="sr-only" onChange={(e) => pick(e.target.files?.[0])} />
+      <input id={id} type="file" accept="audio/*" className="sr-only" onChange={(e) => {
+          pick(e.target.files?.[0]);
+          e.target.value = ""; // allow picking the same file again
+        }} />
       {progress !== null && <Progress value={progress} />}
       {error && <p className="mt-1.5 text-sm text-ember">{error}</p>}
     </div>

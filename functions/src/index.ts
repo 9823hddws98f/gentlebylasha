@@ -25,7 +25,7 @@ import { computeEntitlement, entitlementFields, readSources, setSourceGrant } fr
 import { escapeHtml, sendMail, SENDGRID_API_KEY } from "./mail.js";
 import { APPLE_SIGNIN_KEY, revokeAppleToken, storeAppleRefreshToken } from "./apple-signin.js";
 import { releaseBilling } from "./purchases.js";
-import { sendPush } from "./push.js";
+import { pushResult, sendPush } from "./push.js";
 import { computeStats } from "./stats.js";
 import { rotateDownloadUrl } from "./track-audio.js";
 import { STRIPE_SECRET_KEY } from "./stores/stripe.js";
@@ -389,25 +389,42 @@ export const adminDisableCode = onCall(async (req) => {
  */
 export const adminSetTrackPremium = onCall(async (req) => {
   const adminUid = requireAdmin(req);
-  const { trackId, premium } = parse(z.object({ trackId: z.string().min(1), premium: z.boolean() }), req.data);
+  const { trackId, premium, url: newAudio } = parse(
+    z.object({ trackId: z.string().min(1), premium: z.boolean(), url: z.string().url().optional() }),
+    req.data,
+  );
   const trackRef = db.collection("tracks").doc(trackId);
   const audioRef = db.collection("track_audio").doc(trackId);
   const [track, audio] = await Promise.all([trackRef.get(), audioRef.get()]);
   if (!track.exists) throw new HttpsError("not-found", "Track niet gevonden.");
 
   if (premium) {
-    const url: string = track.data()?.trackUrl || audio.data()?.url;
+    // New audio for a premium track comes straight here, never via the public doc.
+    const url: string = newAudio || track.data()?.trackUrl || audio.data()?.url;
     if (!url) throw new HttpsError("failed-precondition", "Track heeft geen audio.");
     const newUrl = await rotateDownloadUrl(url);
     await audioRef.set({ url: newUrl });
     await trackRef.update({ premium: true, trackUrl: "" });
   } else {
-    const url: string | undefined = audio.data()?.url;
+    const url: string | undefined = newAudio || audio.data()?.url;
     if (url) await trackRef.update({ premium: false, trackUrl: url });
     else await trackRef.update({ premium: false });
     await audioRef.delete();
   }
   await logAdminAction(adminUid, "setTrackPremium", { trackId, premium });
+  return { success: true };
+});
+
+/** Admin: delete a track with its protected audio and play count in one go. */
+export const adminDeleteTrack = onCall(async (req) => {
+  const adminUid = requireAdmin(req);
+  const { trackId } = parse(z.object({ trackId: z.string().min(1) }), req.data);
+  const batch = db.batch();
+  batch.delete(db.collection("tracks").doc(trackId));
+  batch.delete(db.collection("track_audio").doc(trackId));
+  batch.delete(db.collection("track_stats").doc(trackId));
+  await batch.commit();
+  await logAdminAction(adminUid, "deleteTrack", { trackId });
   return { success: true };
 });
 
@@ -452,13 +469,10 @@ export const adminSendPush = onCall(async (req) => {
     createdAt: FieldValue.serverTimestamp(),
   });
   if (!scheduled) {
-    try {
-      await sendPush(job);
-      await ref.update({ status: "sent", sentAt: FieldValue.serverTimestamp() });
-    } catch (e) {
-      await ref.update({ status: "failed", error: String(e).slice(0, 500) });
-      throw new HttpsError("internal", "Versturen mislukt.");
-    }
+    const failed = await sendPush(job);
+    await ref.update({ ...pushResult(failed), sentAt: FieldValue.serverTimestamp() });
+    if (failed.length === 2) throw new HttpsError("internal", "Versturen mislukt.");
+    if (failed.length) throw new HttpsError("internal", `Niet verstuurd in: ${failed.join(", ")}. De rest is wel verstuurd.`);
   }
   await logAdminAction(adminUid, "sendPush", { job: ref.id, audience: job.audience, scheduled });
   return { id: ref.id, scheduled };

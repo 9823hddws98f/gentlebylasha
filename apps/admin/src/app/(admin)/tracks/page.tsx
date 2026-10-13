@@ -196,6 +196,7 @@ function TrackEditor({ initial, isNew, onClose }: { initial: Track; isNew: boole
   return (
     <Sheet
       open
+      busy={busy || uploads > 0}
       wide
       title={isNew ? "Nieuwe track" : "Track bewerken"}
       onClose={onClose}

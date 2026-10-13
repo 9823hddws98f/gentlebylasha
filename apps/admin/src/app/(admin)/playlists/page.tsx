@@ -153,6 +153,7 @@ function PlaylistEditor({
   return (
     <Sheet
       open
+      busy={busy || uploads > 0}
       wide
       title={isNew ? "Nieuwe playlist" : "Playlist bewerken"}
       onClose={onClose}

@@ -124,22 +124,25 @@ export const toBlock = (id: string, v: Record<string, unknown>): Block => ({
 
 export const newId = (name: string) => doc(collection(db, name)).id;
 
-const setTrackPremium = call<{ trackId: string; premium: boolean }, { success: boolean }>("adminSetTrackPremium");
+const setTrackPremium = call<{ trackId: string; premium: boolean; url?: string }, { success: boolean }>(
+  "adminSetTrackPremium",
+);
+const adminDeleteTrack = call<{ trackId: string }, { success: boolean }>("adminDeleteTrack");
 
-/** Saves a track. Premium tracks keep their audio out of tracks/{id} (see adminSetTrackPremium). */
+/**
+ * Saves a track. A premium track's audio URL never goes into the public
+ * tracks/{id}: new audio is handed to adminSetTrackPremium, which protects it.
+ */
 export async function saveTrack(t: Track, audioChanged: boolean) {
   const { premium, ...rest } = t;
   const data: Record<string, unknown> = { ...rest };
-  // A premium track's trackUrl is empty on purpose; only write it when new audio was uploaded.
-  if (premium && !audioChanged) delete data.trackUrl;
+  if (premium) delete data.trackUrl;
   await setDoc(doc(db, "tracks", t.id), data, { merge: true });
-  if (premium && audioChanged) await setTrackPremium({ trackId: t.id, premium: true });
+  if (premium && audioChanged) await setTrackPremium({ trackId: t.id, premium: true, url: t.trackUrl });
 }
 
-export async function deleteTrack(t: Track) {
-  if (t.premium) await setTrackPremium({ trackId: t.id, premium: false });
-  await deleteDoc(doc(db, "tracks", t.id));
-}
+/** Deletes the track, its protected audio and play count on the server. */
+export const deleteTrack = (t: Track) => adminDeleteTrack({ trackId: t.id });
 
 export const savePlaylist = (p: Playlist) => setDoc(doc(db, "playlists", p.id), { ...p });
 export const deletePlaylist = (id: string) => deleteDoc(doc(db, "playlists", id));

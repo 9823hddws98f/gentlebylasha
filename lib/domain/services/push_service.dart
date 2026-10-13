@@ -27,11 +27,16 @@ class PushService {
   final _subscriptions = <StreamSubscription>[];
   Set<String> _topics = {};
 
+  /// Set synchronously so overlapping start() calls can't both add listeners.
+  bool _running = false;
+
   Future<void> start() async {
-    if (kIsWeb || _subscriptions.isNotEmpty) return;
+    if (kIsWeb || _running) return;
+    _running = true;
 
     final settings = await _messaging.requestPermission();
-    if (settings.authorizationStatus == AuthorizationStatus.denied) return;
+    // stop() may have run while the permission prompt was open.
+    if (!_running || settings.authorizationStatus == AuthorizationStatus.denied) return;
 
     await _local
         .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
@@ -42,12 +47,25 @@ class PushService {
     _subscriptions
       ..add(FirebaseMessaging.onMessage.listen(_showOnAndroid))
       ..add(Get.the<EntitlementCubit>().stream.listen((_) => _syncTopics()))
-      ..add(Get.the<LanguageCubit>().stream.listen((_) => _syncTopics()));
+      ..add(Get.the<LanguageCubit>().stream.listen((_) => _syncTopics()))
+      // Topic calls fail until iOS has an APNs token; retry when a token arrives.
+      ..add(_messaging.onTokenRefresh.listen((_) => _syncTopics()));
+    await _waitForApnsToken();
     await _syncTopics();
+  }
+
+  /// On iOS, subscribing to topics throws until the APNs token is known.
+  Future<void> _waitForApnsToken() async {
+    if (defaultTargetPlatform != TargetPlatform.iOS) return;
+    for (var i = 0; i < 10 && _running; i++) {
+      if (await _messaging.getAPNSToken() != null) return;
+      await Future.delayed(const Duration(seconds: 1));
+    }
   }
 
   /// Leaves all topics, so a signed-out device gets no targeted pushes.
   Future<void> stop() async {
+    _running = false;
     for (final s in _subscriptions) {
       await s.cancel();
     }
@@ -60,6 +78,7 @@ class PushService {
   }
 
   Future<void> _syncTopics() async {
+    if (!_running) return;
     final language = Get.the<LanguageCubit>().state.locale.languageCode == 'nl' ? 'nl' : 'en';
     final premium = Get.the<EntitlementCubit>().state.isPremium;
     final wanted = {'lang_$language', premium ? 'premium' : 'free'};

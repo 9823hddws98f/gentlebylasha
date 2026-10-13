@@ -33,14 +33,29 @@ export interface PushJob {
   audience: Audience;
 }
 
-export async function sendPush(job: PushJob) {
+/** Sends one message per language; returns the languages that failed. */
+export async function sendPush(job: PushJob): Promise<Language[]> {
+  const failed: Language[] = [];
   for (const { language, condition } of pushConditions(job.audience)) {
-    await getMessaging().send({
-      condition,
-      notification: { title: job.title[language], body: job.body[language] },
-      android: { notification: { channelId: "gentle_news" } },
-    });
+    try {
+      await getMessaging().send({
+        condition,
+        notification: { title: job.title[language], body: job.body[language] },
+        android: { notification: { channelId: "gentle_news" } },
+      });
+    } catch (e) {
+      logger.error("Push failed", { language, error: String(e) });
+      failed.push(language);
+    }
   }
+  return failed;
+}
+
+/** Job status after sending; "partial" tells the admin not to resend to everyone. */
+export function pushResult(failed: Language[]) {
+  if (failed.length === 0) return { status: "sent" as const };
+  if (failed.length === LANGUAGES.length) return { status: "failed" as const };
+  return { status: "partial" as const, failedLanguages: failed };
 }
 
 /** Sends scheduled pushes that are due. */
@@ -61,12 +76,7 @@ export const sendScheduledPushes = onSchedule("every 5 minutes", async () => {
       return true;
     });
     if (!claimed) continue;
-    try {
-      await sendPush(doc.data() as PushJob);
-      await doc.ref.update({ status: "sent", sentAt: FieldValue.serverTimestamp() });
-    } catch (e) {
-      logger.error("Scheduled push failed", { job: doc.id, error: String(e) });
-      await doc.ref.update({ status: "failed", error: String(e).slice(0, 500) });
-    }
+    const failed = await sendPush(doc.data() as PushJob);
+    await doc.ref.update({ ...pushResult(failed), sentAt: FieldValue.serverTimestamp() });
   }
 });

@@ -24,3 +24,12 @@ describe("topicsFor", () => {
     expect(topicsFor("en", false)).toEqual({ subscribe: ["lang_en", "free"], unsubscribe: ["lang_nl", "premium"] });
   });
 });
+
+describe("pushResult", async () => {
+  const { pushResult } = await import("../src/push.js");
+  it("is sent, partial or failed", () => {
+    expect(pushResult([])).toEqual({ status: "sent" });
+    expect(pushResult(["nl"])).toEqual({ status: "partial", failedLanguages: ["nl"] });
+    expect(pushResult(["en", "nl"])).toEqual({ status: "failed" });
+  });
+});

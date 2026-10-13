@@ -79,6 +79,11 @@ export function audioDuration(file: File): Promise<number> {
     audio.preload = "metadata";
     audio.onloadedmetadata = () => {
       URL.revokeObjectURL(audio.src);
+      // Some VBR/streamed files report Infinity; the app needs a whole number of ms.
+      if (!Number.isFinite(audio.duration) || audio.duration <= 0) {
+        reject(new Error("De duur van dit bestand is onbekend. Exporteer het opnieuw als mp3 (CBR)."));
+        return;
+      }
       resolve(Math.round(audio.duration * 1000));
     };
     audio.onerror = () => reject(new Error("Audio kon niet worden gelezen."));

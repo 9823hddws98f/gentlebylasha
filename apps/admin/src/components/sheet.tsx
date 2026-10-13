@@ -12,6 +12,7 @@ export function Sheet({
   children,
   footer,
   wide = false,
+  busy = false,
 }: {
   open: boolean;
   title: string;
@@ -19,8 +20,12 @@ export function Sheet({
   children: React.ReactNode;
   footer: React.ReactNode;
   wide?: boolean;
+  /** While true (uploading/saving), Escape and backdrop clicks don't close. */
+  busy?: boolean;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
+  // A drag that starts in an input and ends on the backdrop must not close the sheet.
+  const pressedOnBackdrop = useRef(false);
 
   useEffect(() => {
     const d = dialog.current;
@@ -34,7 +39,11 @@ export function Sheet({
       ref={dialog}
       aria-label={title}
       onClose={onClose}
-      onClick={(e) => e.target === dialog.current && onClose()}
+      onCancel={(e) => busy && e.preventDefault()}
+      onMouseDown={(e) => (pressedOnBackdrop.current = e.target === dialog.current)}
+      onClick={(e) => {
+        if (e.target === dialog.current && pressedOnBackdrop.current && !busy) onClose();
+      }}
       className={`m-0 ml-auto h-dvh max-h-none w-full ${wide ? "max-w-2xl" : "max-w-md"} bg-surface p-0 text-ink shadow-[-24px_0_60px_-24px_rgb(16_22_42/0.35)] backdrop:bg-night/40 open:animate-[sheet_380ms_var(--ease-out-expo)]`}
     >
       <div className="flex h-full flex-col">

@@ -229,6 +229,7 @@ function PageEditor({
   return (
     <Sheet
       open
+      busy={busy}
       title={isNew ? "Nieuwe pagina" : "Pagina-instellingen"}
       onClose={onClose}
       footer={
@@ -312,6 +313,7 @@ function BlockEditor({
   return (
     <Sheet
       open
+      busy={busy}
       wide
       title={isNew ? "Nieuwe rij" : "Rij bewerken"}
       onClose={onClose}
