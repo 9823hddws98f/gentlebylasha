@@ -15,9 +15,11 @@ const setTrackPremium = call<{ trackId: string; premium: boolean }, { success: b
 const emptyTrack = (): Track => ({
   id: newId("tracks"),
   title: "",
+  titleNl: "",
   writer: "",
   speaker: "",
   description: "",
+  descriptionNl: "",
   trackUrl: "",
   duration: 0,
   hasTimer: false,
@@ -112,7 +114,8 @@ export default function TracksPage() {
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-medium text-ink">{t.title || "Zonder titel"}</p>
                   <p className="truncate text-sm text-ink-faint">
-                    {t.speaker} · <span className="tabular">{formatDuration(t.duration)}</span>
+                    {t.speaker && `${t.speaker} · `}
+                    <span className="tabular">{formatDuration(t.duration)}</span>
                   </p>
                 </div>
               </button>
@@ -182,7 +185,7 @@ function TrackEditor({ initial, isNew, onClose }: { initial: Track; isNew: boole
   }
 
   async function remove() {
-    if (!confirm(`“${t.title}” verwijderen? Playlists en pagina's slaan hem daarna over.`)) return;
+    if (!confirm(`“${t.title}” verwijderen? Audio en afbeeldingen worden ook gewist.`)) return;
     setBusy(true);
     try {
       await deleteTrack(initial);
@@ -196,6 +199,7 @@ function TrackEditor({ initial, isNew, onClose }: { initial: Track; isNew: boole
   return (
     <Sheet
       open
+      error={error}
       busy={busy || uploads > 0}
       wide
       title={isNew ? "Nieuwe track" : "Track bewerken"}
@@ -207,7 +211,7 @@ function TrackEditor({ initial, isNew, onClose }: { initial: Track; isNew: boole
               Verwijderen
             </Button>
           )}
-          <Button type="button" variant="ghost" onClick={onClose}>
+          <Button type="button" variant="ghost" onClick={onClose} disabled={busy || uploads > 0}>
             Annuleren
           </Button>
           <Button type="submit" form="track-form" variant="primary" busy={busy} disabled={uploads > 0}>
@@ -217,14 +221,24 @@ function TrackEditor({ initial, isNew, onClose }: { initial: Track; isNew: boole
       }
     >
       <form id="track-form" onSubmit={save} className="space-y-5">
-        <Field label="Titel">{(id) => <Input id={id} value={t.title} onChange={(e) => set({ title: e.target.value })} />}</Field>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <Field label="Titel (EN)">{(id) => <Input id={id} value={t.title} onChange={(e) => set({ title: e.target.value })} />}</Field>
+          <Field label="Titel (NL)" hint="Leeg = Engelse tekst wordt getoond">
+            {(id) => <Input id={id} value={t.titleNl} onChange={(e) => set({ titleNl: e.target.value })} />}
+          </Field>
+        </div>
         <div className="grid gap-5 sm:grid-cols-2">
           <Field label="Spreker">{(id) => <Input id={id} value={t.speaker} onChange={(e) => set({ speaker: e.target.value })} />}</Field>
           <Field label="Schrijver">{(id) => <Input id={id} value={t.writer} onChange={(e) => set({ writer: e.target.value })} />}</Field>
         </div>
-        <Field label="Beschrijving">
-          {(id) => <Textarea id={id} value={t.description} onChange={(e) => set({ description: e.target.value })} />}
-        </Field>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <Field label="Beschrijving (EN)">
+            {(id) => <Textarea id={id} value={t.description} onChange={(e) => set({ description: e.target.value })} />}
+          </Field>
+          <Field label="Beschrijving (NL)" hint="Leeg = Engelse tekst wordt getoond">
+            {(id) => <Textarea id={id} value={t.descriptionNl} onChange={(e) => set({ descriptionNl: e.target.value })} />}
+          </Field>
+        </div>
         <AudioField
           value={t.trackUrl}
           durationMs={t.duration}
@@ -241,7 +255,6 @@ function TrackEditor({ initial, isNew, onClose }: { initial: Track; isNew: boole
         </div>
         <Switch label="Slaaptimer tonen in de speler" checked={t.hasTimer} onChange={(hasTimer) => set({ hasTimer })} />
         {t.premium && <p className="text-sm text-ink-faint">Deze track is premium. Premium aan/uit zet je in de lijst.</p>}
-        {error && <p className="text-sm text-ember">{error}</p>}
       </form>
     </Sheet>
   );

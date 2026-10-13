@@ -188,6 +188,9 @@ export interface PickItem {
   sub?: string;
 }
 
+/** Most options the picker lists at once; searching narrows the rest. */
+const PICKER_LIMIT = 50;
+
 /** Ordered selection from a list: add, remove, move up/down. */
 export function OrderedPicker({
   label,
@@ -243,7 +246,7 @@ export function OrderedPicker({
         <>
           <Input type="search" placeholder="Zoeken om toe te voegen" value={q} onChange={(e) => setQ(e.target.value)} aria-label={`${label} zoeken`} />
           <ul className="mt-2 max-h-48 overflow-y-auto rounded-xl border border-line">
-            {available.slice(0, 50).map((o) => (
+            {available.slice(0, PICKER_LIMIT).map((o) => (
               <li key={o.id}>
                 <button
                   type="button"
@@ -257,6 +260,11 @@ export function OrderedPicker({
               </li>
             ))}
             {available.length === 0 && <li className="px-3 py-2 text-sm text-ink-faint">Niets gevonden.</li>}
+            {available.length > PICKER_LIMIT && (
+              <li className="tabular border-t border-line px-3 py-2 text-xs text-ink-faint">
+                Nog {available.length - PICKER_LIMIT} meer — verfijn je zoekopdracht
+              </li>
+            )}
           </ul>
         </>
       )}

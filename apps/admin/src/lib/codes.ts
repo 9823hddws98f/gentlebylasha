@@ -74,7 +74,8 @@ export function toCsv(rows: AccessCode[]): string {
 /** Firebase callable errors carry a readable message; fall back for anything else. */
 export function errorMessage(e: unknown): string {
   if (e && typeof e === "object" && "message" in e && typeof e.message === "string") {
-    return e.message || "Er ging iets mis.";
+    // The callable SDK appends the HTTP status ("… [400]"); admins don't need it.
+    return e.message.replace(/\s*\[\d{3}\]$/, "") || "Er ging iets mis.";
   }
   return "Er ging iets mis.";
 }

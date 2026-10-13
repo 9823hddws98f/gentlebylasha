@@ -15,19 +15,31 @@ interface AuthState {
   user: User | null;
   isAdmin: boolean;
   loading: boolean;
+  /** Set when the signed-in user's rights could not be checked (e.g. offline). */
+  error: string | null;
 }
 
-const AuthContext = createContext<AuthState>({ user: null, isAdmin: false, loading: true });
+const AuthContext = createContext<AuthState>({ user: null, isAdmin: false, loading: true, error: null });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<AuthState>({ user: null, isAdmin: false, loading: true });
+  const [state, setState] = useState<AuthState>({ user: null, isAdmin: false, loading: true, error: null });
 
   useEffect(
     () =>
       onIdTokenChanged(auth, async (user) => {
-        if (!user) return setState({ user: null, isAdmin: false, loading: false });
-        const token = await user.getIdTokenResult();
-        setState({ user, isAdmin: token.claims.admin === true, loading: false });
+        if (!user) return setState({ user: null, isAdmin: false, loading: false, error: null });
+        try {
+          const token = await user.getIdTokenResult();
+          setState({ user, isAdmin: token.claims.admin === true, loading: false, error: null });
+        } catch {
+          // Without this the app would wait forever on a blank screen.
+          setState({
+            user,
+            isAdmin: false,
+            loading: false,
+            error: "Je rechten konden niet worden gecontroleerd. Controleer je verbinding en log opnieuw in.",
+          });
+        }
       }),
     [],
   );

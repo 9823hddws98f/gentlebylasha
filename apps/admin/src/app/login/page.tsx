@@ -5,8 +5,43 @@ import { useEffect, useState } from "react";
 import { Button, Input, Label } from "@/components/ui";
 import { signInWithEmail, signInWithGoogle, signOut, useAuth } from "@/lib/auth";
 
+/** Dutch message for a Firebase Auth error; null when there is nothing to say. */
+function authErrorMessage(e: unknown): string | null {
+  const code = e && typeof e === "object" && "code" in e && typeof e.code === "string" ? e.code : "";
+  switch (code) {
+    case "auth/popup-closed-by-user":
+    case "auth/cancelled-popup-request":
+    case "auth/user-cancelled":
+      return null; // the user closed the Google window themselves
+    case "auth/wrong-password":
+    case "auth/invalid-credential":
+    case "auth/invalid-login-credentials":
+      return "E-mail of wachtwoord klopt niet.";
+    case "auth/user-not-found":
+      return "Er is geen account met dit e-mailadres.";
+    case "auth/invalid-email":
+      return "Dit is geen geldig e-mailadres.";
+    case "auth/user-disabled":
+      return "Dit account is uitgeschakeld.";
+    case "auth/too-many-requests":
+      return "Te veel pogingen. Wacht een paar minuten en probeer het opnieuw.";
+    case "auth/network-request-failed":
+      return "Geen verbinding met Firebase. Controleer je internet en probeer het opnieuw.";
+    case "auth/popup-blocked":
+      return "De browser blokkeerde het Google-venster. Sta pop-ups toe voor deze site.";
+    case "auth/unauthorized-domain":
+      return "Dit domein is nog niet toegestaan in Firebase Auth (Authorized domains).";
+    case "auth/operation-not-allowed":
+      return "Deze manier van inloggen staat niet aan in Firebase Auth (Sign-in method).";
+    case "auth/account-exists-with-different-credential":
+      return "Dit e-mailadres hoort bij een account met een andere inlogmethode.";
+    default:
+      return code ? `Inloggen mislukt (${code}).` : "Inloggen mislukt. Probeer het opnieuw.";
+  }
+}
+
 export default function LoginPage() {
-  const { user, isAdmin, loading } = useAuth();
+  const { user, isAdmin, loading, error: authError } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,8 +57,8 @@ export default function LoginPage() {
     setError(null);
     try {
       await action();
-    } catch {
-      setError("Inloggen mislukt. Controleer je e-mail en wachtwoord.");
+    } catch (e) {
+      setError(authErrorMessage(e));
     } finally {
       setBusy(false);
     }
@@ -42,10 +77,16 @@ export default function LoginPage() {
 
           {signedInWithoutRights ? (
             <div className="mt-4 space-y-4 text-sm text-ink-soft">
-              <p>
-                <span className="font-medium text-ink">{user.email}</span> heeft geen beheerrechten. Vraag een
-                andere beheerder om je toe te voegen, en log daarna opnieuw in.
-              </p>
+              {authError ? (
+                <p role="alert" className="text-ember">
+                  {authError}
+                </p>
+              ) : (
+                <p>
+                  <span className="font-medium text-ink">{user.email}</span> heeft geen beheerrechten. Vraag een
+                  andere beheerder om je toe te voegen, en log daarna opnieuw in.
+                </p>
+              )}
               <Button onClick={() => signOut()} className="w-full">
                 Uitloggen
               </Button>

@@ -1,10 +1,8 @@
 "use client";
 
 import { encode } from "blurhash";
-import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
-import { app } from "./firebase";
-
-const storage = getStorage(app);
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { storage } from "./firebase";
 
 /** Same shape as TxImage in the Flutter app (lib/utils/tx_image.dart). */
 export interface TxImage {

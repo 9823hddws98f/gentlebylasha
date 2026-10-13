@@ -36,12 +36,23 @@ const STATUS: Record<Job["status"], string> = {
 };
 const dateFmt = new Intl.DateTimeFormat("nl-NL", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 
+/** The current minute as a datetime-local value (local time). */
+function localNow() {
+  const d = new Date();
+  d.setSeconds(0, 0);
+  return new Date(d.getTime() - d.getTimezoneOffset() * 60_000).toISOString().slice(0, 16);
+}
+
 export default function PushPage() {
   const [jobs, setJobs] = useState<Job[] | null>(null);
+  const [jobsError, setJobsError] = useState<string | null>(null);
   const [title, setTitle] = useState<Record<Lang, string>>({ nl: "", en: "" });
   const [body, setBody] = useState<Record<Lang, string>>({ nl: "", en: "" });
   const [audience, setAudience] = useState<Audience>("all");
   const [when, setWhen] = useState("");
+  // Set on focus rather than at render, so the prerendered page doesn't depend on the clock.
+  const [minWhen, setMinWhen] = useState<string | undefined>(undefined);
+  const [whenError, setWhenError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
 
@@ -49,7 +60,8 @@ export default function PushPage() {
     () =>
       onSnapshot(
         query(collection(db, "push_jobs"), orderBy("createdAt", "desc"), limit(30)),
-        (snap) =>
+        (snap) => {
+          setJobsError(null);
           setJobs(
             snap.docs.map((d) => {
               const v = d.data();
@@ -61,14 +73,22 @@ export default function PushPage() {
                 sendAt: v.sendAt instanceof Timestamp ? v.sendAt.toDate() : undefined,
               };
             }),
-          ),
-        () => setJobs([]),
+          );
+        },
+        () => {
+          setJobsError("Eerdere berichten konden niet worden geladen.");
+          setJobs([]);
+        },
       ),
     [],
   );
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    // A minute of slack: the picker can't go below the current minute.
+    if (when && new Date(when).getTime() < Date.now() - 60_000) {
+      return setWhenError("Dit tijdstip ligt in het verleden. Kies een later moment, of maak het veld leeg om nu te versturen.");
+    }
     if (when && !confirm("Bericht inplannen?")) return;
     if (!when && !confirm(`Nu versturen naar ${AUDIENCE[audience].toLowerCase()}?`)) return;
     setBusy(true);
@@ -126,13 +146,33 @@ export default function PushPage() {
             )}
           </Field>
           <Field label="Wanneer (leeg = nu)">
-            {(id) => <Input id={id} type="datetime-local" value={when} onChange={(e) => setWhen(e.target.value)} className="w-56" />}
+            {(id) => (
+              <Input
+                id={id}
+                type="datetime-local"
+                value={when}
+                min={minWhen}
+                aria-invalid={whenError ? true : undefined}
+                aria-describedby={whenError ? "when-error" : undefined}
+                onFocus={() => setMinWhen(localNow())}
+                onChange={(e) => {
+                  setWhen(e.target.value);
+                  setWhenError(null);
+                }}
+                className={`w-56 ${whenError ? "border-ember" : ""}`}
+              />
+            )}
           </Field>
           <Button type="submit" variant="primary" busy={busy} icon={<Send className="size-4" aria-hidden />} className="ml-auto">
             {when ? "Inplannen" : "Nu versturen"}
           </Button>
         </div>
         <div aria-live="polite">
+          {whenError && (
+            <p id="when-error" className="text-sm text-ember">
+              {whenError}
+            </p>
+          )}
           {message && <p className={`text-sm ${message.ok ? "text-leaf-ink" : "text-ember"}`}>{message.text}</p>}
         </div>
       </form>
@@ -140,6 +180,8 @@ export default function PushPage() {
       <h2 className="mt-10 mb-3 text-[15px] font-semibold text-ink">Eerder</h2>
       {jobs === null ? (
         <div className="h-32 animate-pulse rounded-2xl border border-line bg-surface" aria-busy="true" />
+      ) : jobsError ? (
+        <p className="text-sm text-ember">{jobsError}</p>
       ) : jobs.length === 0 ? (
         <p className="text-sm text-ink-faint">Nog geen berichten verstuurd.</p>
       ) : (

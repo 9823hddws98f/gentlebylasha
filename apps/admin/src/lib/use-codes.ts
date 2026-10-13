@@ -21,22 +21,28 @@ const date = (v: unknown) => (v instanceof Timestamp ? v.toDate() : undefined);
 
 export function useBatches() {
   const [batches, setBatches] = useState<Batch[]>([]);
+  const [error, setError] = useState<string | null>(null);
   useEffect(
     () =>
-      onSnapshot(query(collection(db, "code_batches"), orderBy("createdAt", "desc")), (snap) =>
-        setBatches(
-          snap.docs.map((d) => ({
-            id: d.id,
-            name: d.data().name,
-            count: d.data().count,
-            durationDays: d.data().durationDays ?? null,
-            createdAt: date(d.data().createdAt),
-          })),
-        ),
+      onSnapshot(
+        query(collection(db, "code_batches"), orderBy("createdAt", "desc")),
+        (snap) => {
+          setError(null);
+          setBatches(
+            snap.docs.map((d) => ({
+              id: d.id,
+              name: d.data().name,
+              count: d.data().count,
+              durationDays: d.data().durationDays ?? null,
+              createdAt: date(d.data().createdAt),
+            })),
+          );
+        },
+        () => setError("Batches konden niet worden geladen."),
       ),
     [],
   );
-  return batches;
+  return { batches, error };
 }
 
 export function useCodes(status: CodeStatus | "all", batchId: string) {

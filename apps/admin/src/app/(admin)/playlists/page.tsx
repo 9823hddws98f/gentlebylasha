@@ -20,9 +20,11 @@ import {
 const emptyPlaylist = (): Playlist => ({
   id: newId("playlists"),
   title: "",
+  titleNl: "",
   author: "",
   profession: "",
   description: "",
+  descriptionNl: "",
   thumbnail: null,
   authorImage: null,
   showAudioThumbnails: true,
@@ -35,7 +37,7 @@ export default function PlaylistsPage() {
   const [editing, setEditing] = useState<{ playlist: Playlist; isNew: boolean } | null>(null);
 
   const trackOptions = useMemo(
-    () => (tracks ?? []).map((t) => ({ id: t.id, label: t.title, sub: `${t.speaker} · ${formatDuration(t.duration)}` })),
+    () => (tracks ?? []).map((t) => ({ id: t.id, label: t.title, sub: [t.speaker, formatDuration(t.duration)].filter(Boolean).join(" · ") })),
     [tracks],
   );
 
@@ -76,7 +78,8 @@ export default function PlaylistsPage() {
                 <span className="min-w-0">
                   <span className="block truncate font-medium text-ink">{p.title || "Zonder titel"}</span>
                   <span className="block truncate text-sm text-ink-faint">
-                    {p.author} · <span className="tabular">{p.trackIds.length}</span> tracks
+                    {p.author && `${p.author} · `}
+                    <span className="tabular">{p.trackIds.length}</span> tracks
                   </span>
                 </span>
               </button>
@@ -153,6 +156,7 @@ function PlaylistEditor({
   return (
     <Sheet
       open
+      error={error}
       busy={busy || uploads > 0}
       wide
       title={isNew ? "Nieuwe playlist" : "Playlist bewerken"}
@@ -164,7 +168,7 @@ function PlaylistEditor({
               Verwijderen
             </Button>
           )}
-          <Button type="button" variant="ghost" onClick={onClose}>
+          <Button type="button" variant="ghost" onClick={onClose} disabled={busy || uploads > 0}>
             Annuleren
           </Button>
           <Button type="submit" form="playlist-form" variant="primary" busy={busy} disabled={uploads > 0}>
@@ -174,16 +178,26 @@ function PlaylistEditor({
       }
     >
       <form id="playlist-form" onSubmit={save} className="space-y-5">
-        <Field label="Titel">{(id) => <Input id={id} value={p.title} onChange={(e) => set({ title: e.target.value })} />}</Field>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <Field label="Titel (EN)">{(id) => <Input id={id} value={p.title} onChange={(e) => set({ title: e.target.value })} />}</Field>
+          <Field label="Titel (NL)" hint="Leeg = Engelse tekst wordt getoond">
+            {(id) => <Input id={id} value={p.titleNl} onChange={(e) => set({ titleNl: e.target.value })} />}
+          </Field>
+        </div>
         <div className="grid gap-5 sm:grid-cols-2">
           <Field label="Auteur">{(id) => <Input id={id} value={p.author} onChange={(e) => set({ author: e.target.value })} />}</Field>
           <Field label="Beroep auteur">
             {(id) => <Input id={id} value={p.profession} placeholder="Slaapcoach" onChange={(e) => set({ profession: e.target.value })} />}
           </Field>
         </div>
-        <Field label="Beschrijving">
-          {(id) => <Textarea id={id} value={p.description} onChange={(e) => set({ description: e.target.value })} />}
-        </Field>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <Field label="Beschrijving (EN)">
+            {(id) => <Textarea id={id} value={p.description} onChange={(e) => set({ description: e.target.value })} />}
+          </Field>
+          <Field label="Beschrijving (NL)" hint="Leeg = Engelse tekst wordt getoond">
+            {(id) => <Textarea id={id} value={p.descriptionNl} onChange={(e) => set({ descriptionNl: e.target.value })} />}
+          </Field>
+        </div>
         <div className="grid gap-5 sm:grid-cols-2">
           <ImageField label="Cover" value={p.thumbnail} folder="playlist/covers" onBusy={onBusy} onChange={(thumbnail) => set({ thumbnail })} />
           <ImageField label="Foto auteur" value={p.authorImage} folder="playlist/authors" onBusy={onBusy} onChange={(authorImage) => set({ authorImage })} />
@@ -194,7 +208,6 @@ function PlaylistEditor({
           onChange={(showAudioThumbnails) => set({ showAudioThumbnails })}
         />
         <OrderedPicker label="Tracks" options={trackOptions} value={p.trackIds} onChange={(trackIds) => set({ trackIds })} />
-        {error && <p className="text-sm text-ember">{error}</p>}
       </form>
     </Sheet>
   );

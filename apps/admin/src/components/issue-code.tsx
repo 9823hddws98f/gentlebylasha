@@ -15,7 +15,7 @@ export function IssueCode({ batches, onIssued }: { batches: Batch[]; onIssued: (
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [issued, setIssued] = useState<{ code: string; email: string; emailed: boolean; mailFailed: boolean } | null>(null);
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState<"idle" | "copied" | "failed">("idle");
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -30,7 +30,7 @@ export function IssueCode({ batches, onIssued }: { batches: Batch[]; onIssued: (
         language,
       });
       setIssued({ code, email, emailed, mailFailed: sendEmail && !emailed });
-      setCopied(false);
+      setCopied("idle");
       setEmail("");
       setNote("");
       onIssued();
@@ -43,8 +43,12 @@ export function IssueCode({ batches, onIssued }: { batches: Batch[]; onIssued: (
 
   async function copy() {
     if (!issued) return;
-    await navigator.clipboard.writeText(issued.code);
-    setCopied(true);
+    try {
+      await navigator.clipboard.writeText(issued.code);
+      setCopied("copied");
+    } catch {
+      setCopied("failed"); // no clipboard permission; the code can still be selected by hand
+    }
   }
 
   return (
@@ -116,7 +120,7 @@ export function IssueCode({ batches, onIssued }: { batches: Batch[]; onIssued: (
         {error && <p className="mt-4 text-sm text-ember">{error}</p>}
         {issued && (
           <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-3 rounded-xl bg-leaf-wash px-4 py-3 animate-[issued_420ms_var(--ease-out-expo)]">
-            <span className="font-mono text-lg font-medium tracking-wider text-ink">{issued.code}</span>
+            <span className="font-mono text-lg font-medium tracking-wider text-ink select-all">{issued.code}</span>
             <span className="text-sm text-leaf-ink">
               {issued.emailed ? "Gemaild naar" : "Gekoppeld aan"} {issued.email}
             </span>
@@ -129,10 +133,15 @@ export function IssueCode({ batches, onIssued }: { batches: Batch[]; onIssued: (
               variant="ghost"
               onClick={copy}
               className="ml-auto"
-              icon={copied ? <Check className="size-4" aria-hidden /> : <Copy className="size-4" aria-hidden />}
+              icon={copied === "copied" ? <Check className="size-4" aria-hidden /> : <Copy className="size-4" aria-hidden />}
             >
-              {copied ? "Gekopieerd" : "Kopiëren"}
+              {copied === "copied" ? "Gekopieerd" : "Kopiëren"}
             </Button>
+            {copied === "failed" && (
+              <span className="basis-full text-sm text-ember order-last">
+                Kopiëren mislukt. Selecteer de code en kopieer hem zelf.
+              </span>
+            )}
           </div>
         )}
       </div>

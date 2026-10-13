@@ -97,7 +97,7 @@ export default function PagesPage() {
             icon={<Plus className="size-4" aria-hidden />}
             onClick={() =>
               setEditingPage({
-                page: { id: newId("pages"), name: "", order: pages?.length ?? 0, config: { showItemDurations: true } },
+                page: { id: newId("pages"), name: "", nameNl: "", order: pages?.length ?? 0, config: { showItemDurations: true } },
                 isNew: true,
               })
             }
@@ -123,7 +123,15 @@ export default function PagesPage() {
                     icon={<Plus className="size-4" aria-hidden />}
                     onClick={() =>
                       setEditingBlock({
-                        block: { id: newId("blocks"), pageId: selected.id, title: "", type: "Normal", sequence: pageBlocks.length, trackIds: [] },
+                        block: {
+                          id: newId("blocks"),
+                          pageId: selected.id,
+                          title: "",
+                          titleNl: "",
+                          type: "Normal",
+                          sequence: pageBlocks.length,
+                          trackIds: [],
+                        },
                         isNew: true,
                       })
                     }
@@ -229,6 +237,7 @@ function PageEditor({
   return (
     <Sheet
       open
+      error={error}
       busy={busy}
       title={isNew ? "Nieuwe pagina" : "Pagina-instellingen"}
       onClose={onClose}
@@ -239,7 +248,7 @@ function PageEditor({
               Verwijderen
             </Button>
           )}
-          <Button type="button" variant="ghost" onClick={onClose}>
+          <Button type="button" variant="ghost" onClick={onClose} disabled={busy}>
             Annuleren
           </Button>
           <Button type="submit" form="page-form" variant="primary" busy={busy}>
@@ -249,15 +258,17 @@ function PageEditor({
       }
     >
       <form id="page-form" onSubmit={save} className="space-y-5">
-        <Field label="Naam (tabblad in de app)">
+        <Field label="Naam tabblad (EN)">
           {(id) => <Input id={id} value={p.name} onChange={(e) => setP({ ...p, name: e.target.value })} />}
+        </Field>
+        <Field label="Naam tabblad (NL)" hint="Leeg = Engelse tekst wordt getoond">
+          {(id) => <Input id={id} value={p.nameNl} onChange={(e) => setP({ ...p, nameNl: e.target.value })} />}
         </Field>
         <Switch
           label="Duur tonen bij tracks"
           checked={p.config.showItemDurations}
           onChange={(showItemDurations) => setP({ ...p, config: { showItemDurations } })}
         />
-        {error && <p className="text-sm text-ember">{error}</p>}
       </form>
     </Sheet>
   );
@@ -313,6 +324,7 @@ function BlockEditor({
   return (
     <Sheet
       open
+      error={error}
       busy={busy}
       wide
       title={isNew ? "Nieuwe rij" : "Rij bewerken"}
@@ -324,7 +336,7 @@ function BlockEditor({
               Verwijderen
             </Button>
           )}
-          <Button type="button" variant="ghost" onClick={onClose}>
+          <Button type="button" variant="ghost" onClick={onClose} disabled={busy}>
             Annuleren
           </Button>
           <Button type="submit" form="block-form" variant="primary" busy={busy}>
@@ -334,7 +346,12 @@ function BlockEditor({
       }
     >
       <form id="block-form" onSubmit={save} className="space-y-5">
-        <Field label="Titel">{(id) => <Input id={id} value={b.title} onChange={(e) => set({ title: e.target.value })} />}</Field>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <Field label="Titel (EN)">{(id) => <Input id={id} value={b.title} onChange={(e) => set({ title: e.target.value })} />}</Field>
+          <Field label="Titel (NL)" hint="Leeg = Engelse tekst wordt getoond">
+            {(id) => <Input id={id} value={b.titleNl} onChange={(e) => set({ titleNl: e.target.value })} />}
+          </Field>
+        </div>
         <Field label="Soort rij" hint={TYPE_INFO[b.type]}>
           {(id) => (
             <Select id={id} value={b.type} onChange={(e) => set({ type: e.target.value as BlockType })}>
@@ -352,7 +369,6 @@ function BlockEditor({
         ) : (
           <OrderedPicker label="Tracks" options={trackOptions} value={b.trackIds ?? []} onChange={(trackIds) => set({ trackIds })} />
         )}
-        {error && <p className="text-sm text-ember">{error}</p>}
       </form>
     </Sheet>
   );

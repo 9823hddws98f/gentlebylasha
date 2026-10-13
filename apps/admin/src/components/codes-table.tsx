@@ -22,13 +22,18 @@ function StatusPill({ status }: { status: CodeStatus }) {
 }
 
 export function CodesTable({ codes, onChanged }: { codes: AccessCode[]; onChanged: () => void }) {
-  const [copied, setCopied] = useState<string | null>(null);
+  const [copied, setCopied] = useState<{ code: string; ok: boolean } | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
 
   async function copy(code: string) {
-    await navigator.clipboard.writeText(code);
-    setCopied(code);
-    setTimeout(() => setCopied((c) => (c === code ? null : c)), 1500);
+    let ok = true;
+    try {
+      await navigator.clipboard.writeText(code);
+    } catch {
+      ok = false; // no clipboard permission or insecure context
+    }
+    setCopied({ code, ok });
+    setTimeout(() => setCopied((c) => (c?.code === code ? null : c)), ok ? 1500 : 3000);
   }
 
   async function disable(code: string) {
@@ -95,14 +100,19 @@ export function CodesTable({ codes, onChanged }: { codes: AccessCode[]; onChange
                   )}
                 </td>
                 <td className="py-2.5 pr-5 pl-4">
-                  <div className="flex justify-end gap-1 opacity-70 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+                  <div className="flex items-center justify-end gap-1 opacity-70 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+                    {copied?.code === c.code && !copied.ok && (
+                      <span role="status" className="mr-1 text-xs whitespace-nowrap text-ember">
+                        Kopiëren mislukt
+                      </span>
+                    )}
                     <button
                       onClick={() => copy(c.code)}
                       className="rounded-md p-1.5 text-ink-soft hover:bg-paper hover:text-ink"
                       aria-label={`Kopieer ${c.code}`}
                       title="Kopiëren"
                     >
-                      {copied === c.code ? <Check className="size-4 text-leaf-ink" /> : <Copy className="size-4" />}
+                      {copied?.code === c.code && copied.ok ? <Check className="size-4 text-leaf-ink" /> : <Copy className="size-4" />}
                     </button>
                     {canDisable && (
                       <button

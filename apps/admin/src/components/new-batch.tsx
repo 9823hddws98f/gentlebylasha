@@ -51,7 +51,8 @@ export function NewBatch({ onCreated }: { onCreated: (batchId: string, created: 
         ref={dialog}
         aria-labelledby="batch-heading"
         className="m-0 ml-auto h-dvh max-h-none w-full max-w-md bg-surface p-0 text-ink shadow-[-24px_0_60px_-24px_rgb(16_22_42/0.35)] backdrop:bg-night/40 open:animate-[sheet_380ms_var(--ease-out-expo)]"
-        onClick={(e) => e.target === dialog.current && dialog.current.close()}
+        onCancel={(e) => busy && e.preventDefault()}
+        onClick={(e) => e.target === dialog.current && !busy && dialog.current.close()}
       >
         <form onSubmit={submit} className="flex h-full flex-col">
           <header className="flex items-start justify-between border-b border-line px-6 py-5">
@@ -66,6 +67,7 @@ export function NewBatch({ onCreated }: { onCreated: (batchId: string, created: 
               variant="ghost"
               aria-label="Sluiten"
               className="-mr-2 px-2"
+              disabled={busy}
               onClick={() => dialog.current?.close()}
               icon={<X className="size-4" aria-hidden />}
             />
@@ -111,7 +113,7 @@ export function NewBatch({ onCreated }: { onCreated: (batchId: string, created: 
           </div>
 
           <footer className="flex justify-end gap-2 border-t border-line px-6 py-4">
-            <Button type="button" variant="ghost" onClick={() => dialog.current?.close()}>
+            <Button type="button" variant="ghost" disabled={busy} onClick={() => dialog.current?.close()}>
               Annuleren
             </Button>
             <Button type="submit" variant="primary" busy={busy}>

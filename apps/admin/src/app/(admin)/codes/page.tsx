@@ -18,7 +18,7 @@ export default function CodesPage() {
   const deferredSearch = useDeferredValue(search.trim().toLowerCase());
   const [notice, setNotice] = useState<string | null>(null);
 
-  const batches = useBatches();
+  const { batches, error: batchesError } = useBatches();
   const { codes, error, truncated } = useCodes(status, batchId);
   const { counts, refresh } = useCounts(batchId);
 
@@ -119,18 +119,27 @@ export default function CodesPage() {
             />
           </div>
 
-          <button
-            onClick={exportCsv}
-            disabled={!visible?.length}
-            className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm text-ink-soft hover:bg-surface hover:text-ink disabled:opacity-40"
-          >
-            <Download className="size-4" aria-hidden /> CSV
-          </button>
+          <span className="inline-flex items-center gap-1">
+            <button
+              onClick={exportCsv}
+              disabled={!visible?.length}
+              aria-describedby={truncated ? "csv-scope" : undefined}
+              className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm text-ink-soft hover:bg-surface hover:text-ink disabled:opacity-40"
+            >
+              <Download className="size-4" aria-hidden /> CSV
+            </button>
+            {truncated && visible && (
+              <span id="csv-scope" className="tabular text-xs text-ink-faint">
+                exporteert de {visible.length} geladen codes
+              </span>
+            )}
+          </span>
         </div>
 
         <div aria-live="polite" className="text-sm">
           {notice && <p className="mb-3 text-leaf-ink">{notice}</p>}
           {error && <p className="mb-3 text-ember">{error}</p>}
+          {batchesError && <p className="mb-3 text-ember">{batchesError}</p>}
         </div>
 
         {visible === null ? (

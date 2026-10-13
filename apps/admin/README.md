@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gentle admin
 
-## Getting Started
+Beheeromgeving van Gentle. Hiermee beheer je de content van de app (tracks, playlists, pagina's en rijen), geef je toegangscodes uit aan Artazest-klanten, bekijk en help je gebruikers (premium geven, admin maken, account verwijderen), verstuur je pushberichten en bekijk je statistieken.
 
-First, run the development server:
+Next.js (App Router) met de Firebase client SDK. Gevoelige acties lopen via callable Cloud Functions in `functions/` die de `admin`-claim controleren en in `admin_log` schrijven.
+
+## Lokaal draaien
+
+Vanuit de root van de repo:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm --prefix apps/admin install
+npm --prefix apps/admin run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open daarna http://localhost:3000. `localhost` staat standaard al bij de toegestane domeinen van Firebase Auth.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Tegen de Firebase-emulators
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Zo test je zonder productiedata. De admin praat dan met het demo-project `demo-gentle`.
 
-## Learn More
+1. Zet `NEXT_PUBLIC_FIREBASE_EMULATORS=1` in `apps/admin/.env.development.local`.
+2. Bouw de functions: `npm --prefix functions run build`.
+3. Zet nep-secrets in `functions/.secret.local`, bijvoorbeeld `SENDGRID_API_KEY=dummy` (één regel per secret uit `functions/.env.example`).
+4. Start de emulators:
+   ```bash
+   firebase emulators:start --project demo-gentle --only auth,firestore,storage,functions
+   ```
+5. Maak een gebruiker aan in de Auth-emulator en geef die de claim `{"admin": true}`, met de Admin SDK en `FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099`.
 
-To learn more about Next.js, take a look at the following resources:
+## Deployen op Vercel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Importeer de repo in Vercel en zet **Root Directory** op `apps/admin`.
+2. Environment variables zijn niet nodig: de (publieke) Firebase-webconfig staat in `src/lib/firebase.ts`.
+3. Voeg het domein van de admin toe in Firebase Console → Authentication → Settings → **Authorized domains** (bijv. het `*.vercel.app`-domein en een eigen domein).
+4. Zet in Firebase Console → Authentication → **Sign-in method** de providers **Email/Password** en **Google** aan.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Eerste admin aanmaken
 
-## Deploy on Vercel
+Admins herken je aan de custom claim `admin`. De eerste zet je vanaf je eigen machine:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+GOOGLE_APPLICATION_CREDENTIALS=/pad/naar/service-account.json \
+  npm --prefix functions run set-admin -- naam@voorbeeld.nl
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Het account moet al bestaan (eerst één keer inloggen of registreren). Daarna kan elke admin andere admins maken onder **Gebruikers**.
+
+Na het krijgen (of verliezen) van de claim moet de persoon **uit- en weer inloggen**; pas dan zit de nieuwe claim in het token.

@@ -13,6 +13,7 @@ export function Sheet({
   footer,
   wide = false,
   busy = false,
+  error = null,
 }: {
   open: boolean;
   title: string;
@@ -20,8 +21,10 @@ export function Sheet({
   children: React.ReactNode;
   footer: React.ReactNode;
   wide?: boolean;
-  /** While true (uploading/saving), Escape and backdrop clicks don't close. */
+  /** While true (uploading/saving), the close button, Escape and backdrop clicks don't close. */
   busy?: boolean;
+  /** Shown above the buttons, so it's visible however far the form is scrolled. */
+  error?: string | null;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   // A drag that starts in an input and ends on the backdrop must not close the sheet.
@@ -38,7 +41,11 @@ export function Sheet({
     <dialog
       ref={dialog}
       aria-label={title}
-      onClose={onClose}
+      onClose={() => {
+        // Chrome lets a second quick Escape skip the cancel event; reopen instead of losing the work.
+        if (busy && open) return dialog.current?.showModal();
+        onClose();
+      }}
       onCancel={(e) => busy && e.preventDefault()}
       onMouseDown={(e) => (pressedOnBackdrop.current = e.target === dialog.current)}
       onClick={(e) => {
@@ -54,12 +61,16 @@ export function Sheet({
             variant="ghost"
             aria-label="Sluiten"
             className="-mr-2 px-2"
+            disabled={busy}
             onClick={onClose}
             icon={<X className="size-4" aria-hidden />}
           />
         </header>
         <div className="flex-1 space-y-5 overflow-y-auto px-6 py-6">{children}</div>
-        <footer className="flex items-center justify-end gap-2 border-t border-line px-6 py-4">{footer}</footer>
+        <div aria-live="polite">
+          {error && <p className="border-t border-line px-6 pt-3 text-sm text-ember">{error}</p>}
+        </div>
+        <footer className={`flex items-center justify-end gap-2 px-6 py-4 ${error ? "" : "border-t border-line"}`}>{footer}</footer>
       </div>
     </dialog>
   );
