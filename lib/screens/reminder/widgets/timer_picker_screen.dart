@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 import '/domain/services/audio_timer_service.dart';
+import '/domain/services/language_cubit.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
 import '/utils/tx_button.dart';
@@ -14,7 +15,7 @@ class SleepTimerScreen extends StatefulWidget {
   State<SleepTimerScreen> createState() => _SleepTimerScreenState();
 }
 
-class _SleepTimerScreenState extends State<SleepTimerScreen> {
+class _SleepTimerScreenState extends State<SleepTimerScreen> with Translation {
   final _timerService = Get.the<AudioTimerService>();
 
   Duration _duration = Duration(hours: 1);
@@ -22,7 +23,7 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
   @override
   Widget build(BuildContext context) => AppScaffold(
         appBar: (context, isMobile) => AdaptiveAppBar(
-          title: 'Sleep Timer',
+          title: tr.sleepTimer,
         ),
         body: (context, isMobile) => ValueListenableBuilder<AudioTimerState>(
             valueListenable: _timerService.timerState,
@@ -36,7 +37,7 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
                           Column(
                             children: [
                               Text(
-                                'Time Remaining',
+                                tr.timeRemaining,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 18,
@@ -55,7 +56,7 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
                           ),
                         SizedBox(height: 12),
                         Text(
-                          'Playback will stop after this time',
+                          tr.playbackStopsAfterTime,
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 20),
                         ),
@@ -68,14 +69,14 @@ class _SleepTimerScreenState extends State<SleepTimerScreen> {
                         ),
                         SizedBox(height: 12),
                         TxButton.filled(
-                          label: Text(state.isActive ? 'Update Timer' : 'Set Timer'),
+                          label: Text(state.isActive ? tr.updateTimer : tr.setTimer),
                           showSuccess: false,
                           onPressVoid: _setSleepTimer,
                         ),
                         if (state.isActive) ...[
                           SizedBox(height: 12),
                           TxButton.outlined(
-                            label: Text('Cancel Timer'),
+                            label: Text(tr.cancelTimer),
                             showSuccess: false,
                             onPressVoid: _cancelSleepTimer,
                           ),

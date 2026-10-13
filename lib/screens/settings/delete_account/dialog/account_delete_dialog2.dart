@@ -2,6 +2,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 
 import '/domain/services/cloud_functions_service.dart';
+import '/domain/services/language_cubit.dart';
 import '/helper/global_functions.dart';
 import '/utils/common_extensions.dart';
 import '/utils/tx_button.dart';
@@ -17,7 +18,7 @@ class AccountDeleteDialog2 extends StatefulWidget {
   State<AccountDeleteDialog2> createState() => _AccountDeleteDialog2State();
 }
 
-class _AccountDeleteDialog2State extends State<AccountDeleteDialog2> {
+class _AccountDeleteDialog2State extends State<AccountDeleteDialog2> with Translation {
   final _codeController = TextEditingController();
   String? _error;
 
@@ -29,23 +30,23 @@ class _AccountDeleteDialog2State extends State<AccountDeleteDialog2> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: const Text('Enter verification code'),
+        title: Text(tr.enterVerificationCode),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('The verification code has been sent to ${widget.email}.'),
+            Text(tr.verificationCodeSent(widget.email)),
             TextField(
               controller: _codeController,
               keyboardType: TextInputType.number,
               maxLength: 6,
-              decoration: InputDecoration(hintText: 'Enter code', errorText: _error),
+              decoration: InputDecoration(hintText: tr.enterCode, errorText: _error),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                const Text('Did not receive the code?'),
-                InkWell(onTap: _resend, child: const Text('Resend')),
+                Text(tr.codeNotReceived),
+                InkWell(onTap: _resend, child: Text(tr.resend)),
               ],
             ),
             Row(
@@ -53,10 +54,10 @@ class _AccountDeleteDialog2State extends State<AccountDeleteDialog2> {
                 const Spacer(),
                 TxButton.outlined(
                   onPressVoid: () => Navigator.of(context).pop(),
-                  label: const Text('Cancel'),
+                  label: Text(tr.cancel),
                 ),
                 const SizedBox(width: 8),
-                TxButton.filled(onPress: _submit, label: const Text('Delete account')),
+                TxButton.filled(onPress: _submit, label: Text(tr.deleteAccount)),
               ],
             ),
           ].interleaveWith(const SizedBox(height: 16)),
@@ -66,11 +67,11 @@ class _AccountDeleteDialog2State extends State<AccountDeleteDialog2> {
   Future<void> _resend() async {
     try {
       await CloudFunctionsService.requestAccountDeletion();
-      showToast('A new code has been sent.');
+      showToast(tr.newCodeSent);
     } on FirebaseFunctionsException catch (e) {
       showToast(e.message == 'wait-before-resend'
-          ? 'Please wait a minute before requesting a new code.'
-          : 'Could not send the code. Please try again.');
+          ? tr.waitBeforeResend
+          : tr.codeSendFailed);
     }
   }
 
@@ -81,14 +82,14 @@ class _AccountDeleteDialog2State extends State<AccountDeleteDialog2> {
     } on FirebaseFunctionsException catch (e) {
       if (!mounted) return false;
       setState(() => _error = switch (e.message) {
-            'wrong-code' => 'This code is incorrect.',
-            'expired' => 'This code has expired. Request a new one.',
-            'too-many-attempts' => 'Too many attempts. Request a new code.',
-            _ => 'Something went wrong. Please try again.',
+            'wrong-code' => tr.verificationCodeWrong,
+            'expired' => tr.verificationCodeExpired,
+            'too-many-attempts' => tr.verificationTooManyAttempts,
+            _ => tr.somethingWentWrong,
           });
       return false;
     } catch (_) {
-      if (mounted) setState(() => _error = 'Something went wrong. Please try again.');
+      if (mounted) setState(() => _error = tr.somethingWentWrong);
       return false;
     }
     if (!mounted) return true;

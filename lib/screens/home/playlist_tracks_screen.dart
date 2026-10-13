@@ -5,6 +5,7 @@ import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_manager.dart';
 import '/domain/services/audio_panel_manager.dart';
 import '/domain/services/deep_linking_service.dart';
+import '/domain/services/language_cubit.dart';
 import '/domain/services/tracks_service.dart';
 import '/helper/global_functions.dart';
 import '/helper/premium_gate.dart';
@@ -29,7 +30,7 @@ class PlayListTracksScreen extends StatefulWidget {
   State<PlayListTracksScreen> createState() => _PlayListTracksScreenState();
 }
 
-class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
+class _PlayListTracksScreenState extends State<PlayListTracksScreen> with Translation {
   final _pageManager = Get.the<AudioManager>();
   final _tracksService = Get.the<TracksService>();
   late final _audioPanelManager = Get.the<AudioPanelManager>();
@@ -138,7 +139,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
                 TextButton.icon(
                   onPressed: _fetchTracks,
                   icon: const Icon(Icons.refresh),
-                  label: const Text('Try Again'),
+                  label: Text(tr.tryAgain),
                 ),
               ],
             ),
@@ -220,7 +221,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
             builder: (context, snapshot) {
               final isPlaying = _isPlaying && snapshot.data?.playing == true;
               return FilledButton.icon(
-                label: Text(isPlaying ? 'Pause' : 'Play'),
+                label: Text(isPlaying ? tr.pause : tr.play),
                 icon: Icon(isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded),
                 onPressed: () {
                   if (_isPlaying) {
@@ -282,7 +283,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
     try {
       playable = await _tracksService.withAudioUrls(allowed);
     } catch (_) {
-      showToast('This playlist could not be loaded.');
+      showToast(tr.playlistLoadFailed);
       return false;
     }
     if (playable.isEmpty) return false;
@@ -373,6 +374,9 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
         () => _tracksService.getByIds(widget.playlist.trackIds),
         ensure: () => mounted,
         onSuccess: (tracks) => setState(() => _tracks = tracks),
-        onError: (error) => setState(() => _error = error.toString()),
+        onError: (error) {
+          debugPrint('Loading the playlist tracks failed: $error');
+          setState(() => _error = tr.playlistLoadFailed);
+        },
       );
 }

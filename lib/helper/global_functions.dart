@@ -88,7 +88,7 @@ Future<bool> playTrack(AudioTrack track) async {
   try {
     track = (await Get.the<TracksService>().withAudioUrls([track])).first;
   } catch (_) {
-    showToast('This track could not be loaded.');
+    showToast(Get.the<LanguageCubit>().translation.trackLoadFailed);
     return false;
   }
   Get.the<AudioManager>().playSinglePlaylist(

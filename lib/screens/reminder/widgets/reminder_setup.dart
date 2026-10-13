@@ -67,7 +67,7 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> with Translation {
         children: [
           Expanded(
             child: Text(
-              'Get reminders',
+              tr.getReminders,
               textAlign: TextAlign.left,
               style: TextStyle(fontWeight: FontWeight.w500),
             ),
@@ -90,7 +90,7 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> with Translation {
       );
 
   Widget _buildSaveButton() => TxButton.filled(
-        label: Text('Save'),
+        label: Text(tr.save),
         color: RoleColor.secondary,
         onPressVoid: _saveSettings,
         onSuccess: () => Navigator.pop(context),
@@ -111,7 +111,8 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> with Translation {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: List.generate(7, (i) => i)
             .map((i) => DaySelector(
-                  dayInitial: ['S', 'M', 'T', 'W', 'T', 'F', 'S'][i],
+                  // Sunday first, like the selection below.
+                  dayInitial: MaterialLocalizations.of(context).narrowWeekdays[i],
                   isSelected: _selectedDays[(i + 6) % 7],
                   onSelected: (selected) => _handleWeekdayChoose((i + 6) % 7, selected),
                 ))
@@ -155,7 +156,7 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> with Translation {
       await _reminderService.cancelReminder(_item.reminderID);
     } else {
       if (_item.everyday && _selectedDays.every((day) => !day)) {
-        showToast('Please select at least 1 day');
+        showToast(tr.selectAtLeastOneDay);
         return;
       }
 

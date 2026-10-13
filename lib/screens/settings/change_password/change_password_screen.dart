@@ -22,7 +22,7 @@ class ChangePasswordScreen extends StatefulWidget {
   State<ChangePasswordScreen> createState() => _ChangePasswordScreen();
 }
 
-class _ChangePasswordScreen extends State<ChangePasswordScreen> {
+class _ChangePasswordScreen extends State<ChangePasswordScreen> with Translation {
   final _auth = Get.the<AuthRepository>();
 
   final _formKey = GlobalKey<FormState>();
@@ -45,7 +45,7 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
   Widget build(BuildContext context) {
     return AppScaffold(
       appBar: (context, isMobile) => AdaptiveAppBar(
-        title: 'Change password',
+        title: tr.changePassword,
       ),
       body: (context, isMobile) => BottomPanelSpacer.padding(
         child: Column(
@@ -65,7 +65,7 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Current password:',
+                          '${tr.currentPassword}:',
                           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                         ),
                       ),
@@ -80,7 +80,7 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'New password:',
+                          '${tr.newPassword}:',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
@@ -99,7 +99,7 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
             Padding(
               padding: EdgeInsets.only(bottom: AppTheme.sidePadding),
               child: TxButton.filled(
-                label: _isPasswordAccount ? Text('Update') : Text('Reset password'),
+                label: Text(_isPasswordAccount ? tr.update : tr.resetPassword),
                 trigger: _trigger,
                 onSuccess: () => Navigator.pop(context),
                 onPress: !_isPasswordAccount
@@ -134,7 +134,6 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
 
       return true;
     } on FirebaseAuthException catch (e) {
-      final tr = Get.the<LanguageCubit>().translation;
       showToast(switch (e.code) {
         // Reauthentication with a wrong current password.
         'wrong-password' || 'invalid-credential' => tr.currentPasswordWrong,

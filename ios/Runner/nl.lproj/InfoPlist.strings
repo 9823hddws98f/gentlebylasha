@@ -1,0 +1,2 @@
+/* Shown when Gentle asks for the photo library (choosing a profile photo). */
+"NSPhotoLibraryUsageDescription" = "Gentle heeft toegang tot je fotobibliotheek nodig, zodat je een profielfoto kunt uploaden.";

@@ -12,6 +12,7 @@ import '/domain/services/tracks_service.dart';
 import '/screens/home/searchable_tracks_screen.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
+import '/utils/inline_placeholder.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
 import '/widgets/app_scaffold/bottom_panel_spacer.dart';
@@ -109,7 +110,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> with Translation {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Your favorite ${_isPlaylist ? 'playlists' : 'tracks'} are empty',
+                  _isPlaylist ? tr.favoritesEmptyPlaylists : tr.favoritesEmptyTracks,
                   style: TextStyle(
                     color: colors.primary,
                   ),
@@ -117,16 +118,15 @@ class _FavoritesScreenState extends State<FavoritesScreen> with Translation {
                 const SizedBox(height: 8),
                 Text.rich(
                   TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'To save any ${_isPlaylist ? 'series' : 'audio'}, tap the ',
-                      ),
-                      WidgetSpan(
+                    children: spansWithPlaceholder(
+                      _isPlaylist
+                          ? tr.favoritesHintPlaylists(inlinePlaceholder)
+                          : tr.favoritesHintTracks(inlinePlaceholder),
+                      const WidgetSpan(
                         child: Icon(Icons.favorite_rounded, size: 16),
                         alignment: PlaceholderAlignment.middle,
                       ),
-                      const TextSpan(text: ' icon'),
-                    ],
+                    ),
                   ),
                 ),
               ],

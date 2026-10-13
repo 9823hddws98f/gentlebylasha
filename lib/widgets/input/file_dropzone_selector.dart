@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
+import '/domain/services/language_cubit.dart';
 import '/domain/services/storage_service.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
@@ -125,7 +126,7 @@ class FileDropzoneSelector extends StatefulWidget {
   State<FileDropzoneSelector> createState() => _FileDropzoneSelectorState();
 }
 
-class _FileDropzoneSelectorState extends State<FileDropzoneSelector> {
+class _FileDropzoneSelectorState extends State<FileDropzoneSelector> with Translation {
   final _storageService = Get.the<StorageService>();
 
   bool _uploading = false;
@@ -239,7 +240,7 @@ class _FileDropzoneSelectorState extends State<FileDropzoneSelector> {
         const SizedBox(width: 8),
         Flexible(
           child: Text(
-            widget.selectedPath ?? 'Drop ${widget.title ?? 'file'} here',
+            widget.selectedPath ?? tr.dropFileHere(widget.title ?? tr.file),
             style: Theme.of(context).textTheme.bodyLarge,
           ),
         ),

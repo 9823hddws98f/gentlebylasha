@@ -15,12 +15,17 @@ class PushService {
   PushService._();
   static final PushService instance = PushService._();
 
-  static const _channel = AndroidNotificationChannel(
-    'gentle_news',
-    'News',
-    description: 'New stories and announcements from Gentle',
-    importance: Importance.high,
-  );
+  /// Named in the app language; Android shows it in the app's notification
+  /// settings. Created again (same id) on start, which renames it.
+  static AndroidNotificationChannel get _channel {
+    final tr = Get.the<LanguageCubit>().translation;
+    return AndroidNotificationChannel(
+      'gentle_news',
+      tr.newsChannelName,
+      description: tr.newsChannelDescription,
+      importance: Importance.high,
+    );
+  }
 
   final _messaging = FirebaseMessaging.instance;
   final _local = FlutterLocalNotificationsPlugin();
@@ -129,13 +134,14 @@ class PushService {
   void _showOnAndroid(RemoteMessage message) {
     final n = message.notification;
     if (n == null || defaultTargetPlatform != TargetPlatform.android) return;
+    final channel = _channel;
     _local.show(
       message.hashCode,
       n.title,
       n.body,
       NotificationDetails(
-        android: AndroidNotificationDetails(_channel.id, _channel.name,
-            channelDescription: _channel.description,
+        android: AndroidNotificationDetails(channel.id, channel.name,
+            channelDescription: channel.description,
             importance: Importance.high,
             icon: '@drawable/ic_notification'),
       ),

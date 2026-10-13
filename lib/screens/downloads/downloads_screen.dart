@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/domain/cubits/downloads_cubit.dart';
 import '/domain/models/block_item/audio_track.dart';
+import '/domain/services/language_cubit.dart';
 import '/utils/get.dart';
 import '/utils/modals.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
@@ -16,19 +17,19 @@ class DownloadsScreen extends StatefulWidget {
   State<DownloadsScreen> createState() => _DownloadsScreen();
 }
 
-class _DownloadsScreen extends State<DownloadsScreen> {
+class _DownloadsScreen extends State<DownloadsScreen> with Translation {
   final _cubit = Get.the<DownloadsCubit>();
 
   @override
   Widget build(BuildContext context) => AppScaffold(
         appBar: (context, isMobile) => AdaptiveAppBar(
-          title: 'Downloads',
+          title: tr.downloads,
           actions: [
             IconButton(
               onPressed: () async {
                 final response = await Modals.confirm(
                   context,
-                  text: 'Are you sure you want to delete all downloads?',
+                  text: tr.confirmDeleteAllDownloads,
                 );
                 if (response == true) {
                   _cubit.removeAll();
@@ -41,7 +42,7 @@ class _DownloadsScreen extends State<DownloadsScreen> {
         body: (context, isMobile) => BlocBuilder<DownloadsCubit, List<AudioTrack>>(
           bloc: _cubit,
           builder: (context, state) => state.isEmpty
-              ? const Center(child: Text('No downloads yet'))
+              ? Center(child: Text(tr.noDownloadsYet))
               : TrackGrid(tracks: state),
         ),
       );

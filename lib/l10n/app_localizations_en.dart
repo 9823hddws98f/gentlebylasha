@@ -458,4 +458,335 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get currentPasswordWrong =>
       'Your current password is not correct. Please try again.';
+
+  @override
+  String get myLibrary => 'My Library';
+
+  @override
+  String get more => 'More';
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get confirmQuestion => 'Are you sure you want to confirm?';
+
+  @override
+  String get yes => 'Yes';
+
+  @override
+  String get no => 'No';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get clear => 'Clear';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get tryAgain => 'Try Again';
+
+  @override
+  String get setTime => 'Set Time';
+
+  @override
+  String get confirmLeaveUnsaved =>
+      'Changes are not saved. Are you sure you want to leave?';
+
+  @override
+  String get confirmDeleteItem => 'Are you sure you want to delete this item?';
+
+  @override
+  String get codeSendFailed => 'Could not send the code. Please try again.';
+
+  @override
+  String get enterVerificationCode => 'Enter verification code';
+
+  @override
+  String verificationCodeSent(String email) {
+    return 'The verification code has been sent to $email.';
+  }
+
+  @override
+  String get enterCode => 'Enter code';
+
+  @override
+  String get codeNotReceived => 'Did not receive the code?';
+
+  @override
+  String get resend => 'Resend';
+
+  @override
+  String get newCodeSent => 'A new code has been sent.';
+
+  @override
+  String get waitBeforeResend =>
+      'Please wait a minute before requesting a new code.';
+
+  @override
+  String get verificationCodeWrong => 'This code is incorrect.';
+
+  @override
+  String get verificationCodeExpired =>
+      'This code has expired. Request a new one.';
+
+  @override
+  String get verificationTooManyAttempts =>
+      'Too many attempts. Request a new code.';
+
+  @override
+  String get profilePhoto => 'Profile photo';
+
+  @override
+  String get changeProfilePhoto => 'Change profile photo';
+
+  @override
+  String get enterYourName => 'Enter your name';
+
+  @override
+  String get noChangesMade => 'No changes made';
+
+  @override
+  String get currentPassword => 'Current password';
+
+  @override
+  String get newPassword => 'New password';
+
+  @override
+  String get resetPassword => 'Reset password';
+
+  @override
+  String dropFileHere(String name) {
+    return 'Drop $name here';
+  }
+
+  @override
+  String get file => 'file';
+
+  @override
+  String get displayMode => 'Display mode';
+
+  @override
+  String get useDeviceSetting => 'Use Device Setting';
+
+  @override
+  String get lightMode => 'Light Mode';
+
+  @override
+  String get darkMode => 'Dark Mode';
+
+  @override
+  String get loginWelcome => 'Welcome back!\nLog in to your account';
+
+  @override
+  String get or => 'or';
+
+  @override
+  String get forgotPasswordDescription =>
+      'Enter your email and we\'ll send you a link to reset your password.';
+
+  @override
+  String get sendPasswordResetEmail => 'Send Password Reset Email';
+
+  @override
+  String get play => 'Play';
+
+  @override
+  String get pause => 'Pause';
+
+  @override
+  String get playlistLoadFailed => 'This playlist could not be loaded.';
+
+  @override
+  String get trackLoadFailed => 'This track could not be loaded.';
+
+  @override
+  String get seeAll => 'See all';
+
+  @override
+  String durationMinutes(String duration) {
+    return '$duration min';
+  }
+
+  @override
+  String sessionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Sessions',
+      one: '1 Session',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get favoriteUpdateFailed => 'Failed to update favorite status.';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get clearSearch => 'Clear search';
+
+  @override
+  String get noResultsFound => 'No results found';
+
+  @override
+  String get noCategoriesFound => 'No categories found';
+
+  @override
+  String searchNothingFound(String query) {
+    return 'Couldn\'t find \"$query\"';
+  }
+
+  @override
+  String get favoritesEmptyTracks => 'Your favorite tracks are empty';
+
+  @override
+  String get favoritesEmptyPlaylists => 'Your favorite playlists are empty';
+
+  @override
+  String favoritesHintTracks(String icon) {
+    return 'To save any audio, tap the $icon icon';
+  }
+
+  @override
+  String favoritesHintPlaylists(String icon) {
+    return 'To save any series, tap the $icon icon';
+  }
+
+  @override
+  String get confirmDeleteAllDownloads =>
+      'Are you sure you want to delete all downloads?';
+
+  @override
+  String get noDownloadsYet => 'No downloads yet';
+
+  @override
+  String get downloadFailed => 'Download failed';
+
+  @override
+  String get getReminders => 'Get reminders';
+
+  @override
+  String get selectAtLeastOneDay => 'Please select at least one day';
+
+  @override
+  String get notificationPermissionFailed =>
+      'Failed to request notification permissions';
+
+  @override
+  String get enableNotificationsInSettings =>
+      'Please enable notifications in phone settings';
+
+  @override
+  String get reminderChannelName => 'Daily Reminder';
+
+  @override
+  String get newsChannelName => 'News';
+
+  @override
+  String get newsChannelDescription =>
+      'New stories and announcements from Gentle';
+
+  @override
+  String get playbackChannelName => 'Playback';
+
+  @override
+  String get sleepTimer => 'Sleep Timer';
+
+  @override
+  String get timeRemaining => 'Time Remaining';
+
+  @override
+  String get playbackStopsAfterTime => 'Playback will stop after this time';
+
+  @override
+  String get setTimer => 'Set Timer';
+
+  @override
+  String get updateTimer => 'Update Timer';
+
+  @override
+  String get cancelTimer => 'Cancel Timer';
+
+  @override
+  String get goalReduceAnxiety => 'Reduce Anxiety';
+
+  @override
+  String get goalImprovePerformance => 'Improve Performance';
+
+  @override
+  String get goalBuildSelfEsteem => 'Build Self Esteem';
+
+  @override
+  String get goalReduceStress => 'Reduce Stress';
+
+  @override
+  String get goalBetterSleep => 'Better Sleep';
+
+  @override
+  String get goalIncreaseHappiness => 'Increase Happiness';
+
+  @override
+  String get goalDevelopGratitude => 'Develop Gratitude';
+
+  @override
+  String get selectGoalsFirst => 'Please select goals first';
+
+  @override
+  String get heardFromQuestion => 'How did you hear about Gentle?';
+
+  @override
+  String get heardFromBillboard => 'Billboard';
+
+  @override
+  String get heardFromAppStore => 'App Store or Google';
+
+  @override
+  String get heardFromTvAd => 'TV Ad';
+
+  @override
+  String get heardFromTherapist => 'Therapist or health professional';
+
+  @override
+  String get heardFromEmployer => 'My employer';
+
+  @override
+  String get heardFromSocialMedia => 'Social media or online Ad';
+
+  @override
+  String get heardFromFriend => 'Friend or family';
+
+  @override
+  String get heardFromArticle => 'Article or blog';
+
+  @override
+  String get heardFromPodcast => 'Podcast Ad';
+
+  @override
+  String get heardFromOther => 'Other';
+
+  @override
+  String get selectOptionFirst => 'Please select an option first';
+
+  @override
+  String get linkInvalid => 'This link could not be opened.';
+
+  @override
+  String playingTrack(String title) {
+    return 'Playing track: $title';
+  }
+
+  @override
+  String get trackNotFound => 'Track not found';
+
+  @override
+  String get playlistNotFound => 'Playlist not found';
 }

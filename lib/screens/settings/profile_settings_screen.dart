@@ -105,7 +105,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Tran
               ),
               _buildListTile(
                 icon: Icons.display_settings,
-                title: 'Display mode',
+                title: tr.displayMode,
                 colors: colors,
                 onTap: () => pushName(context, DisplayModeScreen()),
               ),

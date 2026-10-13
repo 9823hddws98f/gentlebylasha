@@ -2,12 +2,17 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gentle/l10n/app_localizations.dart';
 
+import '/domain/services/language_cubit.dart';
 import '/utils/app_theme.dart';
+import '/utils/get.dart';
 import 'enums.dart';
 import 'tx_button.dart';
 
 class Modals {
+  static AppLocalizations get _tr => Get.the<LanguageCubit>().translation;
+
   static Future<bool> confirm(
     BuildContext context, {
     Widget? content,
@@ -17,17 +22,17 @@ class Modals {
       await show(
         context,
         builder: (context) => AlertDialog(
-          title: const Text('Confirm'),
-          content: content ?? Text(text ?? 'Are you sure you want to confirm?'),
+          title: Text(_tr.confirm),
+          content: content ?? Text(text ?? _tr.confirmQuestion),
           actions: [
             TxButton.text(
-              label: const Text('No'),
+              label: Text(_tr.no),
               color: RoleColor.secondary,
               showSuccess: false,
               onPressVoid: () => Navigator.pop(context, false),
             ),
             TxButton.text(
-              label: const Text('Yes'),
+              label: Text(_tr.yes),
               showSuccess: false,
               onPressVoid: () => Navigator.pop(context, true),
             ),
@@ -37,12 +42,12 @@ class Modals {
 
   static Future<bool> confirmPop(BuildContext context) => confirm(
         context,
-        text: 'Changes are not saved. Are you sure you want to leave?',
+        text: _tr.confirmLeaveUnsaved,
       );
 
   static Future<bool> confirmDelete(BuildContext context) => confirm(
         context,
-        text: 'Are you sure you want to delete this item?',
+        text: _tr.confirmDeleteItem,
       );
 
   static Future<void> pickDateRange(
@@ -73,7 +78,7 @@ class Modals {
                   height: 60,
                   child: TxButton.text(
                     icon: Icons.clear,
-                    label: const Text('Clear'),
+                    label: Text(_tr.clear),
                     color: RoleColor.secondary,
                     onPressVoid: () => onChange(null),
                     onSuccess: () {
@@ -195,7 +200,7 @@ class Modals {
                 ),
               ),
               TxButton.filled(
-                label: const Text('Set Time'),
+                label: Text(_tr.setTime),
                 color: RoleColor.secondary,
                 showSuccess: false,
                 onPressVoid: () => Navigator.pop(

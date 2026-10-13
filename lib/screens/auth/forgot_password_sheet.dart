@@ -56,7 +56,7 @@ class ForgotPasswordState extends State<ForgotPasswordSheet> with Translation {
                       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 24),
-                    Text('Enter your email we will send a link to reset your password'),
+                    Text(tr.forgotPasswordDescription),
                     SizedBox(height: 24),
                     TextFormField(
                       validator: AppValidators.emailValidator,
@@ -75,7 +75,7 @@ class ForgotPasswordState extends State<ForgotPasswordSheet> with Translation {
                   alignment: Alignment.bottomCenter,
                   width: double.infinity,
                   child: TxButton.filled(
-                    label: Text('Send Password Reset Email'),
+                    label: Text(tr.sendPasswordResetEmail),
                     trigger: _trigger,
                     onSuccess: () => Navigator.pop(context),
                     onPress: () async {

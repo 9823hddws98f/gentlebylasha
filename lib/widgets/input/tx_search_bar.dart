@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '/domain/services/language_cubit.dart';
+
 class TxSearchBar extends StatefulWidget {
   const TxSearchBar({
     super.key,
@@ -15,7 +17,7 @@ class TxSearchBar extends StatefulWidget {
   State<TxSearchBar> createState() => _TxSearchBarState();
 }
 
-class _TxSearchBarState extends State<TxSearchBar> {
+class _TxSearchBarState extends State<TxSearchBar> with Translation {
   static const _debounceDuration = Durations.long4;
   final _controller = TextEditingController();
 
@@ -43,7 +45,7 @@ class _TxSearchBarState extends State<TxSearchBar> {
       onChanged: _handleChange,
       style: TextStyle(color: colors.onSurface),
       decoration: InputDecoration(
-        hintText: 'Search',
+        hintText: tr.search,
         hintStyle: TextStyle(color: colors.onSurfaceVariant),
         border: border,
         enabledBorder: border,
@@ -55,7 +57,7 @@ class _TxSearchBarState extends State<TxSearchBar> {
                 ? const Icon(Icons.search_rounded)
                 : IconButton(
                     icon: const Icon(Icons.close_rounded),
-                    tooltip: 'Clear search',
+                    tooltip: tr.clearSearch,
                     onPressed: () {
                       _timer?.cancel();
                       _controller.clear();

@@ -97,7 +97,7 @@ class LoginScreenState extends State<LoginScreen> with Translation {
                                 SvgPicture.asset(Assets.logo),
                                 SizedBox(height: 64),
                                 Text(
-                                  'Welcome back!\nLog in to your account',
+                                  tr.loginWelcome,
                                   style: theme.textTheme.headlineLarge,
                                 ),
                                 SizedBox(height: 32),
@@ -151,7 +151,7 @@ class LoginScreenState extends State<LoginScreen> with Translation {
                     Expanded(child: Divider()),
                     SizedBox(width: 8),
                     Text(
-                      'or',
+                      tr.or,
                       style: TextStyle(color: outlineColor),
                     ),
                     SizedBox(width: 8),

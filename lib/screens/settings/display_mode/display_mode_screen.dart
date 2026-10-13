@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '/domain/services/app_settings.dart';
+import '/domain/services/language_cubit.dart';
 import '/utils/app_theme.dart';
 import '/utils/common_extensions.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
@@ -13,7 +14,7 @@ class DisplayModeScreen extends StatefulWidget {
   State<DisplayModeScreen> createState() => _DisplayModeScreenState();
 }
 
-class _DisplayModeScreenState extends State<DisplayModeScreen> {
+class _DisplayModeScreenState extends State<DisplayModeScreen> with Translation {
   late ThemeMode _selectedMode;
 
   @override
@@ -25,7 +26,7 @@ class _DisplayModeScreenState extends State<DisplayModeScreen> {
   @override
   Widget build(BuildContext context) => AppScaffold(
         appBar: (context, isDark) => AdaptiveAppBar(
-          title: 'Display Mode',
+          title: tr.displayMode,
           hasBottomLine: false,
         ),
         // bodyPadding: EdgeInsets.zero,
@@ -40,15 +41,15 @@ class _DisplayModeScreenState extends State<DisplayModeScreen> {
           child: ListView(
             children: <Widget>[
               _buildThemeModeRadioTile(
-                title: 'Use Device Setting',
+                title: tr.useDeviceSetting,
                 value: ThemeMode.system,
               ),
               _buildThemeModeRadioTile(
-                title: 'Light Mode',
+                title: tr.lightMode,
                 value: ThemeMode.light,
               ),
               _buildThemeModeRadioTile(
-                title: 'Dark Mode',
+                title: tr.darkMode,
                 value: ThemeMode.dark,
               ),
             ].interleaveWith(const SizedBox(height: 8)),

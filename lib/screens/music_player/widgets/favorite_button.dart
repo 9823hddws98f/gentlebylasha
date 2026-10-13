@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/domain/cubits/favorite_playlists.dart';
 import '/domain/cubits/favorite_tracks.dart';
+import '/domain/services/language_cubit.dart';
 import '/utils/get.dart';
 import '/utils/tx_loader.dart';
 
@@ -23,7 +24,7 @@ class FavoriteButton extends StatefulWidget {
   State<FavoriteButton> createState() => _FavoriteButtonState();
 }
 
-class _FavoriteButtonState extends State<FavoriteButton> {
+class _FavoriteButtonState extends State<FavoriteButton> with Translation {
   final _favoriteTracksCubit = Get.the<FavoritesTracksCubit>();
   final _favoritePlaylistsCubit = Get.the<FavoritePlaylistsCubit>();
 
@@ -76,7 +77,7 @@ class _FavoriteButtonState extends State<FavoriteButton> {
       },
       onError: (error) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update favorite status.')),
+          SnackBar(content: Text(tr.favoriteUpdateFailed)),
         );
       },
     );

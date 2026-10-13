@@ -5,10 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/domain/cubits/pages/pages_cubit.dart';
 import '/domain/models/block_item/audio_track.dart';
+import '/domain/services/language_cubit.dart';
 import '/domain/services/tracks_service.dart';
 import '/screens/home/category_list.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
+import '/utils/inline_placeholder.dart';
 import '/utils/tx_loader.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
@@ -26,7 +28,7 @@ class ExploreScreen extends StatefulWidget {
 }
 
 class _ExploreScreenState extends State<ExploreScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, Translation {
   final _trackService = Get.the<TracksService>();
   final _pagesCubit = Get.the<PagesCubit>();
 
@@ -54,7 +56,7 @@ class _ExploreScreenState extends State<ExploreScreen>
         resizeToAvoidBottomInset: false,
         bodyPadding: EdgeInsets.zero,
         appBar: (context, isMobile) => AdaptiveAppBar(
-          title: 'Explore',
+          title: tr.explore,
           hasBottomLine: false,
         ),
         body: (context, isMobile) {
@@ -76,7 +78,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                   : BlocBuilder<PagesCubit, PagesState>(
                       bloc: _pagesCubit,
                       builder: (context, state) => state.explorePages.isEmpty
-                          ? Center(child: Text('No categories found'))
+                          ? Center(child: Text(tr.noCategoriesFound))
                           : TabBarView(
                               physics: NeverScrollableScrollPhysics(),
                               controller: _tabController,
@@ -96,7 +98,7 @@ class _ExploreScreenState extends State<ExploreScreen>
       );
 
   Widget _buildSearchView(Color color) {
-    if (_error != null) return Text('Error: $_error');
+    if (_error != null) return Center(child: Text(tr.somethingWentWrong));
     if (_txLoader.loading) {
       return Padding(
         padding: EdgeInsets.all(16),
@@ -112,14 +114,13 @@ class _ExploreScreenState extends State<ExploreScreen>
           Text.rich(
             TextSpan(
               style: TextStyle(color: color),
-              children: [
-                TextSpan(text: 'Couldn\'t find "'),
+              children: spansWithPlaceholder(
+                tr.searchNothingFound(inlinePlaceholder),
                 TextSpan(
                   text: _query,
                   style: const TextStyle(fontWeight: FontWeight.w500),
                 ),
-                TextSpan(text: '"'),
-              ],
+              ),
             ),
           ),
         ],

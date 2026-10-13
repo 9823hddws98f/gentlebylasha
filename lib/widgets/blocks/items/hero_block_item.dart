@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '/domain/models/app_page/app_page_config.dart';
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_panel_manager.dart';
+import '/domain/services/language_cubit.dart';
 import '/helper/global_functions.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
@@ -10,7 +11,7 @@ import '/widgets/app_image.dart';
 import '/widgets/shimmerize.dart';
 import '../widgets/item_tag.dart';
 
-class HeroBlockItem extends StatelessWidget {
+class HeroBlockItem extends StatelessWidget with Translation {
   final AudioTrack track;
 
   HeroBlockItem({super.key, required this.track});
@@ -60,7 +61,7 @@ class HeroBlockItem extends StatelessWidget {
           ),
           ItemTag(
             icon: Icons.play_arrow_rounded,
-            text: '${track.durationString} min',
+            text: tr.durationMinutes(track.durationString),
             color: track.dominantColor,
           ),
         ],

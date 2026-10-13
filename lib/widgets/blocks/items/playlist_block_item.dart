@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '/domain/models/app_page/app_page_config.dart';
 import '/domain/models/block_item/audio_playlist.dart';
+import '/domain/services/language_cubit.dart';
 import '/helper/global_functions.dart';
 import '/screens/home/playlist_tracks_screen.dart';
 import '/utils/app_theme.dart';
@@ -10,7 +11,7 @@ import '/widgets/blocks/config_of_page.dart';
 import '/widgets/shimmerize.dart';
 import '../widgets/item_tag.dart';
 
-class PlaylistBlockItem extends StatelessWidget {
+class PlaylistBlockItem extends StatelessWidget with Translation {
   static const height = 219.0;
 
   static const _imageSize = 164.0;
@@ -56,7 +57,7 @@ class PlaylistBlockItem extends StatelessWidget {
           showDuration
               ? ItemTag(
                   icon: Icons.queue_music_rounded,
-                  text: '${playlist.trackIds.length} Sessions',
+                  text: tr.sessionCount(playlist.trackIds.length),
                   color: playlist.thumbnail.dominantColor,
                 )
               : ItemTag(

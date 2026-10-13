@@ -901,6 +901,606 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your current password is not correct. Please try again.'**
   String get currentPasswordWrong;
+
+  /// No description provided for @myLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'My Library'**
+  String get myLibrary;
+
+  /// No description provided for @more.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get more;
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// No description provided for @confirmQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to confirm?'**
+  String get confirmQuestion;
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
+
+  /// No description provided for @update.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get update;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tryAgain;
+
+  /// No description provided for @setTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Time'**
+  String get setTime;
+
+  /// No description provided for @confirmLeaveUnsaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes are not saved. Are you sure you want to leave?'**
+  String get confirmLeaveUnsaved;
+
+  /// No description provided for @confirmDeleteItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this item?'**
+  String get confirmDeleteItem;
+
+  /// No description provided for @codeSendFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not send the code. Please try again.'**
+  String get codeSendFailed;
+
+  /// No description provided for @enterVerificationCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter verification code'**
+  String get enterVerificationCode;
+
+  /// No description provided for @verificationCodeSent.
+  ///
+  /// In en, this message translates to:
+  /// **'The verification code has been sent to {email}.'**
+  String verificationCodeSent(String email);
+
+  /// No description provided for @enterCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter code'**
+  String get enterCode;
+
+  /// No description provided for @codeNotReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Did not receive the code?'**
+  String get codeNotReceived;
+
+  /// No description provided for @resend.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend'**
+  String get resend;
+
+  /// No description provided for @newCodeSent.
+  ///
+  /// In en, this message translates to:
+  /// **'A new code has been sent.'**
+  String get newCodeSent;
+
+  /// No description provided for @waitBeforeResend.
+  ///
+  /// In en, this message translates to:
+  /// **'Please wait a minute before requesting a new code.'**
+  String get waitBeforeResend;
+
+  /// No description provided for @verificationCodeWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'This code is incorrect.'**
+  String get verificationCodeWrong;
+
+  /// No description provided for @verificationCodeExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'This code has expired. Request a new one.'**
+  String get verificationCodeExpired;
+
+  /// No description provided for @verificationTooManyAttempts.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Request a new code.'**
+  String get verificationTooManyAttempts;
+
+  /// No description provided for @profilePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile photo'**
+  String get profilePhoto;
+
+  /// No description provided for @changeProfilePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Change profile photo'**
+  String get changeProfilePhoto;
+
+  /// No description provided for @enterYourName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your name'**
+  String get enterYourName;
+
+  /// No description provided for @noChangesMade.
+  ///
+  /// In en, this message translates to:
+  /// **'No changes made'**
+  String get noChangesMade;
+
+  /// No description provided for @currentPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Current password'**
+  String get currentPassword;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get newPassword;
+
+  /// No description provided for @resetPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password'**
+  String get resetPassword;
+
+  /// No description provided for @dropFileHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop {name} here'**
+  String dropFileHere(String name);
+
+  /// No description provided for @file.
+  ///
+  /// In en, this message translates to:
+  /// **'file'**
+  String get file;
+
+  /// No description provided for @displayMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Display mode'**
+  String get displayMode;
+
+  /// No description provided for @useDeviceSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Device Setting'**
+  String get useDeviceSetting;
+
+  /// No description provided for @lightMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Light Mode'**
+  String get lightMode;
+
+  /// No description provided for @darkMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get darkMode;
+
+  /// No description provided for @loginWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back!\nLog in to your account'**
+  String get loginWelcome;
+
+  /// No description provided for @or.
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get or;
+
+  /// No description provided for @forgotPasswordDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email and we\'ll send you a link to reset your password.'**
+  String get forgotPasswordDescription;
+
+  /// No description provided for @sendPasswordResetEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Password Reset Email'**
+  String get sendPasswordResetEmail;
+
+  /// No description provided for @play.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get play;
+
+  /// No description provided for @pause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get pause;
+
+  /// No description provided for @playlistLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'This playlist could not be loaded.'**
+  String get playlistLoadFailed;
+
+  /// No description provided for @trackLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'This track could not be loaded.'**
+  String get trackLoadFailed;
+
+  /// No description provided for @seeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get seeAll;
+
+  /// Length of a track, e.g. 12:30 min.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} min'**
+  String durationMinutes(String duration);
+
+  /// Number of tracks in a playlist.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 Session} other{{count} Sessions}}'**
+  String sessionCount(int count);
+
+  /// No description provided for @favoriteUpdateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update favorite status.'**
+  String get favoriteUpdateFailed;
+
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
+
+  /// No description provided for @clearSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search'**
+  String get clearSearch;
+
+  /// No description provided for @noResultsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get noResultsFound;
+
+  /// No description provided for @noCategoriesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No categories found'**
+  String get noCategoriesFound;
+
+  /// The search term is shown in bold.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t find \"{query}\"'**
+  String searchNothingFound(String query);
+
+  /// No description provided for @favoritesEmptyTracks.
+  ///
+  /// In en, this message translates to:
+  /// **'Your favorite tracks are empty'**
+  String get favoritesEmptyTracks;
+
+  /// No description provided for @favoritesEmptyPlaylists.
+  ///
+  /// In en, this message translates to:
+  /// **'Your favorite playlists are empty'**
+  String get favoritesEmptyPlaylists;
+
+  /// {icon} is replaced by a heart icon.
+  ///
+  /// In en, this message translates to:
+  /// **'To save any audio, tap the {icon} icon'**
+  String favoritesHintTracks(String icon);
+
+  /// {icon} is replaced by a heart icon.
+  ///
+  /// In en, this message translates to:
+  /// **'To save any series, tap the {icon} icon'**
+  String favoritesHintPlaylists(String icon);
+
+  /// No description provided for @confirmDeleteAllDownloads.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete all downloads?'**
+  String get confirmDeleteAllDownloads;
+
+  /// No description provided for @noDownloadsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No downloads yet'**
+  String get noDownloadsYet;
+
+  /// No description provided for @downloadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Download failed'**
+  String get downloadFailed;
+
+  /// No description provided for @getReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Get reminders'**
+  String get getReminders;
+
+  /// No description provided for @selectAtLeastOneDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select at least one day'**
+  String get selectAtLeastOneDay;
+
+  /// No description provided for @notificationPermissionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to request notification permissions'**
+  String get notificationPermissionFailed;
+
+  /// No description provided for @enableNotificationsInSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enable notifications in phone settings'**
+  String get enableNotificationsInSettings;
+
+  /// Android notification channel name, shown in the system settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Reminder'**
+  String get reminderChannelName;
+
+  /// Android notification channel name, shown in the system settings.
+  ///
+  /// In en, this message translates to:
+  /// **'News'**
+  String get newsChannelName;
+
+  /// Android notification channel description, shown in the system settings.
+  ///
+  /// In en, this message translates to:
+  /// **'New stories and announcements from Gentle'**
+  String get newsChannelDescription;
+
+  /// Android notification channel name of the player, shown in the system settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Playback'**
+  String get playbackChannelName;
+
+  /// No description provided for @sleepTimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep Timer'**
+  String get sleepTimer;
+
+  /// No description provided for @timeRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Remaining'**
+  String get timeRemaining;
+
+  /// No description provided for @playbackStopsAfterTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Playback will stop after this time'**
+  String get playbackStopsAfterTime;
+
+  /// No description provided for @setTimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Timer'**
+  String get setTimer;
+
+  /// No description provided for @updateTimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Timer'**
+  String get updateTimer;
+
+  /// No description provided for @cancelTimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Timer'**
+  String get cancelTimer;
+
+  /// No description provided for @goalReduceAnxiety.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce Anxiety'**
+  String get goalReduceAnxiety;
+
+  /// No description provided for @goalImprovePerformance.
+  ///
+  /// In en, this message translates to:
+  /// **'Improve Performance'**
+  String get goalImprovePerformance;
+
+  /// No description provided for @goalBuildSelfEsteem.
+  ///
+  /// In en, this message translates to:
+  /// **'Build Self Esteem'**
+  String get goalBuildSelfEsteem;
+
+  /// No description provided for @goalReduceStress.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce Stress'**
+  String get goalReduceStress;
+
+  /// No description provided for @goalBetterSleep.
+  ///
+  /// In en, this message translates to:
+  /// **'Better Sleep'**
+  String get goalBetterSleep;
+
+  /// No description provided for @goalIncreaseHappiness.
+  ///
+  /// In en, this message translates to:
+  /// **'Increase Happiness'**
+  String get goalIncreaseHappiness;
+
+  /// No description provided for @goalDevelopGratitude.
+  ///
+  /// In en, this message translates to:
+  /// **'Develop Gratitude'**
+  String get goalDevelopGratitude;
+
+  /// No description provided for @selectGoalsFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select goals first'**
+  String get selectGoalsFirst;
+
+  /// No description provided for @heardFromQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How did you hear about Gentle?'**
+  String get heardFromQuestion;
+
+  /// No description provided for @heardFromBillboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Billboard'**
+  String get heardFromBillboard;
+
+  /// No description provided for @heardFromAppStore.
+  ///
+  /// In en, this message translates to:
+  /// **'App Store or Google'**
+  String get heardFromAppStore;
+
+  /// No description provided for @heardFromTvAd.
+  ///
+  /// In en, this message translates to:
+  /// **'TV Ad'**
+  String get heardFromTvAd;
+
+  /// No description provided for @heardFromTherapist.
+  ///
+  /// In en, this message translates to:
+  /// **'Therapist or health professional'**
+  String get heardFromTherapist;
+
+  /// No description provided for @heardFromEmployer.
+  ///
+  /// In en, this message translates to:
+  /// **'My employer'**
+  String get heardFromEmployer;
+
+  /// No description provided for @heardFromSocialMedia.
+  ///
+  /// In en, this message translates to:
+  /// **'Social media or online Ad'**
+  String get heardFromSocialMedia;
+
+  /// No description provided for @heardFromFriend.
+  ///
+  /// In en, this message translates to:
+  /// **'Friend or family'**
+  String get heardFromFriend;
+
+  /// No description provided for @heardFromArticle.
+  ///
+  /// In en, this message translates to:
+  /// **'Article or blog'**
+  String get heardFromArticle;
+
+  /// No description provided for @heardFromPodcast.
+  ///
+  /// In en, this message translates to:
+  /// **'Podcast Ad'**
+  String get heardFromPodcast;
+
+  /// No description provided for @heardFromOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get heardFromOther;
+
+  /// No description provided for @selectOptionFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select an option first'**
+  String get selectOptionFirst;
+
+  /// No description provided for @linkInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'This link could not be opened.'**
+  String get linkInvalid;
+
+  /// No description provided for @playingTrack.
+  ///
+  /// In en, this message translates to:
+  /// **'Playing track: {title}'**
+  String playingTrack(String title);
+
+  /// No description provided for @trackNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Track not found'**
+  String get trackNotFound;
+
+  /// No description provided for @playlistNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Playlist not found'**
+  String get playlistNotFound;
 }
 
 class _AppLocalizationsDelegate

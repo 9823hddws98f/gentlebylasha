@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '/domain/models/block_item/audio_playlist.dart';
 import '/domain/models/block_item/audio_track.dart';
+import '/domain/services/language_cubit.dart';
 import '/utils/app_theme.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
@@ -28,7 +29,7 @@ class SearchableTracksScreen extends StatefulWidget {
   State<SearchableTracksScreen> createState() => _SearchableTracksScreenState();
 }
 
-class _SearchableTracksScreenState extends State<SearchableTracksScreen> {
+class _SearchableTracksScreenState extends State<SearchableTracksScreen> with Translation {
   List<AudioTrack>? _filteredTracks;
   List<AudioPlaylist>? _filteredPlaylists;
 
@@ -71,7 +72,7 @@ class _SearchableTracksScreenState extends State<SearchableTracksScreen> {
   Widget _buildEmptyView() => BottomPanelSpacer.padding(
         child: Center(
           child: Text(
-            'No results found',
+            tr.noResultsFound,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 16,

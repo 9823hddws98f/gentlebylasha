@@ -4,6 +4,7 @@ import 'package:gentle/widgets/blocks/config_of_page.dart';
 
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_panel_manager.dart';
+import '/domain/services/language_cubit.dart';
 import '/helper/global_functions.dart';
 import '/helper/premium_gate.dart';
 import '/utils/app_theme.dart';
@@ -12,7 +13,7 @@ import '/widgets/app_image.dart';
 import '/widgets/shimmerize.dart';
 import '../widgets/item_tag.dart';
 
-class AudioBlockItem extends StatelessWidget {
+class AudioBlockItem extends StatelessWidget with Translation {
   final AudioTrack track;
   final bool isWide;
 
@@ -69,7 +70,7 @@ class AudioBlockItem extends StatelessWidget {
           showDuration
               ? ItemTag(
                   icon: Icons.play_arrow_rounded,
-                  text: '${track.durationString} min',
+                  text: tr.durationMinutes(track.durationString),
                   color: track.dominantColor,
                 )
               : ItemTag(

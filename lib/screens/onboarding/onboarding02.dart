@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gentle/l10n/app_localizations.dart';
 
 import '/domain/blocs/user/user_bloc.dart';
 import '/domain/services/language_cubit.dart';
@@ -16,6 +17,7 @@ class OnBoarding02Screen extends StatefulWidget {
 }
 
 class _OnBoarding02ScreenState extends State<OnBoarding02Screen> with Translation {
+  /// Saved in the profile as these English values, whatever the app language.
   static const _options = [
     'Billboard',
     'App Store or Google',
@@ -29,6 +31,20 @@ class _OnBoarding02ScreenState extends State<OnBoarding02Screen> with Translatio
     'Other'
   ];
 
+  static String _label(AppLocalizations tr, String option) => switch (option) {
+        'Billboard' => tr.heardFromBillboard,
+        'App Store or Google' => tr.heardFromAppStore,
+        'TV Ad' => tr.heardFromTvAd,
+        'Therapist or health professional' => tr.heardFromTherapist,
+        'My employer' => tr.heardFromEmployer,
+        'Social media or online Ad' => tr.heardFromSocialMedia,
+        'Friend or family' => tr.heardFromFriend,
+        'Article or blog' => tr.heardFromArticle,
+        'Podcast Ad' => tr.heardFromPodcast,
+        'Other' => tr.heardFromOther,
+        _ => option,
+      };
+
   String? _selectedOption;
 
   @override
@@ -40,7 +56,7 @@ class _OnBoarding02ScreenState extends State<OnBoarding02Screen> with Translatio
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),
               child: Text(
-                'How did you hear about Gentle?',
+                tr.heardFromQuestion,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               ),
             ),
@@ -55,7 +71,7 @@ class _OnBoarding02ScreenState extends State<OnBoarding02Screen> with Translatio
                     contentPadding: EdgeInsets.zero,
                     value: _options[index],
                     title: Text(
-                      _options[index],
+                      _label(tr, _options[index]),
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
@@ -67,7 +83,7 @@ class _OnBoarding02ScreenState extends State<OnBoarding02Screen> with Translatio
               label: Text(tr.continueText),
               onPressVoid: () {
                 if (_selectedOption == null) {
-                  showToast('Please select a option first');
+                  showToast(tr.selectOptionFirst);
                 } else {
                   final bloc = Get.the<UserBloc>();
                   bloc.add(

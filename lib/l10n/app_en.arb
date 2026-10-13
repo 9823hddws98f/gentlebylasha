@@ -160,5 +160,179 @@
       }
     }
   },
-  "currentPasswordWrong": "Your current password is not correct. Please try again."
+  "currentPasswordWrong": "Your current password is not correct. Please try again.",
+  "myLibrary": "My Library",
+  "more": "More",
+  "confirm": "Confirm",
+  "confirmQuestion": "Are you sure you want to confirm?",
+  "yes": "Yes",
+  "no": "No",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "clear": "Clear",
+  "update": "Update",
+  "tryAgain": "Try Again",
+  "setTime": "Set Time",
+  "confirmLeaveUnsaved": "Changes are not saved. Are you sure you want to leave?",
+  "confirmDeleteItem": "Are you sure you want to delete this item?",
+  "codeSendFailed": "Could not send the code. Please try again.",
+  "enterVerificationCode": "Enter verification code",
+  "verificationCodeSent": "The verification code has been sent to {email}.",
+  "@verificationCodeSent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "enterCode": "Enter code",
+  "codeNotReceived": "Did not receive the code?",
+  "resend": "Resend",
+  "newCodeSent": "A new code has been sent.",
+  "waitBeforeResend": "Please wait a minute before requesting a new code.",
+  "verificationCodeWrong": "This code is incorrect.",
+  "verificationCodeExpired": "This code has expired. Request a new one.",
+  "verificationTooManyAttempts": "Too many attempts. Request a new code.",
+  "profilePhoto": "Profile photo",
+  "changeProfilePhoto": "Change profile photo",
+  "enterYourName": "Enter your name",
+  "noChangesMade": "No changes made",
+  "currentPassword": "Current password",
+  "newPassword": "New password",
+  "resetPassword": "Reset password",
+  "dropFileHere": "Drop {name} here",
+  "@dropFileHere": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "file": "file",
+  "displayMode": "Display mode",
+  "useDeviceSetting": "Use Device Setting",
+  "lightMode": "Light Mode",
+  "darkMode": "Dark Mode",
+  "loginWelcome": "Welcome back!\nLog in to your account",
+  "or": "or",
+  "forgotPasswordDescription": "Enter your email and we'll send you a link to reset your password.",
+  "sendPasswordResetEmail": "Send Password Reset Email",
+  "play": "Play",
+  "pause": "Pause",
+  "playlistLoadFailed": "This playlist could not be loaded.",
+  "trackLoadFailed": "This track could not be loaded.",
+  "seeAll": "See all",
+  "durationMinutes": "{duration} min",
+  "@durationMinutes": {
+    "description": "Length of a track, e.g. 12:30 min.",
+    "placeholders": {
+      "duration": {
+        "type": "String",
+        "example": "12:30"
+      }
+    }
+  },
+  "sessionCount": "{count, plural, =1{1 Session} other{{count} Sessions}}",
+  "@sessionCount": {
+    "description": "Number of tracks in a playlist.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "favoriteUpdateFailed": "Failed to update favorite status.",
+  "search": "Search",
+  "clearSearch": "Clear search",
+  "noResultsFound": "No results found",
+  "noCategoriesFound": "No categories found",
+  "searchNothingFound": "Couldn't find \"{query}\"",
+  "@searchNothingFound": {
+    "description": "The search term is shown in bold.",
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "favoritesEmptyTracks": "Your favorite tracks are empty",
+  "favoritesEmptyPlaylists": "Your favorite playlists are empty",
+  "favoritesHintTracks": "To save any audio, tap the {icon} icon",
+  "@favoritesHintTracks": {
+    "description": "{icon} is replaced by a heart icon.",
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
+  "favoritesHintPlaylists": "To save any series, tap the {icon} icon",
+  "@favoritesHintPlaylists": {
+    "description": "{icon} is replaced by a heart icon.",
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmDeleteAllDownloads": "Are you sure you want to delete all downloads?",
+  "noDownloadsYet": "No downloads yet",
+  "downloadFailed": "Download failed",
+  "getReminders": "Get reminders",
+  "selectAtLeastOneDay": "Please select at least one day",
+  "notificationPermissionFailed": "Failed to request notification permissions",
+  "enableNotificationsInSettings": "Please enable notifications in phone settings",
+  "reminderChannelName": "Daily Reminder",
+  "@reminderChannelName": {
+    "description": "Android notification channel name, shown in the system settings."
+  },
+  "newsChannelName": "News",
+  "@newsChannelName": {
+    "description": "Android notification channel name, shown in the system settings."
+  },
+  "newsChannelDescription": "New stories and announcements from Gentle",
+  "@newsChannelDescription": {
+    "description": "Android notification channel description, shown in the system settings."
+  },
+  "playbackChannelName": "Playback",
+  "@playbackChannelName": {
+    "description": "Android notification channel name of the player, shown in the system settings."
+  },
+  "sleepTimer": "Sleep Timer",
+  "timeRemaining": "Time Remaining",
+  "playbackStopsAfterTime": "Playback will stop after this time",
+  "setTimer": "Set Timer",
+  "updateTimer": "Update Timer",
+  "cancelTimer": "Cancel Timer",
+  "goalReduceAnxiety": "Reduce Anxiety",
+  "goalImprovePerformance": "Improve Performance",
+  "goalBuildSelfEsteem": "Build Self Esteem",
+  "goalReduceStress": "Reduce Stress",
+  "goalBetterSleep": "Better Sleep",
+  "goalIncreaseHappiness": "Increase Happiness",
+  "goalDevelopGratitude": "Develop Gratitude",
+  "selectGoalsFirst": "Please select goals first",
+  "heardFromQuestion": "How did you hear about Gentle?",
+  "heardFromBillboard": "Billboard",
+  "heardFromAppStore": "App Store or Google",
+  "heardFromTvAd": "TV Ad",
+  "heardFromTherapist": "Therapist or health professional",
+  "heardFromEmployer": "My employer",
+  "heardFromSocialMedia": "Social media or online Ad",
+  "heardFromFriend": "Friend or family",
+  "heardFromArticle": "Article or blog",
+  "heardFromPodcast": "Podcast Ad",
+  "heardFromOther": "Other",
+  "selectOptionFirst": "Please select an option first",
+  "linkInvalid": "This link could not be opened.",
+  "playingTrack": "Playing track: {title}",
+  "@playingTrack": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "trackNotFound": "Track not found",
+  "playlistNotFound": "Playlist not found"
 }

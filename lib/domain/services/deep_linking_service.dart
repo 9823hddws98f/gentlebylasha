@@ -1,10 +1,12 @@
 import 'package:app_links/app_links.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gentle/l10n/app_localizations.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '/domain/models/block_item/audio_track.dart';
 import '/domain/services/audio_panel_manager.dart';
+import '/domain/services/language_cubit.dart';
 import '/domain/services/playlists_service.dart';
 import '/domain/services/tracks_service.dart';
 import '/helper/global_functions.dart';
@@ -28,10 +30,15 @@ class DeepLinkingService {
 
   BuildContext get _context => MyApp.navigatorKey.currentContext!;
 
+  AppLocalizations get _tr => Get.the<LanguageCubit>().translation;
+
   void initialize() {
     _appLinks.uriLinkStream.listen(
       (uri) => _handleDeepLink(uri),
-      onError: (err) => showToast('Deep link error: $err'),
+      onError: (err) {
+        debugPrint('Deep link error: $err');
+        showToast(_tr.linkInvalid);
+      },
     );
 
     // Handle initial deep link for cold start
@@ -53,7 +60,7 @@ class DeepLinkingService {
       case 'sharePlaylist':
         await _handlePlaylistDeepLink(id);
       default:
-        showToast('Invalid deep link');
+        showToast(_tr.linkInvalid);
     }
   }
 
@@ -64,13 +71,13 @@ class DeepLinkingService {
 
       track = await _tracksService.getById(trackId);
 
-      showToast('Playing track: ${track.title}');
+      showToast(_tr.playingTrack(track.title));
 
       await playTrack(track).then((ok) {
         if (ok) _audioPanelManager.maximizeAndPlay(false);
       });
     } catch (e) {
-      showToast('Track not found');
+      showToast(_tr.trackNotFound);
     }
   }
 
@@ -85,7 +92,7 @@ class DeepLinkingService {
         ),
       );
     } catch (e) {
-      showToast('Playlist not found');
+      showToast(_tr.playlistNotFound);
     }
   }
 

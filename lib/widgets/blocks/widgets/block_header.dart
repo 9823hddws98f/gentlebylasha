@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '/domain/services/language_cubit.dart';
 import '/helper/global_functions.dart';
 import '/utils/app_theme.dart';
 import '/widgets/shimmerize.dart';
 
-class BlockHeader extends StatelessWidget {
+class BlockHeader extends StatelessWidget with Translation {
   const BlockHeader({super.key, required this.title, this.seeAll});
 
   final String title;
@@ -35,7 +36,7 @@ class BlockHeader extends StatelessWidget {
               GestureDetector(
                 onTap: () => pushName(context, seeAll!),
                 child: Text(
-                  'See all',
+                  tr.seeAll,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 16,

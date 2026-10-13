@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gentle/l10n/app_localizations.dart';
 
 import '/constants/assets.dart';
 import '/domain/blocs/user/user_bloc.dart';
@@ -18,6 +19,7 @@ class OnBoarding01Screen extends StatefulWidget {
 }
 
 class _OnBoarding01ScreenState extends State<OnBoarding01Screen> with Translation {
+  /// Saved in the profile as these English values, whatever the app language.
   static const _options = [
     'Reduce Anxiety',
     'Improve Performance',
@@ -27,6 +29,17 @@ class _OnBoarding01ScreenState extends State<OnBoarding01Screen> with Translatio
     'Increase Happiness',
     'Develop Gratitude',
   ];
+
+  static String _label(AppLocalizations tr, String option) => switch (option) {
+        'Reduce Anxiety' => tr.goalReduceAnxiety,
+        'Improve Performance' => tr.goalImprovePerformance,
+        'Build Self Esteem' => tr.goalBuildSelfEsteem,
+        'Reduce Stress' => tr.goalReduceStress,
+        'Better Sleep' => tr.goalBetterSleep,
+        'Increase Happiness' => tr.goalIncreaseHappiness,
+        'Develop Gratitude' => tr.goalDevelopGratitude,
+        _ => option,
+      };
 
   static const _icons = [
     Assets.iconWater,
@@ -88,7 +101,7 @@ class _OnBoarding01ScreenState extends State<OnBoarding01Screen> with Translatio
                             width: 24,
                           ),
                           SizedBox(width: 16),
-                          Text(_options[index]),
+                          Text(_label(tr, _options[index])),
                         ],
                       ),
                     ),
@@ -103,7 +116,7 @@ class _OnBoarding01ScreenState extends State<OnBoarding01Screen> with Translatio
             showSuccess: false,
             onPressVoid: () {
               if (options.isEmpty) {
-                showToast('Please select goals first');
+                showToast(tr.selectGoalsFirst);
               } else {
                 final bloc = Get.the<UserBloc>();
                 bloc.add(

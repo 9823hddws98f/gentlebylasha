@@ -16,7 +16,6 @@ import 'language_cubit.dart';
 
 class ReminderService {
   static const String _channelId = 'daily_reminder';
-  static const String _channelName = 'Daily Reminder';
   static const String _selectedDaysKey = 'selectedDays';
 
   /// 2: notification ids from [notificationId]. 1 (before): reminder id + day
@@ -47,9 +46,10 @@ class ReminderService {
     _notificationsPlugin = FlutterLocalNotificationsPlugin();
     _prefs = await SharedPreferences.getInstance();
     await _initializeTimeZone();
-    await _initializeNotifications();
+    final languageCode = await LanguageCubit.loadLanguageCode();
+    await _initializeNotifications(lookupAppLocalizations(Locale(languageCode)));
     await _migrateIds();
-    await _syncLanguage(await LanguageCubit.loadLanguageCode());
+    await _syncLanguage(languageCode);
     // Scheduled texts follow the app language.
     Get.the<LanguageCubit>()
         .stream
@@ -74,6 +74,7 @@ class ReminderService {
   Future<void> _syncLanguage(String languageCode) async {
     if (_prefs.getString(_languageKey) == languageCode) return;
     final tr = lookupAppLocalizations(Locale(languageCode));
+    await _setupNotificationChannels(tr);
     for (final reminder in ReminderModel.all) {
       if (!await isReminderEnabled(reminder.prefsKey)) continue;
       final time = await getTimeOfDay(reminder.prefsKey);
@@ -101,7 +102,7 @@ class ReminderService {
     await _prefs.setString(_languageKey, languageCode);
   }
 
-  Future<void> _initializeNotifications() async {
+  Future<void> _initializeNotifications(AppLocalizations tr) async {
     // Small monochrome icon in the Android status bar.
     const androidSettings = AndroidInitializationSettings('@drawable/ic_notification');
     final iosSettings = DarwinInitializationSettings(
@@ -115,7 +116,7 @@ class ReminderService {
       InitializationSettings(android: androidSettings, iOS: iosSettings),
     );
 
-    await _setupNotificationChannels();
+    await _setupNotificationChannels(tr);
   }
 
   Future<bool> _requestPermissions() async {
@@ -137,21 +138,25 @@ class ReminderService {
       return false;
     } catch (e) {
       'Error requesting permissions: $e'.logDebug();
-      showToast('Failed to request notification permissions');
+      showToast(Get.the<LanguageCubit>().translation.notificationPermissionFailed);
       return false;
     }
   }
 
-  Future<void> _setupNotificationChannels() async => await _notificationsPlugin
-      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(
-        AndroidNotificationChannel(
-          _channelId,
-          _channelName,
-          importance: Importance.max,
-          vibrationPattern: Int64List.fromList([0, 500, 500, 1000]),
-        ),
-      );
+  /// Creates the channel, or renames it (same id) when the language changes;
+  /// Android shows the name in the app's notification settings.
+  Future<void> _setupNotificationChannels(AppLocalizations tr) async {
+    await _notificationsPlugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(
+          AndroidNotificationChannel(
+            _channelId,
+            tr.reminderChannelName,
+            importance: Importance.max,
+            vibrationPattern: Int64List.fromList([0, 500, 500, 1000]),
+          ),
+        );
+  }
 
   /// Checks if notifications are permitted on the device
   Future<bool> _areNotificationsEnabled() async {
@@ -171,7 +176,7 @@ class ReminderService {
       if (await _requestPermissions()) {
         return true;
       } else {
-        showToast('Please enable notifications in phone settings');
+        showToast(Get.the<LanguageCubit>().translation.enableNotificationsInSettings);
         return false;
       }
     } else {
@@ -291,7 +296,7 @@ class ReminderService {
   NotificationDetails get _notificationDetails {
     final androidDetails = AndroidNotificationDetails(
       _channelId,
-      _channelName,
+      Get.the<LanguageCubit>().translation.reminderChannelName,
       importance: Importance.max,
       priority: Priority.high,
       playSound: true,

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/domain/blocs/user/app_user.dart';
 import '/domain/blocs/user/user_bloc.dart';
+import '/domain/services/language_cubit.dart';
 import '/helper/global_functions.dart';
 import '/utils/app_theme.dart';
 import '/utils/command_trigger.dart';
@@ -21,7 +22,7 @@ class EditProfileScreen extends StatefulWidget {
   State<EditProfileScreen> createState() => _EditProfileScreenState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class _EditProfileScreenState extends State<EditProfileScreen> with Translation {
   final _userBloc = Get.the<UserBloc>();
 
   final _formKey = GlobalKey<FormState>();
@@ -31,7 +32,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) => AppScaffold(
-        appBar: (context, isMobile) => AdaptiveAppBar(title: 'Edit profile'),
+        appBar: (context, isMobile) => AdaptiveAppBar(title: tr.editProfile),
         body: (context, isMobile) {
           final colors = Theme.of(context).colorScheme;
           return BottomPanelSpacer.padding(
@@ -66,7 +67,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       onPress: _submit,
                       trigger: _trigger,
                       onSuccess: () => Navigator.pop(context),
-                      label: Text('Update'),
+                      label: Text(tr.update),
                     ),
                   ),
                 ],
@@ -80,7 +81,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         buildWhen: (previous, current) => previous.user.photoURL != current.user.photoURL,
         builder: (context, state) => FileDropzoneFormField(
           onSelected: (path) => setState(() => _photoPath = path),
-          title: 'Profile photo',
+          title: tr.profilePhoto,
           initialValue: state.user.photoURL,
           type: FileType.image,
           fieldBuilder: (context, imageUrl, action) => InkWell(
@@ -112,7 +113,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         )
                       : Icon(Icons.person),
                   TxButton.text(
-                    label: Text('Change profile photo'),
+                    label: Text(tr.changeProfilePhoto),
                     showSuccess: false,
                     onPressVoid: action,
                   ),
@@ -128,15 +129,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         children: [
           Padding(
             padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
-            child: Text('Your Name:', style: TextStyle(fontSize: 16)),
+            child: Text('${tr.yourName}:', style: TextStyle(fontSize: 16)),
           ),
           BlocBuilder<UserBloc, UserState>(
             buildWhen: (previous, current) => previous.user.name != current.user.name,
             builder: (context, state) => TextFormField(
               initialValue: state.user.name,
-              decoration: InputDecoration(hintText: 'Enter your name'),
-              validator: (value) =>
-                  value?.isEmpty ?? true ? 'Please enter your name' : null,
+              decoration: InputDecoration(hintText: tr.enterYourName),
+              validator: (value) => value?.isEmpty ?? true ? tr.enterName : null,
               onSaved: (value) => _name = value?.trim(),
             ),
           ),
@@ -149,7 +149,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         children: [
           Padding(
             padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-            child: Text('Email:', style: TextStyle(fontSize: 16)),
+            child: Text('${tr.email}:', style: TextStyle(fontSize: 16)),
           ),
           BlocBuilder<UserBloc, UserState>(
             buildWhen: (previous, current) => previous.user.email != current.user.email,
@@ -173,7 +173,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     // Check if anything changed
     if (_name == _userBloc.state.user.name &&
         _photoPath == _userBloc.state.user.photoURL) {
-      showToast('No changes made');
+      showToast(tr.noChangesMade);
       return false;
     }
 
@@ -191,7 +191,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       _userBloc.add(UserModified(user));
       return true;
     } catch (e) {
-      showToast(e.toString());
+      debugPrint('Updating the profile failed: $e');
+      showToast(tr.somethingWentWrong);
       return false;
     }
   }

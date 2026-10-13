@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/domain/cubits/downloads_cubit.dart';
 import '/domain/models/block_item/audio_track.dart';
+import '/domain/services/language_cubit.dart';
 import '/helper/global_functions.dart';
 import '/helper/premium_gate.dart';
 import '/utils/get.dart';
@@ -21,7 +22,7 @@ class TrackDownloadButton extends StatefulWidget {
   State<TrackDownloadButton> createState() => _TrackDownloadButtonState();
 }
 
-class _TrackDownloadButtonState extends State<TrackDownloadButton> {
+class _TrackDownloadButtonState extends State<TrackDownloadButton> with Translation {
   final _cubit = Get.the<DownloadsCubit>();
 
   bool _downloading = false;
@@ -55,7 +56,7 @@ class _TrackDownloadButtonState extends State<TrackDownloadButton> {
     try {
       await _cubit.downloadTrack(widget.track!);
     } catch (_) {
-      showToast('Download failed');
+      showToast(tr.downloadFailed);
     } finally {
       if (mounted) setState(() => _downloading = false);
     }

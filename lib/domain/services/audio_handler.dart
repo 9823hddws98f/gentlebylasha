@@ -1,19 +1,27 @@
+import 'dart:ui';
+
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/services.dart';
+import 'package:gentle/l10n/app_localizations.dart';
 import 'package:just_audio/just_audio.dart';
 
 import '/domain/models/block_item/audio_track.dart';
 import '/utils/common_extensions.dart';
+import 'language_cubit.dart';
 
-Future<AudioHandler> initAudioService() => AudioService.init(
-      builder: () => MyAudioHandler(),
-      config: const AudioServiceConfig(
-        androidNotificationChannelId: 'com.mezz.gentle.audio',
-        androidNotificationChannelName: 'Audio Service Gentle',
-        androidNotificationOngoing: true,
-        androidStopForegroundOnPause: true,
-      ),
-    );
+Future<AudioHandler> initAudioService() async {
+  final tr = lookupAppLocalizations(Locale(await LanguageCubit.loadLanguageCode()));
+  return AudioService.init(
+    builder: () => MyAudioHandler(),
+    config: AudioServiceConfig(
+      androidNotificationChannelId: 'com.mezz.gentle.audio',
+      // Shown in the app's notification settings on Android.
+      androidNotificationChannelName: tr.playbackChannelName,
+      androidNotificationOngoing: true,
+      androidStopForegroundOnPause: true,
+    ),
+  );
+}
 
 class MyAudioHandler extends BaseAudioHandler {
   final _player = AudioPlayer();
