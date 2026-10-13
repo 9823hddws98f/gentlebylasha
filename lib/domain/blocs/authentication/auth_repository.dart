@@ -6,16 +6,18 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:gentle/l10n/app_localizations.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '/domain/blocs/authentication/appuser_model.dart';
 import '/domain/blocs/user/app_user.dart';
+import '/domain/services/language_cubit.dart';
+import '/helper/auth_errors.dart';
 import '/helper/global_functions.dart';
 import '/main.dart';
-import '/screens/auth/login_screen.dart';
-import '/utils/modals.dart';
+import '/utils/get.dart';
 
 class AuthRepository {
   final FirebaseAuth? _firebaseAuth;
@@ -24,6 +26,8 @@ class AuthRepository {
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 
   AuthUser? currentUser;
+
+  AppLocalizations get _tr => Get.the<LanguageCubit>().translation;
 
   Stream<AuthUser?> get user => _firebaseAuth!.authStateChanges().map((firebaseUser) {
         final user = firebaseUser == null ? AuthUser.empty : firebaseUser.appUser;
@@ -41,36 +45,38 @@ class AuthRepository {
     );
   }
 
+  /// Asks for confirmation, then logs out through the app-wide [logout].
   Future<void> logOut() async {
-    final confirmed = await Modals.confirm(
-      MyApp.navigatorKey.currentState!.context,
-      text: 'Logout',
-      content: const Text('Are you sure you want to logout?'),
-    );
-    if (confirmed != true) return;
-    await _firebaseAuth!.signOut();
-    MyApp.navigatorKey.currentState!.pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
-      (route) => false,
-    );
+    final context = MyApp.navigatorKey.currentContext;
+    if (context == null) return;
+    await logout(context, confirm: true);
+  }
+
+  /// Shows a translated message for a failed sign-in; nothing when the user
+  /// cancelled it.
+  void _showAuthError(Object error, {String? fallback}) {
+    debugPrint('Auth failed: $error');
+    final code = switch (error) {
+      FirebaseAuthException(:final code) => code,
+      SignInWithAppleAuthorizationException(code: AuthorizationErrorCode.canceled) =>
+        'canceled',
+      PlatformException(:final code) => code,
+      _ => 'unknown',
+    };
+    final message = authErrorMessage(code, _tr, fallback: fallback);
+    if (message != null) showToast(message);
   }
 
   Future<UserCredential?> signInWithEmail(String email, String password) async {
     try {
-      return await FirebaseAuth.instance.signInWithEmailAndPassword(
+      return await _firebaseAuth!.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-    } on FirebaseAuthException catch (e) {
-      showToast(switch (e.code) {
-        'user-not-found' => 'No user found for that email.',
-        'wrong-password' => 'Wrong password provided for that user.',
-        _ => 'Error during sign-in: ${e.message}'
-      });
     } catch (e) {
-      showToast('Unexpected error during sign-in: $e');
+      _showAuthError(e);
+      return null;
     }
-    return null;
   }
 
   Future<UserCredential?> signUpWithEmail(String name, String email, String password) async {
@@ -82,15 +88,12 @@ class AuthRepository {
       await _initUserInDBIfNeeded(user, name);
       return user;
     } catch (e) {
-      if (e is FirebaseAuthException && e.code == 'email-already-in-use') {
-        showToast('This email is already registered.');
-      } else {
-        showToast('An error occurred while signing up. Please try again later.');
-      }
+      _showAuthError(e, fallback: _tr.somethingWentWrong);
       return null;
     }
   }
 
+  /// Returns null when sign-in failed or the user cancelled it.
   Future<UserCredential?> signInWithGoogle() async {
     try {
       UserCredential? user;
@@ -99,6 +102,7 @@ class AuthRepository {
         user = await _firebaseAuth!.signInWithPopup(provider);
       } else {
         final googleSignInAccount = await GoogleSignIn().signIn();
+        // null: the user closed the account picker.
         final googleAuth = await googleSignInAccount?.authentication;
         if (googleAuth == null) return null;
         final credential = GoogleAuthProvider.credential(
@@ -111,11 +115,12 @@ class AuthRepository {
       await _initUserInDBIfNeeded(user);
       return user;
     } catch (e) {
-      showToast(e.toString());
+      _showAuthError(e);
       return null;
     }
   }
 
+  /// Returns null when sign-in failed or the user cancelled it.
   Future<UserCredential?> signInWithApple() async {
     try {
       // The nonce ties Apple's identity token to this sign-in, so a stolen
@@ -135,15 +140,45 @@ class AuthRepository {
         accessToken: appleCredential.authorizationCode,
       );
       final user = await _firebaseAuth!.signInWithCredential(credential);
-      await _initUserInDBIfNeeded(user);
-      // Lets the server revoke Apple access when the account is deleted (Apple requires it).
-      FirebaseFunctions.instanceFor(region: 'us-central1')
-          .httpsCallable('linkAppleSignIn')
-          .call({'authorizationCode': appleCredential.authorizationCode}).ignore();
+      // Apple shares the name only the first time someone signs in to the app.
+      final name = appleFullName(appleCredential.givenName, appleCredential.familyName);
+      if (name != null) await _saveAppleName(user, name);
+      await _initUserInDBIfNeeded(user, name);
+      await _linkAppleSignIn(appleCredential.authorizationCode);
       return user;
     } catch (e) {
-      showToast(e.toString());
+      _showAuthError(e);
       return null;
+    }
+  }
+
+  /// Stores the name from Apple on the Auth account, and on an existing
+  /// profile that has none yet (new profiles get it in [_initUserInDBIfNeeded]).
+  Future<void> _saveAppleName(UserCredential credential, String name) async {
+    final user = credential.user;
+    if (user == null) return;
+    try {
+      if (user.displayName?.trim().isEmpty ?? true) await user.updateDisplayName(name);
+      if (credential.additionalUserInfo?.isNewUser == false) {
+        final ref = FirebaseFirestore.instance.collection('users').doc(user.uid);
+        final current = (await ref.get()).data()?['name'];
+        if (current is! String || current.trim().isEmpty) await ref.update({'name': name});
+      }
+    } catch (e) {
+      debugPrint('Saving the name from Apple failed: $e');
+    }
+  }
+
+  /// Lets the server revoke Apple access when the account is deleted (Apple
+  /// requires it). A failure is logged but doesn't stop the sign-in; the next
+  /// Apple sign-in tries again.
+  Future<void> _linkAppleSignIn(String authorizationCode) async {
+    try {
+      await FirebaseFunctions.instanceFor(region: 'us-central1')
+          .httpsCallable('linkAppleSignIn')
+          .call({'authorizationCode': authorizationCode}).timeout(const Duration(seconds: 15));
+    } catch (e) {
+      debugPrint('linkAppleSignIn failed: $e');
     }
   }
 
@@ -158,7 +193,7 @@ class AuthRepository {
           email: user.email ?? '',
           name: name ?? user.displayName ?? '',
           photoURL: user.photoURL ?? '',
-          language: 'en',
+          language: Get.the<LanguageCubit>().languageCode,
           createdAt: DateTime.now(),
           role: UserRole.client,
         ).toMap());
@@ -226,11 +261,20 @@ class AuthRepository {
   }
 }
 
+/// "Given Family" from the name Apple shares at the first sign-in; null when empty.
+String? appleFullName(String? givenName, String? familyName) {
+  final name = [givenName, familyName]
+      .map((part) => part?.trim() ?? '')
+      .where((part) => part.isNotEmpty)
+      .join(' ');
+  return name.isEmpty ? null : name;
+}
+
 extension on User {
   AuthUser get appUser {
     return AuthUser(
       uid,
-      email!,
+      email ?? '',
       displayName ?? '',
       photoURL ?? '',
     );

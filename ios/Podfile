@@ -45,6 +45,17 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
+    # Gentle never records audio: compile audio_session without its microphone
+    # APIs, so the binary doesn't need NSMicrophoneUsageDescription.
+    if target.name == 'audio_session'
+      target.build_configurations.each do |config|
+        defs = config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] || '$(inherited)'
+        defs = defs.split if defs.is_a?(String)
+        defs << '$(inherited)' unless defs.include?('$(inherited)')
+        defs << 'AUDIO_SESSION_MICROPHONE=0' unless defs.include?('AUDIO_SESSION_MICROPHONE=0')
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] = defs
+      end
+    end
     if target.name == 'BoringSSL-GRPC'
       target.source_build_phase.files.each do |file|
         if file.settings && file.settings['COMPILER_FLAGS']

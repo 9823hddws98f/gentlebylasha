@@ -77,40 +77,31 @@ class AppLocalizationsNl extends AppLocalizations {
   String get goodAfternoon => 'Goedemiddag';
 
   @override
-  String get goodEvening => 'Goedeavond';
+  String get goodEvening => 'Goedenavond';
 
   @override
-  String get goodNight => 'Goedeavond';
-
-  @override
-  String get workWithUs => 'Werk met ons';
-
-  @override
-  String get termsOfService => 'Servicevoorwaarden';
+  String get goodNight => 'Goedenacht';
 
   @override
   String get privacyPolicy => 'Privacybeleid';
 
   @override
-  String get mindfulnessAndMeditation => 'Mindfullness en meditatie';
+  String get mindfulnessAndMeditation => 'Mindfulness en meditatie';
 
   @override
   String get bedtime => 'Bedtijd';
 
   @override
-  String get moodCheckIn => 'Stemming check-in';
+  String get moodCheckIn => 'Stemmingscheck';
 
   @override
-  String get gratitudeCheckIn => 'Dankbaarheid inchecken';
+  String get gratitudeCheckIn => 'Moment van dankbaarheid';
 
   @override
   String get dailyReflection => 'Dagelijkse reflectie';
 
   @override
-  String get sleepCheckIn => 'Slaap check-in';
-
-  @override
-  String get welcomeToSleepytales => 'Welkom bij Gentle';
+  String get sleepCheckIn => 'Slaapcheck';
 
   @override
   String get launchScreenMessage => 'sluit gewoon je ogen en luister';
@@ -123,9 +114,6 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get continueWithApple => 'Ga verder met Apple';
-
-  @override
-  String get continueWithFacebook => 'Ga verder met Facebook';
 
   @override
   String get continueWithGoogle => 'Ga verder met Google';
@@ -152,7 +140,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get login => 'Inloggen';
 
   @override
-  String get joinSleepytales => 'Sluit je aan bij Gentle';
+  String get joinGentle => 'Sluit je aan bij Gentle';
 
   @override
   String get yourName => 'Uw naam';
@@ -195,9 +183,6 @@ class AppLocalizationsNl extends AppLocalizations {
   String get signUp => 'Aanmelden';
 
   @override
-  String get loginToSleepytales => 'Log in op Gentle';
-
-  @override
   String get notMember => 'Geen lid';
 
   @override
@@ -207,7 +192,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get reset => 'Resetten';
 
   @override
-  String get whatBringsYouToSleepytales => 'Wat brengt je naar Gentle';
+  String get whatBringsYouToGentle => 'Wat brengt je naar Gentle';
 
   @override
   String get personalizeRecMessage =>
@@ -320,4 +305,159 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get purchaseOtherAccount =>
       'Deze aankoop hoort bij een ander Gentle-account. Log in met dat account om hem te gebruiken.';
+
+  @override
+  String get website => 'Website';
+
+  @override
+  String get termsOfUse => 'Gebruiksvoorwaarden';
+
+  @override
+  String get linkOpenFailed =>
+      'Deze pagina kon niet worden geopend. Probeer het later opnieuw.';
+
+  @override
+  String get logoutConfirm => 'Wil je uitloggen?';
+
+  @override
+  String get nameDialogTitle => 'Hoe mogen we je noemen?';
+
+  @override
+  String get notNow => 'Niet nu';
+
+  @override
+  String get save => 'Opslaan';
+
+  @override
+  String confirmNewEmail(String email) {
+    return 'We hebben een link gestuurd naar $email. Open die om je nieuwe e-mailadres te bevestigen. Tot die tijd log je in met je huidige adres.';
+  }
+
+  @override
+  String get authInvalidCredential =>
+      'Het e-mailadres of wachtwoord klopt niet. Controleer ze en probeer het opnieuw.';
+
+  @override
+  String get authUserDisabled =>
+      'Dit account is uitgeschakeld. Neem contact met ons op via Help & Ondersteuning.';
+
+  @override
+  String get authTooManyRequests =>
+      'Te veel pogingen. Wacht even en probeer het dan opnieuw.';
+
+  @override
+  String get authNetworkError =>
+      'Geen verbinding. Controleer je internet en probeer het opnieuw.';
+
+  @override
+  String get authEmailInUse =>
+      'Er is al een account met dit e-mailadres. Log daarmee in.';
+
+  @override
+  String get authOtherSignInMethod =>
+      'Dit e-mailadres hoort bij een andere manier van inloggen. Log in zoals je dat eerder deed.';
+
+  @override
+  String get authRecentLogin =>
+      'Log voor je veiligheid opnieuw in en probeer het daarna nog een keer.';
+
+  @override
+  String get authPopupBlocked =>
+      'Je browser heeft het inlogvenster geblokkeerd. Sta pop-ups toe voor deze site en probeer het opnieuw.';
+
+  @override
+  String get authFailed => 'Inloggen is niet gelukt. Probeer het opnieuw.';
+
+  @override
+  String alreadySubscribedStore(String store) {
+    return 'Je hebt al een abonnement via $store. Daar kun je het beheren.';
+  }
+
+  @override
+  String get alreadySubscribedWeb =>
+      'Je hebt al een abonnement. Je kunt het beheren onder Abonnement beheren.';
+
+  @override
+  String get checkoutSuccess =>
+      'Dank je wel. Je Premium staat zo voor je klaar.';
+
+  @override
+  String get checkoutCancelled =>
+      'Het afrekenen is geannuleerd. Er is niets afgeschreven.';
+
+  @override
+  String get reminderMindfulnessDescription =>
+      'Elke dag een paar rustige minuten mindfulness of meditatie kan je helpen beter te slapen en je meer op je gemak te voelen.';
+
+  @override
+  String get reminderMindfulnessQuestion =>
+      'Wanneer wil je een herinnering voor mindfulness of meditatie?';
+
+  @override
+  String get reminderMindfulnessNotification =>
+      'Neem even de tijd om stil te staan, adem te halen en in het nu te zijn.';
+
+  @override
+  String get reminderBedtimeDescription =>
+      'Elke avond op hetzelfde tijdstip naar bed gaan helpt je lichaam in een rustig ritme te komen.';
+
+  @override
+  String get reminderBedtimeQuestion =>
+      'Hoe laat wil je je klaarmaken om naar bed te gaan?';
+
+  @override
+  String get reminderBedtimeNotification =>
+      'Tijd om tot rust te komen. Geniet van een rustige avondroutine.';
+
+  @override
+  String get reminderMoodDescription =>
+      'Opmerken hoe je je voelt, zonder er iets van te vinden, is een zachte manier om voor jezelf te zorgen.';
+
+  @override
+  String get reminderMoodQuestion =>
+      'Wanneer wil je een herinnering om stil te staan bij hoe je je voelt?';
+
+  @override
+  String get reminderMoodNotification =>
+      'Neem even een moment voor jezelf. Hoe voel je je?';
+
+  @override
+  String get reminderGratitudeDescription =>
+      'Even stilstaan bij wat er vandaag goed ging, helpt je de dag met een rustiger hoofd af te sluiten.';
+
+  @override
+  String get reminderGratitudeQuestion =>
+      'Wanneer wil je een herinnering voor een moment van dankbaarheid?';
+
+  @override
+  String get reminderGratitudeNotification =>
+      'Waar ben je vandaag dankbaar voor?';
+
+  @override
+  String get reminderReflectionDescription =>
+      'Een kort moment van reflectie helpt je de dag los te laten en ruimte te maken voor rust.';
+
+  @override
+  String get reminderReflectionQuestion =>
+      'Wanneer wil je een herinnering voor je dagelijkse reflectie?';
+
+  @override
+  String get reminderReflectionNotification =>
+      'Sta even stil en kijk terug op je dag.';
+
+  @override
+  String get reminderSleepDescription =>
+      'Terugkijken op hoe je hebt geslapen helpt je te ontdekken wat jou een goede nachtrust geeft.';
+
+  @override
+  String get reminderSleepQuestion =>
+      'Wanneer wil je een herinnering om terug te kijken op je slaap?';
+
+  @override
+  String get reminderSleepNotification =>
+      'Hoe heb je geslapen? Neem even een moment om terug te kijken.';
+
+  @override
+  String get currentPasswordWrong =>
+      'Je huidige wachtwoord klopt niet. Probeer het opnieuw.';
 }

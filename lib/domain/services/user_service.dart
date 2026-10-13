@@ -5,7 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '/domain/blocs/user/app_user.dart';
 import '/domain/services/crud_service.dart';
+import '/utils/get.dart';
 import 'activity_log_service.dart';
+import 'language_cubit.dart';
 
 class UsersService with ActivityLogger implements CrudService<AppUser> {
   final CollectionReference<Map<String, dynamic>> _collectionReference =
@@ -93,7 +95,7 @@ class UsersService with ActivityLogger implements CrudService<AppUser> {
         email: authUser.email ?? '',
         name: authUser.displayName ?? '',
         photoURL: authUser.photoURL ?? '',
-        language: 'en',
+        language: Get.the<LanguageCubit>().languageCode,
         createdAt: DateTime.now(),
         role: UserRole.client,
       );

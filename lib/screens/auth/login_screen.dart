@@ -6,7 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import '/constants/assets.dart';
 import '/domain/blocs/authentication/auth_repository.dart';
 import '/domain/services/language_cubit.dart';
-import '/helper/global_functions.dart';
 import '/helper/validators.dart';
 import '/main.dart';
 import '/screens/app_container/app_container.dart';
@@ -254,10 +253,8 @@ class LoginScreenState extends State<LoginScreen> with Translation {
     final userCredential = await signIn();
     if (!mounted) return false;
 
-    if (userCredential == null) {
-      showToast('${tr.unableToAuth} $authProvider');
-      return false;
-    }
+    // AuthRepository already showed why, or the user cancelled (no message then).
+    if (userCredential == null) return false;
 
     Navigator.of(context).pushNamedAndRemoveUntil(
       AppContainer.routeName,

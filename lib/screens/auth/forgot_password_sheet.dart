@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '/domain/blocs/authentication/auth_repository.dart';
 import '/domain/services/language_cubit.dart';
+import '/helper/auth_errors.dart';
 import '/helper/global_functions.dart';
 import '/helper/validators.dart';
 import '/utils/app_theme.dart';
@@ -84,8 +86,13 @@ class ForgotPasswordState extends State<ForgotPasswordSheet> with Translation {
                             final auth = Get.the<AuthRepository>();
                             await auth.resetPassword(_email!);
                             return true;
-                          } catch (e) {
-                            showToast(e.toString());
+                          } on FirebaseAuthException catch (e) {
+                            showToast(authErrorMessage(e.code, tr,
+                                    fallback: tr.somethingWentWrong) ??
+                                tr.somethingWentWrong);
+                            return false;
+                          } catch (_) {
+                            showToast(tr.somethingWentWrong);
                             return false;
                           }
                         } else {

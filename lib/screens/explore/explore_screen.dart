@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/domain/cubits/pages/pages_cubit.dart';
@@ -127,7 +128,7 @@ class _ExploreScreenState extends State<ExploreScreen>
     return BottomPanelSpacer.padding(
       child: ListView.separated(
         itemCount: _tracks.length,
-        cacheExtent: 1000,
+        scrollCacheExtent: const ScrollCacheExtent.pixels(1000),
         padding: EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
         separatorBuilder: (context, index) => const SizedBox(height: 2),
         itemBuilder: (context, index) {

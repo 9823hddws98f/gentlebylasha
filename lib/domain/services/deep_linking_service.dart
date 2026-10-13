@@ -10,13 +10,14 @@ import '/domain/services/tracks_service.dart';
 import '/helper/global_functions.dart';
 import '/main.dart';
 import '/screens/home/playlist_tracks_screen.dart';
+import '/utils/app_config.dart';
 import '/utils/get.dart';
 
+/// Shared track/playlist links (`<APP_URL>/shareTrack/<id>`). The host is
+/// AppConfig.appUrl; Android App Links (appLinkHost in build.gradle.kts) and the
+/// iOS associated domain (Runner.entitlements) must use the same host, and that
+/// host must serve /.well-known/assetlinks.json and apple-app-site-association.
 class DeepLinkingService {
-  // Also in AndroidManifest.xml (App Links) and web/.well-known/assetlinks.json.
-  // Change all three when the app moves to its own domain.
-  static const _baseUrl = 'https://gentle-mu.vercel.app';
-
   DeepLinkingService._();
   static final instance = DeepLinkingService._();
 
@@ -98,5 +99,5 @@ class DeepLinkingService {
         _createDeepLink('sharePlaylist', playlistId),
       );
 
-  String _createDeepLink(String type, String id) => '$_baseUrl/$type/$id';
+  String _createDeepLink(String type, String id) => AppConfig.shareLink(type, id);
 }

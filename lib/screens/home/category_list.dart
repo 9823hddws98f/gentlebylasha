@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 
 import '/domain/cubits/pages/pages_cubit.dart';
 import '/domain/models/app_page/app_page.dart';
@@ -42,7 +43,7 @@ class CategoryListState extends State<CategoryList> {
       height: 47,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        cacheExtent: 600, // Needed for keys
+        scrollCacheExtent: const ScrollCacheExtent.pixels(600), // Needed for keys
         padding: EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
         itemCount: _appPages.length,
         separatorBuilder: (context, index) => SizedBox(width: 8),

@@ -45,18 +45,20 @@ class _OnBoarding02ScreenState extends State<OnBoarding02Screen> with Translatio
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: _options.length,
-                itemBuilder: (context, index) => RadioListTile(
-                  dense: true,
-                  contentPadding: EdgeInsets.zero,
-                  value: _options[index],
-                  groupValue: _selectedOption,
-                  title: Text(
-                    _options[index],
-                    style: TextStyle(fontSize: 16),
+              child: RadioGroup<String>(
+                groupValue: _selectedOption,
+                onChanged: (value) => setState(() => _selectedOption = value),
+                child: ListView.builder(
+                  itemCount: _options.length,
+                  itemBuilder: (context, index) => RadioListTile<String>(
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                    value: _options[index],
+                    title: Text(
+                      _options[index],
+                      style: TextStyle(fontSize: 16),
+                    ),
                   ),
-                  onChanged: (value) => setState(() => _selectedOption = value),
                 ),
               ),
             ),

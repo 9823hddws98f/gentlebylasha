@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '/domain/services/language_cubit.dart';
 import '/domain/services/reminder_service.dart';
 import '/helper/global_functions.dart';
 import '/utils/app_theme.dart';
@@ -24,7 +25,7 @@ class ReminderSetupScreen extends StatefulWidget {
   State<ReminderSetupScreen> createState() => _ReminderSetupScreen();
 }
 
-class _ReminderSetupScreen extends State<ReminderSetupScreen> {
+class _ReminderSetupScreen extends State<ReminderSetupScreen> with Translation {
   final _reminderService = Get.the<ReminderService>();
 
   TimeOfDay _selectedTime = TimeOfDay.now();
@@ -35,7 +36,7 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> {
 
   @override
   Widget build(BuildContext context) => AppScaffold(
-        appBar: (_, __) => AdaptiveAppBar(title: _item.heading),
+        appBar: (_, __) => AdaptiveAppBar(title: _item.heading(tr)),
         body: (context, _) => DefaultTextStyle.merge(
           style: TextStyle(fontSize: 16),
           textAlign: TextAlign.center,
@@ -81,8 +82,8 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> {
   Widget _buildReminderList() => ListView(
         children: [
           SizedBox.shrink(),
-          Text(_item.description),
-          Text(_item.description2),
+          Text(_item.description(tr)),
+          Text(_item.question(tr)),
           _buildTimeSelector(),
           if (_item.everyday) _buildWeekdays(),
         ].interleaveWith(SizedBox(height: 24)),
@@ -127,8 +128,8 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> {
   }
 
   Future<void> _loadSavedSettings() async {
-    final time = await _reminderService.getTimeOfDay(_item.heading);
-    final enabled = await _reminderService.isReminderEnabled(_item.heading);
+    final time = await _reminderService.getTimeOfDay(_item.prefsKey);
+    final enabled = await _reminderService.isReminderEnabled(_item.prefsKey);
 
     if (_item.everyday) {
       final days = await _reminderService.getSelectedDays();
@@ -161,16 +162,16 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> {
       if (_item.everyday) {
         await _reminderService.setWeeklyReminder(
           id: _item.reminderID,
-          title: _item.heading,
-          description: _item.notificationDescription,
+          title: _item.heading(tr),
+          description: _item.notificationBody(tr),
           time: _selectedTime,
           days: _selectedDays,
         );
       } else {
         await _reminderService.setDailyReminder(
           id: _item.reminderID,
-          title: _item.heading,
-          description: _item.notificationDescription,
+          title: _item.heading(tr),
+          description: _item.notificationBody(tr),
           time: _selectedTime,
         );
       }
@@ -179,8 +180,8 @@ class _ReminderSetupScreen extends State<ReminderSetupScreen> {
     if (_item.everyday) {
       await _reminderService.saveDaysOfWeek(_selectedDays);
     }
-    await _reminderService.saveTimeOfDay(_item.heading, _selectedTime);
-    await _reminderService.saveReminderEnabled(_item.heading, _getReminders);
+    await _reminderService.saveTimeOfDay(_item.prefsKey, _selectedTime);
+    await _reminderService.saveReminderEnabled(_item.prefsKey, _getReminders);
   }
 
   Future<void> _selectTime(BuildContext context) async {

@@ -52,7 +52,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteAccountMessage =>
-      'Are you sure, you want to delete you account?';
+      'Are you sure you want to delete your account?';
 
   @override
   String get deleteAccountDescription =>
@@ -83,16 +83,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get goodNight => 'Good night';
 
   @override
-  String get workWithUs => 'Work with us';
-
-  @override
-  String get termsOfService => 'Terms of service';
-
-  @override
   String get privacyPolicy => 'Privacy policy';
 
   @override
-  String get mindfulnessAndMeditation => 'Mindfulness and Meditation';
+  String get mindfulnessAndMeditation => 'Mindfulness and meditation';
 
   @override
   String get bedtime => 'Bedtime';
@@ -110,9 +104,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sleepCheckIn => 'Sleep check-in';
 
   @override
-  String get welcomeToSleepytales => 'Welcome to Gentle';
-
-  @override
   String get launchScreenMessage => 'just close your eyes and listen';
 
   @override
@@ -123,9 +114,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get continueWithApple => 'Continue with Apple';
-
-  @override
-  String get continueWithFacebook => 'Continue with Facebook';
 
   @override
   String get continueWithGoogle => 'Continue with Google';
@@ -152,7 +140,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get login => 'Login';
 
   @override
-  String get joinSleepytales => 'Join Gentle';
+  String get joinGentle => 'Join Gentle';
 
   @override
   String get yourName => 'Your name';
@@ -195,9 +183,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signUp => 'Sign Up';
 
   @override
-  String get loginToSleepytales => 'Login to Gentle';
-
-  @override
   String get notMember => 'Not a member';
 
   @override
@@ -207,7 +192,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reset => 'Reset';
 
   @override
-  String get whatBringsYouToSleepytales => 'What brings you to Gentle';
+  String get whatBringsYouToGentle => 'What brings you to Gentle';
 
   @override
   String get personalizeRecMessage =>
@@ -318,4 +303,159 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get purchaseOtherAccount =>
       'This purchase belongs to another Gentle account. Sign in with that account to use it.';
+
+  @override
+  String get website => 'Website';
+
+  @override
+  String get termsOfUse => 'Terms of use';
+
+  @override
+  String get linkOpenFailed =>
+      'This page could not be opened. Please try again later.';
+
+  @override
+  String get logoutConfirm => 'Do you want to log out?';
+
+  @override
+  String get nameDialogTitle => 'What should we call you?';
+
+  @override
+  String get notNow => 'Not now';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String confirmNewEmail(String email) {
+    return 'We sent a link to $email. Open it to confirm your new email address. Until then, keep signing in with your current one.';
+  }
+
+  @override
+  String get authInvalidCredential =>
+      'The email address or password is not correct. Please check them and try again.';
+
+  @override
+  String get authUserDisabled =>
+      'This account has been turned off. Please contact us through Help & Support.';
+
+  @override
+  String get authTooManyRequests =>
+      'Too many attempts. Please wait a moment and try again.';
+
+  @override
+  String get authNetworkError =>
+      'No connection. Please check your internet and try again.';
+
+  @override
+  String get authEmailInUse =>
+      'There is already an account with this email address. Please log in instead.';
+
+  @override
+  String get authOtherSignInMethod =>
+      'This email address is linked to another way of signing in. Please sign in the way you did before.';
+
+  @override
+  String get authRecentLogin =>
+      'For your security, please log in again and then try once more.';
+
+  @override
+  String get authPopupBlocked =>
+      'Your browser blocked the sign-in window. Please allow pop-ups for this site and try again.';
+
+  @override
+  String get authFailed => 'Signing in didn\'t work. Please try again.';
+
+  @override
+  String alreadySubscribedStore(String store) {
+    return 'You already have a subscription through $store. You can manage it there.';
+  }
+
+  @override
+  String get alreadySubscribedWeb =>
+      'You already have a subscription. You can manage it under Manage Subscription.';
+
+  @override
+  String get checkoutSuccess =>
+      'Thank you. Your Premium will be ready in a moment.';
+
+  @override
+  String get checkoutCancelled =>
+      'Checkout was cancelled. Nothing has been charged.';
+
+  @override
+  String get reminderMindfulnessDescription =>
+      'A few quiet minutes of mindfulness or meditation each day can help you sleep better and feel more at ease.';
+
+  @override
+  String get reminderMindfulnessQuestion =>
+      'When would you like a mindfulness or meditation reminder?';
+
+  @override
+  String get reminderMindfulnessNotification =>
+      'Take a moment to pause, breathe and be in the present.';
+
+  @override
+  String get reminderBedtimeDescription =>
+      'Going to bed at the same time each night helps your body settle into a calm rhythm.';
+
+  @override
+  String get reminderBedtimeQuestion =>
+      'What time would you like to get ready for bed?';
+
+  @override
+  String get reminderBedtimeNotification =>
+      'Time to wind down. Enjoy a peaceful bedtime routine.';
+
+  @override
+  String get reminderMoodDescription =>
+      'Noticing how you feel, without judging it, is a gentle way to take care of yourself.';
+
+  @override
+  String get reminderMoodQuestion =>
+      'When would you like a reminder to check in with your mood?';
+
+  @override
+  String get reminderMoodNotification =>
+      'Take a moment for yourself. How are you feeling?';
+
+  @override
+  String get reminderGratitudeDescription =>
+      'Pausing to notice what went well today helps you end the day with a calmer mind.';
+
+  @override
+  String get reminderGratitudeQuestion =>
+      'When would you like a gratitude reminder?';
+
+  @override
+  String get reminderGratitudeNotification =>
+      'What are you grateful for today?';
+
+  @override
+  String get reminderReflectionDescription =>
+      'A short moment of reflection helps you let go of the day and make room for rest.';
+
+  @override
+  String get reminderReflectionQuestion =>
+      'When would you like a daily reflection reminder?';
+
+  @override
+  String get reminderReflectionNotification =>
+      'Pause for a moment and look back on your day.';
+
+  @override
+  String get reminderSleepDescription =>
+      'Looking back on how you slept helps you notice what gives you a good night\'s rest.';
+
+  @override
+  String get reminderSleepQuestion =>
+      'When would you like a sleep check-in reminder?';
+
+  @override
+  String get reminderSleepNotification =>
+      'How did you sleep? Take a moment to check in.';
+
+  @override
+  String get currentPasswordWrong =>
+      'Your current password is not correct. Please try again.';
 }

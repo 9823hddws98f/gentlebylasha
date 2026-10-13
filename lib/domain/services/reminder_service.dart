@@ -4,16 +4,28 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:gentle/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import '/helper/global_functions.dart';
+import '/screens/reminder/reminder_model.dart';
 import '/utils/common_extensions.dart';
+import '/utils/get.dart';
+import 'language_cubit.dart';
 
 class ReminderService {
   static const String _channelId = 'daily_reminder';
   static const String _channelName = 'Daily Reminder';
   static const String _selectedDaysKey = 'selectedDays';
+
+  /// 2: notification ids from [notificationId]. 1 (before): reminder id + day
+  /// index, which made reminders overwrite each other.
+  static const _idSchemeKey = 'reminderIdScheme';
+  static const _idScheme = 2;
+
+  /// Language of the scheduled notification texts.
+  static const _languageKey = 'reminderLanguage';
 
   ReminderService._();
   static final instance = ReminderService._();
@@ -21,16 +33,77 @@ class ReminderService {
   late final FlutterLocalNotificationsPlugin _notificationsPlugin;
   late final SharedPreferences _prefs;
 
+  /// Notification id of one slot of a reminder: slot 0 for a daily reminder,
+  /// 1–7 for a weekday (DateTime.monday … DateTime.sunday). Reminder ids are
+  /// 11–16, so reminders never share an id.
+  static int notificationId(int reminderId, int slot) => reminderId * 10 + slot;
+
+  /// Every notification id a reminder can use.
+  static List<int> notificationIds(int reminderId) =>
+      [for (var slot = 0; slot <= 7; slot++) notificationId(reminderId, slot)];
+
   Future<void> initialize() async {
     if (kIsWeb || Platform.isMacOS) return;
     _notificationsPlugin = FlutterLocalNotificationsPlugin();
     _prefs = await SharedPreferences.getInstance();
     await _initializeTimeZone();
     await _initializeNotifications();
+    await _migrateIds();
+    await _syncLanguage(await LanguageCubit.loadLanguageCode());
+    // Scheduled texts follow the app language.
+    Get.the<LanguageCubit>()
+        .stream
+        .listen((state) => _syncLanguage(state.locale.languageCode));
+  }
+
+  /// Old installs scheduled reminders under ids that overlapped; cancel those
+  /// once. [_syncLanguage] then schedules the enabled reminders again.
+  Future<void> _migrateIds() async {
+    if ((_prefs.getInt(_idSchemeKey) ?? 1) >= _idScheme) return;
+    try {
+      for (var id = 11; id <= 22; id++) {
+        await _notificationsPlugin.cancel(id);
+      }
+      await _prefs.remove(_languageKey);
+      await _prefs.setInt(_idSchemeKey, _idScheme);
+    } catch (e) {
+      'Migrating reminders failed: $e'.logDebug();
+    }
+  }
+
+  Future<void> _syncLanguage(String languageCode) async {
+    if (_prefs.getString(_languageKey) == languageCode) return;
+    final tr = lookupAppLocalizations(Locale(languageCode));
+    for (final reminder in ReminderModel.all) {
+      if (!await isReminderEnabled(reminder.prefsKey)) continue;
+      final time = await getTimeOfDay(reminder.prefsKey);
+      try {
+        if (reminder.everyday) {
+          await _scheduleWeekly(
+            reminder.reminderID,
+            reminder.heading(tr),
+            reminder.notificationBody(tr),
+            time,
+            await getSelectedDays(),
+          );
+        } else {
+          await _scheduleDaily(
+            reminder.reminderID,
+            reminder.heading(tr),
+            reminder.notificationBody(tr),
+            time,
+          );
+        }
+      } catch (e) {
+        'Rescheduling reminder ${reminder.reminderID} failed: $e'.logDebug();
+      }
+    }
+    await _prefs.setString(_languageKey, languageCode);
   }
 
   Future<void> _initializeNotifications() async {
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    // Small monochrome icon in the Android status bar.
+    const androidSettings = AndroidInitializationSettings('@drawable/ic_notification');
     final iosSettings = DarwinInitializationSettings(
       // Asked when the user turns a reminder on, not at first launch.
       requestSoundPermission: false,
@@ -109,7 +182,7 @@ class ReminderService {
   /// Sets a daily reminder notification that repeats at the specified time each day.
   ///
   /// Parameters:
-  /// - [id]: Unique identifier for the notification
+  /// - [id]: The reminder (ReminderModel.reminderID); see [notificationId]
   /// - [title]: Title text shown in the notification
   /// - [description]: Body text shown in the notification
   /// - [time]: Time of day when the notification should be shown
@@ -122,7 +195,11 @@ class ReminderService {
     if (!await _areNotificationsEnabled()) {
       throw Exception('Notifications are not enabled');
     }
+    await _scheduleDaily(id, title, description, time);
+  }
 
+  Future<void> _scheduleDaily(int id, String title, String description, TimeOfDay time) async {
+    await cancelReminder(id);
     try {
       final now = tz.TZDateTime.now(tz.local);
       final scheduledDate = tz.TZDateTime(
@@ -135,7 +212,7 @@ class ReminderService {
       );
 
       await _notificationsPlugin.zonedSchedule(
-        id,
+        notificationId(id, 0),
         title,
         description,
         scheduledDate,
@@ -154,11 +231,11 @@ class ReminderService {
   /// Sets a weekly reminder notification that repeats at the specified time each week on the selected days.
   ///
   /// Parameters:
-  /// - [id]: Unique identifier for the notification
+  /// - [id]: The reminder (ReminderModel.reminderID); see [notificationId]
   /// - [title]: Title text shown in the notification
   /// - [description]: Body text shown in the notification
   /// - [time]: Time of day when the notification should be shown
-  /// - [days]: List of booleans indicating which days of the week the reminder should be shown
+  /// - [days]: Which weekdays, Monday (index 0) to Sunday (index 6)
   Future<void> setWeeklyReminder({
     required int id,
     required String title,
@@ -169,23 +246,35 @@ class ReminderService {
     if (!await _areNotificationsEnabled()) {
       throw Exception('Notifications are not enabled');
     }
+    await _scheduleWeekly(id, title, description, time, days);
+  }
 
+  /// [days] runs Monday (index 0) to Sunday (index 6).
+  Future<void> _scheduleWeekly(
+    int id,
+    String title,
+    String description,
+    TimeOfDay time,
+    List<bool> days,
+  ) async {
+    // Also removes days that were switched off.
+    await cancelReminder(id);
     final now = tz.TZDateTime.now(tz.local);
 
-    for (int i = 0; i < days.length; i++) {
+    for (int i = 0; i < days.length && i < 7; i++) {
       if (days[i]) {
-        final adjustedDay = (i + 1) % 7;
+        final weekday = i + 1; // DateTime.monday … DateTime.sunday
         final scheduledDate = tz.TZDateTime(
           tz.local,
           now.year,
           now.month,
-          now.day + (adjustedDay - now.weekday) % 7,
+          now.day + (weekday - now.weekday) % 7,
           time.hour,
           time.minute,
         );
 
         await _notificationsPlugin.zonedSchedule(
-          id + i,
+          notificationId(id, weekday),
           title,
           description,
           scheduledDate,
@@ -213,8 +302,11 @@ class ReminderService {
     return NotificationDetails(android: androidDetails, iOS: iosDetails);
   }
 
+  /// Cancels every notification of reminder [id] (daily and all weekdays).
   Future<void> cancelReminder(int id) async {
-    await _notificationsPlugin.cancel(id);
+    for (final notification in notificationIds(id)) {
+      await _notificationsPlugin.cancel(notification);
+    }
   }
 
   // Preferences Management

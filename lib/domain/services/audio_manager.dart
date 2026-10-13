@@ -36,6 +36,20 @@ class AudioManager {
   final currentPlaylistBlockNotifier = ValueNotifier<AudioPlaylist?>(null);
   bool get _isPlaylistPlaying => currentPlaylistBlockNotifier.value != null;
 
+  /// Track ids of the queue built by [loadPlaylist], in playlist order.
+  List<String> _queuedTrackIds = const [];
+
+  /// Whether the queue must be rebuilt to play [trackIds] of [playlistId]: a
+  /// different playlist, or the same one with other tracks (premium unlocked,
+  /// the admin changed it, tracks without audio left out).
+  static bool needsNewQueue({
+    required String? currentPlaylistId,
+    required List<String> queuedTrackIds,
+    required String playlistId,
+    required List<String> trackIds,
+  }) =>
+      currentPlaylistId != playlistId || !listEquals(queuedTrackIds, trackIds);
+
   bool _isInitialized = false;
 
   void init() async {
@@ -50,7 +64,7 @@ class AudioManager {
 
   void playSinglePlaylist(MediaItem mediaItem, String trackId) {
     if (_isPlaylistPlaying || currentMediaItemNotifier.value.id != trackId) {
-      currentPlaylistBlockNotifier.value = null;
+      _clearPlaylist();
       playlistIdNotifier.value = [];
       _audioHandler.addQueueItem(mediaItem);
     }
@@ -61,8 +75,16 @@ class AudioManager {
     List<AudioTrack> list,
     int index,
   ) async {
-    if (currentPlaylistBlockNotifier.value?.id != playlist.id) {
+    final trackIds = list.map((track) => track.id).toList();
+    if (_audioHandler.queue.value.isEmpty ||
+        needsNewQueue(
+          currentPlaylistId: currentPlaylistBlockNotifier.value?.id,
+          queuedTrackIds: _queuedTrackIds,
+          playlistId: playlist.id,
+          trackIds: trackIds,
+        )) {
       currentPlaylistBlockNotifier.value = playlist;
+      _queuedTrackIds = trackIds;
       playlistIdNotifier.value = [];
       final mediaItems = list
           .map(
@@ -99,6 +121,12 @@ class AudioManager {
 
   void _resetPlaylistState() {
     playlistIdNotifier.value = [];
+  }
+
+  /// Forgets the playlist that was queued, so loading it again rebuilds the queue.
+  void _clearPlaylist() {
+    currentPlaylistBlockNotifier.value = null;
+    _queuedTrackIds = const [];
   }
 
   void _updatePlaylistState(List<MediaItem> playlist) {
@@ -260,6 +288,7 @@ class AudioManager {
       total: Duration.zero,
     );
     currentMediaItemNotifier.value = const MediaItem(id: '', title: '');
+    _clearPlaylist();
     _isInitialized = false;
   }
 

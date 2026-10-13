@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 
 import '/app_init.dart';
 import '/domain/services/user_service.dart';
@@ -25,7 +26,15 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           return;
         }
 
-        final user = await _usersService.getOrCreate(authUser);
+        var user = await _usersService.getOrCreate(authUser);
+        // After a confirmed email change Auth has the new address; copy it to the profile.
+        final authEmail = authUser.email;
+        if (authEmail != null && authEmail.isNotEmpty && authEmail != user.email) {
+          user = user.copyWith(email: authEmail);
+          await _usersService.update(user).catchError((Object e) {
+            debugPrint('Updating the profile email failed: $e');
+          });
+        }
         emit(UserInitial().copyWith(user: user));
         await AppInit.initUserBasedServices();
         _userSubscription = _usersService.watchById(event.user.id).listen(

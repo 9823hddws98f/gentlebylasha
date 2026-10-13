@@ -185,7 +185,7 @@ abstract class AppLocalizations {
   /// No description provided for @deleteAccountMessage.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure, you want to delete you account?'**
+  /// **'Are you sure you want to delete your account?'**
   String get deleteAccountMessage;
 
   /// No description provided for @deleteAccountDescription.
@@ -242,18 +242,6 @@ abstract class AppLocalizations {
   /// **'Good night'**
   String get goodNight;
 
-  /// No description provided for @workWithUs.
-  ///
-  /// In en, this message translates to:
-  /// **'Work with us'**
-  String get workWithUs;
-
-  /// No description provided for @termsOfService.
-  ///
-  /// In en, this message translates to:
-  /// **'Terms of service'**
-  String get termsOfService;
-
   /// No description provided for @privacyPolicy.
   ///
   /// In en, this message translates to:
@@ -263,7 +251,7 @@ abstract class AppLocalizations {
   /// No description provided for @mindfulnessAndMeditation.
   ///
   /// In en, this message translates to:
-  /// **'Mindfulness and Meditation'**
+  /// **'Mindfulness and meditation'**
   String get mindfulnessAndMeditation;
 
   /// No description provided for @bedtime.
@@ -296,12 +284,6 @@ abstract class AppLocalizations {
   /// **'Sleep check-in'**
   String get sleepCheckIn;
 
-  /// No description provided for @welcomeToSleepytales.
-  ///
-  /// In en, this message translates to:
-  /// **'Welcome to Gentle'**
-  String get welcomeToSleepytales;
-
   /// No description provided for @launchScreenMessage.
   ///
   /// In en, this message translates to:
@@ -325,12 +307,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Continue with Apple'**
   String get continueWithApple;
-
-  /// No description provided for @continueWithFacebook.
-  ///
-  /// In en, this message translates to:
-  /// **'Continue with Facebook'**
-  String get continueWithFacebook;
 
   /// No description provided for @continueWithGoogle.
   ///
@@ -380,11 +356,11 @@ abstract class AppLocalizations {
   /// **'Login'**
   String get login;
 
-  /// No description provided for @joinSleepytales.
+  /// No description provided for @joinGentle.
   ///
   /// In en, this message translates to:
   /// **'Join Gentle'**
-  String get joinSleepytales;
+  String get joinGentle;
 
   /// No description provided for @yourName.
   ///
@@ -464,12 +440,6 @@ abstract class AppLocalizations {
   /// **'Sign Up'**
   String get signUp;
 
-  /// No description provided for @loginToSleepytales.
-  ///
-  /// In en, this message translates to:
-  /// **'Login to Gentle'**
-  String get loginToSleepytales;
-
   /// No description provided for @notMember.
   ///
   /// In en, this message translates to:
@@ -488,11 +458,11 @@ abstract class AppLocalizations {
   /// **'Reset'**
   String get reset;
 
-  /// No description provided for @whatBringsYouToSleepytales.
+  /// No description provided for @whatBringsYouToGentle.
   ///
   /// In en, this message translates to:
   /// **'What brings you to Gentle'**
-  String get whatBringsYouToSleepytales;
+  String get whatBringsYouToGentle;
 
   /// No description provided for @personalizeRecMessage.
   ///
@@ -691,6 +661,246 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This purchase belongs to another Gentle account. Sign in with that account to use it.'**
   String get purchaseOtherAccount;
+
+  /// No description provided for @website.
+  ///
+  /// In en, this message translates to:
+  /// **'Website'**
+  String get website;
+
+  /// No description provided for @termsOfUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of use'**
+  String get termsOfUse;
+
+  /// No description provided for @linkOpenFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'This page could not be opened. Please try again later.'**
+  String get linkOpenFailed;
+
+  /// No description provided for @logoutConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to log out?'**
+  String get logoutConfirm;
+
+  /// No description provided for @nameDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What should we call you?'**
+  String get nameDialogTitle;
+
+  /// No description provided for @notNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get notNow;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @confirmNewEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a link to {email}. Open it to confirm your new email address. Until then, keep signing in with your current one.'**
+  String confirmNewEmail(String email);
+
+  /// No description provided for @authInvalidCredential.
+  ///
+  /// In en, this message translates to:
+  /// **'The email address or password is not correct. Please check them and try again.'**
+  String get authInvalidCredential;
+
+  /// No description provided for @authUserDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'This account has been turned off. Please contact us through Help & Support.'**
+  String get authUserDisabled;
+
+  /// No description provided for @authTooManyRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Please wait a moment and try again.'**
+  String get authTooManyRequests;
+
+  /// No description provided for @authNetworkError.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection. Please check your internet and try again.'**
+  String get authNetworkError;
+
+  /// No description provided for @authEmailInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'There is already an account with this email address. Please log in instead.'**
+  String get authEmailInUse;
+
+  /// No description provided for @authOtherSignInMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'This email address is linked to another way of signing in. Please sign in the way you did before.'**
+  String get authOtherSignInMethod;
+
+  /// No description provided for @authRecentLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'For your security, please log in again and then try once more.'**
+  String get authRecentLogin;
+
+  /// No description provided for @authPopupBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Your browser blocked the sign-in window. Please allow pop-ups for this site and try again.'**
+  String get authPopupBlocked;
+
+  /// No description provided for @authFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Signing in didn\'t work. Please try again.'**
+  String get authFailed;
+
+  /// No description provided for @alreadySubscribedStore.
+  ///
+  /// In en, this message translates to:
+  /// **'You already have a subscription through {store}. You can manage it there.'**
+  String alreadySubscribedStore(String store);
+
+  /// No description provided for @alreadySubscribedWeb.
+  ///
+  /// In en, this message translates to:
+  /// **'You already have a subscription. You can manage it under Manage Subscription.'**
+  String get alreadySubscribedWeb;
+
+  /// No description provided for @checkoutSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you. Your Premium will be ready in a moment.'**
+  String get checkoutSuccess;
+
+  /// No description provided for @checkoutCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Checkout was cancelled. Nothing has been charged.'**
+  String get checkoutCancelled;
+
+  /// No description provided for @reminderMindfulnessDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'A few quiet minutes of mindfulness or meditation each day can help you sleep better and feel more at ease.'**
+  String get reminderMindfulnessDescription;
+
+  /// No description provided for @reminderMindfulnessQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'When would you like a mindfulness or meditation reminder?'**
+  String get reminderMindfulnessQuestion;
+
+  /// No description provided for @reminderMindfulnessNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a moment to pause, breathe and be in the present.'**
+  String get reminderMindfulnessNotification;
+
+  /// No description provided for @reminderBedtimeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Going to bed at the same time each night helps your body settle into a calm rhythm.'**
+  String get reminderBedtimeDescription;
+
+  /// No description provided for @reminderBedtimeQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What time would you like to get ready for bed?'**
+  String get reminderBedtimeQuestion;
+
+  /// No description provided for @reminderBedtimeNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to wind down. Enjoy a peaceful bedtime routine.'**
+  String get reminderBedtimeNotification;
+
+  /// No description provided for @reminderMoodDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Noticing how you feel, without judging it, is a gentle way to take care of yourself.'**
+  String get reminderMoodDescription;
+
+  /// No description provided for @reminderMoodQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'When would you like a reminder to check in with your mood?'**
+  String get reminderMoodQuestion;
+
+  /// No description provided for @reminderMoodNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a moment for yourself. How are you feeling?'**
+  String get reminderMoodNotification;
+
+  /// No description provided for @reminderGratitudeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Pausing to notice what went well today helps you end the day with a calmer mind.'**
+  String get reminderGratitudeDescription;
+
+  /// No description provided for @reminderGratitudeQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'When would you like a gratitude reminder?'**
+  String get reminderGratitudeQuestion;
+
+  /// No description provided for @reminderGratitudeNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'What are you grateful for today?'**
+  String get reminderGratitudeNotification;
+
+  /// No description provided for @reminderReflectionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'A short moment of reflection helps you let go of the day and make room for rest.'**
+  String get reminderReflectionDescription;
+
+  /// No description provided for @reminderReflectionQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'When would you like a daily reflection reminder?'**
+  String get reminderReflectionQuestion;
+
+  /// No description provided for @reminderReflectionNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause for a moment and look back on your day.'**
+  String get reminderReflectionNotification;
+
+  /// No description provided for @reminderSleepDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking back on how you slept helps you notice what gives you a good night\'s rest.'**
+  String get reminderSleepDescription;
+
+  /// No description provided for @reminderSleepQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'When would you like a sleep check-in reminder?'**
+  String get reminderSleepQuestion;
+
+  /// No description provided for @reminderSleepNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'How did you sleep? Take a moment to check in.'**
+  String get reminderSleepNotification;
+
+  /// No description provided for @currentPasswordWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Your current password is not correct. Please try again.'**
+  String get currentPasswordWrong;
 }
 
 class _AppLocalizationsDelegate

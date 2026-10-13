@@ -17,6 +17,21 @@ val keystoreProperties = Properties().apply {
     if (file.exists()) file.inputStream().use { load(it) }
 }
 
+// A release build signed with debug keys can't be uploaded and fails silently
+// later, so stop right away when the upload key is missing.
+val releaseTaskRequested = gradle.startParameter.taskNames.any { it.contains("Release") }
+if (releaseTaskRequested && keystoreProperties.isEmpty) {
+    throw GradleException(
+        "android/key.properties is missing. Release builds must be signed with the " +
+            "upload key: add key.properties (storePassword, keyPassword, keyAlias, storeFile)."
+    )
+}
+
+// Host of the App Links for shared tracks/playlists. Must match APP_URL in the
+// app (lib/utils/app_config.dart) and serve /.well-known/assetlinks.json.
+// Override with -PappLinkHost=example.com when the app gets its own domain.
+val appLinkHost = (project.findProperty("appLinkHost") as String?) ?: "gentle-mu.vercel.app"
+
 android {
     namespace = "com.mezz.gentle"
     compileSdk = flutter.compileSdkVersion
@@ -34,6 +49,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders["appLinkHost"] = appLinkHost
     }
 
     signingConfigs {
@@ -47,13 +63,7 @@ android {
 
     buildTypes {
         release {
-            // Falls back to debug keys when key.properties is missing, so
-            // `flutter run --release` still works locally. Store builds need key.properties.
-            signingConfig = if (keystoreProperties.isEmpty) {
-                signingConfigs.getByName("debug")
-            } else {
-                signingConfigs.getByName("release")
-            }
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 }

@@ -38,4 +38,26 @@ void main() {
       expect(const Entitlement(active: true).canPlay(premiumTrack: true, now: now), isTrue);
     });
   });
+
+  group('EntitlementCubit.expiryCheckDelay', () {
+    test('lifetime and free need no check', () {
+      expect(EntitlementCubit.expiryCheckDelay(const Entitlement(active: true), now), isNull);
+      expect(EntitlementCubit.expiryCheckDelay(const Entitlement(), now), isNull);
+    });
+
+    test('checks just after premium ends', () {
+      final e = Entitlement(active: true, expiresAt: now.add(const Duration(hours: 2)));
+      expect(EntitlementCubit.expiryCheckDelay(e, now), const Duration(hours: 2, seconds: 1));
+    });
+
+    test('far-away expiries are checked again after a week', () {
+      final e = Entitlement(active: true, expiresAt: now.add(const Duration(days: 365)));
+      expect(EntitlementCubit.expiryCheckDelay(e, now), EntitlementCubit.maxExpiryWait);
+    });
+
+    test('already expired needs no check', () {
+      final e = Entitlement(active: true, expiresAt: now.subtract(const Duration(minutes: 1)));
+      expect(EntitlementCubit.expiryCheckDelay(e, now), isNull);
+    });
+  });
 }

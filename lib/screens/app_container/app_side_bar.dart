@@ -6,8 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '/constants/assets.dart';
-import '/domain/blocs/authentication/auth_repository.dart';
 import '/domain/cubits/navigation.dart';
+import '/domain/services/language_cubit.dart';
+import '/helper/global_functions.dart';
 import '/utils/get.dart';
 
 class AppSideBar extends StatefulWidget {
@@ -92,12 +93,14 @@ class _AppSideBarState extends State<AppSideBar> {
                       ).transform(animation),
                       child: _buildButton(
                         -1,
-                        label: 'Logout',
+                        label: Get.the<LanguageCubit>().translation.logout,
                         icon: Icons.logout_rounded,
                         selected: false,
                         colorScheme: colors,
                         animation: animation,
-                        onPressed: () => Get.the<AuthRepository>().logOut(),
+                        // Same path as the profile screen: also stops playback,
+                        // leaves push topics and clears premium and favorites.
+                        onPressed: () => logout(context, confirm: true),
                       ),
                     ),
                   ],

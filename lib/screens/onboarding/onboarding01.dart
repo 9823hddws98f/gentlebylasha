@@ -51,7 +51,7 @@ class _OnBoarding01ScreenState extends State<OnBoarding01Screen> with Translatio
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 24),
             child: Text(
-              tr.whatBringsYouToSleepytales,
+              tr.whatBringsYouToGentle,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
           ),

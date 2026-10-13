@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '/domain/blocs/authentication/auth_repository.dart';
+import '/domain/services/language_cubit.dart';
+import '/helper/auth_errors.dart';
 import '/helper/global_functions.dart';
 import '/utils/app_theme.dart';
 import '/utils/command_trigger.dart';
@@ -132,11 +134,13 @@ class _ChangePasswordScreen extends State<ChangePasswordScreen> {
 
       return true;
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'wrong-password') {
-        showToast('Incorrect current password. Please try again.');
-      } else {
-        showToast('Failed to change password: $e');
-      }
+      final tr = Get.the<LanguageCubit>().translation;
+      showToast(switch (e.code) {
+        // Reauthentication with a wrong current password.
+        'wrong-password' || 'invalid-credential' => tr.currentPasswordWrong,
+        _ => authErrorMessage(e.code, tr, fallback: tr.somethingWentWrong) ??
+            tr.somethingWentWrong,
+      });
       return false;
     }
   }

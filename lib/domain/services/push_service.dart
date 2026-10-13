@@ -25,7 +25,27 @@ class PushService {
   final _messaging = FirebaseMessaging.instance;
   final _local = FlutterLocalNotificationsPlugin();
   final _subscriptions = <StreamSubscription>[];
-  Set<String> _topics = {};
+
+  /// Syncs run one after the other, so a quick language switch can't end
+  /// with the topics of the older state.
+  Future<void> _syncQueue = Future.value();
+
+  /// Every topic the app uses; a signed-out device leaves them all.
+  static const allTopics = ['lang_en', 'lang_nl', 'premium', 'free'];
+
+  /// Which topics a device should be in and which it should leave. Mirrors
+  /// topicsFor() in functions/src/push.ts.
+  static ({List<String> subscribe, List<String> unsubscribe}) topicsFor(
+    String language,
+    bool premium,
+  ) {
+    final lang = language == 'nl' ? 'nl' : 'en';
+    final other = lang == 'en' ? 'nl' : 'en';
+    return (
+      subscribe: ['lang_$lang', premium ? 'premium' : 'free'],
+      unsubscribe: ['lang_$other', premium ? 'free' : 'premium'],
+    );
+  }
 
   /// Set synchronously so overlapping start() calls can't both add listeners.
   bool _running = false;
@@ -44,6 +64,7 @@ class PushService {
     // iOS shows notifications itself while the app is open.
     await _messaging.setForegroundNotificationPresentationOptions(alert: true, sound: true);
 
+    // EntitlementCubit also emits when premium expires (timer at expiresAt).
     _subscriptions
       ..add(FirebaseMessaging.onMessage.listen(_showOnAndroid))
       ..add(Get.the<EntitlementCubit>().stream.listen((_) => _syncTopics()))
@@ -71,29 +92,38 @@ class PushService {
     }
     _subscriptions.clear();
     if (kIsWeb) return;
-    for (final topic in _topics) {
-      await _messaging.unsubscribeFromTopic(topic);
-    }
-    _topics = {};
+    await (_syncQueue = _syncQueue.then((_) async {
+      for (final topic in allTopics) {
+        try {
+          await _messaging.unsubscribeFromTopic(topic);
+        } catch (e) {
+          debugPrint('Leaving push topic $topic failed: $e');
+        }
+      }
+    }));
   }
 
-  Future<void> _syncTopics() async {
-    if (!_running) return;
-    final language = Get.the<LanguageCubit>().state.locale.languageCode == 'nl' ? 'nl' : 'en';
-    final premium = Get.the<EntitlementCubit>().state.isPremium;
-    final wanted = {'lang_$language', premium ? 'premium' : 'free'};
-    try {
-      for (final topic in wanted.difference(_topics)) {
-        await _messaging.subscribeToTopic(topic);
-      }
-      for (final topic in _topics.difference(wanted)) {
-        await _messaging.unsubscribeFromTopic(topic);
-      }
-      _topics = wanted;
-    } catch (e) {
-      debugPrint('Push topic sync failed: $e');
-    }
-  }
+  /// Joins the topics for the current language and premium state and leaves
+  /// the others. Always sends both, whatever the device was in before (an
+  /// earlier session, an app update or a failed call may have left it in the
+  /// wrong ones); subscribing twice is harmless.
+  Future<void> _syncTopics() => _syncQueue = _syncQueue.then((_) async {
+        if (!_running) return;
+        final topics = topicsFor(
+          Get.the<LanguageCubit>().languageCode,
+          Get.the<EntitlementCubit>().state.isPremium,
+        );
+        try {
+          for (final topic in topics.subscribe) {
+            await _messaging.subscribeToTopic(topic);
+          }
+          for (final topic in topics.unsubscribe) {
+            await _messaging.unsubscribeFromTopic(topic);
+          }
+        } catch (e) {
+          debugPrint('Push topic sync failed: $e');
+        }
+      });
 
   /// Android doesn't show notifications for messages received in the foreground.
   void _showOnAndroid(RemoteMessage message) {
@@ -105,7 +135,9 @@ class PushService {
       n.body,
       NotificationDetails(
         android: AndroidNotificationDetails(_channel.id, _channel.name,
-            channelDescription: _channel.description, importance: Importance.high),
+            channelDescription: _channel.description,
+            importance: Importance.high,
+            icon: '@drawable/ic_notification'),
       ),
     );
   }

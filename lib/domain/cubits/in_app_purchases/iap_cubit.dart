@@ -25,6 +25,10 @@ class IAPCubit extends Cubit<IAPState> {
 
   StreamSubscription<List<PurchaseDetails>>? _subscription;
 
+  /// Subscriptions the server verified in this session, as
+  /// "uid subscriptionKey" (another account must verify again).
+  final _verified = <String>{};
+
   static const monthlyId = 'gentle_premium_monthly';
   static const yearlyId = 'gentle_premium_yearly';
   static const productIds = [monthlyId, yearlyId];
@@ -39,12 +43,19 @@ class IAPCubit extends Cubit<IAPState> {
 
   Future<void> loadProducts() async {
     if (state.loaded) return;
-    if (!await _iapService.isAvailable()) {
+    final ProductDetailsResponse response;
+    try {
+      if (!await _iapService.isAvailable()) {
+        emit(state.copyWith(storeAvailable: false));
+        return;
+      }
+      response = await _iapService.queryProductDetails(productIds.toSet());
+    } catch (e) {
+      // e.g. iOS 13/14: in_app_purchase_storekit 0.4 only talks StoreKit 2 (iOS 15+).
+      debugPrint('Store not available: $e');
       emit(state.copyWith(storeAvailable: false));
       return;
     }
-
-    final response = await _iapService.queryProductDetails(productIds.toSet());
     if (response.notFoundIDs.isNotEmpty) {
       debugPrint('Store products not found: ${response.notFoundIDs}');
     }
@@ -81,7 +92,21 @@ class IAPCubit extends Cubit<IAPState> {
     });
   }
 
-  Future<void> _onPurchaseDetailsReceived(List<PurchaseDetails> purchases) async {
+  /// Batches are handled one after the other, so two batches with the same
+  /// subscription don't both verify it.
+  Future<void> _handling = Future.value();
+
+  void _onPurchaseDetailsReceived(List<PurchaseDetails> purchases) {
+    _handling = _handling.then((_) => _handlePurchases(purchases)).catchError((Object e) {
+      debugPrint('Handling store transactions failed: $e');
+    });
+  }
+
+  Future<void> _handlePurchases(List<PurchaseDetails> purchases) async {
+    // A restore (and a renewal backlog) delivers many transactions of the same
+    // subscription; group them so each subscription is verified once.
+    final bySubscription =
+        <String, ({StorePurchase purchase, List<PurchaseDetails> transactions})>{};
     for (final details in purchases) {
       switch (details.status) {
         case PurchaseStatus.pending:
@@ -92,30 +117,72 @@ class IAPCubit extends Cubit<IAPState> {
           emit(state.copyWith(busy: false, error: IAPError.purchaseFailed));
         case PurchaseStatus.purchased:
         case PurchaseStatus.restored:
-          try {
-            await _purchases.verifyPurchase(details);
-            emit(state.copyWith(busy: false, error: IAPError.none));
-          } on FirebaseFunctionsException catch (e) {
-            debugPrint('verifyPurchase failed: ${e.code} ${e.message}');
-            emit(state.copyWith(
-              busy: false,
-              error: e.message == 'linked-to-other-account'
-                  ? IAPError.otherAccount
-                  : IAPError.verificationFailed,
-            ));
-            // Leave the transaction open on temporary errors so the store
-            // delivers it again; a purchase of another account never succeeds.
-            if (e.message != 'linked-to-other-account') continue;
-          } catch (e) {
-            debugPrint('verifyPurchase failed: $e');
-            emit(state.copyWith(busy: false, error: IAPError.verificationFailed));
-            continue;
+          final purchase = StorePurchase.from(details);
+          if (purchase != null) {
+            bySubscription
+                .putIfAbsent(purchase.subscriptionKey, () => (purchase: purchase, transactions: []))
+                .transactions
+                .add(details);
+            continue; // finished after verification
           }
+          debugPrint('Store transaction without an id: ${details.productID}');
       }
-      // Finish only after the server has the purchase (or it can never be used).
-      if (details.pendingCompletePurchase) {
-        await _iapService.completePurchase(details);
+      await _complete(details);
+    }
+    if (bySubscription.isEmpty) return;
+
+    var anyVerified = false;
+    var error = IAPError.none;
+    for (final (:purchase, :transactions) in bySubscription.values) {
+      final result = await _verify(purchase, transactions);
+      if (result == IAPError.none) {
+        anyVerified = true;
+      } else if (error == IAPError.none) {
+        error = result;
       }
+    }
+    emit(state.copyWith(busy: false, error: anyVerified ? IAPError.none : error));
+  }
+
+  /// Verifies one subscription with the server and finishes its transactions.
+  /// Restored transactions of a subscription verified earlier in this session
+  /// are only finished.
+  Future<IAPError> _verify(StorePurchase purchase, List<PurchaseDetails> transactions) async {
+    final verifiedKey = '${FirebaseAuth.instance.currentUser?.uid} ${purchase.subscriptionKey}';
+    final onlyRestored = transactions.every((d) => d.status == PurchaseStatus.restored);
+    if (!(onlyRestored && _verified.contains(verifiedKey))) {
+      try {
+        await _purchases.verifyPurchase(purchase);
+        _verified.add(verifiedKey);
+      } on FirebaseFunctionsException catch (e) {
+        debugPrint('verifyPurchase failed: ${e.code} ${e.message}');
+        // A purchase of another account never succeeds: finish it. On other
+        // errors leave it open so the store delivers it again.
+        if (e.message != 'linked-to-other-account') return IAPError.verificationFailed;
+        await _completeAll(transactions);
+        return IAPError.otherAccount;
+      } catch (e) {
+        debugPrint('verifyPurchase failed: $e');
+        return IAPError.verificationFailed;
+      }
+    }
+    // Finish only after the server has the purchase.
+    await _completeAll(transactions);
+    return IAPError.none;
+  }
+
+  Future<void> _completeAll(List<PurchaseDetails> transactions) async {
+    for (final details in transactions) {
+      await _complete(details);
+    }
+  }
+
+  Future<void> _complete(PurchaseDetails details) async {
+    if (!details.pendingCompletePurchase) return;
+    try {
+      await _iapService.completePurchase(details);
+    } catch (e) {
+      debugPrint('completePurchase failed: $e');
     }
   }
 

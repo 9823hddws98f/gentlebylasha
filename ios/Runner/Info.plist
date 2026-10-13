@@ -6,6 +6,11 @@
     <true/>
     <key>CFBundleDevelopmentRegion</key>
     <string>$(DEVELOPMENT_LANGUAGE)</string>
+    <key>CFBundleLocalizations</key>
+    <array>
+      <string>en</string>
+      <string>nl</string>
+    </array>
     <key>CFBundleDisplayName</key>
     <string>Gentle</string>
     <key>CFBundleExecutable</key>
@@ -43,12 +48,15 @@
         <string>Editor</string>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>com.googleusercontent.apps.65622286155-ksiqb07766dr4t4nnm07fcna2g8ot7v5</string>
+          <string>com.googleusercontent.apps.65622286155-a01hf6n0hg09n5ovgjglv0vfomeu4qe4</string>
         </array>
       </dict>
     </array>
     <key>CFBundleVersion</key>
     <string>$(FLUTTER_BUILD_NUMBER)</string>
+    <!-- Links are handled by app_links (DeepLinkingService), not by Flutter's router. -->
+    <key>FlutterDeepLinkingEnabled</key>
+    <false/>
     <key>FirebaseAppDelegateProxyEnabled</key>
     <false/>
     <key>LSRequiresIPhoneOS</key>
@@ -60,14 +68,7 @@
     <key>UIBackgroundModes</key>
     <array>
       <string>audio</string>
-      <string>fetch</string>
-      <string>processing</string>
       <string>remote-notification</string>
-    </array>
-    <key>BGTaskSchedulerPermittedIdentifiers</key>
-    <array>
-      <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-      <string>io.sleeptales.sleeptales.sleeptalesBackgroundTask</string>
     </array>
     <key>UILaunchStoryboardName</key>
     <string>LaunchScreen</string>

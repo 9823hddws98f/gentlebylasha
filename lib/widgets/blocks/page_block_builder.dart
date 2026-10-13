@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gentle/widgets/blocks/config_of_page.dart';
 
@@ -40,7 +41,7 @@ class _PageBlockBuilderState extends State<PageBlockBuilder>
 
   Widget _buildBlocksList(List<Block> blocks) => BottomPanelSpacer.padding(
         child: ListView.separated(
-          cacheExtent: 1000,
+          scrollCacheExtent: const ScrollCacheExtent.pixels(1000),
           separatorBuilder: (_, __) => const Padding(
             padding: EdgeInsets.fromLTRB(
               AppTheme.sidePadding,

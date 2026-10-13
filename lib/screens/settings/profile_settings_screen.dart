@@ -12,6 +12,7 @@ import '/screens/downloads/downloads_screen.dart';
 import '/screens/favorites/favorites_screen.dart';
 import '/screens/reminder/reminders_screen.dart';
 import '/screens/settings/display_mode/display_mode_screen.dart';
+import '/utils/app_config.dart';
 import '/utils/app_theme.dart';
 import '/utils/common_extensions.dart';
 import '/utils/get.dart';
@@ -112,10 +113,9 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Tran
                 icon: Icons.help_center,
                 title: tr.helpSupport,
                 colors: colors,
-                onTap: () {
-                  // TODO: Implement
-                  showToast('Coming soon');
-                },
+                onTap: () => openLink(
+                  AppConfig.helpUrl(Get.the<LanguageCubit>().languageCode),
+                ),
               ),
               _buildListTile(
                 icon: Icons.info,

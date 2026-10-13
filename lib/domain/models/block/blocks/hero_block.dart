@@ -8,6 +8,7 @@ class HeroBlock extends Block {
     required super.id,
     required super.pageId,
     required super.title,
+    super.titleNl,
     required super.type,
     required super.sequence,
   });
@@ -16,6 +17,7 @@ class HeroBlock extends Block {
         id: map['id'] as String,
         pageId: map['pageId'] as String,
         title: map['title'] as String,
+        titleNl: optionalString(map['titleNl']),
         sequence: map['sequence'] as int,
         type: BlockType.values.firstWhere(
           (e) => e.name == map['type'],
@@ -35,6 +37,7 @@ class HeroBlock extends Block {
     String? id,
     String? pageId,
     String? title,
+    String? titleNl,
     BlockType? type,
     int? sequence,
     String? trackId,
@@ -42,7 +45,8 @@ class HeroBlock extends Block {
       HeroBlock(
         id: id ?? this.id,
         pageId: pageId ?? this.pageId,
-        title: title ?? this.title,
+        title: title ?? _title,
+        titleNl: titleNl ?? this.titleNl,
         type: type ?? this.type,
         sequence: sequence ?? this.sequence,
         trackId: trackId ?? this.trackId,

@@ -29,21 +29,30 @@ class _DisplayModeScreenState extends State<DisplayModeScreen> {
           hasBottomLine: false,
         ),
         // bodyPadding: EdgeInsets.zero,
-        body: (context, isDark) => ListView(
-          children: <Widget>[
-            _buildThemeModeRadioTile(
-              title: 'Use Device Setting',
-              value: ThemeMode.system,
-            ),
-            _buildThemeModeRadioTile(
-              title: 'Light Mode',
-              value: ThemeMode.light,
-            ),
-            _buildThemeModeRadioTile(
-              title: 'Dark Mode',
-              value: ThemeMode.dark,
-            ),
-          ].interleaveWith(const SizedBox(height: 8)),
+        body: (context, isDark) => RadioGroup<ThemeMode>(
+          groupValue: _selectedMode,
+          onChanged: (ThemeMode? newValue) async {
+            if (newValue != null) {
+              setState(() => _selectedMode = newValue);
+              await AppSettings.instance.setThemeMode(newValue);
+            }
+          },
+          child: ListView(
+            children: <Widget>[
+              _buildThemeModeRadioTile(
+                title: 'Use Device Setting',
+                value: ThemeMode.system,
+              ),
+              _buildThemeModeRadioTile(
+                title: 'Light Mode',
+                value: ThemeMode.light,
+              ),
+              _buildThemeModeRadioTile(
+                title: 'Dark Mode',
+                value: ThemeMode.dark,
+              ),
+            ].interleaveWith(const SizedBox(height: 8)),
+          ),
         ),
       );
 
@@ -54,14 +63,7 @@ class _DisplayModeScreenState extends State<DisplayModeScreen> {
       RadioListTile<ThemeMode>(
         title: Text(title),
         value: value,
-        groupValue: _selectedMode,
         controlAffinity: ListTileControlAffinity.trailing,
         contentPadding: const EdgeInsets.symmetric(horizontal: AppTheme.sidePadding),
-        onChanged: (ThemeMode? newValue) async {
-          if (newValue != null) {
-            setState(() => _selectedMode = newValue);
-            await AppSettings.instance.setThemeMode(newValue);
-          }
-        },
       );
 }

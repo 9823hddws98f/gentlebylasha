@@ -39,7 +39,7 @@ class _SignupSheetState extends State<SignupSheet> with Translation {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                tr.joinSleepytales,
+                tr.joinGentle,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),

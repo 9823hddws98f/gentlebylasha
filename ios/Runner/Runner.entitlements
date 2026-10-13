@@ -8,5 +8,16 @@
 	<array>
 		<string>Default</string>
 	</array>
+	<!--
+	  Universal links for shared tracks/playlists (DeepLinkingService, APP_URL).
+	  The domain must serve /.well-known/apple-app-site-association listing
+	  "<APPLE_TEAM_ID>.<bundle id>" with paths /shareTrack/* and /sharePlaylist/*.
+	  The owner has to fill in the Apple Team ID there. Change this host together
+	  with APP_URL and the Android appLinkHost when the app gets its own domain.
+	-->
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:gentle-mu.vercel.app</string>
+	</array>
 </dict>
 </plist>

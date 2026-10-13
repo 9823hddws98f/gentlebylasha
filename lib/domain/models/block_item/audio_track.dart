@@ -1,15 +1,20 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import '/utils/localized_content.dart';
 import '/utils/tx_image.dart';
 
 class AudioTrack {
   final String id;
-  final String title;
+  final String _title;
   final String writer;
   final String speaker;
   final String trackUrl;
-  final String description;
+  final String _description;
+
+  /// Dutch title/description; shown when the app is in Dutch and they are filled in.
+  final String? titleNl;
+  final String? descriptionNl;
   final TxImage imageBackground;
   final TxImage thumbnail;
   final bool hasTimer;
@@ -19,23 +24,32 @@ class AudioTrack {
   /// Only playable with an active entitlement (subscription or access code).
   final bool premium;
 
+  /// Title in the app language.
+  String get title => localizedContent(_title, titleNl);
+
+  /// Description in the app language.
+  String get description => localizedContent(_description, descriptionNl);
+
   String get durationString =>
       '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
 
   AudioTrack({
     required this.id,
-    required this.title,
+    required String title,
     required this.writer,
     required this.speaker,
     required this.trackUrl,
-    required this.description,
+    required String description,
     required this.imageBackground,
     required this.thumbnail,
     required this.hasTimer,
     required this.duration,
     this.dominantColor,
     this.premium = false,
-  });
+    this.titleNl,
+    this.descriptionNl,
+  })  : _title = title,
+        _description = description;
 
   AudioTrack copyWith({
     String? id,
@@ -50,31 +64,37 @@ class AudioTrack {
     Duration? duration,
     Color? dominantColor,
     bool? premium,
+    String? titleNl,
+    String? descriptionNl,
   }) {
     return AudioTrack(
       id: id ?? this.id,
-      title: title ?? this.title,
+      title: title ?? _title,
       writer: writer ?? this.writer,
       speaker: speaker ?? this.speaker,
       trackUrl: trackUrl ?? this.trackUrl,
-      description: description ?? this.description,
+      description: description ?? _description,
       imageBackground: imageBackground ?? this.imageBackground,
       thumbnail: thumbnail ?? this.thumbnail,
       hasTimer: hasTimer ?? this.hasTimer,
       duration: duration ?? this.duration,
       dominantColor: dominantColor ?? this.dominantColor,
       premium: premium ?? this.premium,
+      titleNl: titleNl ?? this.titleNl,
+      descriptionNl: descriptionNl ?? this.descriptionNl,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'title': title,
+      'title': _title,
       'writer': writer,
       'speaker': speaker,
       'trackUrl': trackUrl,
-      'description': description,
+      'description': _description,
+      if (titleNl != null) 'titleNl': titleNl,
+      if (descriptionNl != null) 'descriptionNl': descriptionNl,
       'imageBackground': imageBackground.toMap(),
       'thumbnail': thumbnail.toMap(),
       'hasTimer': hasTimer,
@@ -100,6 +120,8 @@ class AudioTrack {
       dominantColor:
           map['dominantColor'] != null ? Color(map['dominantColor'] as int) : null,
       premium: map['premium'] == true,
+      titleNl: optionalString(map['titleNl']),
+      descriptionNl: optionalString(map['descriptionNl']),
     );
   }
 
@@ -118,11 +140,13 @@ class AudioTrack {
     if (identical(this, other)) return true;
 
     return other.id == id &&
-        other.title == title &&
+        other._title == _title &&
+        other.titleNl == titleNl &&
         other.writer == writer &&
         other.speaker == speaker &&
         other.trackUrl == trackUrl &&
-        other.description == description &&
+        other._description == _description &&
+        other.descriptionNl == descriptionNl &&
         other.imageBackground == imageBackground &&
         other.thumbnail == thumbnail &&
         other.duration == duration &&
@@ -134,11 +158,11 @@ class AudioTrack {
   @override
   int get hashCode {
     return id.hashCode ^
-        title.hashCode ^
+        _title.hashCode ^
         writer.hashCode ^
         speaker.hashCode ^
         trackUrl.hashCode ^
-        description.hashCode ^
+        _description.hashCode ^
         imageBackground.hashCode ^
         thumbnail.hashCode ^
         duration.hashCode ^

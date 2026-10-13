@@ -1,9 +1,11 @@
+import 'package:gentle/l10n/app_localizations.dart';
+
 import '/domain/services/language_cubit.dart';
 import '/utils/get.dart';
 
 class AppValidators {
   static const _emailRegex = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
-  static final tr = Get.the<LanguageCubit>().translation;
+  static AppLocalizations get tr => Get.the<LanguageCubit>().translation;
 
   static String? Function(String?) emailValidator = (value) {
     if (value?.isEmpty ?? true) {

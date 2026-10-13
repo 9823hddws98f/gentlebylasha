@@ -6,6 +6,7 @@ import '/domain/cubits/navigation.dart';
 import '/domain/services/audio_manager.dart';
 import '/domain/services/audio_panel_manager.dart';
 import '/domain/services/deep_linking_service.dart';
+import '/domain/services/web_checkout.dart';
 import '/main.dart';
 import '/screens/app_container/user_init.dart';
 import '/utils/get.dart';
@@ -45,6 +46,7 @@ class _AppContainerState extends State<AppContainer> with SingleTickerProviderSt
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       _deepLinkingService.initialize();
+      handleCheckoutReturn();
       UserInit(user: _userBloc.state.user).initialize(context);
     });
   }

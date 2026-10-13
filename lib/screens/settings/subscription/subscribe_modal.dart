@@ -1,3 +1,4 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +10,7 @@ import '/domain/cubits/in_app_purchases/iap_service.dart';
 import '/domain/cubits/in_app_purchases/product.dart';
 import '/domain/services/language_cubit.dart';
 import '/helper/global_functions.dart';
+import '/utils/app_config.dart';
 import '/utils/app_theme.dart';
 import '/utils/get.dart';
 import '/utils/modals.dart';
@@ -67,6 +69,8 @@ class _SubscribeModalState extends State<SubscribeModal> with Translation {
     try {
       final url = await PurchasesApi.instance.checkoutUrl(_yearly ? 'yearly' : 'monthly');
       await launchUrl(url, webOnlyWindowName: '_self');
+    } on FirebaseFunctionsException catch (e) {
+      if (mounted) setState(() => _webError = _checkoutError(e));
     } catch (_) {
       if (mounted) setState(() => _webError = tr.purchaseFailed);
     } finally {
@@ -74,9 +78,19 @@ class _SubscribeModalState extends State<SubscribeModal> with Translation {
     }
   }
 
+  /// The server refuses a second subscription; say where the current one is.
+  String _checkoutError(FirebaseFunctionsException e) =>
+      switch (PurchasesApi.alreadySubscribedSource(e.message)) {
+        'apple' => tr.alreadySubscribedStore('App Store'),
+        'google' => tr.alreadySubscribedStore('Google Play'),
+        null => tr.purchaseFailed,
+        _ => tr.alreadySubscribedWeb,
+      };
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final language = Get.the<LanguageCubit>().languageCode;
     return BlocListener<EntitlementCubit, Entitlement>(
       bloc: _entitlement,
       listenWhen: (before, now) => !before.isPremium && now.isPremium,
@@ -106,11 +120,14 @@ class _SubscribeModalState extends State<SubscribeModal> with Translation {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    const Align(
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: CloseButton(),
+                    ),
                     Expanded(
                       child: ListView(
                         controller: widget.scrollController,
                         children: [
-                          const SizedBox(height: 16),
                           Text(
                             tr.unlockGentle,
                             style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
@@ -164,6 +181,14 @@ class _SubscribeModalState extends State<SubscribeModal> with Translation {
                         ),
                       ],
                     ),
+                    // Required next to subscriptions (App Store Review Guideline 3.1.2).
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      children: [
+                        _legalLink(colors, tr.termsOfUse, AppConfig.termsUrl(language)),
+                        _legalLink(colors, tr.privacyPolicy, AppConfig.privacyUrl(language)),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -173,6 +198,16 @@ class _SubscribeModalState extends State<SubscribeModal> with Translation {
       ),
     );
   }
+
+  Widget _legalLink(ColorScheme colors, String label, Uri url) => TextButton(
+        style: TextButton.styleFrom(
+          foregroundColor: colors.onSurfaceVariant,
+          textStyle: const TextStyle(fontSize: 13, decoration: TextDecoration.underline),
+          visualDensity: VisualDensity.compact,
+        ),
+        onPressed: () => openLink(url),
+        child: Text(label),
+      );
 
   /// Store price on mobile; on the web Stripe Checkout shows the price.
   String? _priceOf(IAPState state, {required bool yearly}) =>

@@ -41,7 +41,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
   String? _error;
   List<AudioTrack> _tracks = [];
 
-  /// Whether this playlist is currently playing
+  /// Whether this playlist is the one in the player
   bool _isPlaying = false;
 
   @override
@@ -54,7 +54,8 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
 
   void _onPlaylistBlockChange() {
     if (!mounted) return;
-    setState(() => _isPlaying = _pageManager.currentPlaylistBlockNotifier.value != null);
+    setState(() =>
+        _isPlaying = _pageManager.currentPlaylistBlockNotifier.value?.id == widget.playlist.id);
   }
 
   @override
@@ -284,8 +285,11 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
       showToast('This playlist could not be loaded.');
       return false;
     }
+    if (playable.isEmpty) return false;
+    // AudioManager rebuilds the queue when these tracks differ from the queued
+    // ones (e.g. premium tracks became playable), not only for another playlist.
     final start = index == 0 ? 0 : playable.indexWhere((t) => t.id == requested.id);
-    await _pageManager.loadPlaylist(widget.playlist, playable, start);
+    await _pageManager.loadPlaylist(widget.playlist, playable, start < 0 ? 0 : start);
     return true;
   }
 
@@ -300,7 +304,7 @@ class _PlayListTracksScreenState extends State<PlayListTracksScreen> {
               builder: (context, mediaItem, child) {
                 return InkWell(
                   onTap: () {
-                    if (mediaItem.id == widget.playlist.trackIds[index] && _isPlaying) {
+                    if (mediaItem.id == track.id && _isPlaying) {
                       _audioPanelManager.maximizeAndPlay(false);
                     } else {
                       _startPlaylist(index).then((ok) {
