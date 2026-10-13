@@ -13,7 +13,9 @@
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
     "set-admin": "npm run build && node lib/scripts/set-admin.js",
-    "test:rules": "npx -y firebase-tools@15.33.0 emulators:exec --project demo-gentle-rules --only firestore,storage \"vitest run --config vitest.rules.config.ts\""
+    "test:rules": "npx -y firebase-tools@15.33.0 emulators:exec --project demo-gentle-rules --only firestore,storage \"vitest run --config vitest.rules.config.ts\"",
+    "emulators": "npm run build && npx -y firebase-tools@15.33.0 emulators:start --project demo-gentle --only auth,firestore,storage,functions",
+    "seed": "node dev/seed-emulators.mjs"
   },
   "dependencies": {
     "@apple/app-store-server-library": "^3.1.0",

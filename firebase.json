@@ -50,7 +50,8 @@
         "*.local",
         "test",
         "test-rules",
-        "vitest*.ts"
+        "vitest*.ts",
+        "dev"
       ],
       "predeploy": [
         "npm --prefix \"$RESOURCE_DIR\" run build"
