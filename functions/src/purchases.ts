@@ -126,6 +126,7 @@ export const verifyPurchase = onCall({ secrets: [APPLE_IAP_KEY] }, async (req) =
       if (result.obfuscatedAccountId && result.obfuscatedAccountId !== accountToken(uid)) {
         throw new HttpsError("already-exists", "linked-to-other-account");
       }
+      if (result.linkedPurchaseToken) await retireReplacedPurchase(uid, result.linkedPurchaseToken);
       await recordPurchase("google", purchaseId, uid, result.grant);
     }
   } catch (e) {
@@ -187,8 +188,20 @@ export const googleRtdn = onMessagePublished({ topic: PLAY_RTDN_TOPIC, retry: tr
   const uid =
     (await linkedUid("google", token)) ??
     (result.linkedPurchaseToken ? await linkedUid("google", result.linkedPurchaseToken) : undefined);
-  if (uid) await recordPurchase("google", token, uid, result.grant);
+  if (!uid) return;
+  if (result.linkedPurchaseToken) await retireReplacedPurchase(uid, result.linkedPurchaseToken);
+  await recordPurchase("google", token, uid, result.grant);
 });
+
+/**
+ * A plan change (monthly ↔ yearly) gives a new Play purchase that replaces the
+ * old one. The old link would otherwise keep granting premium until its old
+ * expiry date, even after the new subscription is cancelled.
+ */
+async function retireReplacedPurchase(uid: string, oldToken: string) {
+  const ref = linkRef("google", oldToken);
+  if ((await ref.get()).data()?.uid === uid) await ref.delete();
+}
 
 // ---------------------------------------------------------------------------
 // Stripe (web)
