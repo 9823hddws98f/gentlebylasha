@@ -73,8 +73,9 @@ Stand: 13 oktober 2026. Alles hieronder kan alleen de eigenaar doen: accounts, s
 5. **Sign in with Apple-sleutel:** noteer de key id en het team id.
 6. **Mail aan "Verberg mijn e-mail"-gebruikers.** Registreer het afzenderdomein van `MAIL_FROM` bij "Sign in with Apple for Email Communication". Anders komt de verwijdercode niet aan bij gebruikers die hun e-mail verbergen, en dat is een afwijzingsreden.
 7. **Universal links:**
-   - Zet `apple-app-site-association` in `web/.well-known/` met het team id.
-   - Pas de host in `ios/Runner/Runner.entitlements` aan als het domein verandert.
+   - Zet `apple-app-site-association` in `web/.well-known/` met `<TEAMID>.<bundle id>`. Vercel serveert het bestand al als JSON.
+   - Het Xcode-project gebruikt nu team `AT39BY34V6`. Controleer of dat jouw team is.
+   - Pas de host in `ios/Runner/Runner.entitlements` aan als het domein verandert, en ook `appLinkHost` (Gradle, `-PappLinkHost=…`) en `--dart-define=APP_URL=…`.
 8. Voor iOS-builds op deze Mac: `sudo xcodebuild -license accept`.
 
 ## 5. Google Play
@@ -101,6 +102,8 @@ Stand: 13 oktober 2026. Alles hieronder kan alleen de eigenaar doen: accounts, s
 | Website | `website/public` | zie `website/README.md` |
 
 Voeg elk domein ook toe aan Firebase Auth → Authorized domains.
+
+Android-builds zijn op deze Mac niet getest, want hier staat geen Android SDK. Draai één keer `flutter build appbundle` op een machine met de SDK.
 
 ## 7. Testen op echte toestellen
 
