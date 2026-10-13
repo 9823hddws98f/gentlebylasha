@@ -1,7 +1,7 @@
 # Gentle platform — ontwerp
 
 Datum: 2026-10-11
-Status: ter review
+Status: in uitvoering — openstaande eigenaarstaken in docs/launch-checklist.md
 
 ## Doel
 
@@ -81,7 +81,7 @@ Nieuw:
 - `admin_log/{id}` — `{ adminUid, action, target, payload, at }`. Alleen schrijfbaar door functions.
 - `push_jobs/{id}` — `{ title{en,nl}, body{en,nl}, audience: 'all'|'premium'|'free', sendAt, status }`.
 
-Tracks en playlists krijgen een veld `premium: bool` (default `false`) als dat nog niet bestaat, en titels/beschrijvingen per taal (`{en, nl}`), met fallback naar het bestaande enkele veld.
+Tracks en playlists krijgen een veld `premium: bool` (default `false`) als dat nog niet bestaat, en optioneel `titleNl`/`descriptionNl` (rijen: `titleNl`, pagina's: `nameNl`). Het bestaande veld blijft de Engelse standaardtekst; de app toont de NL-tekst als de app in het Nederlands staat en het veld gevuld is.
 
 ### Admin-rechten
 
@@ -142,7 +142,7 @@ Next.js App Router, Firebase client SDK voor lezen, callable functions voor gevo
 | Pagina's & blokken | Pagina's ordenen; per pagina blokken (hero, featured, series, normal) slepen, inhoud kiezen, preview. Schrijft naar bestaande `pages`/`blocks`-structuur. |
 | Gebruikers | Zoeken op e-mail, profiel + abonnement bekijken, handmatig premium (`source: 'manual'`, met einddatum), account verwijderen, admin maken. |
 | Statistieken | Totaal gebruikers, nieuwe aanmeldingen per week, actieve abonnees per bron, opzeggingen, top-10 tracks. Uit `users`, `subscriptions`, `activity_log` (aggregaties via function `adminStats`, 1 uur gecached). |
-| Push | Titel/tekst EN/NL, doelgroep (alle/premium/gratis), nu of gepland. Via FCM-topics; app abonneert op `all`, `premium` of `free` en `lang_en`/`lang_nl`. |
+| Push | Titel/tekst EN/NL, doelgroep (alle/premium/gratis), nu of gepland. Via FCM-topics; app abonneert op `premium` of `free` en op `lang_en` of `lang_nl`. “Alle” = beide taaltopics. |
 
 Gevoelige acties (verwijderen, premium geven, push, admin maken) alleen via functions met claimcheck; elke actie in `admin_log`.
 

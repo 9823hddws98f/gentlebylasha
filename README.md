@@ -1,16 +1,38 @@
-# gentle
+# Gentle
 
-Gentle App
+Slaap- en ontspanningsapp met audio (tracks, playlists) en een premium-abonnement.
 
-## Getting Started
+| Map | Wat |
+|---|---|
+| `lib/`, `ios/`, `android/`, `web/` | Flutter-app voor iOS en Android. De webbuild is de klant-webapp. |
+| `functions/` | Firebase Cloud Functions (TypeScript): codes, aankopen, push, admin-acties. |
+| `apps/admin/` | Admin-webapp (Next.js): content, gebruikers, codes, push, statistieken. |
+| `website/` | Marketingwebsite (statisch). Zie `website/README.md`. |
+| `firestore.rules`, `storage.rules` | Security rules, getest in `functions/test-rules/`. |
 
-This project is a starting point for a Flutter application.
+Achtergrond: [ontwerp](docs/superpowers/specs/2026-10-11-gentle-platform-design.md), [product](PRODUCT.md), [lanceer-checklist](docs/launch-checklist.md).
 
-A few resources to get you started if this is your first Flutter project:
+## Werken
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```bash
+# App
+flutter pub get
+flutter run                       # of: flutter run -d chrome
+flutter analyze && flutter test
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# Functions
+npm --prefix functions install
+npm --prefix functions test       # unit tests
+npm --prefix functions run test:rules   # security rules op de emulators (Java nodig)
+
+# Admin
+npm --prefix apps/admin install
+npm --prefix apps/admin run dev
+```
+
+De app leest `SITE_URL` en `APP_URL` uit `--dart-define`. Zonder die waarden gebruikt hij de huidige `*.vercel.app`-adressen.
+
+## Deploy
+
+- Backend: `firebase deploy --only firestore:rules,firestore:indexes,storage,functions`.
+- Webapp, admin en website: op Vercel. Zie de [lanceer-checklist](docs/launch-checklist.md) voor de projectinstellingen, secrets en wat er in de stores moet gebeuren.
