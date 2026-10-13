@@ -3,7 +3,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() { return request.auth != null; }
-    function isAdmin() { return signedIn() && request.auth.token.admin == true; }
+    function isAdmin() { return signedIn() && request.auth.token.get('admin', false) == true; }
     function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
     function hasPremium() {
       let path = /databases/$(database)/documents/subscriptions/$(request.auth.uid);
@@ -12,11 +12,17 @@ service cloud.firestore {
     }
 
     // Profile. Users may edit their own profile but never their role.
+    function validProfile(data) {
+      return data.keys().hasOnly(['id', 'name', 'email', 'createdAt', 'language', 'heardFrom', 'goals', 'photoURL', 'role'])
+        && data.get('name', '').size() <= 100
+        && data.get('email', '').size() <= 320
+        && data.get('photoURL', '').size() <= 2048;
+    }
     match /users/{uid} {
       allow read: if isOwner(uid) || isAdmin();
-      allow create: if isOwner(uid)
+      allow create: if isOwner(uid) && validProfile(request.resource.data)
         && (!('role' in request.resource.data) || request.resource.data.role == 'client');
-      allow update: if isAdmin() || (isOwner(uid)
+      allow update: if isAdmin() || (isOwner(uid) && validProfile(request.resource.data)
         && (!('role' in request.resource.data) || request.resource.data.role == resource.data.get('role', 'client')));
       allow delete: if isAdmin();
     }
@@ -52,18 +58,23 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // Play counts: anyone signed in may add exactly one play; admins read.
+    // Play counts: anyone signed in may add exactly one play to an existing track; admins read.
     match /track_stats/{trackId} {
       allow read: if isAdmin();
       allow create: if signedIn() && request.resource.data.keys().hasOnly(['plays'])
-        && request.resource.data.plays == 1;
+        && request.resource.data.plays == 1
+        && exists(/databases/$(database)/documents/tracks/$(trackId));
       allow update: if signedIn() && request.resource.data.keys().hasOnly(['plays'])
         && request.resource.data.plays == resource.data.plays + 1;
     }
 
     // Activity log: users append their own entries, admins read.
     match /activity_log/{id} {
-      allow create: if signedIn() && request.resource.data.userId == request.auth.uid;
+      allow create: if signedIn() && request.resource.data.userId == request.auth.uid
+        && request.resource.data.keys().hasOnly(['id', 'title', 'userId', 'subtitle', 'activityType', 'timestamp', 'extra'])
+        && request.resource.data.title is string && request.resource.data.title.size() <= 200
+        && (request.resource.data.get('subtitle', null) == null || request.resource.data.subtitle.size() <= 500)
+        && (request.resource.data.get('extra', null) == null || request.resource.data.extra.size() <= 500);
       allow read: if isAdmin();
     }
 

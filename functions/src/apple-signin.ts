@@ -39,7 +39,10 @@ function params(): SecretParams | null {
     clientId: APPLE_SIGNIN_CLIENT_ID.value(),
     privateKey: APPLE_SIGNIN_KEY.value(),
   };
-  return p.teamId && p.keyId && p.privateKey ? p : null;
+  if (p.teamId && p.keyId && p.privateKey) return p;
+  // Apple requires revoking the token on account deletion; make a missing setup visible.
+  logger.error("Sign in with Apple is not configured: set APPLE_TEAM_ID, APPLE_SIGNIN_KEY_ID and APPLE_SIGNIN_KEY");
+  return null;
 }
 
 const tokenRef = (uid: string) => getFirestore().collection("apple_tokens").doc(uid);
@@ -67,7 +70,7 @@ export async function storeAppleRefreshToken(uid: string, authorizationCode: str
 export async function revokeAppleToken(uid: string) {
   const ref = tokenRef(uid);
   const token = (await ref.get()).data()?.refreshToken as string | undefined;
-  const p = params();
+  const p = token ? params() : null;
   if (token && p) {
     const res = await fetch("https://appleid.apple.com/auth/revoke", {
       method: "POST",

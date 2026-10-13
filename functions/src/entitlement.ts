@@ -29,6 +29,15 @@ export function computeEntitlement(sources: Record<string, SourceGrant>, now: Da
   return best;
 }
 
+/** The longest-lasting valid grant of several (e.g. all purchases in one store). */
+export function bestGrant(grants: SourceGrant[], now: Date): SourceGrant {
+  let best: SourceGrant = { active: false, expiresAt: null };
+  for (const grant of grants) {
+    if (computeEntitlement({ best, grant }, now).source === "grant") best = grant;
+  }
+  return best;
+}
+
 const toDate = (v: unknown) => (v instanceof Timestamp ? v.toDate() : null);
 
 export function readSources(data: FirebaseFirestore.DocumentData | undefined): Record<string, SourceGrant> {

@@ -9,6 +9,7 @@ import { z } from "zod";
 
 import {
   accountToken,
+  bestGrant,
   computeEntitlement,
   readSources,
   setSourceGrant,
@@ -59,17 +60,11 @@ async function linkedUid(source: Source, id: string): Promise<string | undefined
 /** Premium from a store = the best grant over all of the user's purchases there. */
 async function recomputeSource(uid: string, source: Source) {
   const links = await db().collection("store_links").where("uid", "==", uid).where("source", "==", source).get();
-  let best: SourceGrant = { active: false, expiresAt: null };
-  for (const doc of links.docs) {
+  const grants = links.docs.map((doc): SourceGrant => {
     const g = doc.data().grant;
-    const grant: SourceGrant = {
-      active: g?.active === true,
-      expiresAt: g?.expiresAt instanceof Timestamp ? g.expiresAt.toDate() : null,
-    };
-    const e = computeEntitlement({ best, grant }, new Date());
-    if (e.source === "grant") best = grant;
-  }
-  await setSourceGrant(uid, source, best);
+    return { active: g?.active === true, expiresAt: g?.expiresAt instanceof Timestamp ? g.expiresAt.toDate() : null };
+  });
+  await setSourceGrant(uid, source, bestGrant(grants, new Date()));
 }
 
 /**
@@ -78,16 +73,19 @@ async function recomputeSource(uid: string, source: Source) {
  */
 async function recordPurchase(source: Source, purchaseId: string, uid: string, grant: SourceGrant) {
   const ref = linkRef(source, purchaseId);
-  const owner = (await ref.get()).data()?.uid as string | undefined;
-  if (owner && owner !== uid && (await userExists(owner))) {
-    throw new HttpsError("already-exists", "linked-to-other-account");
-  }
-  await ref.set({
-    uid,
-    source,
-    purchaseId,
-    grant: { active: grant.active, expiresAt: grant.expiresAt ? Timestamp.fromDate(grant.expiresAt) : null },
-    updatedAt: FieldValue.serverTimestamp(),
+  // In a transaction, so two accounts verifying the same purchase can't both claim it.
+  await db().runTransaction(async (tx) => {
+    const owner = (await tx.get(ref)).data()?.uid as string | undefined;
+    if (owner && owner !== uid && (await userExists(owner))) {
+      throw new HttpsError("already-exists", "linked-to-other-account");
+    }
+    tx.set(ref, {
+      uid,
+      source,
+      purchaseId,
+      grant: { active: grant.active, expiresAt: grant.expiresAt ? Timestamp.fromDate(grant.expiresAt) : null },
+      updatedAt: FieldValue.serverTimestamp(),
+    });
   });
   await recomputeSource(uid, source);
 }
@@ -161,7 +159,18 @@ export const googleRtdn = onMessagePublished({ topic: PLAY_RTDN_TOPIC, retry: tr
   const token = (event.data.message.json as { subscriptionNotification?: { purchaseToken?: string } })
     ?.subscriptionNotification?.purchaseToken;
   if (!token) return;
-  const result = await googleSubscription(token);
+  let result;
+  try {
+    result = await googleSubscription(token);
+  } catch (e) {
+    // A token Google doesn't know (anymore) won't get better by retrying for a week.
+    const status = (e as { status?: number; code?: number }).status ?? (e as { code?: number }).code;
+    if (status === 400 || status === 404 || status === 410) {
+      logger.warn("googleRtdn: unknown purchase token", { status });
+      return;
+    }
+    throw e;
+  }
   // A plan change or resubscribe creates a new token that points at the old one.
   const uid =
     (await linkedUid("google", token)) ??
@@ -243,7 +252,14 @@ export const stripeWebhook = onRequest({ secrets: [STRIPE_SECRET_KEY, STRIPE_WEB
       const uid = sub.metadata.uid || customer?.metadata.uid;
       if (!uid) logger.warn("Stripe subscription without uid", { subscription: sub.id });
       // Ignore accounts that were deleted meanwhile; don't recreate their data.
-      else if (await userExists(uid)) await setSourceGrant(uid, "stripe", subscriptionGrant(sub));
+      else if (await userExists(uid)) {
+        // The best of all the customer's subscriptions, so a late event about an
+        // old cancelled one can't take away premium that a newer one gives.
+        const all = customer
+          ? (await stripe().subscriptions.list({ customer: customer.id, status: "all", limit: 100 })).data
+          : [sub];
+        await setSourceGrant(uid, "stripe", bestGrant(all.map(subscriptionGrant), new Date()));
+      }
     } catch (e) {
       logger.error("stripeWebhook failed", { event: event.id, error: String(e) });
       res.sendStatus(500); // Stripe retries

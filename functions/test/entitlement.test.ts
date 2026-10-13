@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computeEntitlement, type SourceGrant } from "../src/entitlement.js";
+import { bestGrant, computeEntitlement, type SourceGrant } from "../src/entitlement.js";
 
 const now = new Date("2026-10-12T12:00:00Z");
 const d = (s: string) => new Date(s);
@@ -81,5 +81,25 @@ describe("accountToken", () => {
     const { accountToken } = await import("../src/entitlement.js");
     // sha256("abc") = ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
     expect(accountToken("abc")).toBe("ba7816bf-8f01-cfea-4141-40de5dae2223");
+  });
+});
+
+describe("bestGrant", () => {
+  const now = new Date("2026-10-13T12:00:00Z");
+  const later = new Date("2026-12-01T00:00:00Z");
+  const soon = new Date("2026-10-20T00:00:00Z");
+
+  it("picks the longest valid grant", () => {
+    expect(bestGrant([{ active: true, expiresAt: soon }, { active: true, expiresAt: later }], now)).toEqual({
+      active: true,
+      expiresAt: later,
+    });
+  });
+  it("an old cancelled grant doesn't hide an active one", () => {
+    expect(bestGrant([{ active: true, expiresAt: later }, { active: false, expiresAt: null }], now).active).toBe(true);
+  });
+  it("nothing valid means no access", () => {
+    expect(bestGrant([], now)).toEqual({ active: false, expiresAt: null });
+    expect(bestGrant([{ active: true, expiresAt: new Date("2026-01-01") }], now).active).toBe(false);
   });
 });

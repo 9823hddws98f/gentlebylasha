@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { FieldValue, getFirestore, Timestamp } from "firebase-admin/firestore";
+import { getStorage } from "firebase-admin/storage";
 import { setGlobalOptions } from "firebase-functions/v2";
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import { CallableRequest, HttpsError, onCall } from "firebase-functions/v2/https";
@@ -27,7 +28,7 @@ import { APPLE_SIGNIN_KEY, revokeAppleToken, storeAppleRefreshToken } from "./ap
 import { releaseBilling } from "./purchases.js";
 import { pushResult, sendPush } from "./push.js";
 import { computeStats } from "./stats.js";
-import { rotateDownloadUrl } from "./track-audio.js";
+import { parseDownloadUrl, rotateDownloadUrl } from "./track-audio.js";
 import { STRIPE_SECRET_KEY } from "./stores/stripe.js";
 
 initializeApp();
@@ -122,6 +123,13 @@ export const deleteUser = onCall({ secrets: [STRIPE_SECRET_KEY, APPLE_SIGNIN_KEY
   });
   if (check !== "ok") throw new HttpsError("failed-precondition", check);
 
+  await deleteAccount(uid);
+  logger.info("User deleted", { uid });
+  return { success: true };
+});
+
+/** Removes an account with everything that belongs to it. */
+async function deleteAccount(uid: string) {
   await releaseBilling(uid);
   await revokeAppleToken(uid).catch((e) => logger.error("revokeAppleToken failed", { uid, error: String(e) }));
   const batch = db.batch();
@@ -138,10 +146,20 @@ export const deleteUser = onCall({ secrets: [STRIPE_SECRET_KEY, APPLE_SIGNIN_KEY
     batch.delete(db.collection(collection).doc(uid));
   }
   await batch.commit();
+  // activity_log entries carry the user's name and email.
+  const activity = await db.collection("activity_log").where("userId", "==", uid).get();
+  const writer = db.bulkWriter();
+  activity.docs.forEach((d) => writer.delete(d.ref));
+  await writer.close();
+  await getStorage()
+    .bucket()
+    .deleteFiles({ prefix: `users/${uid}/` })
+    .catch((e) => logger.error("Deleting profile files failed", { uid, error: String(e) }));
   await getAuth().deleteUser(uid);
-  logger.info("User deleted", { uid });
-  return { success: true };
-});
+  // Cancelling Stripe above fires a webhook that may have rewritten the
+  // subscription before the Auth user was gone; the webhook skips it from now on.
+  await db.collection("subscriptions").doc(uid).delete();
+}
 
 /** After Sign in with Apple: keep a revocable token (Apple requires revoking it on account deletion). */
 export const linkAppleSignIn = onCall({ secrets: [APPLE_SIGNIN_KEY] }, async (req) => {
@@ -164,11 +182,17 @@ export const onUserCreated = onDocumentCreated(
   { document: "users/{userId}", secrets: [SENDGRID_API_KEY] },
   async (event) => {
     const user = event.data?.data();
-    if (!user?.email) return;
-    const name = escapeHtml(String(user.name ?? "").trim()) || "there";
+    // The address comes from Auth, not from the client-written profile, so the
+    // profile can't be used to send mail to someone else.
+    const email = await getAuth()
+      .getUser(event.params.userId)
+      .then((u) => u.email)
+      .catch(() => undefined);
+    if (!email) return;
+    const name = escapeHtml(String(user?.name ?? "").trim().slice(0, 40)) || "there";
     try {
       await sendMail(
-        user.email,
+        email,
         "Welcome to Gentle",
         `<h1>Welcome, ${name}!</h1><p>Thank you for joining Gentle. Sleep well.</p>`,
       );
@@ -297,9 +321,10 @@ export const adminAssignCode = onCall({ secrets: [SENDGRID_API_KEY] }, async (re
   const input = parse(
     z.object({
       email: z.string().trim().toLowerCase().email(),
-      code: z.string().optional(),
-      batchId: z.string().optional(),
-      note: z.string().max(500).optional(),
+      // The callable SDK sends empty optional fields as null.
+      code: z.string().nullish(),
+      batchId: z.string().nullish(),
+      note: z.string().max(500).nullish(),
       sendEmail: z.boolean().default(false),
       language: z.enum(["en", "nl"]).default("nl"),
     }),
@@ -402,6 +427,12 @@ export const adminSetTrackPremium = onCall(async (req) => {
     // New audio for a premium track comes straight here, never via the public doc.
     const url: string = newAudio || track.data()?.trackUrl || audio.data()?.url;
     if (!url) throw new HttpsError("failed-precondition", "Track heeft geen audio.");
+    if (!parseDownloadUrl(url)) {
+      throw new HttpsError(
+        "failed-precondition",
+        "Deze audio staat niet in Firebase Storage en kan niet beschermd worden. Upload de audio opnieuw.",
+      );
+    }
     const newUrl = await rotateDownloadUrl(url);
     await audioRef.set({ url: newUrl });
     await trackRef.update({ premium: true, trackUrl: "" });
@@ -415,18 +446,54 @@ export const adminSetTrackPremium = onCall(async (req) => {
   return { success: true };
 });
 
-/** Admin: delete a track with its protected audio and play count in one go. */
+/**
+ * Admin: delete a track with its protected audio, play count and uploaded
+ * files. Refuses while a playlist or page row still uses it.
+ */
 export const adminDeleteTrack = onCall(async (req) => {
   const adminUid = requireAdmin(req);
   const { trackId } = parse(z.object({ trackId: z.string().min(1) }), req.data);
+  const [playlists, rows, heroes] = await Promise.all([
+    db.collection("playlists").where("trackIds", "array-contains", trackId).get(),
+    db.collection("blocks").where("trackIds", "array-contains", trackId).get(),
+    db.collection("blocks").where("trackId", "==", trackId).get(),
+  ]);
+  const usedIn = [
+    ...playlists.docs.map((d) => `playlist “${d.data().title ?? d.id}”`),
+    ...[...rows.docs, ...heroes.docs].map((d) => `rij “${d.data().title || d.id}”`),
+  ];
+  if (usedIn.length) {
+    throw new HttpsError("failed-precondition", `Track wordt nog gebruikt in ${usedIn.join(", ")}. Haal hem daar eerst weg.`);
+  }
+
+  const trackRef = db.collection("tracks").doc(trackId);
+  const audioRef = db.collection("track_audio").doc(trackId);
+  const [track, audio] = await Promise.all([trackRef.get(), audioRef.get()]);
+  const t = track.data();
+  const urls = [t?.trackUrl, t?.thumbnail?.url, t?.imageBackground?.url, audio.data()?.url];
+
   const batch = db.batch();
-  batch.delete(db.collection("tracks").doc(trackId));
-  batch.delete(db.collection("track_audio").doc(trackId));
+  batch.delete(trackRef);
+  batch.delete(audioRef);
   batch.delete(db.collection("track_stats").doc(trackId));
   await batch.commit();
+  await deleteStorageFiles(urls);
   await logAdminAction(adminUid, "deleteTrack", { trackId });
   return { success: true };
 });
+
+/** Deletes the Storage files behind download URLs; other URLs are left alone. */
+async function deleteStorageFiles(urls: unknown[]) {
+  for (const url of urls) {
+    const parsed = typeof url === "string" ? parseDownloadUrl(url) : null;
+    if (!parsed) continue;
+    await getStorage()
+      .bucket(parsed.bucket)
+      .file(parsed.path)
+      .delete({ ignoreNotFound: true })
+      .catch((e) => logger.warn("Deleting file failed", { path: parsed.path, error: String(e) }));
+  }
+}
 
 /** Admin: give or take away premium by hand (gifts, support cases). */
 export const adminSetManualPremium = onCall(async (req) => {
@@ -457,6 +524,10 @@ export const adminSendPush = onCall(async (req) => {
     req.data,
   );
   const sendAt = job.sendAt ? new Date(job.sendAt) : null;
+  // A time in the past is a mistake, not a request to send to everyone right now.
+  if (sendAt && sendAt.getTime() < Date.now() - 5 * 60_000) {
+    throw new HttpsError("invalid-argument", "Het gekozen tijdstip ligt in het verleden.");
+  }
   const scheduled = sendAt !== null && sendAt.getTime() > Date.now() + 60_000;
   const ref = db.collection("push_jobs").doc();
   await ref.set({
@@ -468,13 +539,11 @@ export const adminSendPush = onCall(async (req) => {
     createdBy: adminUid,
     createdAt: FieldValue.serverTimestamp(),
   });
-  if (!scheduled) {
-    const failed = await sendPush(job);
-    await ref.update({ ...pushResult(failed), sentAt: FieldValue.serverTimestamp() });
-    if (failed.length === 2) throw new HttpsError("internal", "Versturen mislukt.");
-    if (failed.length) throw new HttpsError("internal", `Niet verstuurd in: ${failed.join(", ")}. De rest is wel verstuurd.`);
-  }
-  await logAdminAction(adminUid, "sendPush", { job: ref.id, audience: job.audience, scheduled });
+  const failed = scheduled ? [] : await sendPush(job);
+  if (!scheduled) await ref.update({ ...pushResult(failed), sentAt: FieldValue.serverTimestamp() });
+  await logAdminAction(adminUid, "sendPush", { job: ref.id, audience: job.audience, scheduled, failed });
+  if (failed.length === 2) throw new HttpsError("internal", "Versturen mislukt.");
+  if (failed.length) throw new HttpsError("internal", `Niet verstuurd in: ${failed.join(", ")}. De rest is wel verstuurd.`);
   return { id: ref.id, scheduled };
 });
 
@@ -505,16 +574,63 @@ export const adminStats = onCall({ timeoutSeconds: 120 }, async (req) => {
   return stats;
 });
 
-/** Admin: grant or revoke admin rights by email. */
+async function getUserOrThrow(uid: string) {
+  return getAuth()
+    .getUser(uid)
+    .catch(() => {
+      throw new HttpsError("not-found", "Gebruiker niet gevonden.");
+    });
+}
+
+/**
+ * Admin: look up an account by email or uid in Firebase Auth, so accounts
+ * without a profile document can be found too.
+ */
+export const adminFindUser = onCall(async (req) => {
+  requireAdmin(req);
+  const { query } = parse(z.object({ query: z.string().trim().min(1).max(200) }), req.data);
+  const user = await (query.includes("@") ? getAuth().getUserByEmail(query.toLowerCase()) : getAuth().getUser(query))
+    .catch(() => null);
+  if (!user) return { user: null };
+  const profile = (await db.collection("users").doc(user.uid).get()).data();
+  return {
+    user: {
+      uid: user.uid,
+      email: user.email ?? "",
+      name: user.displayName || String(profile?.name ?? ""),
+      createdAt: new Date(user.metadata.creationTime).toISOString(),
+      lastSignInAt: user.metadata.lastSignInTime ? new Date(user.metadata.lastSignInTime).toISOString() : null,
+      providers: user.providerData.map((p) => p.providerId),
+      admin: user.customClaims?.admin === true,
+      disabled: user.disabled,
+    },
+  };
+});
+
+/** Admin: grant or revoke admin rights. */
 export const adminSetAdmin = onCall(async (req) => {
   const adminUid = requireAdmin(req);
-  const { email, admin } = parse(z.object({ email: z.string().email(), admin: z.boolean() }), req.data);
-  const user = await getAuth().getUserByEmail(email).catch(() => {
-    throw new HttpsError("not-found", "No account with that email.");
-  });
-  if (user.uid === adminUid && !admin) throw new HttpsError("failed-precondition", "You can't remove yourself.");
+  const { uid, admin } = parse(z.object({ uid: z.string().min(1), admin: z.boolean() }), req.data);
+  const user = await getUserOrThrow(uid);
+  if (user.uid === adminUid && !admin) throw new HttpsError("failed-precondition", "Je kunt jezelf geen admin-rechten afnemen.");
   await getAuth().setCustomUserClaims(user.uid, { ...user.customClaims, admin });
-  await logAdminAction(adminUid, "setAdmin", { email, admin });
+  // Without this a removed admin keeps the claim in their ID token for up to an hour.
+  if (!admin) await getAuth().revokeRefreshTokens(user.uid);
+  await logAdminAction(adminUid, "setAdmin", { uid, email: user.email ?? null, admin });
+  return { success: true };
+});
+
+/** Admin: delete someone's account, the same way users delete their own. */
+export const adminDeleteUser = onCall({ secrets: [STRIPE_SECRET_KEY, APPLE_SIGNIN_KEY] }, async (req) => {
+  const adminUid = requireAdmin(req);
+  const { uid } = parse(z.object({ uid: z.string().min(1) }), req.data);
+  if (uid === adminUid) throw new HttpsError("failed-precondition", "Je kunt je eigen account hier niet verwijderen.");
+  const user = await getUserOrThrow(uid);
+  if (user.customClaims?.admin === true) {
+    throw new HttpsError("failed-precondition", "Dit is een admin. Neem eerst de admin-rechten af.");
+  }
+  await deleteAccount(uid);
+  await logAdminAction(adminUid, "deleteUser", { uid, email: user.email ?? null });
   return { success: true };
 });
 
