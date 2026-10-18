@@ -23,13 +23,14 @@ import {
   type StoredDeletionCode,
 } from "./deletion.js";
 import { computeEntitlement, entitlementFields, readSources, setSourceGrant } from "./entitlement.js";
-import { escapeHtml, sendMail, SENDGRID_API_KEY } from "./mail.js";
+import { accessCodeEmail, deletionCodeEmail, languageOf, welcomeEmail } from "./emails.js";
+import { sendMail, SENDGRID_API_KEY } from "./mail.js";
 import { APPLE_SIGNIN_KEY, revokeAppleToken, storeAppleRefreshToken } from "./apple-signin.js";
 import { releaseBilling } from "./purchases.js";
 import { pushResult, sendPush } from "./push.js";
 import { computeStats, STATS_VERSION } from "./stats.js";
 import { parseDownloadUrl, rotateDownloadUrl } from "./track-audio.js";
-import { STRIPE_SECRET_KEY } from "./stores/stripe.js";
+import { APP_URL, STRIPE_SECRET_KEY } from "./stores/stripe.js";
 
 initializeApp();
 setGlobalOptions({ region: "us-central1", maxInstances: 10 });
@@ -101,13 +102,8 @@ export const requestAccountDeletion = onCall({ secrets: [SENDGRID_API_KEY] }, as
       attempts: sameDay ? (previous?.attempts ?? 0) : 0,
     });
   });
-  await sendMail(
-    email,
-    "Delete your Gentle account",
-    `<p>You asked to delete your Gentle account. Enter this code in the app to confirm:</p>
-     <p style="font-size:24px;font-weight:bold;letter-spacing:4px">${code}</p>
-     <p>The code is valid for 15 minutes. Didn't ask for this? Ignore this email.</p>`,
-  );
+  const language = languageOf((await db.collection("users").doc(uid).get()).get("language"));
+  await sendMail(email, deletionCodeEmail(language, code));
   return { success: true };
 });
 
@@ -198,13 +194,8 @@ export const onUserCreated = onDocumentCreated(
       .then((u) => u.email)
       .catch(() => undefined);
     if (!email) return;
-    const name = escapeHtml(String(user?.name ?? "").trim().slice(0, 40)) || "there";
     try {
-      await sendMail(
-        email,
-        "Welcome to Gentle",
-        `<h1>Welcome, ${name}!</h1><p>Thank you for joining Gentle. Sleep well.</p>`,
-      );
+      await sendMail(email, welcomeEmail(languageOf(user?.language), String(user?.name ?? ""), APP_URL.value()));
     } catch (e) {
       logger.error("Welcome mail failed", e);
     }
@@ -372,22 +363,8 @@ export const adminAssignCode = onCall({ secrets: [SENDGRID_API_KEY] }, async (re
 
   let emailed = false;
   if (input.sendEmail) {
-    const nl = input.language === "nl";
-    const access = code.durationDays === null
-      ? (nl ? "onbeperkt" : "unlimited")
-      : nl ? `${code.durationDays} dagen` : `${code.durationDays} days`;
     try {
-      await sendMail(
-        input.email,
-        nl ? "Je Gentle-code" : "Your Gentle code",
-        nl
-          ? `<p>Bedankt voor je bestelling bij Artazest. Hiermee krijg je ${access} toegang tot Gentle:</p>
-             <p style="font-size:22px;font-weight:bold;letter-spacing:2px">${code.code}</p>
-             <p>Download de Gentle-app, maak een account en vul de code in onder Profiel &rarr; Code invoeren.</p>`
-          : `<p>Thank you for your Artazest order. This gives you ${access} access to Gentle:</p>
-             <p style="font-size:22px;font-weight:bold;letter-spacing:2px">${code.code}</p>
-             <p>Download the Gentle app, create an account and enter the code under Profile &rarr; Redeem code.</p>`,
-      );
+      await sendMail(input.email, accessCodeEmail(input.language, code.code, code.durationDays, APP_URL.value()));
       emailed = true;
     } catch (e) {
       // The code stays assigned; the admin can copy it and send it by hand.
