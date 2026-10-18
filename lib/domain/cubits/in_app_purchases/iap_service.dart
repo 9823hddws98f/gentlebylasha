@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:intl/intl.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
 
@@ -79,6 +81,28 @@ class PurchasesApi {
   Future<Uri> checkoutUrl(String plan) async {
     final result = await _functions.httpsCallable('createCheckoutSession').call({'plan': plan});
     return Uri.parse(result.data['url'] as String);
+  }
+
+  /// Prices of the web plans ('monthly', 'yearly') formatted for [languageCode];
+  /// a plan is missing when Stripe isn't configured or can't be reached.
+  Future<Map<String, String>> webPrices(String languageCode) async {
+    final result = await _functions.httpsCallable('webPrices').call();
+    final data = Map<String, dynamic>.from(result.data as Map);
+    return {
+      for (final plan in const ['monthly', 'yearly'])
+        if (data[plan] is Map)
+          plan: formatPrice(
+            (data[plan]['amount'] as num).toInt(),
+            data[plan]['currency'] as String,
+            languageCode,
+          ),
+    };
+  }
+
+  /// [amount] in the currency's smallest unit (cents), e.g. "€ 4,99" in Dutch.
+  static String formatPrice(int amount, String currency, String languageCode) {
+    final format = NumberFormat.simpleCurrency(locale: languageCode, name: currency.toUpperCase());
+    return format.format(amount / pow(10, format.decimalDigits ?? 2));
   }
 
   /// Stripe customer portal URL (change card, switch plan, cancel).

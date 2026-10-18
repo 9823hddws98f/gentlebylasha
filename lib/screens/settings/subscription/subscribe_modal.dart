@@ -47,11 +47,25 @@ class _SubscribeModalState extends State<SubscribeModal> with Translation {
   bool _yearly = true;
   bool _webBusy = false;
   String? _webError;
+  Map<String, String> _webPrices = const {};
 
   @override
   void initState() {
     super.initState();
-    if (!kIsWeb) _iap.loadProducts();
+    if (kIsWeb) {
+      _loadWebPrices();
+    } else {
+      _iap.loadProducts();
+    }
+  }
+
+  Future<void> _loadWebPrices() async {
+    try {
+      final prices = await PurchasesApi.instance.webPrices(Get.the<LanguageCubit>().languageCode);
+      if (mounted) setState(() => _webPrices = prices);
+    } catch (_) {
+      // Without prices the plans still work; Stripe Checkout shows the amount.
+    }
   }
 
   Future<void> _subscribe(List<PurchasableProduct> products) async {
@@ -209,9 +223,10 @@ class _SubscribeModalState extends State<SubscribeModal> with Translation {
         child: Text(label),
       );
 
-  /// Store price on mobile; on the web Stripe Checkout shows the price.
-  String? _priceOf(IAPState state, {required bool yearly}) =>
-      state.products.where((p) => p.isYearly == yearly).firstOrNull?.price;
+  /// Store price on mobile; the Stripe price on the web.
+  String? _priceOf(IAPState state, {required bool yearly}) => kIsWeb
+      ? _webPrices[yearly ? 'yearly' : 'monthly']
+      : state.products.where((p) => p.isYearly == yearly).firstOrNull?.price;
 
   Widget _plan(ColorScheme colors, {required bool yearly, String? price}) {
     final selected = _yearly == yearly;

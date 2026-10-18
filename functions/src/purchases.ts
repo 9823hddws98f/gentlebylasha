@@ -246,6 +246,34 @@ export const createCheckoutSession = onCall({ secrets: [STRIPE_SECRET_KEY] }, as
   return { url: session.url };
 });
 
+export interface WebPrice {
+  /** In the currency's smallest unit (cents). */
+  amount: number;
+  currency: string;
+}
+
+let priceCache: { at: number; prices: Record<"monthly" | "yearly", WebPrice | null> } | undefined;
+
+/** Prices of the web plans, so the paywall can show them before checkout. Cached for an hour. */
+export const webPrices = onCall({ secrets: [STRIPE_SECRET_KEY] }, async (req) => {
+  requireAuth(req);
+  if (priceCache && Date.now() - priceCache.at < 3_600_000) return priceCache.prices;
+  const load = async (id: string): Promise<WebPrice | null> => {
+    if (!id) return null;
+    const price = await stripe().prices.retrieve(id);
+    return price.unit_amount === null ? null : { amount: price.unit_amount, currency: price.currency };
+  };
+  try {
+    const [monthly, yearly] = await Promise.all([load(STRIPE_PRICE_MONTHLY.value()), load(STRIPE_PRICE_YEARLY.value())]);
+    priceCache = { at: Date.now(), prices: { monthly, yearly } };
+    return priceCache.prices;
+  } catch (e) {
+    // The paywall still works without prices; Stripe Checkout shows them too.
+    logger.error("webPrices failed", { error: String(e) });
+    return { monthly: null, yearly: null };
+  }
+});
+
 /** Stripe's customer portal: change plan, update card, cancel. */
 export const createPortalSession = onCall({ secrets: [STRIPE_SECRET_KEY] }, async (req) => {
   const uid = requireAuth(req);
