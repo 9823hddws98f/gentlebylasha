@@ -640,4 +640,4 @@ export {
   webPrices,
 } from "./purchases.js";
 
-export { sendScheduledPushes } from "./push.js";
+export { sendScheduledPushes, syncWebPushTopics } from "./push.js";
