@@ -93,6 +93,11 @@ flutter_native_splash:
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.
 flutter:
+  # The FlutterFire plugin versions in use still ship CocoaPods only; mixing
+  # them with Swift Package Manager breaks `pod install`. Re-enable after
+  # upgrading every Firebase plugin to a release with SPM support.
+  config:
+    enable-swift-package-manager: false
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
