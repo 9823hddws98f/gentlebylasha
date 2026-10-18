@@ -53,7 +53,9 @@ Store-teksten, review notes en privacy-antwoorden staan klaar in [store-listing.
 - [ ] **Authentication:**
   - Zet de providers E-mail/wachtwoord, Google en Apple aan.
   - Zet het OAuth-toestemmingsscherm op "Gentle".
-- [ ] **Cloud Messaging:** upload de APNs-sleutel van Apple.
+- [ ] **Cloud Messaging:**
+  - Upload de APNs-sleutel van Apple.
+  - Maak onder "Web configuration" een sleutelpaar aan. Die waarde gaat als `WEB_PUSH_VAPID_KEY` naar Vercel (stap 4), voor push in de webapp.
 
 ### Stripe (web)
 
@@ -123,7 +125,7 @@ Store-teksten, review notes en privacy-antwoorden staan klaar in [store-listing.
 
   | Project | Root directory | Opmerking |
   |---|---|---|
-  | Webapp | repo-root | Bouwt met `scripts/vercel-build-web.sh` |
+  | Webapp | repo-root | Bouwt met `scripts/vercel-build-web.sh`. Env: `WEB_PUSH_VAPID_KEY`, en later `SITE_URL`/`APP_URL` |
   | Admin | `apps/admin` | Geen env-variabelen nodig |
 
 - Daarna zet **jij** beide `*.vercel.app`-adressen bij Firebase Auth → Authorized domains.
@@ -179,9 +181,5 @@ Store-teksten, review notes en privacy-antwoorden staan klaar in [store-listing.
 ## Later
 
 - **Firebase App Check.** Hiervoor zijn reCAPTCHA Enterprise, App Attest en Play Integrity in de console nodig.
-- **Webpush in de webapp.** Hiervoor is een VAPID-sleutel nodig. Push gaat nu alleen naar iOS en Android.
 - **FlutterFire 5 (Firebase iOS SDK 13, Android BoM 35).** Dit vraagt Android `minSdk` 24 in plaats van 23, dus Android 6 valt dan af. De app zit nu op de 4.x-lijn.
 - **audio_session via Swift Package Manager.** Blijft nu bewust onder 0.1.24 en dus op CocoaPods, zodat de Podfile de microfooncode eruit laat. Via SPM kan dat alleen met `AUDIO_SESSION_MICROPHONE=0` als omgevingsvariabele bij elke build. Dit moet opgelost zijn voordat Flutter CocoaPods laat vallen.
-- **In de admin:**
-  - Volgorde aanpassen door te slepen in plaats van met pijltjes.
-  - Een voorbeeld van een pagina.
