@@ -80,6 +80,12 @@ textarea {
   font-variant-numeric: tabular-nums;
 }
 
+/* While a list row is held (components/sortable.tsx), the grabbing cursor follows the pointer everywhere. */
+html[data-sorting],
+html[data-sorting] * {
+  cursor: grabbing !important;
+}
+
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--line-strong) transparent;

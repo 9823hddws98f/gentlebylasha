@@ -1,9 +1,10 @@
 "use client";
 
-import { ArrowDown, ArrowUp, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Field, OrderedPicker, Switch } from "@/components/form";
 import { Sheet } from "@/components/sheet";
+import { SortableItem, SortableList, useOptimisticOrder } from "@/components/sortable";
 import { Button, Input, Select } from "@/components/ui";
 import { errorMessage } from "@/lib/codes";
 import {
@@ -30,27 +31,8 @@ const TYPE_INFO: Record<BlockType, string> = {
   Series: "Rij met playlists",
 };
 
-function MoveButtons({ index, count, onMove }: { index: number; count: number; onMove: (d: -1 | 1) => void }) {
-  return (
-    <span className="flex shrink-0">
-      <button type="button" disabled={index === 0} onClick={() => onMove(-1)} aria-label="Omhoog" className="rounded p-1.5 text-ink-soft hover:bg-paper disabled:opacity-30">
-        <ArrowUp className="size-4" />
-      </button>
-      <button type="button" disabled={index === count - 1} onClick={() => onMove(1)} aria-label="Omlaag" className="rounded p-1.5 text-ink-soft hover:bg-paper disabled:opacity-30">
-        <ArrowDown className="size-4" />
-      </button>
-    </span>
-  );
-}
-
-const moved = <T,>(list: T[], i: number, d: -1 | 1) => {
-  const next = [...list];
-  [next[i], next[i + d]] = [next[i + d], next[i]];
-  return next;
-};
-
 export default function PagesPage() {
-  const { items: pages, error } = useCollection("pages", "order", toPage);
+  const { items: storedPages, error } = useCollection("pages", "order", toPage);
   const { items: blocks } = useCollection("blocks", "sequence", toBlock);
   const { items: tracks } = useCollection("tracks", "title", toTrack);
   const { items: playlists } = useCollection("playlists", "title", toPlaylist);
@@ -58,16 +40,19 @@ export default function PagesPage() {
   const [editingPage, setEditingPage] = useState<{ page: Page; isNew: boolean } | null>(null);
   const [editingBlock, setEditingBlock] = useState<{ block: Block; isNew: boolean } | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const orderFailed = (e: unknown) => setActionError(`De nieuwe volgorde is niet opgeslagen. ${errorMessage(e)}`);
 
+  // A dragged order shows at once and rolls back if the write fails.
+  const [pages, reorderPages] = useOptimisticOrder(storedPages, (ids) => reorder("pages", ids), orderFailed);
   const selected = pages?.find((p) => p.id === selectedId) ?? pages?.[0] ?? null;
-  const pageBlocks = useMemo(() => (blocks ?? []).filter((b) => b.pageId === selected?.id), [blocks, selected]);
+  const pageIds = useMemo(() => (pages ?? []).map((p) => p.id), [pages]);
+  const selectedBlocks = useMemo(() => (blocks ?? []).filter((b) => b.pageId === selected?.id), [blocks, selected]);
+  const [pageBlocks, reorderBlocks] = useOptimisticOrder(selectedBlocks, (ids) => reorder("blocks", ids), orderFailed);
   const trackOptions = useMemo(() => (tracks ?? []).map((t) => ({ id: t.id, label: t.title, sub: t.speaker })), [tracks]);
   const playlistOptions = useMemo(
     () => (playlists ?? []).map((p) => ({ id: p.id, label: p.title, sub: `${p.trackIds.length} tracks` })),
     [playlists],
   );
-
-  const run = (action: Promise<unknown>) => action.catch((e) => setActionError(errorMessage(e)));
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -78,20 +63,37 @@ export default function PagesPage() {
         </p>
       </header>
 
-      {(error || actionError) && <p className="mb-3 text-sm text-ember">{error || actionError}</p>}
+      {(error || actionError) && (
+        <p role="alert" className="mb-3 text-sm text-ember">
+          {error || actionError}
+        </p>
+      )}
 
       <div className="grid gap-6 md:grid-cols-[240px_minmax(0,1fr)]">
         <section aria-label="Pagina's">
-          <ul className="divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface">
-            {(pages ?? []).map((p, i) => (
-              <li key={p.id} className={`flex items-center gap-1 pr-1 ${selected?.id === p.id ? "bg-dusk-wash" : ""}`}>
-                <button onClick={() => setSelectedId(p.id)} aria-current={selected?.id === p.id} className="min-w-0 flex-1 truncate px-4 py-3 text-left text-sm font-medium text-ink">
+          <SortableList
+            as="ul"
+            ids={pageIds}
+            label={(id) => pages?.find((p) => p.id === id)?.name || "Zonder naam"}
+            onReorder={(ids) => {
+              setActionError(null);
+              reorderPages(ids);
+            }}
+            className="divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface"
+          >
+            {(pages ?? []).map((p) => (
+              <SortableItem
+                key={p.id}
+                id={p.id}
+                handleClassName="p-1.5"
+                className={`flex items-center pl-1.5 data-dragging:rounded-lg data-dragging:border-transparent ${selected?.id === p.id ? "bg-dusk-wash" : "data-dragging:bg-surface"}`}
+              >
+                <button onClick={() => setSelectedId(p.id)} aria-current={selected?.id === p.id} className="min-w-0 flex-1 truncate py-3 pr-4 pl-1.5 text-left text-sm font-medium text-ink">
                   {p.name || "Zonder naam"}
                 </button>
-                <MoveButtons index={i} count={pages!.length} onMove={(d) => run(reorder("pages", moved(pages!, i, d).map((x) => x.id)))} />
-              </li>
+              </SortableItem>
             ))}
-          </ul>
+          </SortableList>
           <Button
             className="mt-3 w-full"
             icon={<Plus className="size-4" aria-hidden />}
@@ -145,22 +147,34 @@ export default function PagesPage() {
                   Deze pagina is nog leeg.
                 </div>
               ) : (
-                <ol className="space-y-2">
-                  {pageBlocks.map((b, i) => {
+                <SortableList
+                  ids={pageBlocks.map((b) => b.id)}
+                  label={(id) => pageBlocks.find((b) => b.id === id)?.title || "Zonder titel"}
+                  onReorder={(ids) => {
+                    setActionError(null);
+                    reorderBlocks(ids);
+                  }}
+                  className="space-y-2"
+                >
+                  {pageBlocks.map((b) => {
                     const count = b.type === "Series" ? b.playlistIds?.length : b.type === "Hero" ? (b.trackId ? 1 : 0) : b.trackIds?.length;
                     return (
-                      <li key={b.id} className="flex items-center gap-3 rounded-2xl border border-line bg-surface px-4 py-3">
+                      <SortableItem
+                        key={b.id}
+                        id={b.id}
+                        handleClassName="p-1.5"
+                        className="flex items-center gap-2 rounded-2xl border border-line bg-surface py-3 pr-4 pl-2"
+                      >
                         <button onClick={() => setEditingBlock({ block: b, isNew: false })} className="min-w-0 flex-1 text-left">
                           <span className="block truncate font-medium text-ink">{b.title || "Zonder titel"}</span>
                           <span className="block text-sm text-ink-faint">
                             {TYPE_INFO[b.type]} · <span className="tabular">{count ?? 0}</span> {b.type === "Series" ? "playlists" : "tracks"}
                           </span>
                         </button>
-                        <MoveButtons index={i} count={pageBlocks.length} onMove={(d) => run(reorder("blocks", moved(pageBlocks, i, d).map((x) => x.id)))} />
-                      </li>
+                      </SortableItem>
                     );
                   })}
-                </ol>
+                </SortableList>
               )}
             </>
           )}

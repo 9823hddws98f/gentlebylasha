@@ -1,8 +1,9 @@
 "use client";
 
-import { ArrowDown, ArrowUp, ImagePlus, Music, Plus, X } from "lucide-react";
-import { useId, useMemo, useState } from "react";
+import { ImagePlus, Music, Plus, X } from "lucide-react";
+import { useCallback, useId, useMemo, useState } from "react";
 import { audioDuration, type TxImage, uploadFile, uploadImage } from "@/lib/media";
+import { SortableItem, SortableList } from "./sortable";
 import { Input, Label } from "./ui";
 
 export function Field({ label, children, hint }: { label: string; children: (id: string) => React.ReactNode; hint?: string }) {
@@ -191,7 +192,7 @@ export interface PickItem {
 /** Most options the picker lists at once; searching narrows the rest. */
 const PICKER_LIMIT = 50;
 
-/** Ordered selection from a list: add, remove, move up/down. */
+/** Ordered selection from a list: add, remove, drag (or move by keyboard) into order. */
 export function OrderedPicker({
   label,
   options,
@@ -211,34 +212,33 @@ export function OrderedPicker({
     (o) => !value.includes(o.id) && (!q || o.label.toLowerCase().includes(q.toLowerCase())),
   );
   const full = max !== undefined && value.length >= max;
-
-  const move = (i: number, d: -1 | 1) => {
-    const next = [...value];
-    [next[i], next[i + d]] = [next[i + d], next[i]];
-    onChange(next);
-  };
+  const nameOf = useCallback((id: string) => byId.get(id)?.label ?? "Verwijderd item", [byId]);
 
   return (
     <div>
       <p className="mb-1.5 text-[13px] font-medium text-ink-soft">{label}</p>
       {value.length > 0 ? (
-        <ol className="mb-3 divide-y divide-line rounded-xl border border-line">
+        <SortableList
+          ids={value}
+          label={nameOf}
+          onReorder={onChange}
+          disabled={max === 1}
+          className="mb-3 divide-y divide-line rounded-xl border border-line"
+        >
           {value.map((id, i) => (
-            <li key={id} className="flex items-center gap-2 px-3 py-2 text-sm">
+            <SortableItem
+              key={id}
+              id={id}
+              className={`flex items-center gap-2 py-2 pr-3 text-sm data-dragging:rounded-lg data-dragging:border-transparent data-dragging:bg-surface ${max === 1 ? "pl-3" : "pl-2"}`}
+            >
               <span className="tabular w-5 text-ink-faint">{i + 1}</span>
               <span className="min-w-0 flex-1 truncate">{byId.get(id)?.label ?? <em className="text-ember">Verwijderd</em>}</span>
-              <button type="button" disabled={i === 0} onClick={() => move(i, -1)} aria-label="Omhoog" className="rounded p-1 text-ink-soft hover:bg-paper disabled:opacity-30">
-                <ArrowUp className="size-4" />
-              </button>
-              <button type="button" disabled={i === value.length - 1} onClick={() => move(i, 1)} aria-label="Omlaag" className="rounded p-1 text-ink-soft hover:bg-paper disabled:opacity-30">
-                <ArrowDown className="size-4" />
-              </button>
-              <button type="button" onClick={() => onChange(value.filter((v) => v !== id))} aria-label="Verwijderen" className="rounded p-1 text-ink-soft hover:bg-ember-wash hover:text-ember">
+              <button type="button" onClick={() => onChange(value.filter((v) => v !== id))} aria-label={`${nameOf(id)} verwijderen`} className="rounded p-1 text-ink-soft hover:bg-ember-wash hover:text-ember">
                 <X className="size-4" />
               </button>
-            </li>
+            </SortableItem>
           ))}
-        </ol>
+        </SortableList>
       ) : (
         <p className="mb-3 text-sm text-ink-faint">Nog niets gekozen.</p>
       )}
