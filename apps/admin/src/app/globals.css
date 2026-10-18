@@ -21,6 +21,15 @@
   --ember: #b42318;
   --ember-wash: #fbe9e7;
   --focus: #365dcb;
+
+  /* The app's dark theme (lib/utils/app_theme.dart), for the page preview. */
+  --app-bg: #0e1529;
+  --app-surface: #1a2034;
+  --app-ink: #f5f5f5;
+  --app-ink-soft: #99a1b7;
+  --app-line: #323849;
+  --app-leaf: #52b788;
+  --app-missing: #f2a196;
 }
 
 @theme inline {
@@ -42,6 +51,13 @@
   --color-dusk-wash: var(--dusk-wash);
   --color-ember: var(--ember);
   --color-ember-wash: var(--ember-wash);
+  --color-app-bg: var(--app-bg);
+  --color-app-surface: var(--app-surface);
+  --color-app-ink: var(--app-ink);
+  --color-app-ink-soft: var(--app-ink-soft);
+  --color-app-line: var(--app-line);
+  --color-app-leaf: var(--app-leaf);
+  --color-app-missing: var(--app-missing);
   --font-sans: var(--font-figtree);
   --font-display: var(--font-fraunces);
   --font-mono: var(--font-jetbrains);
@@ -89,6 +105,23 @@ html[data-sorting] * {
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--line-strong) transparent;
+}
+
+/* Inside the phone of the page preview (components/page-preview.tsx), the browser parts follow the app:
+   no standing scrollbars (rows still scroll by trackpad, shift+wheel or arrow keys), dark selection and focus. */
+.app-screen,
+.app-screen * {
+  scrollbar-width: none;
+}
+
+.app-screen ::selection {
+  background: rgb(82 183 136 / 0.35);
+  color: var(--app-ink);
+}
+
+.app-screen :focus-visible {
+  outline-color: var(--app-leaf);
+  outline-offset: -2px;
 }
 
 @media (prefers-reduced-motion: reduce) {

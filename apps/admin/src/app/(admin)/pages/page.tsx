@@ -1,8 +1,9 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { Plus, Smartphone } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Field, OrderedPicker, Switch } from "@/components/form";
+import { PagePreview, type PreviewLanguage } from "@/components/page-preview";
 import { Sheet } from "@/components/sheet";
 import { SortableItem, SortableList, useOptimisticOrder } from "@/components/sortable";
 import { Button, Input, Select } from "@/components/ui";
@@ -40,6 +41,8 @@ export default function PagesPage() {
   const [editingPage, setEditingPage] = useState<{ page: Page; isNew: boolean } | null>(null);
   const [editingBlock, setEditingBlock] = useState<{ block: Block; isNew: boolean } | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewLang, setPreviewLang] = useState<PreviewLanguage>("en");
   const orderFailed = (e: unknown) => setActionError(`De nieuwe volgorde is niet opgeslagen. ${errorMessage(e)}`);
 
   // A dragged order shows at once and rolls back if the write fails.
@@ -54,8 +57,16 @@ export default function PagesPage() {
     [playlists],
   );
 
+  function closePreview() {
+    setPreviewOpen(false);
+    document.getElementById("page-preview-toggle")?.focus();
+  }
+
+  // With the preview open, wide screens keep the rows clear of it, so both stay usable side by side.
+  const roomForPreview = previewOpen && selected ? "xl:box-content xl:pr-[426px]" : "";
+
   return (
-    <div className="mx-auto max-w-5xl">
+    <div className={`mx-auto max-w-5xl ${roomForPreview}`}>
       <header className="mb-8">
         <h1 className="font-display text-[2rem] leading-tight font-medium tracking-[-0.02em] text-ink">Pagina&apos;s</h1>
         <p className="mt-1.5 max-w-prose text-[15px] text-ink-soft">
@@ -120,6 +131,16 @@ export default function PagesPage() {
                 <div className="flex gap-2">
                   <Button variant="ghost" onClick={() => setEditingPage({ page: selected, isNew: false })}>
                     Pagina-instellingen
+                  </Button>
+                  <Button
+                    id="page-preview-toggle"
+                    variant="ghost"
+                    aria-expanded={previewOpen}
+                    aria-controls="page-preview"
+                    icon={<Smartphone className="size-4" aria-hidden />}
+                    onClick={() => (previewOpen ? closePreview() : setPreviewOpen(true))}
+                  >
+                    Voorbeeld
                   </Button>
                   <Button
                     icon={<Plus className="size-4" aria-hidden />}
@@ -199,6 +220,16 @@ export default function PagesPage() {
           trackOptions={trackOptions}
           playlistOptions={playlistOptions}
           onClose={() => setEditingBlock(null)}
+        />
+      )}
+      {previewOpen && selected && (
+        <PagePreview
+          page={selected}
+          pages={pages ?? []}
+          blocks={pageBlocks}
+          lang={previewLang}
+          onLangChange={setPreviewLang}
+          onClose={closePreview}
         />
       )}
     </div>
