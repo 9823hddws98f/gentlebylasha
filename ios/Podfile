@@ -31,7 +31,8 @@ target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
-  # The Firebase pods come with the FlutterFire plugins (same versions).
+  # Firebase and Google Sign-In come in through Swift Package Manager; only
+  # plugins without SPM support are installed as pods here.
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   target 'RunnerTests' do
     inherit! :search_paths
@@ -42,7 +43,9 @@ post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
     # Gentle never records audio: compile audio_session without its microphone
-    # APIs, so the binary doesn't need NSMicrophoneUsageDescription.
+    # APIs, so the binary doesn't need NSMicrophoneUsageDescription. This only
+    # works while audio_session is a pod; pubspec.yaml keeps it below 0.1.24,
+    # the first release that builds with Swift Package Manager.
     if target.name == 'audio_session'
       target.build_configurations.each do |config|
         defs = config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] || '$(inherited)'
@@ -50,15 +53,6 @@ post_install do |installer|
         defs << '$(inherited)' unless defs.include?('$(inherited)')
         defs << 'AUDIO_SESSION_MICROPHONE=0' unless defs.include?('AUDIO_SESSION_MICROPHONE=0')
         config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] = defs
-      end
-    end
-    if target.name == 'BoringSSL-GRPC'
-      target.source_build_phase.files.each do |file|
-        if file.settings && file.settings['COMPILER_FLAGS']
-          flags = file.settings['COMPILER_FLAGS'].split
-          flags.reject! { |flag| flag == '-GCC_WARN_INHIBIT_ALL_WARNINGS' }
-          file.settings['COMPILER_FLAGS'] = flags.join(' ')
-        end
       end
     end
   end
