@@ -30,6 +30,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get changePassword => 'Change Password';
 
   @override
+  String get webPushTurnOn => 'Turn on notifications';
+
+  @override
+  String get webPushOn => 'Notifications are on';
+
+  @override
+  String get webPushBlocked =>
+      'Notifications are blocked in this browser. You can allow them in the site settings.';
+
+  @override
   String get reminders => 'Reminders';
 
   @override

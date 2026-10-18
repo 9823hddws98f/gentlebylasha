@@ -140,6 +140,24 @@ abstract class AppLocalizations {
   /// **'Change Password'**
   String get changePassword;
 
+  /// No description provided for @webPushTurnOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on notifications'**
+  String get webPushTurnOn;
+
+  /// No description provided for @webPushOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are on'**
+  String get webPushOn;
+
+  /// No description provided for @webPushBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are blocked in this browser. You can allow them in the site settings.'**
+  String get webPushBlocked;
+
   /// No description provided for @reminders.
   ///
   /// In en, this message translates to:

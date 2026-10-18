@@ -12,4 +12,10 @@ fi
 export PATH="$HOME/flutter/bin:$PATH"
 flutter config --no-analytics >/dev/null
 flutter pub get
-flutter build web --release --no-wasm-dry-run
+# Optional Vercel environment variables: SITE_URL and APP_URL (own domain),
+# WEB_PUSH_VAPID_KEY (Firebase console → Cloud Messaging → Web configuration).
+defines=()
+for name in SITE_URL APP_URL WEB_PUSH_VAPID_KEY; do
+  if [ -n "${!name:-}" ]; then defines+=("--dart-define=$name=${!name}"); fi
+done
+flutter build web --release --no-wasm-dry-run ${defines[@]+"${defines[@]}"}

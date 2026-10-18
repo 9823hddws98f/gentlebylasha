@@ -1,16 +1,20 @@
 import 'dart:async';
 
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '/domain/cubits/entitlement_cubit.dart';
+import '/helper/global_functions.dart';
 import '/utils/get.dart';
 import 'language_cubit.dart';
 
 /// Push messages sent from the admin. Each device is subscribed to its
 /// language (lang_en/lang_nl) and to premium or free; the admin targets
-/// those topics (functions/src/push.ts). Not available on web.
+/// those topics (functions/src/push.ts). On the web the browser can't join
+/// topics itself: its token goes to syncWebPushTopics, and only after the
+/// user turned notifications on in the settings.
 class PushService {
   PushService._();
   static final PushService instance = PushService._();
@@ -26,6 +30,15 @@ class PushService {
       importance: Importance.high,
     );
   }
+
+  /// Firebase console → Cloud Messaging → Web configuration → key pair.
+  /// Without it (--dart-define=WEB_PUSH_VAPID_KEY=…) the web has no push.
+  static const _vapidKey = String.fromEnvironment('WEB_PUSH_VAPID_KEY');
+  static bool get webPushAvailable => kIsWeb && _vapidKey.isNotEmpty;
+
+  /// The web app's FCM token while web push is on.
+  String? _webToken;
+  bool get webPushOn => _webToken != null;
 
   final _messaging = FirebaseMessaging.instance;
   final _local = FlutterLocalNotificationsPlugin();
@@ -56,7 +69,14 @@ class PushService {
   bool _running = false;
 
   Future<void> start() async {
-    if (kIsWeb || _running) return;
+    if (_running) return;
+    if (kIsWeb) {
+      // Never prompt on page load; only resume when the user allowed it before.
+      if (!webPushAvailable) return;
+      final settings = await _messaging.getNotificationSettings();
+      if (settings.authorizationStatus == AuthorizationStatus.authorized) await _startWeb();
+      return;
+    }
     _running = true;
 
     final settings = await _messaging.requestPermission();
@@ -80,6 +100,43 @@ class PushService {
     await _syncTopics();
   }
 
+  /// Turns web push on from a tap in the settings (browsers want a user
+  /// gesture for the permission prompt). Returns whether it is on now.
+  Future<bool> enableWebPush() async {
+    if (!webPushAvailable) return false;
+    if (webPushOn) return true;
+    final settings = await _messaging.requestPermission();
+    if (settings.authorizationStatus != AuthorizationStatus.authorized) return false;
+    await _startWeb();
+    return webPushOn;
+  }
+
+  Future<void> _startWeb() async {
+    _running = true;
+    try {
+      _webToken = await _messaging.getToken(vapidKey: _vapidKey);
+    } catch (e) {
+      debugPrint('Web push token failed: $e');
+    }
+    if (!_running || _webToken == null) {
+      _running = false;
+      return;
+    }
+    _subscriptions
+      // A focused tab gets no system notification; show it quietly in the app.
+      ..add(FirebaseMessaging.onMessage.listen((m) {
+        final n = m.notification;
+        if (n != null) showToast([n.title, n.body].whereType<String>().join('\n'));
+      }))
+      ..add(Get.the<EntitlementCubit>().stream.listen((_) => _syncTopics()))
+      ..add(Get.the<LanguageCubit>().stream.listen((_) => _syncTopics()))
+      ..add(_messaging.onTokenRefresh.listen((token) {
+        _webToken = token;
+        _syncTopics();
+      }));
+    await _syncTopics();
+  }
+
   /// On iOS, subscribing to topics throws until the APNs token is known.
   Future<void> _waitForApnsToken() async {
     if (defaultTargetPlatform != TargetPlatform.iOS) return;
@@ -96,7 +153,14 @@ class PushService {
       await s.cancel();
     }
     _subscriptions.clear();
-    if (kIsWeb) return;
+    if (kIsWeb) {
+      // A deleted token gets no pushes at all, whatever topics it was in.
+      if (_webToken != null) {
+        _webToken = null;
+        await _messaging.deleteToken().catchError((Object e) => debugPrint('Deleting web push token failed: $e'));
+      }
+      return;
+    }
     await (_syncQueue = _syncQueue.then((_) async {
       for (final topic in allTopics) {
         try {
@@ -119,6 +183,15 @@ class PushService {
           Get.the<EntitlementCubit>().state.isPremium,
         );
         try {
+          if (kIsWeb) {
+            final token = _webToken;
+            if (token == null) return;
+            // The server decides premium or free itself.
+            await FirebaseFunctions.instanceFor(region: 'us-central1')
+                .httpsCallable('syncWebPushTopics')
+                .call({'token': token, 'language': Get.the<LanguageCubit>().languageCode});
+            return;
+          }
           for (final topic in topics.subscribe) {
             await _messaging.subscribeToTopic(topic);
           }

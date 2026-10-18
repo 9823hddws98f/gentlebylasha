@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '/domain/blocs/user/user_bloc.dart';
 import '/domain/services/downloads_service.dart';
 import '/domain/services/language_cubit.dart';
+import '/domain/services/push_service.dart';
 import '/helper/global_functions.dart';
 import '/screens/about/about_screen.dart';
 import '/screens/downloads/downloads_screen.dart';
@@ -85,6 +86,19 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Tran
                   title: tr.reminders,
                   colors: colors,
                   onTap: () => pushName(context, RemindersScreen()),
+                ),
+              if (PushService.webPushAvailable)
+                _buildListTile(
+                  icon: Icons.notifications_rounded,
+                  title: PushService.instance.webPushOn ? tr.webPushOn : tr.webPushTurnOn,
+                  colors: colors,
+                  onTap: () async {
+                    if (PushService.instance.webPushOn) return;
+                    final on = await PushService.instance.enableWebPush();
+                    if (!mounted) return;
+                    if (!on) showToast(tr.webPushBlocked);
+                    setState(() {});
+                  },
                 ),
               _buildListTile(
                 icon: Icons.subscriptions,

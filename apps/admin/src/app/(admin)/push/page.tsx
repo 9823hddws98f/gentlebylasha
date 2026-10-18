@@ -111,7 +111,7 @@ export default function PushPage() {
       <header className="mb-8">
         <h1 className="font-display text-[2rem] leading-tight font-medium tracking-[-0.02em] text-ink">Pushberichten</h1>
         <p className="mt-1.5 max-w-prose text-[15px] text-ink-soft">
-          Gebruikers krijgen het bericht in de taal van hun app. Alleen voor de iOS- en Android-app.
+          Gebruikers krijgen het bericht in de taal van hun app: in de iOS- en Android-app, en in de webapp als ze daar meldingen hebben aangezet.
         </p>
       </header>
 

@@ -30,6 +30,16 @@ class AppLocalizationsNl extends AppLocalizations {
   String get changePassword => 'Verander wachtwoord';
 
   @override
+  String get webPushTurnOn => 'Meldingen aanzetten';
+
+  @override
+  String get webPushOn => 'Meldingen staan aan';
+
+  @override
+  String get webPushBlocked =>
+      'Meldingen zijn geblokkeerd in deze browser. Je kunt ze toestaan in de site-instellingen.';
+
+  @override
   String get reminders => 'Herinneringen';
 
   @override
