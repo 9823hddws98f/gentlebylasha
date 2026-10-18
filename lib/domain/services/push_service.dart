@@ -34,7 +34,15 @@ class PushService {
   /// Firebase console → Cloud Messaging → Web configuration → key pair.
   /// Without it (--dart-define=WEB_PUSH_VAPID_KEY=…) the web has no push.
   static const _vapidKey = String.fromEnvironment('WEB_PUSH_VAPID_KEY');
-  static bool get webPushAvailable => kIsWeb && _vapidKey.isNotEmpty;
+
+  /// Known after start(): some browsers (Safari on iPhone outside a home-screen
+  /// app) have no notifications at all.
+  static bool _webSupported = false;
+  static bool get webPushAvailable => kIsWeb && _vapidKey.isNotEmpty && _webSupported;
+
+  /// While the browser token is being fetched, so a double tap or a tap during
+  /// page load can't start web push twice.
+  Future<void>? _webStarting;
 
   /// The web app's FCM token while web push is on.
   String? _webToken;
@@ -71,10 +79,16 @@ class PushService {
   Future<void> start() async {
     if (_running) return;
     if (kIsWeb) {
-      // Never prompt on page load; only resume when the user allowed it before.
-      if (!webPushAvailable) return;
-      final settings = await _messaging.getNotificationSettings();
-      if (settings.authorizationStatus == AuthorizationStatus.authorized) await _startWeb();
+      if (_vapidKey.isEmpty) return;
+      try {
+        _webSupported = await _messaging.isSupported();
+        // Never prompt on page load; only resume when the user allowed it before.
+        if (!_webSupported) return;
+        final settings = await _messaging.getNotificationSettings();
+        if (settings.authorizationStatus == AuthorizationStatus.authorized) await _startWeb();
+      } catch (e) {
+        debugPrint('Web push start failed: $e');
+      }
       return;
     }
     _running = true;
@@ -101,27 +115,48 @@ class PushService {
   }
 
   /// Turns web push on from a tap in the settings (browsers want a user
-  /// gesture for the permission prompt). Returns whether it is on now.
-  Future<bool> enableWebPush() async {
-    if (!webPushAvailable) return false;
-    if (webPushOn) return true;
-    final settings = await _messaging.requestPermission();
-    if (settings.authorizationStatus != AuthorizationStatus.authorized) return false;
-    await _startWeb();
-    return webPushOn;
+  /// gesture for the permission prompt).
+  Future<WebPushResult> enableWebPush() async {
+    if (!webPushAvailable) return WebPushResult.failed;
+    if (webPushOn) return WebPushResult.on;
+    try {
+      if (_webStarting == null) {
+        final settings = await _messaging.requestPermission();
+        if (settings.authorizationStatus != AuthorizationStatus.authorized) {
+          return WebPushResult.blocked;
+        }
+      }
+      await _startWeb();
+    } catch (e) {
+      debugPrint('Turning on web push failed: $e');
+    }
+    return webPushOn ? WebPushResult.on : WebPushResult.failed;
   }
 
-  Future<void> _startWeb() async {
+  Future<void> _startWeb() =>
+      _webStarting ??= _doStartWeb().whenComplete(() => _webStarting = null);
+
+  Future<void> _doStartWeb() async {
+    if (_running) return;
     _running = true;
+    String? token;
     try {
-      _webToken = await _messaging.getToken(vapidKey: _vapidKey);
+      token = await _messaging.getToken(vapidKey: _vapidKey);
     } catch (e) {
       debugPrint('Web push token failed: $e');
     }
-    if (!_running || _webToken == null) {
+    if (!_running) {
+      // Signed out while the token was fetched: don't leave it subscribed.
+      if (token != null) await _deleteWebToken();
+      return;
+    }
+    if (token == null) {
       _running = false;
       return;
     }
+    _webToken = token;
+    // The web plugin has no token-refresh events; start() fetches the
+    // current token on every sign-in instead.
     _subscriptions
       // A focused tab gets no system notification; show it quietly in the app.
       ..add(FirebaseMessaging.onMessage.listen((m) {
@@ -129,13 +164,12 @@ class PushService {
         if (n != null) showToast([n.title, n.body].whereType<String>().join('\n'));
       }))
       ..add(Get.the<EntitlementCubit>().stream.listen((_) => _syncTopics()))
-      ..add(Get.the<LanguageCubit>().stream.listen((_) => _syncTopics()))
-      ..add(_messaging.onTokenRefresh.listen((token) {
-        _webToken = token;
-        _syncTopics();
-      }));
+      ..add(Get.the<LanguageCubit>().stream.listen((_) => _syncTopics()));
     await _syncTopics();
   }
+
+  Future<void> _deleteWebToken() =>
+      _messaging.deleteToken().catchError((Object e) => debugPrint('Deleting web push token failed: $e'));
 
   /// On iOS, subscribing to topics throws until the APNs token is known.
   Future<void> _waitForApnsToken() async {
@@ -157,7 +191,7 @@ class PushService {
       // A deleted token gets no pushes at all, whatever topics it was in.
       if (_webToken != null) {
         _webToken = null;
-        await _messaging.deleteToken().catchError((Object e) => debugPrint('Deleting web push token failed: $e'));
+        await _deleteWebToken();
       }
       return;
     }
@@ -221,3 +255,5 @@ class PushService {
     );
   }
 }
+
+enum WebPushResult { on, blocked, failed }

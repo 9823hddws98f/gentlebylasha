@@ -103,9 +103,15 @@ export const syncWebPushTopics = onCall(async (req) => {
   const premium = computeEntitlement(readSources(subscription.data()), new Date()).active;
   const { subscribe, unsubscribe } = topicsFor(language, premium);
   const messaging = getMessaging();
-  await Promise.all([
+  const results = await Promise.all([
     ...subscribe.map((topic) => messaging.subscribeToTopic(token, topic)),
     ...unsubscribe.map((topic) => messaging.unsubscribeFromTopic(token, topic)),
   ]);
+  // An invalid or expired token doesn't throw; it comes back as a failure.
+  const errors = results.flatMap((r) => r.errors.map((e) => e.error.code));
+  if (errors.length) {
+    logger.warn("syncWebPushTopics failed", { uid: req.auth.uid, errors });
+    throw new HttpsError("failed-precondition", "invalid-token");
+  }
   return { premium, topics: subscribe };
 });

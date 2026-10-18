@@ -146,6 +146,12 @@ abstract class AppLocalizations {
   /// **'Turn on notifications'**
   String get webPushTurnOn;
 
+  /// No description provided for @webPushFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications couldn\'t be turned on. Try again later.'**
+  String get webPushFailed;
+
   /// No description provided for @webPushOn.
   ///
   /// In en, this message translates to:

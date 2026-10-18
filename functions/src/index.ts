@@ -1,8 +1,8 @@
+import "./options.js";
 import { initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { FieldValue, getFirestore, Timestamp } from "firebase-admin/firestore";
 import { getStorage } from "firebase-admin/storage";
-import { setGlobalOptions } from "firebase-functions/v2";
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import { CallableRequest, HttpsError, onCall } from "firebase-functions/v2/https";
 import { logger } from "firebase-functions";
@@ -33,7 +33,6 @@ import { parseDownloadUrl, rotateDownloadUrl } from "./track-audio.js";
 import { APP_URL, STRIPE_SECRET_KEY } from "./stores/stripe.js";
 
 initializeApp();
-setGlobalOptions({ region: "us-central1", maxInstances: 10 });
 
 const db = getFirestore();
 

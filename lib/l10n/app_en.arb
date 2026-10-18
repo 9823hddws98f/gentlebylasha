@@ -7,6 +7,7 @@
   "downloads": "Downloads",
   "changePassword": "Change Password",
   "webPushTurnOn": "Turn on notifications",
+  "webPushFailed": "Notifications couldn't be turned on. Try again later.",
   "webPushOn": "Notifications are on",
   "webPushBlocked": "Notifications are blocked in this browser. You can allow them in the site settings.",
   "reminders": "Reminders",

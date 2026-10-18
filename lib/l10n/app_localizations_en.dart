@@ -33,6 +33,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get webPushTurnOn => 'Turn on notifications';
 
   @override
+  String get webPushFailed =>
+      'Notifications couldn\'t be turned on. Try again later.';
+
+  @override
   String get webPushOn => 'Notifications are on';
 
   @override

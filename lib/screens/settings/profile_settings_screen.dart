@@ -94,9 +94,10 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> with Tran
                   colors: colors,
                   onTap: () async {
                     if (PushService.instance.webPushOn) return;
-                    final on = await PushService.instance.enableWebPush();
+                    final result = await PushService.instance.enableWebPush();
                     if (!mounted) return;
-                    if (!on) showToast(tr.webPushBlocked);
+                    if (result == WebPushResult.blocked) showToast(tr.webPushBlocked);
+                    if (result == WebPushResult.failed) showToast(tr.webPushFailed);
                     setState(() {});
                   },
                 ),

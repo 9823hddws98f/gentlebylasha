@@ -33,6 +33,10 @@ class AppLocalizationsNl extends AppLocalizations {
   String get webPushTurnOn => 'Meldingen aanzetten';
 
   @override
+  String get webPushFailed =>
+      'Meldingen konden niet aan. Probeer het later nog eens.';
+
+  @override
   String get webPushOn => 'Meldingen staan aan';
 
   @override

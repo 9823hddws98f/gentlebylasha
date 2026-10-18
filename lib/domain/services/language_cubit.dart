@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -64,6 +65,17 @@ class LanguageCubit extends Cubit<LanguageState> {
     await (await SharedPreferences.getInstance()).setString(_prefsKey, language.languageCode);
 
     emit(LanguageState(Locale(language.languageCode)));
+    _saveToProfile(language.languageCode);
+  }
+
+  /// The server writes mails (welcome, account deletion) in the profile's language.
+  void _saveToProfile(String code) {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .update({'language': code}).catchError((Object e) => debugPrint('Saving the language failed: $e'));
   }
 
   @override
