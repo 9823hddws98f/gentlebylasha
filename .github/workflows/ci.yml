@@ -27,6 +27,12 @@ jobs:
       - run: npm run build
       - run: npm test
       - run: npm run test:rules
+      - name: Integration tests against the emulators
+        run: |
+          # The Functions emulator needs every secret; dummy values are enough
+          # (sending mail fails, which the functions tolerate).
+          printf '%s=dummy\n' SENDGRID_API_KEY STRIPE_SECRET_KEY STRIPE_WEBHOOK_SECRET APPLE_IAP_KEY APPLE_SIGNIN_KEY > .secret.local
+          npm run test:integration
 
   admin:
     name: Admin webapp

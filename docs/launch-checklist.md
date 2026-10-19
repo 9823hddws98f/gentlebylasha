@@ -146,6 +146,11 @@ Store-teksten, review notes en privacy-antwoorden staan klaar in [store-listing.
 - [ ] Zet de premium-tracks op premium.
 - [ ] Maak een codebatch voor Artazest en geef een testcode aan jezelf.
 - [ ] Maak een demo-account voor de App Review en geef het handmatig premium (Onbeperkt).
+- [ ] **Controleer de content.** Doe dit eerst, en daarna nog eens na grote wijzigingen. Het script leest alleen en schrijft niets.
+  ```bash
+  GOOGLE_APPLICATION_CREDENTIALS=key.json npm --prefix functions run check-content
+  ```
+  Bij "fout" kan de app een document niet lezen. Eén fout pagina- of rij-document maakt de hele app leeg, één foute track maakt zijn rij leeg. Oude content uit 2024 is nog nooit zo gecontroleerd.
 
 ## Stap 7 — Testen op echte toestellen (jij, Claude helpt)
 

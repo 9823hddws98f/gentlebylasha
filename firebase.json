@@ -51,7 +51,8 @@
         "test",
         "test-rules",
         "vitest*.ts",
-        "dev"
+        "dev",
+        "test-integration"
       ],
       "predeploy": [
         "npm --prefix \"$RESOURCE_DIR\" run build"

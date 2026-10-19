@@ -48,6 +48,8 @@ Alles draait tegen de Firebase-emulators met het demo-project `demo-gentle`. Daa
 
 Op het web raak je in emulatormodus je sessie kwijt bij herladen. Log dan opnieuw in.
 
+Integratietests van de Cloud Functions: `npm --prefix functions run test:integration` (nep-secrets uit stap 1 nodig). Dat start de emulators zelf, dus niet tegelijk met stap 2.
+
 ## Deploy
 
 - Backend: `firebase deploy --only firestore:rules,firestore:indexes,storage,functions`.
