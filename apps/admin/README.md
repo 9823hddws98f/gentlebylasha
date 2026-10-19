@@ -31,7 +31,7 @@ Zo test je zonder productiedata. De admin praat dan met het demo-project `demo-g
 ## Deployen op Vercel
 
 1. Importeer de repo in Vercel en zet **Root Directory** op `apps/admin`.
-2. Environment variables zijn niet nodig: de (publieke) Firebase-webconfig staat in `src/lib/firebase.ts`.
+2. Environment variables zijn niet nodig: de (publieke) Firebase-webconfig staat in `src/lib/firebase.ts`. Alleen voor App Check zet je later `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` (zie de lanceer-checklist).
 3. Voeg het domein van de admin toe in Firebase Console → Authentication → Settings → **Authorized domains** (bijv. het `*.vercel.app`-domein en een eigen domein).
 4. Zet in Firebase Console → Authentication → **Sign-in method** de providers **Email/Password** en **Google** aan.
 

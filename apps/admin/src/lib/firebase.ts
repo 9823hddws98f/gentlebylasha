@@ -1,4 +1,5 @@
 import { getApp, getApps, initializeApp } from "firebase/app";
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 import { connectFunctionsEmulator, getFunctions, httpsCallable } from "firebase/functions";
@@ -20,6 +21,20 @@ const config = {
 
 const fresh = getApps().length === 0;
 export const app = fresh ? initializeApp(config) : getApp();
+
+// Firebase App Check (docs/launch-checklist.md): only once the web app's
+// reCAPTCHA Enterprise key is set, never against the emulators, and only in
+// the browser. `next dev` uses a debug token instead: the browser console
+// prints it, register it under App Check → Apps → Manage debug tokens.
+const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+if (recaptchaSiteKey && !emulators && fresh && typeof window !== "undefined") {
+  if (process.env.NODE_ENV === "development") Object.assign(self, { FIREBASE_APPCHECK_DEBUG_TOKEN: true });
+  initializeAppCheck(app, {
+    provider: new ReCaptchaEnterpriseProvider(recaptchaSiteKey),
+    isTokenAutoRefreshEnabled: true,
+  });
+}
+
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);

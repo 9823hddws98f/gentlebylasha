@@ -125,8 +125,8 @@ Store-teksten, review notes en privacy-antwoorden staan klaar in [store-listing.
 
   | Project | Root directory | Opmerking |
   |---|---|---|
-  | Webapp | repo-root | Bouwt met `scripts/vercel-build-web.sh`. Env: `WEB_PUSH_VAPID_KEY`, en later `SITE_URL`/`APP_URL` |
-  | Admin | `apps/admin` | Geen env-variabelen nodig |
+  | Webapp | repo-root | Bouwt met `scripts/vercel-build-web.sh`. Env: `WEB_PUSH_VAPID_KEY`, en later `SITE_URL`/`APP_URL` en App Check (stap 10) |
+  | Admin | `apps/admin` | Geen env-variabelen nodig, tot App Check (stap 10) |
 
 - Daarna zet **jij** beide `*.vercel.app`-adressen bij Firebase Auth → Authorized domains.
 - Zodra de webapp-URL vaststaat: `APP_URL` in `functions/.env.sleeptales-4bac2` en in `website/build.py`.
@@ -178,8 +178,42 @@ Store-teksten, review notes en privacy-antwoorden staan klaar in [store-listing.
 - [ ] **Eigen domein:** koppel het aan de website, de webapp (`app.`) en de admin (`admin.`). Zet het daarna in Firebase Auth, `APP_URL`, `appLinkHost` en `Runner.entitlements`.
 - [ ] **Oude webapp `gentle-mu.vercel.app`:** offline halen.
 
+## Stap 10 — Firebase App Check (na de lancering)
+
+Met App Check zien Firestore, Storage, Auth en de functions of een verzoek van een echte Gentle-build komt. De code staat klaar, maar staat uit. Zolang je de stappen hieronder niet doet, verandert er niets.
+
+1. **Apps registreren (jij).** Firebase Console → App Check → Apps.
+   - [ ] **Android** (`com.mezz.gentle`): kies Play Integrity.
+     - Koppel in Play Console → App-integriteit de Play Integrity API aan het Cloud-project `sleeptales-4bac2`.
+     - Zet de SHA-256 van het Play App Signing-certificaat in Firebase (Projectinstellingen → de Android-app). Test je met builds die met de upload-sleutel zijn getekend, zet dan ook die SHA-256 erbij.
+   - [ ] **iOS** (`io.sleeptales.sleeptales`): registreer App Attest én DeviceCheck. Toestellen zonder App Attest vallen terug op DeviceCheck.
+     - App Attest vraagt alleen het team id.
+     - DeviceCheck vraagt een sleutel: Apple Developer → Keys → een nieuwe sleutel met DeviceCheck. Upload het `.p8`-bestand, met de key id en het team id.
+     - Zet bij de App ID (Identifiers) de capability **App Attest** aan. Laat het Claude weten: Claude zet dan `com.apple.developer.devicecheck.appattest-environment` op `production` in `ios/Runner/Runner.entitlements`.
+   - [ ] **Web**: kies reCAPTCHA Enterprise. De webapp en de admin zijn samen één Firebase-web-app, dus één sleutel.
+     - Google Cloud Console → Security → reCAPTCHA: zet de API aan en maak een sleutel van het type Website, zonder vinkje-uitdaging (score-based).
+     - Zet de domeinen van de webapp en de admin bij die sleutel: de twee `*.vercel.app`-adressen, en later `app.` en `admin.` van het eigen domein.
+     - Plak de site key in App Check.
+2. **Vercel (jij).** Zet de variabelen alleen voor de omgeving Production. Preview-adressen staan niet bij de reCAPTCHA-sleutel.
+   - [ ] Webapp: `APP_CHECK=true` en `RECAPTCHA_SITE_KEY=<site key>`.
+   - [ ] Admin: `NEXT_PUBLIC_RECAPTCHA_SITE_KEY=<dezelfde site key>`.
+   - [ ] Deploy beide opnieuw.
+3. **Store-builds met App Check (Claude).** Claude bouwt iOS en Android met `--dart-define=APP_CHECK=true`, bijvoorbeeld `flutter build appbundle --dart-define=APP_CHECK=true`. Jij dient die builds in.
+   - **Eigen testtoestellen** gebruiken in debug een debug-token. De app zegt in de log waar dat token staat: Android-logcat `DebugAppCheckProvider`, de Xcode-console `Firebase App Check Debug Token`, de browserconsole `App Check debug token`. Voeg het één keer toe onder App Check → Apps → ⋮ → Debugtokens beheren.
+   - Met `--dart-define=APP_CHECK_DEBUG_TOKEN=<token>` blijft hetzelfde token werken na een herinstallatie.
+   - De admin onder `next dev` print zijn debug-token ook in de browserconsole.
+   - De emulators gebruiken nooit App Check.
+4. **Meekijken (jij).** App Check → APIs toont per product hoeveel verzoeken geverifieerd zijn.
+   - Wacht tot bij Cloud Firestore, Cloud Storage en Authentication bijna alles "Verified" is.
+   - Oude app-versies zonder App Check tellen als "Outdated client". Die werken niet meer zodra je afdwingt. Wacht dus tot de meeste gebruikers de nieuwe versie hebben.
+5. **Afdwingen (jij).** App Check → APIs → per product **Enforce**: eerst Cloud Firestore, dan Cloud Storage, dan Authentication.
+   - Het duurt tot 15 minuten voordat het werkt.
+   - Gaat er iets mis, zet het dan op dezelfde plek weer uit.
+6. **Callable functions (Claude).** Die dwing je af in de code, niet in de console: `enforceAppCheck: true` per callable in `functions/src`, daarna een deploy. `stripeWebhook` en `appleNotifications` blijven zonder App Check, want Stripe en Apple roepen die aan, niet de app.
+
+reCAPTCHA Enterprise kost geld boven een gratis maandquotum. Het budgetalarm uit stap 2 waarschuwt je op tijd.
+
 ## Later
 
-- **Firebase App Check.** Hiervoor zijn reCAPTCHA Enterprise, App Attest en Play Integrity in de console nodig.
 - **FlutterFire 5 (Firebase iOS SDK 13, Android BoM 35).** Dit vraagt Android `minSdk` 24 in plaats van 23, dus Android 6 valt dan af. De app zit nu op de 4.x-lijn.
 - **audio_session via Swift Package Manager.** Blijft nu bewust onder 0.1.24 en dus op CocoaPods, zodat de Podfile de microfooncode eruit laat. Via SPM kan dat alleen met `AUDIO_SESSION_MICROPHONE=0` als omgevingsvariabele bij elke build. Dit moet opgelost zijn voordat Flutter CocoaPods laat vallen.

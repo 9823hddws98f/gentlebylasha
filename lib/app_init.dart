@@ -17,6 +17,7 @@ import '/domain/cubits/in_app_purchases/iap_cubit.dart';
 import '/domain/cubits/favorite_playlists.dart';
 import '/domain/cubits/favorite_tracks.dart';
 import '/domain/cubits/pages/pages_cubit.dart';
+import '/domain/services/app_check.dart';
 import '/domain/services/push_service.dart';
 import '/domain/services/reminder_service.dart';
 import '/firebase_options.dart';
@@ -57,6 +58,8 @@ class AppInit {
     final options = DefaultFirebaseOptions.currentPlatform;
     if (!useEmulators) {
       await Firebase.initializeApp(options: options);
+      // Off unless built with APP_CHECK=true; never in emulator mode.
+      await AppCheckSetup.activate();
       return;
     }
     // No measurementId: Analytics can't run against a demo project.
