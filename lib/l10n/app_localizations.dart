@@ -1208,7 +1208,7 @@ abstract class AppLocalizations {
   /// **'See all'**
   String get seeAll;
 
-  /// Length of a track, e.g. 12:30 min.
+  /// Length of a track in whole minutes, e.g. 12 min.
   ///
   /// In en, this message translates to:
   /// **'{duration} min'**

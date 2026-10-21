@@ -70,7 +70,7 @@ class AudioBlockItem extends StatelessWidget with Translation {
           showDuration
               ? ItemTag(
                   icon: Icons.play_arrow_rounded,
-                  text: tr.durationMinutes(track.durationString),
+                  text: tr.durationMinutes('${track.roundedMinutes}'),
                   color: track.dominantColor,
                 )
               : ItemTag(

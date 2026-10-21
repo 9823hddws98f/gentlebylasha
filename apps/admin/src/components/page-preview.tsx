@@ -50,9 +50,9 @@ const APP_TEXT = {
 const localized = (value: string, nl: string, lang: PreviewLanguage) => (lang === "nl" && nl.trim() ? nl : value);
 
 /** AudioTrack.durationString: whole minutes and seconds, rounded down. */
+/** Whole minutes, at least 1, as the app's cards show them ("31 min"). */
 function appDuration(ms: number) {
-  const s = Math.floor(ms / 1000);
-  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+  return String(Math.max(1, Math.round(ms / 60_000)));
 }
 
 const hex = (argb: number) => `#${(argb & 0xffffff).toString(16).padStart(6, "0")}`;

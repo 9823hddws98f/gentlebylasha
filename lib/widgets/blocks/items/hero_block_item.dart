@@ -61,7 +61,7 @@ class HeroBlockItem extends StatelessWidget with Translation {
           ),
           ItemTag(
             icon: Icons.play_arrow_rounded,
-            text: tr.durationMinutes(track.durationString),
+            text: tr.durationMinutes('${track.roundedMinutes}'),
             color: track.dominantColor,
           ),
         ],

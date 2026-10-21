@@ -33,6 +33,9 @@ class AudioTrack {
   String get durationString =>
       '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
 
+  /// Whole minutes for cards ("31 min"); at least 1.
+  int get roundedMinutes => (duration.inSeconds / 60).round().clamp(1, 1 << 30);
+
   AudioTrack({
     required this.id,
     required String title,

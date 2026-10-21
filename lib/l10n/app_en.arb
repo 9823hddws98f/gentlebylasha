@@ -228,11 +228,11 @@
   "seeAll": "See all",
   "durationMinutes": "{duration} min",
   "@durationMinutes": {
-    "description": "Length of a track, e.g. 12:30 min.",
+    "description": "Length of a track in whole minutes, e.g. 12 min.",
     "placeholders": {
       "duration": {
         "type": "String",
-        "example": "12:30"
+        "example": "12"
       }
     }
   },
