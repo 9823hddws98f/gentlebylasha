@@ -5,7 +5,7 @@ nav: home
 header: overlay
 -->
 <section class="hero">
-  <div class="hero-media">
+  <div class="hero-media is-mirrored">
     <img src="assets/img/meer-nacht-2400.jpg" srcset="assets/img/meer-nacht-1200.jpg 1200w, assets/img/meer-nacht-2400.jpg 2400w" sizes="100vw" alt="Een bootje op een stil meer onder een heldere sterrenhemel" fetchpriority="high" width="2400" height="1600">
   </div>
   <div class="wrap">
@@ -56,29 +56,42 @@ header: overlay
 </section>
 
 <section class="section" style="padding-top:0" aria-labelledby="avond-titel">
-  <div class="wrap evening">
-    <div class="evening-head" data-reveal>
-      <h2 class="h2" id="avond-titel">Een avond <em>met Gentle</em></h2>
-      <p class="lead">Slapen begint niet als je je ogen dichtdoet. Gentle helpt je de avond rustig af te bouwen.</p>
+  <div class="wrap flow" data-flow>
+    <div class="flow-text">
+      <div data-reveal>
+        <h2 class="h2" id="avond-titel">Een avond <em>met Gentle</em></h2>
+        <p class="lead">Slapen begint niet als je je ogen dichtdoet. Gentle helpt je de avond rustig af te bouwen.</p>
+      </div>
+      <ol class="flow-steps">
+        <li class="flow-step is-active" data-step="0">
+          <time>21:45</time>
+          <h3>Een zachte herinnering</h3>
+          <p>Op het tijdstip dat jij kiest laat Gentle weten dat het tijd is om af te bouwen. Daarna kies je wat bij je avond past.</p>
+          <figure class="step-shot"><img src="assets/img/app-home-nl-1170.jpg" sizes="240px" alt="Het startscherm van de Gentle-app met het slaapverhaal Het stille meer" loading="lazy" width="1170" height="2532"></figure>
+        </li>
+        <li class="flow-step" data-step="1">
+          <time>22:00</time>
+          <h3>Ogen dicht, luisteren</h3>
+          <p>Een kalme stem of zachte regen. Leg je telefoon weg: Gentle speelt door, ook met je scherm uit.</p>
+          <figure class="step-shot"><img src="assets/img/app-player-nl-1170.jpg" sizes="240px" alt="De speler van Gentle met een sterrenhemel en de knoppen om te pauzeren" loading="lazy" width="1170" height="2532"></figure>
+        </li>
+        <li class="flow-step" data-step="2">
+          <time>22:20</time>
+          <h3>Het geluid stopt vanzelf</h3>
+          <p>Met de slaaptimer stopt Gentle na de tijd die jij kiest. Het einde van het verhaal haal je meestal niet.</p>
+          <figure class="step-shot"><img src="assets/img/app-timer-nl-1170.jpg" sizes="240px" alt="De slaaptimer van Gentle, ingesteld op een uur" loading="lazy" width="1170" height="2532"></figure>
+        </li>
+      </ol>
     </div>
-    <ol class="timeline">
-      <li data-reveal>
-        <time>21:45</time>
-        <div><h3>Een zachte herinnering</h3><p>Op het tijdstip dat jij kiest laat Gentle weten dat het tijd is om af te bouwen.</p></div>
-      </li>
-      <li data-reveal>
-        <time>22:00</time>
-        <div><h3>Vijf minuten ademhalen</h3><p>Een korte meditatie om de dag los te laten. Je hoeft niets te kunnen.</p></div>
-      </li>
-      <li data-reveal>
-        <time>22:10</time>
-        <div><h3>Een slaapverhaal</h3><p>Een kalme stem, een langzaam verhaal. Het einde haal je meestal niet.</p></div>
-      </li>
-      <li data-reveal>
-        <time>07:00</time>
-        <div><h3>Hoe heb je geslapen?</h3><p>Een korte check-in in de ochtend, zodat je ziet wat jou helpt.</p></div>
-      </li>
-    </ol>
+    <div class="flow-phone" aria-hidden="true">
+      <div class="phone">
+        <div class="phone-screen">
+          <img class="is-active" data-shot="0" src="assets/img/app-home-nl-1170.jpg" sizes="320px" alt="" loading="lazy" width="1170" height="2532">
+          <img data-shot="1" src="assets/img/app-player-nl-1170.jpg" sizes="320px" alt="" loading="lazy" width="1170" height="2532">
+          <img data-shot="2" src="assets/img/app-timer-nl-1170.jpg" sizes="320px" alt="" loading="lazy" width="1170" height="2532">
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -111,8 +124,20 @@ header: overlay
       <div class="feature" data-reveal style="--i:1"><i class="ph-light ph-download-simple" aria-hidden="true"></i><h3>Ook offline</h3><p>Download je favorieten en luister zonder internet, ook in vliegtuigmodus.</p></div>
       <div class="feature" data-reveal style="--i:2"><i class="ph-light ph-bell-simple" aria-hidden="true"></i><h3>Herinneringen</h3><p>Kies je eigen bedtijd. Gentle helpt je eraan denken, zonder te zeuren.</p></div>
       <div class="feature" data-reveal><i class="ph-light ph-heart" aria-hidden="true"></i><h3>Jouw favorieten</h3><p>Bewaar verhalen en playlists die werken, zodat je niet hoeft te zoeken.</p></div>
-      <div class="feature" data-reveal style="--i:1"><i class="ph-light ph-smiley" aria-hidden="true"></i><h3>Korte check-ins</h3><p>Hoe voel je je, hoe sliep je? Een paar tikken, meer is het niet.</p></div>
+      <div class="feature" data-reveal style="--i:1"><i class="ph-light ph-globe-simple" aria-hidden="true"></i><h3>In jouw taal</h3><p>De hele app in het Nederlands of het Engels. Je kiest zelf, of Gentle volgt je telefoon.</p></div>
       <div class="feature" data-reveal style="--i:2"><i class="ph-light ph-devices" aria-hidden="true"></i><h3>Overal hetzelfde</h3><p>Op iPhone, Android en in de browser. Je account en favorieten gaan mee.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight" style="padding-top:0" aria-labelledby="artazest-titel">
+  <div class="wrap">
+    <div class="gift" data-reveal>
+      <div>
+        <h2 class="h3" id="artazest-titel">Een kunstwerk van Artazest gekocht?</h2>
+        <p>Bij je bestelling zit een persoonlijke code. Maak een account, vul de code in onder Profiel en luister alles.</p>
+      </div>
+      <a class="btn btn-quiet" href="{{APP_URL}}">Code invoeren</a>
     </div>
   </div>
 </section>

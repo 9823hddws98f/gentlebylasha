@@ -68,6 +68,22 @@
     revealEls.forEach(function (el) { el.classList.add("is-in"); });
   }
 
+  /* ---------- Evening flow: the phone shows the screen of the step in view ---------- */
+  document.querySelectorAll("[data-flow]").forEach(function (flow) {
+    var steps = flow.querySelectorAll("[data-step]");
+    var shots = flow.querySelectorAll("[data-shot]");
+    if (!("IntersectionObserver" in window) || !steps.length) return;
+    var show = function (n) {
+      steps.forEach(function (s) { s.classList.toggle("is-active", s.getAttribute("data-step") === n); });
+      shots.forEach(function (s) { s.classList.toggle("is-active", s.getAttribute("data-shot") === n); });
+    };
+    // A step counts as current once it crosses the middle band of the viewport.
+    var stepIo = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) { if (entry.isIntersecting) show(entry.target.getAttribute("data-step")); });
+    }, { rootMargin: "-45% 0px -45% 0px" });
+    steps.forEach(function (s) { stepIo.observe(s); });
+  });
+
   /* ---------- Range fill (webkit track) ---------- */
   function paintRange(input) {
     var min = +input.min || 0, max = +input.max || 100;

@@ -63,7 +63,7 @@
 </div>
 <main id="main">
 <section class="hero">
-  <div class="hero-media">
+  <div class="hero-media is-mirrored">
     <picture><source type="image/webp" srcset="../assets/img/meer-nacht-640.webp 640w, ../assets/img/meer-nacht-1200.webp 1200w, ../assets/img/meer-nacht-2400.webp 2400w" sizes="100vw"><img src="../assets/img/meer-nacht-1200.jpg" srcset="../assets/img/meer-nacht-640.jpg 640w, ../assets/img/meer-nacht-1200.jpg 1200w, ../assets/img/meer-nacht-2400.jpg 2400w" sizes="100vw" alt="A small boat on a still lake under a clear starry sky" fetchpriority="high" width="2400" height="1600"></picture>
   </div>
   <div class="wrap">
@@ -114,29 +114,42 @@
 </section>
 
 <section class="section" style="padding-top:0" aria-labelledby="evening-title">
-  <div class="wrap evening">
-    <div class="evening-head" data-reveal>
-      <h2 class="h2" id="evening-title">An evening <em>with Gentle</em></h2>
-      <p class="lead">Sleep doesn't start when you close your eyes. Gentle helps you slow the evening down.</p>
+  <div class="wrap flow" data-flow>
+    <div class="flow-text">
+      <div data-reveal>
+        <h2 class="h2" id="evening-title">An evening <em>with Gentle</em></h2>
+        <p class="lead">Sleep doesn't start when you close your eyes. Gentle helps you slow the evening down.</p>
+      </div>
+      <ol class="flow-steps">
+        <li class="flow-step is-active" data-step="0">
+          <time>21:45</time>
+          <h3>A gentle reminder</h3>
+          <p>At a time you choose, Gentle lets you know it's time to start winding down. Then you pick whatever suits your evening.</p>
+          <figure class="step-shot"><picture><source type="image/webp" srcset="../assets/img/app-home-en-640.webp 640w, ../assets/img/app-home-en-1170.webp 1170w" sizes="240px"><img src="../assets/img/app-home-en-1170.jpg" srcset="../assets/img/app-home-en-640.jpg 640w, ../assets/img/app-home-en-1170.jpg 1170w" sizes="240px" alt="The Gentle home screen with the sleep story The quiet lake" loading="lazy" width="1170" height="2532"></picture></figure>
+        </li>
+        <li class="flow-step" data-step="1">
+          <time>22:00</time>
+          <h3>Eyes closed, just listen</h3>
+          <p>A calm voice or soft rain. Put your phone away: Gentle keeps playing, even with the screen off.</p>
+          <figure class="step-shot"><picture><source type="image/webp" srcset="../assets/img/app-player-en-640.webp 640w, ../assets/img/app-player-en-1170.webp 1170w" sizes="240px"><img src="../assets/img/app-player-en-1170.jpg" srcset="../assets/img/app-player-en-640.jpg 640w, ../assets/img/app-player-en-1170.jpg 1170w" sizes="240px" alt="The Gentle player with a starry sky and the pause controls" loading="lazy" width="1170" height="2532"></picture></figure>
+        </li>
+        <li class="flow-step" data-step="2">
+          <time>22:20</time>
+          <h3>The sound stops by itself</h3>
+          <p>With the sleep timer, Gentle stops after the time you choose. Most nights you won't hear the ending.</p>
+          <figure class="step-shot"><picture><source type="image/webp" srcset="../assets/img/app-timer-en-640.webp 640w, ../assets/img/app-timer-en-1170.webp 1170w" sizes="240px"><img src="../assets/img/app-timer-en-1170.jpg" srcset="../assets/img/app-timer-en-640.jpg 640w, ../assets/img/app-timer-en-1170.jpg 1170w" sizes="240px" alt="The Gentle sleep timer, set to one hour" loading="lazy" width="1170" height="2532"></picture></figure>
+        </li>
+      </ol>
     </div>
-    <ol class="timeline">
-      <li data-reveal>
-        <time>21:45</time>
-        <div><h3>A gentle reminder</h3><p>At a time you choose, Gentle lets you know it's time to start winding down.</p></div>
-      </li>
-      <li data-reveal>
-        <time>22:00</time>
-        <div><h3>Five minutes of breathing</h3><p>A short meditation to let the day go. No experience needed.</p></div>
-      </li>
-      <li data-reveal>
-        <time>22:10</time>
-        <div><h3>A sleep story</h3><p>A calm voice, a slow story. Most nights you won't hear the ending.</p></div>
-      </li>
-      <li data-reveal>
-        <time>07:00</time>
-        <div><h3>How did you sleep?</h3><p>A quick morning check-in, so you can see what helps you.</p></div>
-      </li>
-    </ol>
+    <div class="flow-phone" aria-hidden="true">
+      <div class="phone">
+        <div class="phone-screen">
+          <picture><source type="image/webp" srcset="../assets/img/app-home-en-640.webp 640w, ../assets/img/app-home-en-1170.webp 1170w" sizes="320px"><img class="is-active" data-shot="0" src="../assets/img/app-home-en-1170.jpg" srcset="../assets/img/app-home-en-640.jpg 640w, ../assets/img/app-home-en-1170.jpg 1170w" sizes="320px" alt="" loading="lazy" width="1170" height="2532"></picture>
+          <picture><source type="image/webp" srcset="../assets/img/app-player-en-640.webp 640w, ../assets/img/app-player-en-1170.webp 1170w" sizes="320px"><img data-shot="1" src="../assets/img/app-player-en-1170.jpg" srcset="../assets/img/app-player-en-640.jpg 640w, ../assets/img/app-player-en-1170.jpg 1170w" sizes="320px" alt="" loading="lazy" width="1170" height="2532"></picture>
+          <picture><source type="image/webp" srcset="../assets/img/app-timer-en-640.webp 640w, ../assets/img/app-timer-en-1170.webp 1170w" sizes="320px"><img data-shot="2" src="../assets/img/app-timer-en-1170.jpg" srcset="../assets/img/app-timer-en-640.jpg 640w, ../assets/img/app-timer-en-1170.jpg 1170w" sizes="320px" alt="" loading="lazy" width="1170" height="2532"></picture>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -169,8 +182,20 @@
       <div class="feature" data-reveal style="--i:1"><i class="ph-light ph-download-simple" aria-hidden="true"></i><h3>Works offline</h3><p>Download your favourites and listen without internet, even in flight mode.</p></div>
       <div class="feature" data-reveal style="--i:2"><i class="ph-light ph-bell-simple" aria-hidden="true"></i><h3>Reminders</h3><p>Choose your own bedtime. Gentle helps you remember it, without nagging.</p></div>
       <div class="feature" data-reveal><i class="ph-light ph-heart" aria-hidden="true"></i><h3>Your favourites</h3><p>Save the stories and playlists that work, so you never have to search.</p></div>
-      <div class="feature" data-reveal style="--i:1"><i class="ph-light ph-smiley" aria-hidden="true"></i><h3>Quick check-ins</h3><p>How do you feel, how did you sleep? A few taps, nothing more.</p></div>
+      <div class="feature" data-reveal style="--i:1"><i class="ph-light ph-globe-simple" aria-hidden="true"></i><h3>In your language</h3><p>The whole app in English or Dutch. Choose yourself, or let Gentle follow your phone.</p></div>
       <div class="feature" data-reveal style="--i:2"><i class="ph-light ph-devices" aria-hidden="true"></i><h3>The same everywhere</h3><p>On iPhone, Android and in your browser. Your account and favourites come along.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight" style="padding-top:0" aria-labelledby="artazest-title">
+  <div class="wrap">
+    <div class="gift" data-reveal>
+      <div>
+        <h2 class="h3" id="artazest-title">Bought an artwork from Artazest?</h2>
+        <p>Your order comes with a personal code. Create an account, enter the code under Profile and listen to everything.</p>
+      </div>
+      <a class="btn btn-quiet" href="https://gentle-mu.vercel.app">Enter your code</a>
     </div>
   </div>
 </section>
