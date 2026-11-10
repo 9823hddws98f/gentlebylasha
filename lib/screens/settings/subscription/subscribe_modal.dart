@@ -8,6 +8,7 @@ import '/domain/cubits/entitlement_cubit.dart';
 import '/domain/cubits/in_app_purchases/iap_cubit.dart';
 import '/domain/cubits/in_app_purchases/iap_service.dart';
 import '/domain/cubits/in_app_purchases/product.dart';
+import '/domain/services/cloud_functions_service.dart';
 import '/domain/services/language_cubit.dart';
 import '/helper/global_functions.dart';
 import '/utils/app_config.dart';
@@ -94,7 +95,7 @@ class _SubscribeModalState extends State<SubscribeModal> with Translation {
 
   /// The server refuses a second subscription; say where the current one is.
   String _checkoutError(FirebaseFunctionsException e) =>
-      switch (PurchasesApi.alreadySubscribedSource(e.message)) {
+      switch (PurchasesApi.alreadySubscribedSource(e.reason)) {
         'apple' => tr.alreadySubscribedStore('App Store'),
         'google' => tr.alreadySubscribedStore('Google Play'),
         null => tr.purchaseFailed,

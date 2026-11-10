@@ -48,6 +48,8 @@ class _SignupSheetState extends State<SignupSheet> with Translation {
                 child: Text('${tr.name}:', style: TextStyle(fontSize: 16)),
               ),
               TextFormField(
+                textCapitalization: TextCapitalization.words,
+                textInputAction: TextInputAction.next,
                 decoration: InputDecoration(hintText: tr.name),
                 validator: (value) => value?.isEmpty ?? true ? tr.enterName : null,
                 onSaved: (value) => setState(() => _name = value),

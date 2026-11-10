@@ -8,6 +8,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_android/billing_client_wrappers.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
+import '/domain/services/cloud_functions_service.dart';
 import '/domain/services/interfaces/in_app_purchases.dart';
 import '/helper/account_token.dart';
 import '/utils/get.dart';
@@ -189,7 +190,7 @@ class IAPCubit extends Cubit<IAPState> {
         debugPrint('verifyPurchase failed: ${e.code} ${e.message}');
         // A purchase of another account never succeeds: finish it. On other
         // errors leave it open so the store delivers it again.
-        if (e.message != 'linked-to-other-account') return IAPError.verificationFailed;
+        if (e.reason != 'linked-to-other-account') return IAPError.verificationFailed;
         await _completeAll(transactions);
         return IAPError.otherAccount;
       } catch (e) {

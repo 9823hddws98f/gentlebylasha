@@ -49,14 +49,16 @@ class _AccountDeleteDialog2State extends State<AccountDeleteDialog2> with Transl
                 InkWell(onTap: _resend, child: Text(tr.resend)),
               ],
             ),
-            Row(
+            // Wraps: both buttons don't fit next to each other on a phone.
+            Wrap(
+              alignment: WrapAlignment.end,
+              spacing: 8,
+              runSpacing: 8,
               children: [
-                const Spacer(),
                 TxButton.outlined(
                   onPressVoid: () => Navigator.of(context).pop(),
                   label: Text(tr.cancel),
                 ),
-                const SizedBox(width: 8),
                 TxButton.filled(onPress: _submit, label: Text(tr.deleteAccount)),
               ],
             ),
@@ -69,7 +71,7 @@ class _AccountDeleteDialog2State extends State<AccountDeleteDialog2> with Transl
       await CloudFunctionsService.requestAccountDeletion();
       showToast(tr.newCodeSent);
     } on FirebaseFunctionsException catch (e) {
-      showToast(e.message == 'wait-before-resend'
+      showToast(e.reason == 'wait-before-resend'
           ? tr.waitBeforeResend
           : tr.codeSendFailed);
     }
@@ -81,7 +83,7 @@ class _AccountDeleteDialog2State extends State<AccountDeleteDialog2> with Transl
       await CloudFunctionsService.deleteUser(_codeController.text);
     } on FirebaseFunctionsException catch (e) {
       if (!mounted) return false;
-      setState(() => _error = switch (e.message) {
+      setState(() => _error = switch (e.reason) {
             'wrong-code' => tr.verificationCodeWrong,
             'expired' => tr.verificationCodeExpired,
             'too-many-attempts' => tr.verificationTooManyAttempts,

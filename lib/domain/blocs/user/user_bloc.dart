@@ -31,7 +31,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           return;
         }
 
-        var user = await _usersService.getOrCreate(authUser);
+        var user = await _loadProfile(authUser);
+        if (user == null) {
+          emit(UserInitial());
+          return;
+        }
         // After a confirmed email change Auth has the new address; copy it to the profile.
         final authEmail = authUser.email;
         if (authEmail != null && authEmail.isNotEmpty && authEmail != user.email) {
@@ -64,6 +68,20 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         emit(UserInitial().copyWith(user: event.user));
       }
     });
+  }
+
+  /// The profile, or null when Firestore no longer accepts this session (for
+  /// example a disabled account). Signs out then; otherwise the app would stay
+  /// on the start screen forever.
+  Future<AppUser?> _loadProfile(User authUser) async {
+    try {
+      return await _usersService.getOrCreate(authUser);
+    } on FirebaseException catch (e) {
+      if (e.code != 'permission-denied') rethrow;
+      debugPrint('Profile refused, signing out: $e');
+      await FirebaseAuth.instance.signOut();
+      return null;
+    }
   }
 
   @override

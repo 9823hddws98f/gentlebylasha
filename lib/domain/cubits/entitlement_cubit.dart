@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 
 /// Premium access of the signed-in user, read from `subscriptions/{uid}`.
 /// That document is written only by Cloud Functions (store purchase, Stripe
@@ -93,6 +94,23 @@ class EntitlementCubit extends Cubit<Entitlement> {
           (snap) => emit(Entitlement.fromMap(snap.data())),
           onError: (_) => emit(const Entitlement()),
         );
+  }
+
+  /// Reads the document from the server right away, for callers that know it
+  /// just changed (a redeemed code) and shouldn't wait for the listener.
+  Future<void> refresh() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+    try {
+      final snap = await FirebaseFirestore.instance
+          .collection('subscriptions')
+          .doc(uid)
+          .get(const GetOptions(source: Source.server));
+      emit(Entitlement.fromMap(snap.data()));
+    } catch (e) {
+      // The listener still delivers it, just later.
+      debugPrint('Refreshing premium failed: $e');
+    }
   }
 
   Future<void> reset() async {

@@ -72,42 +72,52 @@ class _OnBoarding01ScreenState extends State<OnBoarding01Screen> with Translatio
             child: ListView.separated(
               itemCount: _options.length,
               separatorBuilder: (context, index) => const SizedBox(height: 12),
-              itemBuilder: (context, index) => Material(
-                child: InkWell(
-                  borderRadius: AppTheme.smallBorderRadius,
-                  onTap: () => setState(() {
-                    if (options.contains(_options[index])) {
-                      options.remove(_options[index]);
-                    } else {
-                      options.add(_options[index]);
-                    }
-                  }),
-                  child: Ink(
-                    decoration: BoxDecoration(
-                      borderRadius: AppTheme.smallBorderRadius,
-                      color: options.contains(_options[index])
-                          ? colors.surfaceContainerHighest
-                          : colors.surfaceContainerLowest,
-                    ),
-                    height: 48,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            _icons[index],
-                            color: colors.onSurface,
-                            height: 24,
-                            width: 24,
-                          ),
-                          SizedBox(width: 16),
-                          Text(_label(tr, _options[index])),
-                        ],
+              itemBuilder: (context, index) {
+                final selected = options.contains(_options[index]);
+                return Material(
+                  child: InkWell(
+                    borderRadius: AppTheme.smallBorderRadius,
+                    onTap: () => setState(() {
+                      if (selected) {
+                        options.remove(_options[index]);
+                      } else {
+                        options.add(_options[index]);
+                      }
+                    }),
+                    child: Ink(
+                      decoration: BoxDecoration(
+                        borderRadius: AppTheme.smallBorderRadius,
+                        // Light theme's surface containers are the same grey, so
+                        // the selection needs the accent colour to be visible.
+                        color: selected
+                            ? colors.primary.withValues(alpha: 0.12)
+                            : colors.surfaceContainerLowest,
+                        border: Border.all(
+                          color: selected ? colors.primary : Colors.transparent,
+                          width: 1.5,
+                        ),
+                      ),
+                      height: 48,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              _icons[index],
+                              color: colors.onSurface,
+                              height: 24,
+                              width: 24,
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(child: Text(_label(tr, _options[index]))),
+                            if (selected) Icon(Icons.check, color: colors.primary, size: 20),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
           ),
           const SizedBox(height: 12),

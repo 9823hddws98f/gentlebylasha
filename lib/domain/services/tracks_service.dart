@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 import '/domain/models/block_item/audio_track.dart';
 import '/utils/common_extensions.dart';
@@ -62,6 +63,14 @@ class TracksService {
     });
   }
 
+  /// Whether a track document matches [normalizedQuery] (lowercase). Looks at
+  /// the Dutch title too, since that is the title Dutch users see.
+  @visibleForTesting
+  static bool matchesSearch(Map<String, dynamic> data, String normalizedQuery) =>
+      const ['title', 'titleNl', 'speaker', 'writer'].any(
+        (field) => data[field]?.toString().toLowerCase().contains(normalizedQuery) ?? false,
+      );
+
   Future<List<AudioTrack>> searchTracks(String query) async {
     _analytics.logSearch(query);
 
@@ -75,16 +84,8 @@ class TracksService {
           .limit(100) // Adjust limit as needed
           .get();
 
-      final filteredDocs = snapshot.docs.where((doc) {
-        final data = doc.data();
-        final title = data['title']?.toString().toLowerCase() ?? '';
-        final speaker = data['speaker']?.toString().toLowerCase() ?? '';
-        final writer = data['writer']?.toString().toLowerCase() ?? '';
-
-        return title.contains(normalizedQuery) ||
-            speaker.contains(normalizedQuery) ||
-            writer.contains(normalizedQuery);
-      }).toList();
+      final filteredDocs =
+          snapshot.docs.where((doc) => matchesSearch(doc.data(), normalizedQuery)).toList();
 
       return filteredDocs.map((doc) => AudioTrack.fromMap(doc.data())).toList();
     } catch (e) {

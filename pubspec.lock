@@ -877,14 +877,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.0"
-  number_ticker:
-    dependency: "direct main"
-    description:
-      name: number_ticker
-      sha256: "837f3e1d0878c50893c35176b3685408511ba430fa31e94b6ce6bffe4c7f76d4"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.2+1"
   path:
     dependency: transitive
     description:

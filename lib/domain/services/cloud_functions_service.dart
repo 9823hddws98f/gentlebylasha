@@ -1,5 +1,14 @@
 import 'package:cloud_functions/cloud_functions.dart';
 
+/// The reason our functions put in an error's message. On the web the SDK
+/// appends the HTTP status to it (`not-found [400]`).
+String? callableErrorReason(String? message) =>
+    message?.replaceFirst(RegExp(r' \[\d+\]$'), '');
+
+extension CallableErrorReason on FirebaseFunctionsException {
+  String? get reason => callableErrorReason(message);
+}
+
 class CloudFunctionsService {
   /// Must match `setGlobalOptions({region})` in functions/src/index.ts.
   static final _functions = FirebaseFunctions.instanceFor(region: 'us-central1');

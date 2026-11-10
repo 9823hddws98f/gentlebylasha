@@ -22,6 +22,9 @@ class AppScaffold extends StatelessWidget {
     // Screens read their texts through `tr` without a BuildContext; depending on
     // the locale here rebuilds every screen (title and body) after a language switch.
     Localizations.localeOf(context);
+    // MyApp.isMobile reads the navigator's context; depend on the size here so a
+    // resized browser window switches between the phone and desktop layout.
+    MediaQuery.sizeOf(context);
     final isMobile = MyApp.isMobile;
     return Scaffold(
       appBar: appBar?.call(context, isMobile) as PreferredSizeWidget?,

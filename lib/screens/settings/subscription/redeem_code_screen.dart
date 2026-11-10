@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
+import '/domain/cubits/entitlement_cubit.dart';
 import '/domain/services/cloud_functions_service.dart';
 import '/domain/services/language_cubit.dart';
 import '/utils/app_theme.dart';
 import '/utils/command_trigger.dart';
+import '/utils/get.dart';
 import '/utils/tx_button.dart';
 import '/widgets/app_scaffold/adaptive_app_bar.dart';
 import '/widgets/app_scaffold/app_scaffold.dart';
@@ -39,6 +41,8 @@ class _RedeemCodeScreenState extends State<RedeemCodeScreen> with Translation {
     setState(() => _error = _success = null);
     try {
       final expiresAt = await CloudFunctionsService.redeemCode(code);
+      // Premium is active the moment "Done!" shows, not when the listener catches up.
+      await Get.the<EntitlementCubit>().refresh();
       if (!mounted) return true;
       final locale = Localizations.localeOf(context).toLanguageTag();
       setState(() => _success = expiresAt == null
@@ -47,7 +51,7 @@ class _RedeemCodeScreenState extends State<RedeemCodeScreen> with Translation {
       return true;
     } on FirebaseFunctionsException catch (e) {
       if (!mounted) return false;
-      setState(() => _error = switch (e.message) {
+      setState(() => _error = switch (e.reason) {
             'not-found' => tr.codeNotFound,
             'already-redeemed' => tr.codeAlreadyRedeemed,
             'disabled' => tr.codeDisabled,
