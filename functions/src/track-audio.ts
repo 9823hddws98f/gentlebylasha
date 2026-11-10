@@ -1,14 +1,22 @@
 import { randomUUID } from "node:crypto";
 import { getStorage } from "firebase-admin/storage";
 
+/** Where download URLs point: production, or the local Storage emulator. */
+const storageOrigin = () => {
+  const emulator = process.env.FIREBASE_STORAGE_EMULATOR_HOST;
+  return emulator ? `http://${emulator}` : "https://firebasestorage.googleapis.com";
+};
+
 /** Bucket and object path from a Firebase Storage download URL. */
 export function parseDownloadUrl(url: string): { bucket: string; path: string } | null {
-  const m = url.match(/^https:\/\/firebasestorage\.googleapis\.com\/v0\/b\/([^/]+)\/o\/([^?]+)/);
+  const prefix = `${storageOrigin()}/v0/b/`;
+  if (!url.startsWith(prefix)) return null;
+  const m = url.slice(prefix.length).match(/^([^/]+)\/o\/([^?]+)/);
   return m ? { bucket: m[1], path: decodeURIComponent(m[2]) } : null;
 }
 
 export function downloadUrl(bucket: string, path: string, token: string): string {
-  return `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodeURIComponent(path)}?alt=media&token=${token}`;
+  return `${storageOrigin()}/v0/b/${bucket}/o/${encodeURIComponent(path)}?alt=media&token=${token}`;
 }
 
 /** Gives the file a new download token, so every earlier URL stops working. */

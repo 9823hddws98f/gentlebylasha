@@ -43,10 +43,12 @@ Alles draait tegen de Firebase-emulators met het demo-project `demo-gentle`. Daa
    - een homepagina;
    - code `GENTLE-ABCD-EFGH`;
    - admin `admin@gentle.test`, wachtwoord `admin-password`.
-4. **App starten:** `flutter run -d chrome --dart-define=FIREBASE_EMULATORS=true`. Maak daarin een account aan.
+4. **App starten:** `flutter run -d chrome --dart-define=FIREBASE_EMULATORS=true`. Op iOS (simulator): `scripts/run-ios-emulators.sh -d <simulator>`. Dat script past `ios/Runner/GoogleService-Info.plist` tijdelijk aan en zet hem bij het stoppen terug; commit de aangepaste versie niet. Maak daarin een account aan.
 5. **Admin starten:** zet `NEXT_PUBLIC_FIREBASE_EMULATORS=1` in `apps/admin/.env.development.local` en start dan `npm --prefix apps/admin run dev`.
 
-Op het web raak je in emulatormodus je sessie kwijt bij herladen. Log dan opnieuw in.
+Herlaad de webapp in emulatormodus niet terwijl je bent ingelogd. Firebase herstelt de sessie dan vóór de emulator is gekoppeld, waarna inloggen naar de echte Google-servers gaat en mislukt. Wis in dat geval de sitegegevens van localhost of gebruik een privévenster, en gebruik hier nooit een echt wachtwoord.
+
+E-mails gaan in emulatormodus niet echt de deur uit. De tekst, met bijvoorbeeld de verwijdercode, staat in de log van de emulators.
 
 Integratietests van de Cloud Functions: `npm --prefix functions run test:integration` (nep-secrets uit stap 1 nodig). Dat start de emulators zelf, dus niet tegelijk met stap 2.
 

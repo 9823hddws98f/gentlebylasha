@@ -1,6 +1,6 @@
 // Fills the local emulators (project demo-gentle) with test data shaped the way
-// the admin writes it: two tracks (one premium), a home page with one row, an
-// unused access code and an admin account. Run while `npm run emulators` runs:
+// the admin writes it: tracks (one premium), playlists, three pages with every
+// row type, an unused access code and an admin account. Run while `npm run emulators` runs:
 //   npm run seed
 // Never point this at a real project: it refuses anything but demo-gentle.
 import { randomUUID } from "node:crypto";
@@ -67,7 +67,50 @@ await db.doc("tracks/t-premium").set({
   imageBackground: await image("background.jpg"),
 });
 await db.doc("track_audio/t-premium").set({ url: audio });
+await db.doc("tracks/t-long").set({
+  ...track,
+  id: "t-long",
+  title: "Under the stars",
+  titleNl: "Onder de sterren",
+  description: "A longer free track",
+  descriptionNl: "Een langere gratis track",
+  trackUrl: audio,
+  premium: false,
+  thumbnail: await image("background.jpg"),
+  imageBackground: await image("thumbnail.jpg"),
+});
+const playlist = {
+  author: "Gentle",
+  profession: "",
+  description: "A playlist",
+  showAudioThumbnails: true,
+};
+await db.doc("playlists/p-free").set({
+  ...playlist,
+  id: "p-free",
+  title: "Slow evenings",
+  titleNl: "Rustige avonden",
+  trackIds: ["t-free", "t-long"],
+  thumbnail: await image("thumbnail.jpg"),
+  authorImage: await image("background.jpg"),
+});
+await db.doc("playlists/p-mixed").set({
+  ...playlist,
+  id: "p-mixed",
+  title: "Deep sleep",
+  titleNl: "Diepe slaap",
+  trackIds: ["t-free", "t-premium", "t-long"],
+  thumbnail: await image("background.jpg"),
+  authorImage: await image("thumbnail.jpg"),
+});
 await db.doc("pages/home").set({ id: "home", name: "Home", nameNl: "Thuis", order: 0, config: { showItemDurations: true } });
+await db.doc("pages/sleep").set({ id: "sleep", name: "Sleep", nameNl: "Slapen", order: 1, config: { showItemDurations: true } });
+await db.doc("pages/relax").set({ id: "relax", name: "Relax", nameNl: "Ontspannen", order: 2, config: { showItemDurations: false } });
+await db.doc("blocks/hero").set({ id: "hero", pageId: "home", title: "Tonight", titleNl: "Vanavond", type: "Hero", sequence: 2, trackId: "t-long" });
+await db.doc("blocks/series").set({ id: "series", pageId: "home", title: "Playlists", titleNl: "Playlists", type: "Series", sequence: 3, playlistIds: ["p-free", "p-mixed"] });
+await db.doc("blocks/featured").set({ id: "featured", pageId: "home", title: "Featured", titleNl: "Uitgelicht", type: "Featured", sequence: 4, trackIds: ["t-long", "t-premium"] });
+await db.doc("blocks/sleep-row").set({ id: "sleep-row", pageId: "sleep", title: "Stories", titleNl: "Verhalen", type: "Normal", sequence: 0, trackIds: ["t-long", "t-free"] });
+await db.doc("blocks/relax-row").set({ id: "relax-row", pageId: "relax", title: "Sounds", titleNl: "Geluiden", type: "Normal", sequence: 0, trackIds: ["t-free"] });
 await db.doc("blocks/tonight").set({
   id: "tonight",
   pageId: "home",

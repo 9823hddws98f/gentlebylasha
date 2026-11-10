@@ -49,8 +49,11 @@ class AppInit {
   /// Local development against the Firebase emulators:
   /// `--dart-define=FIREBASE_EMULATORS=true` (optionally `EMULATOR_HOST`,
   /// e.g. 10.0.2.2 on an Android emulator). Uses the demo project
-  /// `demo-gentle`, so nothing can reach production. On web a reload loses the
-  /// session (Firebase restores it before the emulator is connected): sign in again.
+  /// `demo-gentle`, so production data stays out of reach. On web a reload while
+  /// signed in breaks sign-in (Firebase restores the session before the emulator
+  /// is connected, so Auth calls the real servers): clear the site data first.
+  /// iOS configures the default app from its plist, so use
+  /// `scripts/run-ios-emulators.sh` there.
   static const useEmulators = bool.fromEnvironment('FIREBASE_EMULATORS');
   static const _emulatorHost = String.fromEnvironment('EMULATOR_HOST', defaultValue: '127.0.0.1');
 
