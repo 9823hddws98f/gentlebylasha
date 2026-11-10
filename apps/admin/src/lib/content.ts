@@ -82,6 +82,9 @@ export function useCollection<T>(name: string, order: string, map: (id: string, 
   return { items, error };
 }
 
+/** "1 track", "3 tracks": Dutch and English plurals coincide for these nouns. */
+export const plural = (n: number, noun: "track" | "playlist") => `${n} ${noun}${n === 1 ? "" : "s"}`;
+
 const str = (v: unknown) => (typeof v === "string" ? v : "");
 const img = (v: unknown) => (v && typeof v === "object" && "url" in v ? (v as TxImage) : null);
 const ids = (v: unknown) => (Array.isArray(v) ? (v as string[]) : []);

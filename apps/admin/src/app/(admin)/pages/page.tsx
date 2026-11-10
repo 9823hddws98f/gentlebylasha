@@ -23,6 +23,7 @@ import {
   toPlaylist,
   toTrack,
   useCollection,
+  plural,
 } from "@/lib/content";
 
 const TYPE_INFO: Record<BlockType, string> = {
@@ -53,7 +54,7 @@ export default function PagesPage() {
   const [pageBlocks, reorderBlocks] = useOptimisticOrder(selectedBlocks, (ids) => reorder("blocks", ids), orderFailed);
   const trackOptions = useMemo(() => (tracks ?? []).map((t) => ({ id: t.id, label: t.title, sub: t.speaker })), [tracks]);
   const playlistOptions = useMemo(
-    () => (playlists ?? []).map((p) => ({ id: p.id, label: p.title, sub: `${p.trackIds.length} tracks` })),
+    () => (playlists ?? []).map((p) => ({ id: p.id, label: p.title, sub: plural(p.trackIds.length, "track") })),
     [playlists],
   );
 
@@ -189,7 +190,7 @@ export default function PagesPage() {
                         <button onClick={() => setEditingBlock({ block: b, isNew: false })} className="min-w-0 flex-1 text-left">
                           <span className="block truncate font-medium text-ink">{b.title || "Zonder titel"}</span>
                           <span className="block text-sm text-ink-faint">
-                            {TYPE_INFO[b.type]} · <span className="tabular">{count ?? 0}</span> {b.type === "Series" ? "playlists" : "tracks"}
+                            {TYPE_INFO[b.type]} · <span className="tabular">{plural(count ?? 0, b.type === "Series" ? "playlist" : "track")}</span>
                           </span>
                         </button>
                       </SortableItem>

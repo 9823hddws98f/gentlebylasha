@@ -15,6 +15,7 @@ import {
   toPlaylist,
   toTrack,
   useCollection,
+  plural,
 } from "@/lib/content";
 
 const emptyPlaylist = (): Playlist => ({
@@ -79,7 +80,7 @@ export default function PlaylistsPage() {
                   <span className="block truncate font-medium text-ink">{p.title || "Zonder titel"}</span>
                   <span className="block truncate text-sm text-ink-faint">
                     {p.author && `${p.author} · `}
-                    <span className="tabular">{p.trackIds.length}</span> tracks
+                    <span className="tabular">{plural(p.trackIds.length, "track")}</span>
                   </span>
                 </span>
               </button>
