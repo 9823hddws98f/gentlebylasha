@@ -63,6 +63,22 @@ class TracksService {
     });
   }
 
+  /// Every track, read once per [_searchCacheAge] instead of on every search
+  /// keystroke. Filtered on the device: Firestore has no text search.
+  List<Map<String, dynamic>>? _searchCache;
+  DateTime _searchCachedAt = DateTime(0);
+  static const _searchCacheAge = Duration(minutes: 10);
+
+  Future<List<Map<String, dynamic>>> _searchableTracks() async {
+    final cache = _searchCache;
+    if (cache != null && DateTime.now().difference(_searchCachedAt) < _searchCacheAge) {
+      return cache;
+    }
+    final snapshot = await _collection.get();
+    _searchCachedAt = DateTime.now();
+    return _searchCache = [for (final doc in snapshot.docs) doc.data()];
+  }
+
   /// Whether a track document matches [normalizedQuery] (lowercase). Looks at
   /// the Dutch title too, since that is the title Dutch users see.
   @visibleForTesting
@@ -79,15 +95,11 @@ class TracksService {
     try {
       final normalizedQuery = query.toLowerCase();
 
-      // Get all documents and filter client-side
-      final snapshot = await _collection
-          .limit(100) // Adjust limit as needed
-          .get();
-
-      final filteredDocs =
-          snapshot.docs.where((doc) => matchesSearch(doc.data(), normalizedQuery)).toList();
-
-      return filteredDocs.map((doc) => AudioTrack.fromMap(doc.data())).toList();
+      final tracks = await _searchableTracks();
+      return [
+        for (final data in tracks)
+          if (matchesSearch(data, normalizedQuery)) AudioTrack.fromMap(data),
+      ];
     } catch (e) {
       e.logDebug();
       return [];

@@ -76,7 +76,11 @@ class PushService {
   /// Set synchronously so overlapping start() calls can't both add listeners.
   bool _running = false;
 
-  Future<void> start() async {
+  /// Starts push. Only shows the system permission prompt when [ask] is set:
+  /// UserInit asks after onboarding, so a new user doesn't get the prompt on
+  /// top of the first questions. Without [ask] push starts only when the user
+  /// already allowed it.
+  Future<void> start({bool ask = false}) async {
     if (_running) return;
     if (kIsWeb) {
       if (_vapidKey.isEmpty) return;
@@ -90,6 +94,11 @@ class PushService {
         debugPrint('Web push start failed: $e');
       }
       return;
+    }
+    if (!ask) {
+      final current = await _messaging.getNotificationSettings();
+      if (!_allowed(current.authorizationStatus)) return;
+      if (_running) return;
     }
     _running = true;
 
@@ -113,6 +122,9 @@ class PushService {
     await _waitForApnsToken();
     await _syncTopics();
   }
+
+  static bool _allowed(AuthorizationStatus status) =>
+      status == AuthorizationStatus.authorized || status == AuthorizationStatus.provisional;
 
   /// Turns web push on from a tap in the settings (browsers want a user
   /// gesture for the permission prompt).

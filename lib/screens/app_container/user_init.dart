@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -5,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '/domain/blocs/user/app_user.dart';
 import '/domain/blocs/user/user_bloc.dart';
 import '/domain/services/language_cubit.dart';
+import '/domain/services/push_service.dart';
 import '/domain/services/user_service.dart';
 import '/screens/onboarding/onboarding_bottom_sheet.dart';
 import '/utils/command_trigger.dart';
@@ -29,6 +32,9 @@ class UserInit {
     if (user.goals == null || user.heardFrom == null) {
       await OnboardingBottomSheet.show(context);
     }
+
+    // Asked here, after onboarding, rather than at sign-in on top of it.
+    if (context.mounted) unawaited(PushService.instance.start(ask: true));
   }
 
   /// The profile has no name. Use the one from the sign-in (Apple, Google)

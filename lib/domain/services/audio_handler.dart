@@ -237,6 +237,9 @@ class MyAudioHandler extends BaseAudioHandler {
       _playlist.clear();
 
       _loadEmptyPlaylist();
+      // Forget the last track too, or the next account sees it in the player.
+      queue.add(const []);
+      mediaItem.add(null);
       // await _player.dispose();
       super.stop();
     }

@@ -302,6 +302,8 @@ class AudioManager {
     _audioHandler.pause();
     _audioHandler.customAction('dispose');
     resetNotifiers();
+    // Hide the mini player; nothing is loaded any more.
+    Get.the<AudioPanelManager>().panelVisibility.value = 0;
     _isInitialized = false;
   }
 
