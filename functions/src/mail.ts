@@ -3,7 +3,8 @@ import { logger } from "firebase-functions";
 import { defineSecret, defineString } from "firebase-functions/params";
 
 export const SENDGRID_API_KEY = defineSecret("SENDGRID_API_KEY");
-const MAIL_FROM = defineString("MAIL_FROM", { default: "noreply@headfolk.com" });
+// Empty by default: a forgotten value must not send mail from another domain.
+const MAIL_FROM = defineString("MAIL_FROM", { default: "" });
 
 export async function sendMail(to: string, mail: { subject: string; html: string; text: string }) {
   // Local runs have no SendGrid key; log the mail so codes in it can still be used.
@@ -11,8 +12,10 @@ export async function sendMail(to: string, mail: { subject: string; html: string
     logger.info("Mail not sent on the emulator", { to, subject: mail.subject, text: mail.text });
     return;
   }
+  const from = MAIL_FROM.value();
+  if (!from) throw new Error("MAIL_FROM is not set (functions/.env.<project>)");
   sgMail.setApiKey(SENDGRID_API_KEY.value());
-  await sgMail.send({ to, from: { email: MAIL_FROM.value(), name: "Gentle" }, ...mail });
+  await sgMail.send({ to, from: { email: from, name: "Gentle" }, ...mail });
 }
 
 export function escapeHtml(value: string): string {

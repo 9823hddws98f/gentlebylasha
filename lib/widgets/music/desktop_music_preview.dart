@@ -33,12 +33,12 @@ class DesktopMusicPreview extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: ValueListenableBuilder(
                 valueListenable: _pageManager.currentMediaItemNotifier,
-                builder: (_, mediaItem, __) => mediaItem.id.isEmpty
+                builder: (context, mediaItem, __) => mediaItem.id.isEmpty
                     ? SizedBox()
                     : Padding(
                         padding: const EdgeInsets.only(left: 8),
                         child: Text(
-                          mediaItem.title,
+                          mediaItem.localizedTitle(context),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(

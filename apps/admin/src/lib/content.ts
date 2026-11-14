@@ -1,6 +1,6 @@
 "use client";
 
-import { collection, deleteDoc, deleteField, doc, onSnapshot, orderBy, query, setDoc, writeBatch } from "firebase/firestore";
+import { collection, deleteDoc, deleteField, doc, getDocs, onSnapshot, orderBy, query, setDoc, where, writeBatch } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { call, db } from "./firebase";
 import type { TxImage } from "./media";
@@ -169,7 +169,15 @@ export const deleteTrack = (t: Track) => adminDeleteTrack({ trackId: t.id });
 
 export const savePlaylist = (p: Playlist) =>
   setDoc(doc(db, "playlists", p.id), { ...p, titleNl: nl(p.titleNl), descriptionNl: nl(p.descriptionNl) }, merge);
-export const deletePlaylist = (id: string) => deleteDoc(doc(db, "playlists", id));
+/** Refuses while a row still shows the playlist, like adminDeleteTrack does for tracks. */
+export async function deletePlaylist(id: string) {
+  const rows = await getDocs(query(collection(db, "blocks"), where("playlistIds", "array-contains", id)));
+  if (!rows.empty) {
+    const usedIn = rows.docs.map((d) => `rij “${d.data().title ?? d.id}”`);
+    throw new Error(`Playlist wordt nog gebruikt in ${usedIn.join(", ")}. Haal hem daar eerst weg.`);
+  }
+  await deleteDoc(doc(db, "playlists", id));
+}
 
 export const savePage = (p: Page) => setDoc(doc(db, "pages", p.id), { ...p, nameNl: nl(p.nameNl) }, merge);
 

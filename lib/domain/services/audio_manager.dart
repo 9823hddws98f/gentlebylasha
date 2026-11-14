@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:audio_service/audio_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 
 import '/domain/models/block_item/audio_playlist.dart';
 import '/domain/models/block_item/audio_track.dart';
@@ -11,6 +12,16 @@ import '/notifiers/progress_notifier.dart';
 import '/notifiers/repeat_notifier.dart';
 import '/utils/get.dart';
 import 'analytics_service.dart';
+
+extension LocalizedMediaItem on MediaItem {
+  /// The track's title in the app language. A queued MediaItem keeps the title
+  /// from when it was added; reading the locale from [context] also rebuilds
+  /// the caller after a language switch.
+  String localizedTitle(BuildContext context) {
+    Localizations.localeOf(context);
+    return (extras?['track'] as AudioTrack?)?.title ?? title;
+  }
+}
 
 class AudioManager {
   AudioManager._();

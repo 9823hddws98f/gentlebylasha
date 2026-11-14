@@ -12,9 +12,9 @@ class CurrentSongTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ValueListenableBuilder<MediaItem>(
         valueListenable: _pageManager.currentMediaItemNotifier,
-        builder: (_, mediaItem, __) => Center(
+        builder: (context, mediaItem, __) => Center(
           child: Text(
-            mediaItem.title,
+            mediaItem.localizedTitle(context),
             textAlign: TextAlign.center,
             style: TextStyle(
               fontWeight: FontWeight.w600,

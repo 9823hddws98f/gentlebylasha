@@ -15,12 +15,12 @@ class CurrentSongInfoSmall extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     return ValueListenableBuilder<MediaItem>(
       valueListenable: _pageManager.currentMediaItemNotifier,
-      builder: (_, mediaItem, __) => Column(
+      builder: (context, mediaItem, __) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Text(
-            mediaItem.title,
+            mediaItem.localizedTitle(context),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontWeight: FontWeight.w500),
