@@ -102,7 +102,14 @@ export const requestAccountDeletion = onCall({ secrets: [SENDGRID_API_KEY] }, as
     });
   });
   const language = languageOf((await db.collection("users").doc(uid).get()).get("language"));
-  await sendMail(email, deletionCodeEmail(language, code));
+  try {
+    await sendMail(email, deletionCodeEmail(language, code));
+  } catch (e) {
+    // The code never arrived: allow another try right away. The send still
+    // counts toward the daily limit.
+    await ref.update({ sentAt: FieldValue.delete() });
+    throw e;
+  }
   return { success: true };
 });
 

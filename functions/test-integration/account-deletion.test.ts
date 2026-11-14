@@ -63,9 +63,21 @@ describe("adminDeleteUser", () => {
   });
 });
 
+describe("requestAccountDeletion", () => {
+  // On the emulator the mail is logged, not sent (sendMail).
+  it("stores a hashed code and refuses a resend within a minute", async () => {
+    const user = await createClient({ name: "leaving" });
+    await user.call("requestAccountDeletion");
+
+    const stored = await data(`deletion_codes/${user.uid}`);
+    expect(stored).toMatchObject({ sends: 1, attempts: 0, codeHash: expect.any(String) });
+    await expectError(user.call("requestAccountDeletion"), "resource-exhausted", "wait-before-resend");
+  });
+});
+
 describe("deleteUser (own account)", () => {
-  // requestAccountDeletion emails the code, which the dummy SendGrid key can't
-  // do; the stored code is seeded the way it writes it.
+  // The code itself only goes out by mail, so the tests seed it the way
+  // requestAccountDeletion stores it.
   async function seedCode(uid: string, code: string, opts: { expiresInMs?: number; attempts?: number } = {}) {
     await db.doc(`deletion_codes/${uid}`).set({
       codeHash: hashCode(uid, code),
