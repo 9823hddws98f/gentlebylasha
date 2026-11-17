@@ -5,6 +5,7 @@ import '/domain/services/cloud_functions_service.dart';
 import '/domain/services/language_cubit.dart';
 import '/helper/global_functions.dart';
 import '/utils/common_extensions.dart';
+import '/utils/enums.dart';
 import '/utils/tx_button.dart';
 
 /// Second step of account deletion: enter the emailed code.
@@ -59,7 +60,11 @@ class _AccountDeleteDialog2State extends State<AccountDeleteDialog2> with Transl
                   onPressVoid: () => Navigator.of(context).pop(),
                   label: Text(tr.cancel),
                 ),
-                TxButton.filled(onPress: _submit, label: Text(tr.deleteAccount)),
+                TxButton.filled(
+                  onPress: _submit,
+                  label: Text(tr.deleteAccount),
+                  color: RoleColor.danger,
+                ),
               ],
             ),
           ].interleaveWith(const SizedBox(height: 16)),

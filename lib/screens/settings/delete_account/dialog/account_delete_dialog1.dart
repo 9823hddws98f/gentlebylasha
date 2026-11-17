@@ -29,6 +29,10 @@ class _AccountDeleteDialog1State extends State<AccountDeleteDialog1> with Transl
           child: Text(tr.cancel),
         ),
         FilledButton(
+          style: FilledButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.error,
+            foregroundColor: Theme.of(context).colorScheme.onError,
+          ),
           onPressed: () async {
             final user = FirebaseAuth.instance.currentUser;
             if (user == null || _loading) return;

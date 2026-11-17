@@ -44,6 +44,8 @@ class DeleteAccountScreen extends StatelessWidget with Translation {
               ),
               TxButton.filled(
                 label: Text(tr.deleteAccount),
+                // Opening the dialog isn't a success; no green check on a delete button.
+                showSuccess: false,
                 onPressVoid: () => Modals.show(
                   context,
                   builder: (context) => AccountDeleteDialog1(),
